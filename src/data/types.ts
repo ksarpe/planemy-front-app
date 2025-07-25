@@ -101,6 +101,29 @@ export interface AdditionalDataInterface {
 
 // NEW TASK SYSTEM - Updated according to system design
 
+// User interface for sharing system
+export interface UserProfile {
+  id: string;
+  email: string;
+  displayName?: string;
+  photoURL?: string;
+  createdAt?: string;
+}
+
+// Sharing permission levels
+export type SharePermission = "view" | "edit" | "admin";
+
+// Shared task list entry
+export interface SharedTaskList {
+  id?: string; // For invitation documents
+  listId: string;
+  sharedBy: string; // user ID who shared
+  sharedWith: string; // user ID who received
+  permission: SharePermission;
+  sharedAt: string;
+  acceptedAt?: string;
+}
+
 // Label interface for categorizing and organizing tasks
 export interface LabelInterface {
   id: string;
@@ -119,6 +142,7 @@ export interface TaskInterface {
   isCompleted: boolean;
   labels?: LabelInterface[]; // Optional array of labels
   userId: string;
+  sharedBy?: string; // ID of user who originally created the task (for shared lists)
 }
 
 // NEW TaskList interface according to system design
@@ -127,8 +151,11 @@ export interface TaskListInterface {
   name: string;
   tasks: TaskInterface[]; // Array of tasks
   labels?: LabelInterface[]; // Optional array of labels for the list
-  sharedWith: string[]; // Array of user IDs
+  sharedWith: SharedTaskList[]; // Array of sharing entries
   userId: string; // Owner of the list
+  isShared?: boolean; // True if this is a shared list
+  originalOwner?: string; // For shared lists, ID of original owner
+  permission?: SharePermission; // User's permission level for this list
 }
 
 // Legacy interface for backwards compatibility (if needed)

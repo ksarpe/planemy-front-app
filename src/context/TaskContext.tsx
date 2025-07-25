@@ -1,11 +1,12 @@
 import { createContext, useEffect, useState, ReactNode } from "react";
-import type { TaskInterface, TaskListInterface, LabelInterface } from "@/data/types";
+import type { TaskInterface, TaskListInterface, LabelInterface, SharedTaskList, SharePermission, UserProfile } from "@/data/types";
 import { useToast } from "@/context/ToastContext";
 import { useAuth } from "@/context/AuthContext";
 import type { TaskContextProps } from "@/data/typesProps";
 import { 
   useUserTaskLists, 
   useUserLabels,
+  useUserPendingShares,
   createTaskList as createTaskListFirebase,
   updateTaskList as updateTaskListFirebase,
   deleteTaskList as deleteTaskListFirebase,
@@ -15,7 +16,13 @@ import {
   toggleTaskCompletion as toggleTaskCompletionFirebase,
   createLabel as createLabelFirebase,
   updateLabel as updateLabelFirebase,
-  deleteLabel as deleteLabelFirebase
+  deleteLabel as deleteLabelFirebase,
+  shareTaskListWithUser,
+  removeUserFromSharedList,
+  acceptSharedTaskList,
+  rejectSharedTaskList,
+  updateUserPermission,
+  searchUsersByEmail
 } from "@/firebase/tasks";
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
@@ -29,11 +36,13 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   // New task list system
   const taskListsFromFirebase = useUserTaskLists();
   const labelsFromFirebase = useUserLabels();
+  const pendingSharesFromFirebase = useUserPendingShares();
   
   // State
   const [taskLists, setTaskLists] = useState<TaskListInterface[]>([]);
   const [currentTaskList, setCurrentTaskList] = useState<TaskListInterface | null>(null);
   const [labels, setLabels] = useState<LabelInterface[]>([]);
+  const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLabels, setSelectedLabels] = useState<LabelInterface[]>([]);
@@ -51,6 +60,10 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     setLabels(labelsFromFirebase);
   }, [labelsFromFirebase]);
+
+  useEffect(() => {
+    setPendingShares(pendingSharesFromFirebase);
+  }, [pendingSharesFromFirebase]);
 
   // Task List Functions
   const createTaskList = async (name: string): Promise<void> => {
@@ -101,10 +114,15 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const shareTaskList = async (listId: string, userIds: string[]): Promise<void> => {
+  const shareTaskList = async (listId: string, userEmail: string, permission: SharePermission): Promise<void> => {
+    if (!user) {
+      showToast("error", "Musisz być zalogowany, aby udostępnić listę");
+      return;
+    }
+
     try {
       setLoading(true);
-      await updateTaskListFirebase(listId, { sharedWith: userIds });
+      await shareTaskListWithUser(listId, userEmail, permission, user.uid);
       showToast("success", "Lista została udostępniona!");
     } catch (error) {
       console.error("Error sharing task list:", error);
@@ -114,12 +132,82 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const unshareTaskList = async (listId: string, userId: string): Promise<void> => {
+    try {
+      setLoading(true);
+      await removeUserFromSharedList(listId, userId);
+      showToast("success", "Udostępnianie zostało cofnięte!");
+    } catch (error) {
+      console.error("Error unsharing task list:", error);
+      showToast("error", "Błąd podczas cofania udostępniania");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const acceptSharedList = async (shareId: string): Promise<void> => {
+    try {
+      setLoading(true);
+      await acceptSharedTaskList(shareId);
+      showToast("success", "Lista została zaakceptowana!");
+    } catch (error) {
+      console.error("Error accepting shared list:", error);
+      showToast("error", "Błąd podczas akceptowania listy");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const rejectSharedList = async (shareId: string): Promise<void> => {
+    try {
+      setLoading(true);
+      await rejectSharedTaskList(shareId);
+      showToast("success", "Lista została odrzucona!");
+    } catch (error) {
+      console.error("Error rejecting shared list:", error);
+      showToast("error", "Błąd podczas odrzucania listy");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateSharePermission = async (listId: string, userId: string, permission: SharePermission): Promise<void> => {
+    try {
+      setLoading(true);
+      await updateUserPermission(listId, userId, permission);
+      showToast("success", "Uprawnienia zostały zaktualizowane!");
+    } catch (error) {
+      console.error("Error updating permissions:", error);
+      showToast("error", "Błąd podczas aktualizacji uprawnień");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const searchUsers = async (email: string): Promise<UserProfile[]> => {
+    try {
+      return await searchUsersByEmail(email);
+    } catch (error) {
+      console.error("Error searching users:", error);
+      showToast("error", "Błąd podczas wyszukiwania użytkowników");
+      return [];
+    }
+  };
+
+  const getSharedLists = (): TaskListInterface[] => {
+    return taskLists.filter(list => list.isShared);
+  };
+
+  const getPendingShares = (): SharedTaskList[] => {
+    return pendingShares;
+  };
+
   // Task Functions
   const addTask = async (
     listId: string, 
     title: string, 
-    description?: string, 
-    dueDate?: string, 
+    description?: string | null, 
+    dueDate?: string | null, 
     labels?: LabelInterface[]
   ): Promise<void> => {
     if (!user) {
@@ -292,7 +380,16 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         createTaskList,
         updateTaskList,
         deleteTaskList,
+        
+        // Sharing functionality
         shareTaskList,
+        unshareTaskList,
+        acceptSharedList,
+        rejectSharedList,
+        updateSharePermission,
+        searchUsers,
+        getSharedLists,
+        getPendingShares,
         
         // Tasks
         addTask,

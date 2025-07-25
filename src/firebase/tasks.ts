@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { db } from "./config";
-import { collection, onSnapshot, doc, setDoc, deleteDoc, addDoc, query, where, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
+import { collection, onSnapshot, doc, setDoc, deleteDoc, addDoc, query, where, updateDoc, arrayUnion, serverTimestamp, getDocs } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
-import { TaskInterface, TaskListInterface, LabelInterface } from "../data/types";
+import { TaskInterface, TaskListInterface, LabelInterface, UserProfile, SharedTaskList, SharePermission } from "../data/types";
 
-// Hook to get user's task lists
+// Hook to get user's task lists (own + shared)
 export const useUserTaskLists = (): TaskListInterface[] => {
     const [taskLists, setTaskLists] = useState<TaskListInterface[]>([]);
     const { user } = useAuth();
@@ -16,19 +16,54 @@ export const useUserTaskLists = (): TaskListInterface[] => {
         }
 
         const taskListsCollection = collection(db, "taskLists");
-        const userTaskListsQuery = query(taskListsCollection, where("userId", "==", user.uid));
+        
+        // Query for own lists
+        const ownTaskListsQuery = query(taskListsCollection, where("userId", "==", user.uid));
+        
+        // Query for shared lists
+        const sharedTaskListsQuery = query(taskListsCollection, where("sharedWith", "array-contains", {
+            userId: user.uid,
+            permission: "view" // This will be expanded later
+        }));
 
-        const unsubscribe = onSnapshot(userTaskListsQuery, (snapshot) => {
-            const lists: TaskListInterface[] = snapshot.docs.map((doc) => ({
+        let ownLists: TaskListInterface[] = [];
+        let sharedLists: TaskListInterface[] = [];
+
+        // Listen to own lists
+        const unsubscribeOwn = onSnapshot(ownTaskListsQuery, (snapshot) => {
+            ownLists = snapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
+                isShared: false,
             })) as TaskListInterface[];
+            
+            // Combine and update
+            setTaskLists([...ownLists, ...sharedLists]);
+        });
 
-            setTaskLists(lists);
+        // Listen to shared lists
+        const unsubscribeShared = onSnapshot(sharedTaskListsQuery, (snapshot) => {
+            sharedLists = snapshot.docs.map((doc) => {
+                const data = doc.data();
+                // Find user's permission level
+                const userShare = data.sharedWith?.find((share: SharedTaskList) => share.sharedWith === user.uid);
+                
+                return {
+                    id: doc.id,
+                    ...data,
+                    isShared: true,
+                    originalOwner: data.userId,
+                    permission: userShare?.permission || "view",
+                } as TaskListInterface;
+            });
+            
+            // Combine and update
+            setTaskLists([...ownLists, ...sharedLists]);
         });
 
         return () => {
-            unsubscribe();
+            unsubscribeOwn();
+            unsubscribeShared();
         };
     }, [user]);
 
@@ -112,8 +147,8 @@ export const addTaskToList = async (
     listId: string, 
     title: string, 
     userId: string,
-    description?: string, 
-    dueDate?: string,
+    description?: string | null, 
+    dueDate?: string | null,
     labels?: LabelInterface[]
 ): Promise<void> => {
     try {
@@ -121,8 +156,8 @@ export const addTaskToList = async (
         const newTask: TaskInterface = {
             id: crypto.randomUUID(),
             title,
-            description,
-            dueDate,
+            description: description || "",
+            dueDate: dueDate || "",
             isCompleted: false,
             labels: labels || [],
             userId,
@@ -246,6 +281,230 @@ export const deleteLabel = async (labelId: string): Promise<void> => {
         await deleteDoc(labelDocRef);
     } catch (error) {
         console.error("Error deleting label:", error);
+        throw error;
+    }
+};
+
+// SHARING SYSTEM FUNCTIONS
+
+// Function to create user profile (called when user registers)
+export const createUserProfile = async (userId: string, email: string, displayName?: string): Promise<void> => {
+    try {
+        const userProfile: UserProfile = {
+            id: userId,
+            email,
+            displayName,
+            createdAt: new Date().toISOString(),
+        };
+        
+        await setDoc(doc(db, "users", userId), userProfile);
+    } catch (error) {
+        console.error("Error creating user profile:", error);
+        throw error;
+    }
+};
+
+// Search users by email
+export const searchUsersByEmail = async (email: string): Promise<UserProfile[]> => {
+    try {
+        const usersCollection = collection(db, "users");
+        const userQuery = query(usersCollection, where("email", "==", email));
+        const snapshot = await getDocs(userQuery);
+        
+        return snapshot.docs.map(doc => doc.data() as UserProfile);
+    } catch (error) {
+        console.error("Error searching users:", error);
+        throw error;
+    }
+};
+
+// Share task list with another user
+export const shareTaskListWithUser = async (
+    listId: string, 
+    targetUserEmail: string, 
+    permission: SharePermission,
+    sharedByUserId: string
+): Promise<void> => {
+    try {
+        // First, find the target user by email
+        const users = await searchUsersByEmail(targetUserEmail);
+        if (users.length === 0) {
+            throw new Error("User not found with this email");
+        }
+        
+        const targetUser = users[0];
+        
+        // Create shared entry
+        const shareEntry: SharedTaskList = {
+            listId,
+            sharedBy: sharedByUserId,
+            sharedWith: targetUser.id,
+            permission,
+            sharedAt: new Date().toISOString(),
+        };
+        console.log('Share entry:', shareEntry);
+        // Update the task list to include the share
+        const taskListDocRef = doc(db, "taskLists", listId);
+        await updateDoc(taskListDocRef, {
+            sharedWith: arrayUnion(shareEntry)
+        });
+        
+        // Also create a notification/invitation document
+        const invitationCollection = collection(db, "shareInvitations");
+        await addDoc(invitationCollection, {
+            ...shareEntry,
+            status: "pending",
+            createdAt: new Date().toISOString(),
+        });
+        
+    } catch (error) {
+        console.error("Error sharing task list:", error);
+        throw error;
+    }
+};
+
+// Accept shared task list
+export const acceptSharedTaskList = async (shareId: string): Promise<void> => {
+    try {
+        // Update invitation status
+        const invitationDocRef = doc(db, "shareInvitations", shareId);
+        await updateDoc(invitationDocRef, {
+            status: "accepted",
+            acceptedAt: new Date().toISOString(),
+        });
+        
+        // The task list should already be accessible through the updated query
+    } catch (error) {
+        console.error("Error accepting shared task list:", error);
+        throw error;
+    }
+};
+
+// Reject shared task list
+export const rejectSharedTaskList = async (shareId: string): Promise<void> => {
+    try {
+        const invitationDocRef = doc(db, "shareInvitations", shareId);
+        await updateDoc(invitationDocRef, {
+            status: "rejected",
+            rejectedAt: new Date().toISOString(),
+        });
+    } catch (error) {
+        console.error("Error rejecting shared task list:", error);
+        throw error;
+    }
+};
+
+// Remove user from shared task list
+export const removeUserFromSharedList = async (listId: string, userId: string): Promise<void> => {
+    try {
+        const { getDoc } = await import("firebase/firestore");
+        const taskListDocRef = doc(db, "taskLists", listId);
+        const listSnapshot = await getDoc(taskListDocRef);
+        
+        if (listSnapshot.exists()) {
+            const currentList = listSnapshot.data() as TaskListInterface;
+            const updatedSharedWith = currentList.sharedWith.filter(
+                share => share.sharedWith !== userId
+            );
+            
+            await updateDoc(taskListDocRef, {
+                sharedWith: updatedSharedWith
+            });
+        }
+    } catch (error) {
+        console.error("Error removing user from shared list:", error);
+        throw error;
+    }
+};
+
+// Update user permission for shared list
+export const updateUserPermission = async (
+    listId: string, 
+    userId: string, 
+    newPermission: SharePermission
+): Promise<void> => {
+    try {
+        const { getDoc } = await import("firebase/firestore");
+        const taskListDocRef = doc(db, "taskLists", listId);
+        const listSnapshot = await getDoc(taskListDocRef);
+        
+        if (listSnapshot.exists()) {
+            const currentList = listSnapshot.data() as TaskListInterface;
+            const updatedSharedWith = currentList.sharedWith.map(share => 
+                share.sharedWith === userId 
+                    ? { ...share, permission: newPermission }
+                    : share
+            );
+            
+            await updateDoc(taskListDocRef, {
+                sharedWith: updatedSharedWith
+            });
+        }
+    } catch (error) {
+        console.error("Error updating user permission:", error);
+        throw error;
+    }
+};
+
+// Get pending share invitations for user
+export const useUserPendingShares = (): SharedTaskList[] => {
+    const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
+    const { user } = useAuth();
+
+    useEffect(() => {
+        if (!user) {
+            setPendingShares([]);
+            return;
+        }
+
+        const invitationsCollection = collection(db, "shareInvitations");
+        const pendingQuery = query(
+            invitationsCollection, 
+            where("sharedWith", "==", user.uid),
+            where("status", "==", "pending")
+        );
+
+        const unsubscribe = onSnapshot(pendingQuery, (snapshot) => {
+            const invitations = snapshot.docs.map((doc) => {
+                const data = doc.data();
+                return {
+                    id: doc.id,
+                    listId: data.listId,
+                    sharedBy: data.sharedBy,
+                    sharedWith: data.sharedWith,
+                    permission: data.permission,
+                    sharedAt: data.sharedAt,
+                    acceptedAt: data.acceptedAt,
+                } as SharedTaskList;
+            });
+
+            setPendingShares(invitations);
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, [user]);
+
+    return pendingShares;
+};
+
+// Create default "Shared" task list for user if it doesn't exist
+export const createDefaultSharedList = async (userId: string): Promise<string> => {
+    try {
+        const taskListsCollection = collection(db, "taskLists");
+        const newTaskList = {
+            name: "Współdzielone",
+            tasks: [],
+            labels: [],
+            sharedWith: [],
+            userId,
+        };
+        
+        const docRef = await addDoc(taskListsCollection, newTaskList);
+        return docRef.id;
+    } catch (error) {
+        console.error("Error creating default shared list:", error);
         throw error;
     }
 };

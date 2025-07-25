@@ -4,7 +4,7 @@ import { X, Calendar, FileText, Clock } from "lucide-react";
 interface AddTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (title: string, description?: string, dueDate?: string) => Promise<void>;
+  onSubmit: (title: string, description?: string | null, dueDate?: string | null) => Promise<void>;
 }
 
 export const AddTaskModal = ({ isOpen, onClose, onSubmit }: AddTaskModalProps) => {
@@ -17,6 +17,8 @@ export const AddTaskModal = ({ isOpen, onClose, onSubmit }: AddTaskModalProps) =
     const today = new Date();
     return today.toISOString().split('T')[0];
   });
+
+  const [hasDueDate, setHasDueDate] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,8 +33,8 @@ export const AddTaskModal = ({ isOpen, onClose, onSubmit }: AddTaskModalProps) =
     try {
       await onSubmit(
         formData.title.trim(),
-        formData.description.trim() || undefined,
-        selectedDate
+        formData.description.trim() || null,
+        hasDueDate ? selectedDate : null
       );
       
       // Reset form
@@ -41,6 +43,7 @@ export const AddTaskModal = ({ isOpen, onClose, onSubmit }: AddTaskModalProps) =
         description: "",
       });
       setSelectedDate(new Date().toISOString().split('T')[0]);
+      setHasDueDate(false);
       onClose();
     } catch (error) {
       console.error("Error submitting task:", error);
@@ -98,45 +101,59 @@ export const AddTaskModal = ({ isOpen, onClose, onSubmit }: AddTaskModalProps) =
 
           {/* Due Date */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              <Calendar size={16} className="inline mr-1" />
-              Termin wykonania
-            </label>
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Quick Date Buttons */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Clock size={16} className="inline mr-1" />
-              Szybkie terminy
-            </label>
-            <div className="flex gap-2 flex-wrap">
-              {[
-                { label: 'Dziś', days: 0 },
-                { label: 'Jutro', days: 1 },
-                { label: 'Za tydzień', days: 7 },
-                { label: 'Za miesiąc', days: 30 },
-              ].map((option) => (
-                <button
-                  key={option.label}
-                  type="button"
-                  onClick={() => {
-                    const date = new Date();
-                    date.setDate(date.getDate() + option.days);
-                    setSelectedDate(date.toISOString().split('T')[0]);
-                  }}
-                  className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors"
-                >
-                  {option.label}
-                </button>
-              ))}
+            <div className="flex items-center gap-2 mb-2">
+              <input
+                type="checkbox"
+                id="hasDueDate"
+                checked={hasDueDate}
+                onChange={(e) => setHasDueDate(e.target.checked)}
+                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <label htmlFor="hasDueDate" className="text-sm font-medium text-gray-700">
+                <Calendar size={16} className="inline mr-1" />
+                Ustaw termin wykonania
+              </label>
             </div>
+            
+            {hasDueDate && (
+              <>
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
+                />
+                
+                {/* Quick Date Buttons */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <Clock size={16} className="inline mr-1" />
+                    Szybkie terminy
+                  </label>
+                  <div className="flex gap-2 flex-wrap">
+                    {[
+                      { label: 'Dziś', days: 0 },
+                      { label: 'Jutro', days: 1 },
+                      { label: 'Za tydzień', days: 7 },
+                      { label: 'Za miesiąc', days: 30 },
+                    ].map((option) => (
+                      <button
+                        key={option.label}
+                        type="button"
+                        onClick={() => {
+                          const date = new Date();
+                          date.setDate(date.getDate() + option.days);
+                          setSelectedDate(date.toISOString().split('T')[0]);
+                        }}
+                        className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors"
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Submit Button */}

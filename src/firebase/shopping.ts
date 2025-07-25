@@ -241,7 +241,7 @@ export const useShoppingLists = () => {
             completedAt: item.completedAt ? 
                         (item.completedAt instanceof Date ? item.completedAt : 
                          item.completedAt?.toDate ? item.completedAt.toDate() : new Date(item.completedAt)) : 
-                        undefined,
+                        "",
           })) || []
         } as ShoppingListInterface;
       });

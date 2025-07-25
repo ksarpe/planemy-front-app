@@ -9,6 +9,9 @@ import type {
   TaskInterface,
   TaskListInterface,
   LabelInterface,
+  UserProfile,
+  SharePermission,
+  SharedTaskList,
 } from "./types";
 
 export interface ToastContextProps {
@@ -57,10 +60,19 @@ export interface TaskContextProps {
   createTaskList: (name: string) => Promise<void>;
   updateTaskList: (listId: string, updates: Partial<TaskListInterface>) => Promise<void>;
   deleteTaskList: (listId: string) => Promise<void>;
-  shareTaskList: (listId: string, userIds: string[]) => Promise<void>;
+  
+  // Sharing functionality
+  shareTaskList: (listId: string, userEmail: string, permission: SharePermission) => Promise<void>;
+  unshareTaskList: (listId: string, userId: string) => Promise<void>;
+  acceptSharedList: (shareId: string) => Promise<void>;
+  rejectSharedList: (shareId: string) => Promise<void>;
+  updateSharePermission: (listId: string, userId: string, permission: SharePermission) => Promise<void>;
+  searchUsers: (email: string) => Promise<UserProfile[]>;
+  getSharedLists: () => TaskListInterface[];
+  getPendingShares: () => SharedTaskList[];
   
   // Tasks within lists
-  addTask: (listId: string, title: string, description?: string, dueDate?: string, labels?: LabelInterface[]) => Promise<void>;
+  addTask: (listId: string, title: string, description?: string | null, dueDate?: string | null, labels?: LabelInterface[]) => Promise<void>;
   updateTask: (listId: string, taskId: string, updates: Partial<TaskInterface>) => Promise<void>;
   removeTask: (listId: string, taskId: string) => Promise<void>;
   toggleTaskComplete: (listId: string, taskId: string) => Promise<void>;
