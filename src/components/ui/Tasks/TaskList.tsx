@@ -1,13 +1,15 @@
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Plus } from "lucide-react";
 import { TaskInterface } from "@/data/types";
 import TaskItem from "./TaskItem";
 
 interface TaskListProps {
   tasks: TaskInterface[];
   filter: 'all' | 'pending' | 'completed' | 'overdue';
+  onAddTaskClick: () => void;
+  loading?: boolean;
 }
 
-export default function TaskList({ tasks, filter }: TaskListProps) {
+export default function TaskList({ tasks, filter, onAddTaskClick, loading = false }: TaskListProps) {
   // Calculate filtered tasks
   const completedTasks = tasks.filter(task => task.isCompleted);
   const pendingTasks = tasks.filter(task => !task.isCompleted);
@@ -66,7 +68,19 @@ export default function TaskList({ tasks, filter }: TaskListProps) {
 
   return (
     <div className="flex-1 min-h-0">
-      <ul className="space-y-3 overflow-auto">
+      {/* Add Task Button */}
+      <div className="mb-2 px-1 w-fit">
+        <button
+          onClick={onAddTaskClick}
+          className="w-full flex items-center justify-center gap-2  border-l-4 border-green-700 bg-green-600 text-white px-2 py-1 rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer"
+          disabled={loading}
+        >
+          <Plus size={18} />
+          <span className="text-sm">Dodaj nowe zadanie</span>
+        </button>
+      </div>
+      
+      <ul className="space-y-3 overflow-auto px-1 py-2">
         {sortedTasks.map(task => (
           <TaskItem key={task.id} task={task} />
         ))}

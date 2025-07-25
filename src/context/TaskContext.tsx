@@ -51,11 +51,24 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   // Update local state when Firebase data changes
   useEffect(() => {
     setTaskLists(taskListsFromFirebase);
-    // Set first list as current if none selected and lists exist
+  }, [taskListsFromFirebase]);
+
+  // Set first list as current if none selected and lists exist
+  useEffect(() => {
     if (taskListsFromFirebase.length > 0 && !currentTaskList) {
       setCurrentTaskList(taskListsFromFirebase[0]);
     }
   }, [taskListsFromFirebase, currentTaskList]);
+
+  // Update current task list when task lists change (to reflect real-time updates)
+  useEffect(() => {
+    if (currentTaskList && taskLists.length > 0) {
+      const updatedList = taskLists.find(list => list.id === currentTaskList.id);
+      if (updatedList && JSON.stringify(updatedList.tasks) !== JSON.stringify(currentTaskList.tasks)) {
+        setCurrentTaskList(updatedList);
+      }
+    }
+  }, [taskLists, currentTaskList]);
 
   useEffect(() => {
     setLabels(labelsFromFirebase);
@@ -64,6 +77,19 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     setPendingShares(pendingSharesFromFirebase);
   }, [pendingSharesFromFirebase]);
+
+  // Update clickedTask when taskLists change (to reflect real-time updates)
+  useEffect(() => {
+    if (clickedTask && currentTaskList) {
+      const updatedList = taskLists.find(list => list.id === currentTaskList.id);
+      if (updatedList) {
+        const updatedTask = updatedList.tasks.find(task => task.id === clickedTask.id);
+        if (updatedTask && JSON.stringify(updatedTask) !== JSON.stringify(clickedTask)) {
+          setClickedTask(updatedTask);
+        }
+      }
+    }
+  }, [taskLists, clickedTask, currentTaskList]);
 
   // Task List Functions
   const createTaskList = async (name: string): Promise<void> => {

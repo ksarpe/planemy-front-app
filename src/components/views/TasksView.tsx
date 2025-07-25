@@ -61,7 +61,6 @@ export default function TasksView() {
           currentTaskList={currentTaskList}
           onTaskListChange={setCurrentTaskList}
           onNewListClick={() => setIsListModalOpen(true)}
-          onAddTaskClick={() => setIsTaskModalOpen(true)}
           onShareListClick={handleShareList}
           loading={loading}
         />
@@ -96,7 +95,12 @@ export default function TasksView() {
             />
 
             {/* Tasks List */}
-            <TaskList tasks={tasks} filter={filter} />
+            <TaskList 
+              tasks={tasks} 
+              filter={filter} 
+              onAddTaskClick={() => setIsTaskModalOpen(true)}
+              loading={loading}
+            />
 
             {/* Progress indicator */}
             <TaskProgressIndicator tasks={tasks} />
