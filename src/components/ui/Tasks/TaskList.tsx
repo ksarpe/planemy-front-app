@@ -53,7 +53,7 @@ export default function TaskList({ tasks, filter, onAddTaskClick, loading = fals
 
   if (filteredTasks.length === 0) {
     return (
-      <div className="text-center py-8">
+      <div className="text-center py-8 flex flex-col items-center">
         <CheckCircle2 size={48} className="mx-auto text-gray-400 mb-4" />
         <h3 className="text-lg font-medium text-gray-600 mb-2">Brak zadań</h3>
         <p className="text-gray-500">
@@ -62,6 +62,16 @@ export default function TaskList({ tasks, filter, onAddTaskClick, loading = fals
             : `Brak zadań w kategorii "${filter}".`
           }
         </p>
+        <div className="mb-2 w-fit">
+        <button
+          onClick={onAddTaskClick}
+          className="w-full flex items-center justify-center gap-2 mt-2  border-l-4 border-green-700 bg-green-600 text-white px-2 py-1 rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer"
+          disabled={loading}
+        >
+          <Plus size={18} />
+          <span className="text-sm">Dodaj nowe zadanie</span>
+        </button>
+      </div>
       </div>
     );
   }

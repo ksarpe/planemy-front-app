@@ -49,10 +49,19 @@ export default function ShareTaskListModal({
   };
 
   const handleShare = async () => {
+    console.log("ShareTaskListModal handleShare called:", { 
+      selectedUser, 
+      taskListId, 
+      permission,
+      selectedUserEmail: selectedUser?.email 
+    });
+    
     if (!selectedUser) return;
     
     try {
+      console.log("Calling shareTaskList from context");
       await shareTaskList(taskListId, selectedUser.email, permission);
+      console.log("shareTaskList completed successfully");
       setShareSuccess(true);
       
       // Reset form after success

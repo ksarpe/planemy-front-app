@@ -110,7 +110,6 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
         emoji: emoji || "📝",
         items: [],
         isShared: false,
-        sharedWith: [],
         userId: user.uid,
         type: "personal",
         color: color || "#3B82F6",

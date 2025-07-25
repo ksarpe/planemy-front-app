@@ -17,13 +17,13 @@ import {
   createLabel as createLabelFirebase,
   updateLabel as updateLabelFirebase,
   deleteLabel as deleteLabelFirebase,
-  shareTaskListWithUser,
-  removeUserFromSharedList,
-  acceptSharedTaskList,
-  rejectSharedTaskList,
-  updateUserPermission,
   searchUsersByEmail
 } from "@/firebase/tasks";
+import {
+  shareTaskListWithUser,
+  acceptTaskListInvitation,
+  rejectTaskListInvitation
+} from "@/firebase/taskNotifications";
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 
@@ -75,6 +75,8 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   }, [labelsFromFirebase]);
 
   useEffect(() => {
+    console.log("TaskContext - pendingSharesFromFirebase updated:", pendingSharesFromFirebase);
+    console.log("TaskContext - pendingSharesFromFirebase length:", pendingSharesFromFirebase.length);
     setPendingShares(pendingSharesFromFirebase);
   }, [pendingSharesFromFirebase]);
 
@@ -141,6 +143,8 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const shareTaskList = async (listId: string, userEmail: string, permission: SharePermission): Promise<void> => {
+    console.log("TaskContext shareTaskList called:", { listId, userEmail, permission, userId: user?.uid });
+    
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby udostępnić listę");
       return;
@@ -148,7 +152,9 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       setLoading(true);
+      console.log("Calling shareTaskListWithUser from tasks.ts");
       await shareTaskListWithUser(listId, userEmail, permission, user.uid);
+      console.log("shareTaskListWithUser completed successfully");
       showToast("success", "Lista została udostępniona!");
     } catch (error) {
       console.error("Error sharing task list:", error);
@@ -158,11 +164,14 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const unshareTaskList = async (listId: string, userId: string): Promise<void> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const unshareTaskList = async (_listId: string, _userId: string): Promise<void> => {
     try {
       setLoading(true);
-      await removeUserFromSharedList(listId, userId);
-      showToast("success", "Udostępnianie zostało cofnięte!");
+      // We need to find the permission ID for this user and list
+      // This should be implemented to get the permission ID first
+      // For now, this function needs to be refactored to work with the new system
+      showToast("error", "Funkcja cofania udostępniania wymaga refaktoryzacji");
     } catch (error) {
       console.error("Error unsharing task list:", error);
       showToast("error", "Błąd podczas cofania udostępniania");
@@ -174,7 +183,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const acceptSharedList = async (shareId: string): Promise<void> => {
     try {
       setLoading(true);
-      await acceptSharedTaskList(shareId);
+      await acceptTaskListInvitation(shareId);
       showToast("success", "Lista została zaakceptowana!");
     } catch (error) {
       console.error("Error accepting shared list:", error);
@@ -187,7 +196,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const rejectSharedList = async (shareId: string): Promise<void> => {
     try {
       setLoading(true);
-      await rejectSharedTaskList(shareId);
+      await rejectTaskListInvitation(shareId);
       showToast("success", "Lista została odrzucona!");
     } catch (error) {
       console.error("Error rejecting shared list:", error);
@@ -197,11 +206,14 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateSharePermission = async (listId: string, userId: string, permission: SharePermission): Promise<void> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const updateSharePermission = async (_listId: string, _userId: string, _permission: SharePermission): Promise<void> => {
     try {
       setLoading(true);
-      await updateUserPermission(listId, userId, permission);
-      showToast("success", "Uprawnienia zostały zaktualizowane!");
+      // We need to find the permission ID for this user and list first
+      // This should be implemented to get the permission ID first  
+      // For now, this function needs to be refactored to work with the new system
+      showToast("error", "Funkcja aktualizacji uprawnień wymaga refaktoryzacji");
     } catch (error) {
       console.error("Error updating permissions:", error);
       showToast("error", "Błąd podczas aktualizacji uprawnień");
@@ -221,10 +233,15 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getSharedLists = (): TaskListInterface[] => {
-    return taskLists.filter(list => list.isShared);
+    // With the new permission system, we need to determine which lists are shared
+    // This should be implemented to check permissions or maybe we need to add
+    // a flag to indicate shared lists. For now, return empty array.
+    return [];
   };
 
   const getPendingShares = (): SharedTaskList[] => {
+    console.log("TaskContext getPendingShares called, returning:", pendingShares);
+    console.log("TaskContext getPendingShares length:", pendingShares.length);
     return pendingShares;
   };
 

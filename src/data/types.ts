@@ -70,7 +70,6 @@ export interface EventInterface {
   // Privacy and permissions
   isPrivate: boolean;
   visibility: "public" | "private" | "shared";
-  sharedWith?: string[];
   
   // Metadata
   userId: string;
@@ -113,15 +112,38 @@ export interface UserProfile {
 // Sharing permission levels
 export type SharePermission = "view" | "edit" | "admin";
 
-// Shared task list entry
+// NEW: Task list permission entry for separate collection
+export interface TaskListPermission {
+  id?: string; // Firestore document ID
+  list_id: string; // ID of the task list
+  user_id: string; // ID of the user with permission
+  role: SharePermission; // Permission level
+  granted_by: string; // ID of user who granted permission
+  granted_at: string; // ISO string timestamp
+  accepted_at?: string; // When user accepted invitation
+  status: "pending" | "accepted" | "rejected"; // Invitation status
+}
+
+// Legacy: Shared task list entry (for backwards compatibility)
 export interface SharedTaskList {
   id?: string; // For invitation documents
   listId: string;
   sharedBy: string; // user ID who shared
-  sharedWith: string; // user ID who received
   permission: SharePermission;
   sharedAt: string;
   acceptedAt?: string;
+}
+
+// Simple notification for task list sharing
+export interface TaskListNotification {
+  id?: string; // Firestore document ID
+  listId: string; // ID of the task list
+  listName: string; // Name of the task list for display
+  sharedBy: string; // ID of user who shared
+  sharedWith: string; // ID of user receiving notification
+  permission: SharePermission; // Permission level
+  sharedAt: string; // ISO string timestamp
+  status: "pending" | "accepted" | "rejected"; // Notification status
 }
 
 // Label interface for categorizing and organizing tasks
@@ -151,11 +173,10 @@ export interface TaskListInterface {
   name: string;
   tasks: TaskInterface[]; // Array of tasks
   labels?: LabelInterface[]; // Optional array of labels for the list
-  sharedWith: SharedTaskList[]; // Array of sharing entries
   userId: string; // Owner of the list
-  isShared?: boolean; // True if this is a shared list
-  originalOwner?: string; // For shared lists, ID of original owner
-  permission?: SharePermission; // User's permission level for this list
+  userIds?: string[]; // Array of user IDs who have access to this list
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Legacy interface for backwards compatibility (if needed)
@@ -185,7 +206,6 @@ export interface ShoppingListInterface {
   emoji?: string;
   items: ShoppingItemInterface[];
   isShared: boolean;
-  sharedWith: string[];
   createdAt: Date;
   updatedAt: Date;
   userId: string;
