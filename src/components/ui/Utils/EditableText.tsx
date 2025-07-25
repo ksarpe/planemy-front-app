@@ -50,13 +50,18 @@ export default function EditableText({ value, onSave, className, placeholder }: 
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
       placeholder={placeholder}
-      className="focus:outline-none border-b focus:border-b-amber-600 px-1 focus:border-transparent focus:border-1 p-1"
+      className="w-full px-3 py-2 bg-white border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
     />
   ) : (
-    <span
+    <div
       onClick={() => setIsEditing(true)}
-      className={`cursor-pointer ${className} px-1 border border-transparent border-b-gray-300 hover:border-gray-400 focus:border-primary text-base`}>
-      {tempValue || placeholder || "Click to edit"}
-    </span>
+      className={`w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-100 hover:border-gray-300 transition-colors min-h-[42px] flex items-center ${className}`}
+    >
+      <span className="text-base">
+        {tempValue || (
+          <span className="text-gray-400 italic">{placeholder || "Kliknij, aby edytować"}</span>
+        )}
+      </span>
+    </div>
   );
 }

@@ -21,6 +21,10 @@ export default function TasksView() {
     clickedTask, 
     addTask,
     createTaskList,
+    renameTaskList,
+    deleteTaskList,
+    clearCompletedTasks,
+    uncheckAllTasks,
     loading
   } = useTaskContext();
   
@@ -62,6 +66,10 @@ export default function TasksView() {
           onTaskListChange={setCurrentTaskList}
           onNewListClick={() => setIsListModalOpen(true)}
           onShareListClick={handleShareList}
+          onRenameList={renameTaskList}
+          onDeleteList={deleteTaskList}
+          onClearCompletedTasks={clearCompletedTasks}
+          onUncheckAllTasks={uncheckAllTasks}
           loading={loading}
         />
 

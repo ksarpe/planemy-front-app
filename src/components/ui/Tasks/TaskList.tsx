@@ -69,7 +69,7 @@ export default function TaskList({ tasks, filter, onAddTaskClick, loading = fals
   return (
     <div className="flex-1 min-h-0">
       {/* Add Task Button */}
-      <div className="mb-2 px-1 w-fit">
+      <div className="mb-2 w-fit">
         <button
           onClick={onAddTaskClick}
           className="w-full flex items-center justify-center gap-2  border-l-4 border-green-700 bg-green-600 text-white px-2 py-1 rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer"
@@ -80,7 +80,7 @@ export default function TaskList({ tasks, filter, onAddTaskClick, loading = fals
         </button>
       </div>
       
-      <ul className="space-y-3 overflow-auto px-1 py-2">
+      <ul className="space-y-3 overflow-auto py-2">
         {sortedTasks.map(task => (
           <TaskItem key={task.id} task={task} />
         ))}

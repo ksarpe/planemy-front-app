@@ -3,9 +3,7 @@ import { useTaskContext } from "@/hooks/useTaskContext";
 import { 
   X, 
   Calendar, 
-  Clock, 
   CheckCircle2, 
-  AlertTriangle, 
   Trash2,
   CalendarPlus,
   Edit3,
@@ -99,26 +97,6 @@ export default function TaskDetails() {
 
       {/* Task Content */}
       <div className="flex-1 space-y-6">
-        {/* Status Badge */}
-        <div className="flex items-center gap-2">
-          {clickedTask.isCompleted ? (
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-              <CheckCircle2 size={16} />
-              Ukończone
-            </div>
-          ) : isOverdue() ? (
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">
-              <AlertTriangle size={16} />
-              Przeterminowane
-            </div>
-          ) : (
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-              <Clock size={16} />
-              W toku
-            </div>
-          )}
-        </div>
-
         {/* Title */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -179,30 +157,7 @@ export default function TaskDetails() {
           }`}>
             {formatDueDate()}
           </p>
-        </div>
-
-        {/* Task Info */}
-        <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Status:</span>
-            <span className={`font-medium ${
-              clickedTask.isCompleted ? "text-green-600" : "text-blue-600"
-            }`}>
-              {clickedTask.isCompleted ? "Ukończone" : "W toku"}
-            </span>
-          </div>
-          
-          {clickedTask.dueDate && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Dni do wykonania:</span>
-              <span className={`font-medium ${
-                isOverdue() && !clickedTask.isCompleted ? "text-red-600" : "text-gray-800"
-              }`}>
-                {getDaysUntilDue() !== null ? getDaysUntilDue() : "Brak terminu"}
-              </span>
-            </div>
-          )}
-        </div>
+        </div>          
       </div>
 
       {/* Actions */}

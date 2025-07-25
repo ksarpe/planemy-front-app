@@ -390,6 +390,61 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // List management functions
+  const renameTaskList = async (listId: string, newName: string): Promise<void> => {
+    try {
+      await updateTaskList(listId, { name: newName });
+      showToast("success", "Nazwa listy została zmieniona!");
+    } catch (error) {
+      console.error("Error renaming task list:", error);
+      showToast("error", "Błąd podczas zmiany nazwy listy");
+    }
+  };
+
+  const clearCompletedTasks = async (listId: string): Promise<void> => {
+    try {
+      setLoading(true);
+      const list = taskLists.find(l => l.id === listId);
+      if (!list) return;
+
+      const completedTasks = list.tasks.filter(task => task.isCompleted);
+      
+      // Remove all completed tasks
+      for (const task of completedTasks) {
+        await removeTask(listId, task.id);
+      }
+      
+      showToast("success", `Usunięto ${completedTasks.length} ukończonych zadań!`);
+    } catch (error) {
+      console.error("Error clearing completed tasks:", error);
+      showToast("error", "Błąd podczas usuwania ukończonych zadań");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const uncheckAllTasks = async (listId: string): Promise<void> => {
+    try {
+      setLoading(true);
+      const list = taskLists.find(l => l.id === listId);
+      if (!list) return;
+
+      const completedTasks = list.tasks.filter(task => task.isCompleted);
+      
+      // Uncheck all completed tasks
+      for (const task of completedTasks) {
+        await toggleTaskComplete(listId, task.id);
+      }
+      
+      showToast("success", `Odznaczono ${completedTasks.length} zadań!`);
+    } catch (error) {
+      console.error("Error unchecking tasks:", error);
+      showToast("error", "Błąd podczas odznaczania zadań");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Legacy support
   const convertToEvent = () => {
     if (!clickedTask) return;
@@ -406,6 +461,9 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         createTaskList,
         updateTaskList,
         deleteTaskList,
+        renameTaskList,
+        clearCompletedTasks,
+        uncheckAllTasks,
         
         // Sharing functionality
         shareTaskList,

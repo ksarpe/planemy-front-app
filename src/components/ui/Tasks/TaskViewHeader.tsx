@@ -1,5 +1,7 @@
-import { List, FolderPlus, Share2 } from "lucide-react";
+import { FolderPlus, Share2 } from "lucide-react";
 import { TaskListInterface } from "@/data/types";
+import TaskListDropdown from "./TaskListDropdown";
+import TaskListActions from "./TaskListActions";
 
 interface TaskViewHeaderProps {
   taskLists: TaskListInterface[];
@@ -7,6 +9,10 @@ interface TaskViewHeaderProps {
   onTaskListChange: (list: TaskListInterface | null) => void;
   onNewListClick: () => void;
   onShareListClick: (listId: string) => void;
+  onRenameList: (listId: string, newName: string) => void;
+  onDeleteList: (listId: string) => void;
+  onClearCompletedTasks: (listId: string) => void;
+  onUncheckAllTasks: (listId: string) => void;
   loading: boolean;
 }
 
@@ -16,37 +22,42 @@ export default function TaskViewHeader({
   onTaskListChange,
   onNewListClick,
   onShareListClick,
+  onRenameList,
+  onDeleteList,
+  onClearCompletedTasks,
+  onUncheckAllTasks,
   loading
 }: TaskViewHeaderProps) {
   return (
-    <div className="flex justify-between items-start">
-      <div className="flex-1">
-        <div className="flex items-center gap-4 mb-4">
-          
-          {/* Task List Selector */}
-          {taskLists.length > 0 && (
-            <div className="flex items-center gap-2">
-              <select
-                value={currentTaskList?.id || ""}
-                onChange={(e) => {
-                  const list = taskLists.find(l => l.id === e.target.value);
-                  onTaskListChange(list || null);
-                }}
-                className="px-3 py-1 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {taskLists.map(list => (
-                  <option key={list.id} value={list.id}>
-                    {list.name} ({list.tasks.length})
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </div>
+    <div className="flex justify-between items-center">
+      {/* Task List Dropdown and Actions */}
+      <div className="flex items-center gap-3">
+        {taskLists.length > 0 && (
+          <TaskListDropdown
+            taskLists={taskLists}
+            currentTaskList={currentTaskList}
+            onTaskListChange={onTaskListChange}
+          />
+        )}
+        
+        {/* Task List Actions */}
+        {currentTaskList && (
+          <TaskListActions
+            currentTaskList={currentTaskList}
+            onRenameList={onRenameList}
+            onDeleteList={onDeleteList}
+            onClearCompletedTasks={onClearCompletedTasks}
+            onUncheckAllTasks={onUncheckAllTasks}
+            loading={loading}
+          />
+        )}
       </div>
 
       {/* Action Buttons */}
       <div className="flex gap-2">
+        
+
+        {/* New List Button */}
         <button
           onClick={onNewListClick}
           className="flex items-center gap-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
@@ -56,6 +67,7 @@ export default function TaskViewHeader({
           Nowa lista
         </button>
         
+        {/* Share Button */}
         {currentTaskList && (
           <button
             onClick={() => onShareListClick(currentTaskList.id)}

@@ -60,6 +60,9 @@ export interface TaskContextProps {
   createTaskList: (name: string) => Promise<void>;
   updateTaskList: (listId: string, updates: Partial<TaskListInterface>) => Promise<void>;
   deleteTaskList: (listId: string) => Promise<void>;
+  renameTaskList: (listId: string, newName: string) => Promise<void>;
+  clearCompletedTasks: (listId: string) => Promise<void>;
+  uncheckAllTasks: (listId: string) => Promise<void>;
   
   // Sharing functionality
   shareTaskList: (listId: string, userEmail: string, permission: SharePermission) => Promise<void>;
