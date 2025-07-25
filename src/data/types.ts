@@ -99,18 +99,39 @@ export interface AdditionalDataInterface {
   isOvulation: boolean;
 }
 
+// NEW TASK SYSTEM - Updated according to system design
+
+// Label interface for categorizing and organizing tasks
+export interface LabelInterface {
+  id: string;
+  name: string;
+  color: string; // hex color or predefined color class
+  description?: string;
+  userId: string;
+}
+
+// Updated Task interface according to system design
 export interface TaskInterface {
   id: string;
   title: string;
-  description: string;
-  dueDate: string;
-  completed: boolean;
-  priority?: 'low' | 'medium' | 'high';
+  description?: string; // Optional textarea
+  dueDate?: string; // Optional datetime
+  isCompleted: boolean;
+  labels?: LabelInterface[]; // Optional array of labels
   userId: string;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
+// NEW TaskList interface according to system design
+export interface TaskListInterface {
+  id: string;
+  name: string;
+  tasks: TaskInterface[]; // Array of tasks
+  labels?: LabelInterface[]; // Optional array of labels for the list
+  sharedWith: string[]; // Array of user IDs
+  userId: string; // Owner of the list
+}
+
+// Legacy interface for backwards compatibility (if needed)
 export interface QuickTaskInterface {
   id: number;
   title: string;

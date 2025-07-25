@@ -7,6 +7,8 @@ import type {
   ShoppingCategoryInterface,
   ShoppingItemInterface,
   TaskInterface,
+  TaskListInterface,
+  LabelInterface,
 } from "./types";
 
 export interface ToastContextProps {
@@ -48,14 +50,41 @@ export interface CalendarContextProps {
 }
 
 export interface TaskContextProps {
-  tasks: TaskInterface[];
+  // Task Lists
+  taskLists: TaskListInterface[];
+  currentTaskList: TaskListInterface | null;
+  setCurrentTaskList: (taskList: TaskListInterface | null) => void;
+  createTaskList: (name: string) => Promise<void>;
+  updateTaskList: (listId: string, updates: Partial<TaskListInterface>) => Promise<void>;
+  deleteTaskList: (listId: string) => Promise<void>;
+  shareTaskList: (listId: string, userIds: string[]) => Promise<void>;
+  
+  // Tasks within lists
+  addTask: (listId: string, title: string, description?: string, dueDate?: string, labels?: LabelInterface[]) => Promise<void>;
+  updateTask: (listId: string, taskId: string, updates: Partial<TaskInterface>) => Promise<void>;
+  removeTask: (listId: string, taskId: string) => Promise<void>;
+  toggleTaskComplete: (listId: string, taskId: string) => Promise<void>;
+  moveTask: (taskId: string, fromListId: string, toListId: string) => Promise<void>;
+  
+  // Labels
+  labels: LabelInterface[];
+  createLabel: (name: string, color: string, description?: string) => Promise<void>;
+  updateLabel: (labelId: string, updates: Partial<LabelInterface>) => Promise<void>;
+  deleteLabel: (labelId: string) => Promise<void>;
+  addLabelToTask: (listId: string, taskId: string, label: LabelInterface) => Promise<void>;
+  removeLabelFromTask: (listId: string, taskId: string, labelId: string) => Promise<void>;
+  
+  // UI State
+  loading: boolean;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  selectedLabels: LabelInterface[];
+  setSelectedLabels: (labels: LabelInterface[]) => void;
+  
+  // Legacy support (for backwards compatibility)
   clickedTask: TaskInterface | null;
   setClickedTask: (task: TaskInterface | null) => void;
-  addTask: (title: string, description?: string, dueDate?: string, priority?: 'low' | 'medium' | 'high') => Promise<void>;
-  markTaskAsDoneOrUndone: (id: string) => Promise<void>;
   convertToEvent: () => void;
-  updateTask: (title?: string, description?: string) => Promise<void>;
-  removeTask: () => Promise<void>;
 }
 
 export interface ShoppingContextProps {

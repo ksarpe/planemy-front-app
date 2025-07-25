@@ -1,17 +1,16 @@
 import { useState } from "react";
-import { X, Calendar, FileText, Tag, Clock } from "lucide-react";
+import { X, Calendar, FileText, Clock } from "lucide-react";
 
 interface AddTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (title: string, description?: string, dueDate?: string, priority?: 'low' | 'medium' | 'high') => Promise<void>;
+  onSubmit: (title: string, description?: string, dueDate?: string) => Promise<void>;
 }
 
 export const AddTaskModal = ({ isOpen, onClose, onSubmit }: AddTaskModalProps) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    priority: "medium" as 'low' | 'medium' | 'high',
   });
 
   const [selectedDate, setSelectedDate] = useState(() => {
@@ -33,15 +32,13 @@ export const AddTaskModal = ({ isOpen, onClose, onSubmit }: AddTaskModalProps) =
       await onSubmit(
         formData.title.trim(),
         formData.description.trim() || undefined,
-        selectedDate,
-        formData.priority
+        selectedDate
       );
       
       // Reset form
       setFormData({
         title: "",
         description: "",
-        priority: "medium",
       });
       setSelectedDate(new Date().toISOString().split('T')[0]);
       onClose();
@@ -49,22 +46,6 @@ export const AddTaskModal = ({ isOpen, onClose, onSubmit }: AddTaskModalProps) =
       console.error("Error submitting task:", error);
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const getPriorityColor = (priority: 'low' | 'medium' | 'high') => {
-    switch (priority) {
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'high': return 'bg-red-100 text-red-800 border-red-200';
-    }
-  };
-
-  const getPriorityIcon = (priority: 'low' | 'medium' | 'high') => {
-    switch (priority) {
-      case 'low': return '🟢';
-      case 'medium': return '🟡';
-      case 'high': return '🔴';
     }
   };
 
@@ -127,35 +108,6 @@ export const AddTaskModal = ({ isOpen, onClose, onSubmit }: AddTaskModalProps) =
               onChange={(e) => setSelectedDate(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div>
-
-          {/* Priority */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Tag size={16} className="inline mr-1" />
-              Priorytet
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { value: 'low', label: 'Niski' },
-                { value: 'medium', label: 'Średni' },
-                { value: 'high', label: 'Wysoki' },
-              ].map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, priority: option.value as 'low' | 'medium' | 'high' }))}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all border-2 flex items-center justify-center gap-1 ${
-                    formData.priority === option.value
-                      ? getPriorityColor(option.value as 'low' | 'medium' | 'high')
-                      : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
-                  }`}
-                >
-                  <span>{getPriorityIcon(option.value as 'low' | 'medium' | 'high')}</span>
-                  {option.label}
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Quick Date Buttons */}
