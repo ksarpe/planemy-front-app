@@ -1,7 +1,7 @@
-import type { CalendarClickContent, EventInterface } from "@/data/types";
-import type { CalendarContextProps } from "@/data/typesProps";
-import { useEvents } from "@/firebase/events";
-import { getDateKey } from "@/utils/helpers";
+import type { CalendarClickContent, EventInterface } from "../data/types";
+import type { CalendarContextProps } from "../data/typesProps";
+import { useEvents, addEvent as firebaseAddEvent, updateEvent as firebaseUpdateEvent } from "../firebase/events";
+import { getDateKey } from "../utils/helpers";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const CalendarContext = createContext<CalendarContextProps>({
@@ -15,8 +15,8 @@ const CalendarContext = createContext<CalendarContextProps>({
   setIsInitialized: () => {},
   setCurrentDate: () => {},
   events: [],
-  setEventList: () => {},
-  updateEvent: () => {},
+  updateEvent: async () => {},
+  addEvent: async () => {},
   hourlyEvents: {},
   dailyEvents: {},
   calendarClickContent: null,
@@ -34,8 +34,7 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
   const [isInitialized, setIsInitialized] = useState(false);
 
   const events = useEvents();
-  const [eventList, setEventList] = useState<EventInterface[]>(events); // <- nowa lokalna kontrola
-
+  
   const setModalPosition = (position: { top: number; left: number } | null) => {
     if (!position) {
       setActualModalPosition(null);
@@ -54,24 +53,32 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
     }
     setActualModalPosition(position);
   };
-
+  
   useEffect(() => {
-    if (Array.isArray(events) && events.length > 0 && !isInitialized) {
+    console.log("CalendarContext - events updated:", events.length, events);
+    if (Array.isArray(events) && events.length >= 0) {
       setIsInitialized(true);
-      setEventList(events);
     }
-  }, [events, isInitialized]);
+  }, [events]);
 
-  const updateEvent = (updatedEvent: EventInterface) => {
-    setEventList((prevEvents) => {
-      const index = prevEvents.findIndex((event) => event.id === updatedEvent.id);
-      if (index !== -1) {
-        const newEvents = [...prevEvents];
-        newEvents[index] = updatedEvent;
-        return newEvents;
-      }
-      return prevEvents; // If not found, return the original list
-    });
+  const updateEvent = async (updatedEvent: EventInterface) => {
+    try {
+      await firebaseUpdateEvent(updatedEvent.id, updatedEvent);
+      // Firebase will trigger a real-time update through useEvents hook
+    } catch (error) {
+      console.error("Failed to update event:", error);
+    }
+  };
+
+  const addEvent = async (eventData: Omit<EventInterface, "id" | "createdAt" | "updatedAt">) => {
+    try {
+      const eventId = await firebaseAddEvent(eventData);
+      console.log("Event added with ID:", eventId);
+      // Firebase will trigger a real-time update through useEvents hook
+    } catch (error) {
+      console.error("Failed to add event:", error);
+      throw error;
+    }
   };
 
   const { hourlyEvents, dailyEvents } = useMemo(() => {
@@ -80,7 +87,7 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
 
     const stripTime = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-    eventList.forEach((event) => {
+    events.forEach((event: EventInterface) => {
       const start = new Date(event.start);
       const end = new Date(event.end);
       const startKey = getDateKey(start);
@@ -108,7 +115,7 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
     });
 
     return { hourlyEvents: hourly, dailyEvents: daily };
-  }, [eventList]);
+  }, [events]);
 
   const loadNext = () => {
     if (view === "month") {
@@ -147,9 +154,9 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
         setView,
         isInitialized,
         setIsInitialized,
-        events: eventList,
-        setEventList,
+        events: events,
         updateEvent,
+        addEvent,
         hourlyEvents,
         dailyEvents,
         calendarClickContent,

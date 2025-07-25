@@ -22,17 +22,70 @@ export interface InventoryItem {
   icon: string;
 }
 
-export type EventColor = "bg-red-500" | "bg-blue-400" | "bg-yellow-500" | "bg-green-500";
-export type EventCategory = "Important" | "Meeting" | "Holiday" | "Other" | "Test";
+export type EventColor = "bg-red-500" | "bg-blue-400" | "bg-yellow-500" | "bg-green-500" | "bg-purple-500" | "bg-pink-500" | "bg-indigo-500" | "bg-orange-500";
+export type EventCategory = "Important" | "Meeting" | "Holiday" | "Health" | "Personal" | "Work" | "Travel" | "Fitness" | "Social" | "Finance" | "Other";
+
+// Enum for recurring patterns
+export type RecurrencePattern = "daily" | "weekly" | "biweekly" | "monthly" | "quarterly" | "yearly" | "custom";
+
+// Enum for display types
+export type EventDisplayType = "standard" | "icon";
+
+// Recurrence rules interface
+export interface RecurrenceRule {
+  pattern: RecurrencePattern;
+  interval: number; // every X days/weeks/months
+  endDate?: string;
+  count?: number; // number of occurrences
+  daysOfWeek?: number[]; // 0=Sunday, 1=Monday, etc.
+  monthlyType?: "date" | "day"; // repeat on date (15th) or day (3rd Monday)
+  exceptions?: string[]; // dates to skip
+}
+
+// Enhanced event interface
 export interface EventInterface {
-  id: number;
+  id: string; // Changed to string for Firebase compatibility
   title: string;
+  description?: string;
   category: EventCategory;
   start: string;
   end: string;
   allDay: boolean;
-  classNames: string;
+  
+  // Styling and display
   color: string;
+  displayType: EventDisplayType;
+  icon?: string; // lucide icon name or emoji
+  iconColor?: string;
+  
+  // Recurrence
+  isRecurring: boolean;
+  recurrence?: RecurrenceRule;
+  originalEventId?: string; // for recurring event instances
+  
+  // Location and attendees
+  location?: string;
+  attendees?: string[];
+  
+  // Privacy and permissions
+  isPrivate: boolean;
+  visibility: "public" | "private" | "shared";
+  sharedWith?: string[];
+  
+  // Metadata
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+  
+  // Health tracking specific (for period tracking, etc.)
+  healthData?: {
+    type: "period" | "ovulation" | "medication" | "symptom" | "mood" | "weight" | "other";
+    notes?: string;
+    symptoms?: string[];
+  };
+  
+  // Legacy fields for backwards compatibility
+  classNames?: string;
   colSpan?: number;
 }
 export interface CalendarClickContent {

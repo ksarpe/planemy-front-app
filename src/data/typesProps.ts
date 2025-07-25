@@ -35,8 +35,8 @@ export interface CalendarContextProps {
   events: EventInterface[];
   hourlyEvents: Record<string, EventInterface[]>;
   dailyEvents: Record<string, EventInterface[]>;
-  setEventList: (events: EventInterface[]) => void;
-  updateEvent: (event: EventInterface) => void;
+  updateEvent: (event: EventInterface) => Promise<void>;
+  addEvent: (event: Omit<EventInterface, "id" | "createdAt" | "updatedAt">) => Promise<void>;
   //CALENDAR
   calendarClickContent: CalendarClickContent | null;
   setCalendarClickContent: (content: CalendarClickContent | null) => void;
