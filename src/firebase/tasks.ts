@@ -4,7 +4,7 @@ import { collection, onSnapshot, doc, deleteDoc, addDoc, query, where, updateDoc
 import { useAuth } from "../context/AuthContext";
 import { TaskInterface, TaskListInterface, LabelInterface, UserProfile, SharedTaskList, SharePermission, TaskListNotification } from "../data/types";
 
-// Hook to get user's task lists (own + shared)
+// Hook to get user's task lists (own + shared via permissions)
 export const useUserTaskLists = (): TaskListInterface[] => {
     const [taskLists, setTaskLists] = useState<TaskListInterface[]>([]);
     const { user } = useAuth();
@@ -16,38 +16,59 @@ export const useUserTaskLists = (): TaskListInterface[] => {
         }
 
         const taskListsCollection = collection(db, "taskLists");
+        const permissionsCollection = collection(db, "task_permissions");
         
-        // Query for lists where user is owner OR user is in sharedWith array
-        const ownListsQuery = query(taskListsCollection, where("userId", "==", user.uid));
-        const sharedListsQuery = query(taskListsCollection, where("sharedWith", "array-contains", user.uid));
+        // First, get all accepted permissions for this user
+        const permissionsQuery = query(
+            permissionsCollection, 
+            where("user_id", "==", user.uid),
+            where("status", "==", "accepted")
+        );
         
-        let ownLists: TaskListInterface[] = [];
-        let sharedLists: TaskListInterface[] = [];
-        
-        // Listen to own lists
-        const unsubscribeOwn = onSnapshot(ownListsQuery, (snapshot) => {
-            ownLists = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            })) as TaskListInterface[];
+        const unsubscribePermissions = onSnapshot(permissionsQuery, async (permissionsSnapshot) => {
+            const permissions = permissionsSnapshot.docs.map(doc => doc.data());
+            const listIds = permissions.map(p => p.list_id);
             
-            setTaskLists([...ownLists, ...sharedLists]);
-        });
-        
-        // Listen to shared lists
-        const unsubscribeShared = onSnapshot(sharedListsQuery, (snapshot) => {
-            sharedLists = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            })) as TaskListInterface[];
+            // Also get lists where user is owner
+            const ownListsQuery = query(taskListsCollection, where("userId", "==", user.uid));
             
-            setTaskLists([...ownLists, ...sharedLists]);
+            const unsubscribeOwn = onSnapshot(ownListsQuery, async (ownListsSnapshot) => {
+                const ownLists = ownListsSnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                })) as TaskListInterface[];
+                
+                // Get shared lists by IDs from permissions
+                let sharedLists: TaskListInterface[] = [];
+                if (listIds.length > 0) {
+                    const sharedListsPromises = listIds.map(async (listId) => {
+                        const listDoc = await getDoc(doc(taskListsCollection, listId));
+                        if (listDoc.exists()) {
+                            return {
+                                id: listDoc.id,
+                                ...listDoc.data(),
+                            } as TaskListInterface;
+                        }
+                        return null;
+                    });
+                    
+                    const resolvedSharedLists = await Promise.all(sharedListsPromises);
+                    sharedLists = resolvedSharedLists.filter(list => list !== null) as TaskListInterface[];
+                }
+                
+                // Combine own and shared lists, remove duplicates
+                const allLists = [...ownLists, ...sharedLists];
+                const uniqueLists = allLists.filter((list, index, self) => 
+                    index === self.findIndex(l => l.id === list.id)
+                );
+                
+                setTaskLists(uniqueLists);
+            });
+            
+            return unsubscribeOwn;
         });
 
-        return () => {
-            unsubscribeOwn();
-            unsubscribeShared();
-        };
+        return unsubscribePermissions;
     }, [user]);
 
     return taskLists;

@@ -176,7 +176,6 @@ export interface TaskListInterface {
   name: string;
   labels?: LabelInterface[]; // Optional array of labels for the list
   userId: string; // Owner of the list
-  sharedWith?: string[]; // Array of user IDs who have access to this list
   createdAt?: string;
   updatedAt?: string;
 }

@@ -9,9 +9,7 @@ import {
   deleteDoc, 
   onSnapshot,
   orderBy,
-  getDoc,
-  arrayUnion,
-  arrayRemove 
+  getDoc
 } from "firebase/firestore";
 import { db } from "./config";
 import { TaskListNotification, SharePermission } from "../data/types";
@@ -62,47 +60,37 @@ export const shareTaskListWithUser = async (
     const targetUser = users[0];
     console.log("Target user found:", targetUser);
     
-    // Get task list name for notification
+    // Get task list to verify it exists
     const taskListDoc = await getDoc(doc(db, "taskLists", listId));
     if (!taskListDoc.exists()) {
       throw new Error("Task list not found");
     }
     
-    const taskListData = taskListDoc.data();
-    const listName = taskListData.name || "Lista zadań";
-    
-    // Check if user already has access
-    const currentSharedWith = taskListData.sharedWith || [];
-    if (currentSharedWith.includes(targetUser.id)) {
-      throw new Error("User already has access to this list");
-    }
-    
-    // Check if notification already exists
-    const notificationsCollection = collection(db, PERMISSIONS_COLLECTION);
+    // Check if permission already exists for this user and list
+    const permissionsCollection = collection(db, PERMISSIONS_COLLECTION);
     const existingQuery = query(
-      notificationsCollection,
-      where("listId", "==", listId),
-      where("sharedWith", "==", targetUser.id),
-      where("status", "==", "pending")
+      permissionsCollection,
+      where("list_id", "==", listId),
+      where("user_id", "==", targetUser.id),
+      where("status", "in", ["pending", "accepted"])
     );
     const existingSnapshot = await getDocs(existingQuery);
     
     if (!existingSnapshot.empty) {
-      throw new Error("Invitation already sent to this user");
+      throw new Error("User already has access or pending invitation to this list");
     }
     
-    // Create notification
-    const notification: Omit<TaskListNotification, 'id'> = {
-      listId,
-      listName,
-      sharedBy: sharedByUserId,
-      sharedWith: targetUser.id,
-      permission,
-      sharedAt: new Date().toISOString(),
+    // Create permission entry using TaskListPermission structure
+    const permissionEntry = {
+      list_id: listId,
+      user_id: targetUser.id,
+      role: permission,
+      granted_by: sharedByUserId,
+      granted_at: new Date().toISOString(),
       status: "pending"
     };
     
-    await addDoc(notificationsCollection, notification);
+    await addDoc(permissionsCollection, permissionEntry);
     
   } catch (error) {
     console.error("Error sharing task list:", error);
@@ -117,25 +105,19 @@ export const acceptTaskListInvitation = async (notificationId: string): Promise<
   console.log("acceptTaskListInvitation called with:", notificationId);
   
   try {
-    // Get notification details
-    const notificationDoc = await getDoc(doc(db, PERMISSIONS_COLLECTION, notificationId));
-    if (!notificationDoc.exists()) {
-      throw new Error("Notification not found");
+    // Get permission details to verify it exists
+    const permissionDoc = await getDoc(doc(db, PERMISSIONS_COLLECTION, notificationId));
+    if (!permissionDoc.exists()) {
+      throw new Error("Permission not found");
     }
     
-    const notification = notificationDoc.data() as TaskListNotification;
-    
-    // Add user to task list sharedWith
-    const taskListRef = doc(db, "taskLists", notification.listId);
-    await updateDoc(taskListRef, {
-      sharedWith: arrayUnion(notification.sharedWith)
+    // Update permission status to accepted and add accepted_at timestamp
+    await updateDoc(permissionDoc.ref, {
+      status: "accepted",
+      accepted_at: new Date().toISOString()
     });
-    console.log("User added to task list sharedWith");
     
-    // Update notification status
-    await updateDoc(notificationDoc.ref, {
-      status: "accepted"
-    });
+    console.log("Permission accepted successfully");
     
   } catch (error) {
     console.error("Error accepting invitation:", error);
@@ -192,20 +174,47 @@ export const listenToUserPendingNotifications = (
 ) => {    
   const q = query(
     collection(db, PERMISSIONS_COLLECTION),
-    where("sharedWith", "==", userId),
+    where("user_id", "==", userId),
     where("status", "==", "pending")
   );
   
-  return onSnapshot(q, (snapshot) => {
+  return onSnapshot(q, async (snapshot) => {
     console.log("listenToUserPendingNotifications - snapshot received, docs count:", snapshot.docs.length);
-    const notifications = snapshot.docs.map(doc => {
-      const data = {
-        id: doc.id,
-        ...doc.data()
-      } as TaskListNotification;
-      console.log("listenToUserPendingNotifications - doc data:", data);
-      return data;
-    }).sort((a, b) => new Date(b.sharedAt).getTime() - new Date(a.sharedAt).getTime()); // Sort in memory
+    
+    // Convert permission entries to TaskListNotification format for compatibility
+    const notifications: TaskListNotification[] = [];
+    
+    for (const permissionDoc of snapshot.docs) {
+      const permissionData = permissionDoc.data();
+      console.log("listenToUserPendingNotifications - permission data:", permissionData);
+      
+      // Get task list name
+      let listName = "Lista zadań";
+      try {
+        const listDoc = await getDoc(doc(db, "taskLists", permissionData.list_id));
+        if (listDoc.exists()) {
+          listName = listDoc.data().name || "Lista zadań";
+        }
+      } catch (error) {
+        console.error("Error fetching list name:", error);
+      }
+      
+      const notification: TaskListNotification = {
+        id: permissionDoc.id,
+        listId: permissionData.list_id,
+        listName: listName,
+        sharedBy: permissionData.granted_by,
+        sharedWith: permissionData.user_id,
+        permission: permissionData.role,
+        sharedAt: permissionData.granted_at,
+        status: permissionData.status
+      };
+      
+      notifications.push(notification);
+    }
+    
+    // Sort by date
+    notifications.sort((a, b) => new Date(b.sharedAt).getTime() - new Date(a.sharedAt).getTime());
     
     callback(notifications);
   }, (error) => {
@@ -235,47 +244,40 @@ export const revokeTaskListAccess = async (
   try {
     console.log("Revoking access for user:", userId, "from list:", listId);
     
-    // Remove user from task list sharedWith array
-    const taskListRef = doc(db, "taskLists", listId);
-    await updateDoc(taskListRef, {
-      sharedWith: arrayRemove(userId)
-    });
-    console.log("User removed from task list sharedWith");
-    
-    // Find and delete any pending notifications for this user and list
+    // Find and delete any pending permissions for this user and list
     const permissionsCollection = collection(db, PERMISSIONS_COLLECTION);
     const pendingQuery = query(
       permissionsCollection,
-      where("listId", "==", listId),
-      where("sharedWith", "==", userId),
+      where("list_id", "==", listId),
+      where("user_id", "==", userId),
       where("status", "==", "pending")
     );
     
     const pendingSnapshot = await getDocs(pendingQuery);
     
-    // Delete all pending notifications
+    // Delete all pending permissions
     const deletePromises = pendingSnapshot.docs.map(doc => deleteDoc(doc.ref));
     await Promise.all(deletePromises);
     
-    console.log("Deleted", pendingSnapshot.docs.length, "pending notifications");
+    console.log("Deleted", pendingSnapshot.docs.length, "pending permissions");
     
-    // Also find and update any accepted notifications to "revoked" status
+    // Also find and update any accepted permissions to "revoked" status
     const acceptedQuery = query(
       permissionsCollection,
-      where("listId", "==", listId),
-      where("sharedWith", "==", userId),
+      where("list_id", "==", listId),
+      where("user_id", "==", userId),
       where("status", "==", "accepted")
     );
     
     const acceptedSnapshot = await getDocs(acceptedQuery);
     
-    // Update accepted notifications to revoked status for audit trail
+    // Update accepted permissions to revoked status for audit trail
     const updatePromises = acceptedSnapshot.docs.map(doc => 
       updateDoc(doc.ref, { status: "revoked" })
     );
     await Promise.all(updatePromises);
     
-    console.log("Updated", acceptedSnapshot.docs.length, "accepted notifications to revoked status");
+    console.log("Updated", acceptedSnapshot.docs.length, "accepted permissions to revoked status");
     
   } catch (error) {
     console.error("Error revoking task list access:", error);
@@ -300,10 +302,9 @@ export const getTaskListSharedUsers = async (listId: string): Promise<Array<{
     const permissionsCollection = collection(db, PERMISSIONS_COLLECTION);
     const permissionsQuery = query(
       permissionsCollection,
-      where("listId", "==", listId),
+      where("list_id", "==", listId),
       where("status", "in", ["pending", "accepted"])
-    );
-    
+    );    
     console.log("Executing permissions query...");
     const permissionsSnapshot = await getDocs(permissionsQuery);
     console.log("Permissions found:", permissionsSnapshot.docs.length);
@@ -313,7 +314,7 @@ export const getTaskListSharedUsers = async (listId: string): Promise<Array<{
     });
     
     // Get unique user IDs
-    const userIds = [...new Set(permissionsSnapshot.docs.map(doc => doc.data().sharedWith))];
+    const userIds = [...new Set(permissionsSnapshot.docs.map(doc => doc.data().user_id))];
     console.log("Unique user IDs:", userIds);
     
     if (userIds.length === 0) {
@@ -325,17 +326,22 @@ export const getTaskListSharedUsers = async (listId: string): Promise<Array<{
     const usersCollection = collection(db, "users");
     const usersPromises = userIds.map(async (userId) => {
       console.log("Fetching user data for:", userId);
-      const userDoc = await getDoc(doc(usersCollection, userId));
-      if (userDoc.exists()) {
+      
+      // Query for user document where the 'id' field equals userId
+      const userQuery = query(usersCollection, where("id", "==", userId));
+      const userSnapshot = await getDocs(userQuery);
+      
+      if (!userSnapshot.empty) {
+        const userDoc = userSnapshot.docs[0];
         const userData = userDoc.data();
         console.log("User data found:", userData);
         // Find the permission for this user
-        const permission = permissionsSnapshot.docs.find(doc => doc.data().sharedWith === userId);
+        const permission = permissionsSnapshot.docs.find(doc => doc.data().user_id === userId);
         const result = {
           id: userId,
           email: userData.email,
           displayName: userData.displayName,
-          permission: permission?.data().permission as SharePermission,
+          permission: permission?.data().role as SharePermission,
           status: permission?.data().status as 'pending' | 'accepted'
         };
         console.log("User result:", result);
