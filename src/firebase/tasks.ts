@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db } from "./config";
-import { collection, onSnapshot, doc, deleteDoc, addDoc, query, where, updateDoc, arrayUnion, getDocs } from "firebase/firestore";
+import { collection, onSnapshot, doc, deleteDoc, addDoc, query, where, updateDoc, getDocs, getDoc } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
 import { TaskInterface, TaskListInterface, LabelInterface, UserProfile, SharedTaskList, SharePermission, TaskListNotification } from "../data/types";
 
@@ -17,9 +17,9 @@ export const useUserTaskLists = (): TaskListInterface[] => {
 
         const taskListsCollection = collection(db, "taskLists");
         
-        // Query for lists where user is owner OR user is in userIds array
+        // Query for lists where user is owner OR user is in sharedWith array
         const ownListsQuery = query(taskListsCollection, where("userId", "==", user.uid));
-        const sharedListsQuery = query(taskListsCollection, where("userIds", "array-contains", user.uid));
+        const sharedListsQuery = query(taskListsCollection, where("sharedWith", "array-contains", user.uid));
         
         let ownLists: TaskListInterface[] = [];
         let sharedLists: TaskListInterface[] = [];
@@ -51,6 +51,34 @@ export const useUserTaskLists = (): TaskListInterface[] => {
     }, [user]);
 
     return taskLists;
+};
+
+// Hook to get tasks for a specific task list
+export const useTasksForList = (taskListId: string | null): TaskInterface[] => {
+    const [tasks, setTasks] = useState<TaskInterface[]>([]);
+
+    useEffect(() => {
+        if (!taskListId) {
+            setTasks([]);
+            return;
+        }
+
+        const tasksCollection = collection(db, "tasks");
+        const tasksQuery = query(tasksCollection, where("taskListId", "==", taskListId));
+        
+        const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
+            const tasksList = snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            })) as TaskInterface[];
+            
+            setTasks(tasksList);
+        });
+
+        return unsubscribe;
+    }, [taskListId]);
+
+    return tasks;
 };
 
 // Hook to get user's labels
@@ -126,7 +154,7 @@ export const deleteTaskList = async (listId: string): Promise<void> => {
     }
 };
 
-// Add task to list
+// Add task to list - now creates task in separate collection
 export const addTaskToList = async (
     listId: string, 
     title: string, 
@@ -136,95 +164,110 @@ export const addTaskToList = async (
     labels?: LabelInterface[]
 ): Promise<void> => {
     try {
-        const taskListDocRef = doc(db, "taskLists", listId);
-        const newTask: TaskInterface = {
-            id: crypto.randomUUID(),
+        const tasksCollection = collection(db, "tasks");
+        const newTask: Omit<TaskInterface, 'id'> = {
             title,
             description: description || "",
             dueDate: dueDate || "",
             isCompleted: false,
             labels: labels || [],
             userId,
+            taskListId: listId,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
         };
         
-        await updateDoc(taskListDocRef, {
-            tasks: arrayUnion(newTask)
-        });
+        await addDoc(tasksCollection, newTask);
     } catch (error) {
         console.error("Error adding task to list:", error);
         throw error;
     }
 };
 
-// Update task in list
+// Update task - now updates task in tasks collection
 export const updateTaskInList = async (
-    listId: string, 
     taskId: string, 
     updates: Partial<TaskInterface>
 ): Promise<void> => {
     try {
-        // This requires getting the current list, updating the specific task, and saving back
-        // Due to Firestore limitations with array updates, we need to replace the entire tasks array
-        const { getDoc } = await import("firebase/firestore");
-        const taskListDocRef = doc(db, "taskLists", listId);
-        const listSnapshot = await getDoc(taskListDocRef);
-        
-        if (listSnapshot.exists()) {
-            const currentList = listSnapshot.data() as TaskListInterface;
-            const updatedTasks = currentList.tasks.map(task => 
-                task.id === taskId ? { ...task, ...updates } : task
-            );
-            
-            await updateDoc(taskListDocRef, {
-                tasks: updatedTasks
-            });
-        }
+        const taskDocRef = doc(db, "tasks", taskId);
+        await updateDoc(taskDocRef, {
+            ...updates,
+            updatedAt: new Date().toISOString()
+        });
     } catch (error) {
-        console.error("Error updating task in list:", error);
+        console.error("Error updating task:", error);
         throw error;
     }
-};
-
-// Remove task from list
-export const removeTaskFromList = async (listId: string, taskId: string): Promise<void> => {
+};// Remove task from list - now deletes task from tasks collection
+export const removeTaskFromList = async (taskId: string): Promise<void> => {
     try {
-        const { getDoc } = await import("firebase/firestore");
-        const taskListDocRef = doc(db, "taskLists", listId);
-        const listSnapshot = await getDoc(taskListDocRef);
-        
-        if (listSnapshot.exists()) {
-            const currentList = listSnapshot.data() as TaskListInterface;
-            const updatedTasks = currentList.tasks.filter(task => task.id !== taskId);
-            
-            await updateDoc(taskListDocRef, {
-                tasks: updatedTasks
-            });
-        }
+        const taskDocRef = doc(db, "tasks", taskId);
+        await deleteDoc(taskDocRef);
     } catch (error) {
         console.error("Error removing task from list:", error);
         throw error;
     }
 };
 
-// Toggle task completion
-export const toggleTaskCompletion = async (listId: string, taskId: string): Promise<void> => {
+// Toggle task completion - now updates task in tasks collection
+export const toggleTaskCompletion = async (taskId: string): Promise<void> => {
     try {
-        const { getDoc } = await import("firebase/firestore");
-        const taskListDocRef = doc(db, "taskLists", listId);
-        const listSnapshot = await getDoc(taskListDocRef);
+        const taskDocRef = doc(db, "tasks", taskId);
+        const taskSnapshot = await getDoc(taskDocRef);
         
-        if (listSnapshot.exists()) {
-            const currentList = listSnapshot.data() as TaskListInterface;
-            const updatedTasks = currentList.tasks.map(task => 
-                task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
-            );
-            
-            await updateDoc(taskListDocRef, {
-                tasks: updatedTasks
+        if (taskSnapshot.exists()) {
+            const currentTask = taskSnapshot.data() as TaskInterface;
+            await updateDoc(taskDocRef, {
+                isCompleted: !currentTask.isCompleted,
+                updatedAt: new Date().toISOString()
             });
         }
     } catch (error) {
         console.error("Error toggling task completion:", error);
+        throw error;
+    }
+};
+
+// Clear completed tasks from a list
+export const clearCompletedTasks = async (listId: string): Promise<void> => {
+    try {
+        const tasksCollection = collection(db, "tasks");
+        const completedTasksQuery = query(
+            tasksCollection, 
+            where("taskListId", "==", listId),
+            where("isCompleted", "==", true)
+        );
+        
+        const snapshot = await getDocs(completedTasksQuery);
+        const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
+        await Promise.all(deletePromises);
+    } catch (error) {
+        console.error("Error clearing completed tasks:", error);
+        throw error;
+    }
+};
+
+// Uncheck all tasks in a list
+export const uncheckAllTasks = async (listId: string): Promise<void> => {
+    try {
+        const tasksCollection = collection(db, "tasks");
+        const completedTasksQuery = query(
+            tasksCollection, 
+            where("taskListId", "==", listId),
+            where("isCompleted", "==", true)
+        );
+        
+        const snapshot = await getDocs(completedTasksQuery);
+        const updatePromises = snapshot.docs.map(doc => 
+            updateDoc(doc.ref, { 
+                isCompleted: false,
+                updatedAt: new Date().toISOString()
+            })
+        );
+        await Promise.all(updatePromises);
+    } catch (error) {
+        console.error("Error unchecking all tasks:", error);
         throw error;
     }
 };
@@ -343,39 +386,28 @@ export const rejectSharedTaskList = async (shareId: string): Promise<void> => {
     }
 };
 
-// Remove user from shared task list - now uses permissions collection
-export const removeUserFromSharedList = async (listId: string, userId: string): Promise<void> => {
+// Revoke access to shared task list
+export const revokeTaskListAccess = async (listId: string, userId: string): Promise<void> => {
     try {
-        const { removeTaskListPermission, getTaskListPermission } = await import("./taskPermissions");
-        const permission = await getTaskListPermission(listId, userId);
-        if (permission && permission.id) {
-            await removeTaskListPermission(permission.id);
-        }
+        const { revokeTaskListAccess: revokeAccess } = await import("./taskNotifications");
+        await revokeAccess(listId, userId);
     } catch (error) {
-        console.error("Error removing user from shared list:", error);
+        console.error("Error revoking task list access:", error);
         throw error;
     }
 };
 
-// Update user permission for shared list - now uses permissions collection  
-export const updateUserPermission = async (
-    listId: string, 
-    userId: string, 
-    newPermission: SharePermission
-): Promise<void> => {
+// Get users with access to task list
+export const getTaskListSharedUsers = async (listId: string) => {
     try {
-        const { updateTaskListPermission, getTaskListPermission } = await import("./taskPermissions");
-        const permission = await getTaskListPermission(listId, userId);
-        if (permission && permission.id) {
-            await updateTaskListPermission(permission.id, newPermission);
-        }
+        const { getTaskListSharedUsers: getSharedUsers } = await import("./taskNotifications");
+        return await getSharedUsers(listId);
     } catch (error) {
-        console.error("Error updating user permission:", error);
-        throw error;
+        console.error("Error getting shared users:", error);
+        return [];
     }
 };
 
-// Get pending share invitations for user
 // Get pending share invitations for user - now uses notifications collection
 export const useUserPendingShares = (): SharedTaskList[] => {
     const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);

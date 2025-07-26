@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useTaskContext } from "@/hooks/useTaskContext";
+import { useTasksForList } from "@/firebase/tasks";
 import { AddTaskModal } from "@/components/ui/Tasks/Modals/AddTaskModal";
 import TaskDetails from "@/components/ui/Tasks/TaskDetails";
-import ShareTaskListModal from "@/components/ui/Tasks/Modals/ShareTaskListModal";
+import ManageTaskListSharingModal from "@/components/ui/Tasks/Modals/ManageTaskListSharingModal";
 import PendingSharesNotification from "@/components/ui/Tasks/PendingSharesNotification";
 import TaskViewHeader from "@/components/ui/Tasks/TaskViewHeader";
 import TaskStatistics from "@/components/ui/Tasks/TaskStatistics";
@@ -34,8 +35,8 @@ export default function TasksView() {
   const [shareListId, setShareListId] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'pending' | 'completed' | 'overdue'>('all');
 
-  // Get tasks from current list or empty array
-  const tasks = currentTaskList?.tasks || [];
+  // Get tasks from current list using new hook
+  const tasks = useTasksForList(currentTaskList?.id || null);
 
   const handleAddTask = async (title: string, description?: string | null, dueDate?: string | null) => {
     if (!currentTaskList) return;
@@ -134,14 +135,14 @@ export default function TasksView() {
 
         {/* Share Task List Modal */}
         {isShareModalOpen && shareListId && currentTaskList && (
-          <ShareTaskListModal
+          <ManageTaskListSharingModal
             isOpen={isShareModalOpen}
             onClose={() => {
               setIsShareModalOpen(false);
               setShareListId(null);
             }}
-            taskListId={shareListId}
-            taskListName={currentTaskList.name}
+            listId={shareListId}
+            listName={currentTaskList.name}
           />
         )}
       </div>

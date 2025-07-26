@@ -6,12 +6,14 @@ interface TaskListDropdownProps {
   taskLists: TaskListInterface[];
   currentTaskList: TaskListInterface | null;
   onTaskListChange: (list: TaskListInterface | null) => void;
+  getTaskStats?: (listId: string) => { completed: number; total: number; pending: number };
 }
 
 export default function TaskListDropdown({
   taskLists,
   currentTaskList,
-  onTaskListChange
+  onTaskListChange,
+  getTaskStats
 }: TaskListDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -29,11 +31,12 @@ export default function TaskListDropdown({
     };
   }, []);
 
-  const getTaskStats = (list: TaskListInterface) => {
-    const completed = list.tasks.filter(task => task.isCompleted).length;
-    const total = list.tasks.length;
-    const pending = total - completed;
-    return { completed, total, pending };
+  const getTaskStatsForList = (list: TaskListInterface) => {
+    if (getTaskStats) {
+      return getTaskStats(list.id);
+    }
+    // Fallback for backward compatibility - show a simple message
+    return { completed: 0, total: 0, pending: 0 };
   };
 
   return (
@@ -49,7 +52,7 @@ export default function TaskListDropdown({
             <div>
               <div className="font-medium text-gray-900">{currentTaskList.name}</div>
               <div className="text-xs text-gray-500">
-                {getTaskStats(currentTaskList).total} zadań
+                {getTaskStatsForList(currentTaskList).total} zadań
               </div>
             </div>
           ) : (
@@ -68,7 +71,7 @@ export default function TaskListDropdown({
       {isOpen && (
         <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
           {taskLists.map(list => {
-            const stats = getTaskStats(list);
+            const stats = getTaskStatsForList(list);
             const isSelected = currentTaskList?.id === list.id;
             
             return (

@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Settings, Edit3, Trash2, RotateCcw, AlertTriangle, X } from "lucide-react";
+import { Settings, Edit3, Trash2, RotateCcw, AlertTriangle, X, Users } from "lucide-react";
 import { TaskListInterface } from "@/data/types";
+import { useTasksForList } from "@/firebase/tasks";
+import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
 
 interface TaskListActionsProps {
   currentTaskList: TaskListInterface | null;
@@ -23,11 +25,14 @@ export default function TaskListActions({
   const [isRenaming, setIsRenaming] = useState(false);
   const [newName, setNewName] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showSharingModal, setShowSharingModal] = useState(false);
+
+  const tasks = useTasksForList(currentTaskList?.id || "");
 
   if (!currentTaskList) return null;
 
-  const completedCount = currentTaskList.tasks.filter(task => task.isCompleted).length;
-  const totalCount = currentTaskList.tasks.length;
+  const completedCount = tasks.filter(task => task.isCompleted).length;
+  const totalCount = tasks.length;
 
   const handleRename = () => {
     if (newName.trim() && newName.trim() !== currentTaskList.name) {
@@ -87,6 +92,18 @@ export default function TaskListActions({
             >
               <Edit3 size={16} />
               <span className="text-sm">Zmień nazwę</span>
+            </button>
+
+            {/* Manage Sharing */}
+            <button
+              onClick={() => {
+                setShowSharingModal(true);
+                setIsOpen(false);
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2 text-left text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors"
+            >
+              <Users size={16} />
+              <span className="text-sm">Zarządzaj udostępnianiem</span>
             </button>
 
             {/* Clear Completed Tasks */}
@@ -222,6 +239,14 @@ export default function TaskListActions({
           onClick={() => setIsOpen(false)}
         ></div>
       )}
+
+      {/* Manage Sharing Modal */}
+      <ManageTaskListSharingModal
+        isOpen={showSharingModal}
+        onClose={() => setShowSharingModal(false)}
+        listId={currentTaskList.id}
+        listName={currentTaskList.name}
+      />
     </div>
   );
 }

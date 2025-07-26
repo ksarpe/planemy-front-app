@@ -163,18 +163,20 @@ export interface TaskInterface {
   dueDate?: string; // Optional datetime
   isCompleted: boolean;
   labels?: LabelInterface[]; // Optional array of labels
-  userId: string;
+  userId: string; // Creator of the task
+  taskListId: string; // Foreign key to TaskList
   sharedBy?: string; // ID of user who originally created the task (for shared lists)
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-// NEW TaskList interface according to system design
+// NEW TaskList interface according to system design - no longer contains tasks array
 export interface TaskListInterface {
   id: string;
   name: string;
-  tasks: TaskInterface[]; // Array of tasks
   labels?: LabelInterface[]; // Optional array of labels for the list
   userId: string; // Owner of the list
-  userIds?: string[]; // Array of user IDs who have access to this list
+  sharedWith?: string[]; // Array of user IDs who have access to this list
   createdAt?: string;
   updatedAt?: string;
 }
