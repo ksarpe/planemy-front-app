@@ -1,21 +1,18 @@
 import { useState } from "react";
-import { Settings, Edit3, Trash2, RotateCcw, AlertTriangle, X, Users } from "lucide-react";
-import { TaskListInterface } from "@/data/types";
+import { Settings, Edit3, Trash2, RotateCcw, AlertTriangle, Users } from "lucide-react";
 import { useTasksForList } from "@/firebase/tasks";
 import { useTaskContext } from "@/hooks/useTaskContext";
 import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
+import { DeleteConfirmationModal, RenameModal } from "../Common";
 
-interface TaskListActionsProps {
-  currentTaskList: TaskListInterface | null;
-  loading?: boolean;
-}
-
-export default function TaskListActions({ currentTaskList, loading = false }: TaskListActionsProps) {
-  const { renameTaskList, deleteTaskList, clearCompletedTasks, uncheckAllTasks } = useTaskContext();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isRenaming, setIsRenaming] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+// Expandable actions for the task list
+// in the task list view
+export default function TaskListActions() {
+  const { renameTaskList, deleteTaskList, clearCompletedTasks, uncheckAllTasks, loading, currentTaskList } =
+    useTaskContext(); //context data
+  const [isOpen, setIsOpen] = useState(false); // wether the dropdown is open
+  const [isRenaming, setIsRenaming] = useState(false); // wether the rename modal is open
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // wether the delete confirmation modal is open
   const [showSharingModal, setShowSharingModal] = useState(false);
 
   const tasks = useTasksForList(currentTaskList?.id || "");
@@ -25,13 +22,9 @@ export default function TaskListActions({ currentTaskList, loading = false }: Ta
   const completedCount = tasks.filter((task) => task.isCompleted).length;
   const totalCount = tasks.length;
 
-  const handleRename = () => {
-    if (newName.trim() && newName.trim() !== currentTaskList.name) {
-      renameTaskList(currentTaskList.id, newName.trim());
-    }
+  const handleRename = (newName: string) => {
+    renameTaskList(currentTaskList.id, newName);
     setIsRenaming(false);
-    setNewName("");
-    setIsOpen(false);
   };
 
   const handleDelete = () => {
@@ -59,8 +52,8 @@ export default function TaskListActions({ currentTaskList, loading = false }: Ta
         disabled={loading}>
         <Settings size={18} className="text-gray-500" />
         <div className="flex flex-col text-left">
-          <span className="text-sm font-medium text-gray-900">Edytuj</span>
-          <span className="text-xs text-gray-500">Zarządzaj listą</span>
+          <span className="text-sm font-medium text-gray-900">Zarządzaj</span>
+          <span className="text-xs text-gray-500">{currentTaskList.name}</span>
         </div>
       </button>
 
@@ -68,16 +61,11 @@ export default function TaskListActions({ currentTaskList, loading = false }: Ta
       {isOpen && (
         <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
           <div className="p-2">
-            <div className="text-xs text-gray-500 mb-3 px-2">
-              Lista: <span className="font-medium">{currentTaskList.name}</span>
-            </div>
-
             {/* Rename Option */}
             <button
               onClick={() => {
                 setIsRenaming(true);
                 setIsOpen(false);
-                setNewName(currentTaskList.name);
               }}
               className="w-full flex items-center gap-3 px-3 py-2 text-left text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
               <Edit3 size={16} />
@@ -130,90 +118,27 @@ export default function TaskListActions({ currentTaskList, loading = false }: Ta
       )}
 
       {/* Rename Modal */}
-      {isRenaming && (
-        <div className="fixed inset-0bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Zmień nazwę listy</h3>
-              <button
-                onClick={() => {
-                  setIsRenaming(false);
-                  setNewName("");
-                }}
-                className="text-gray-400 hover:text-gray-600">
-                <X size={20} />
-              </button>
-            </div>
-
-            <input
-              type="text"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
-              placeholder="Nowa nazwa listy"
-              autoFocus
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleRename();
-                if (e.key === "Escape") {
-                  setIsRenaming(false);
-                  setNewName("");
-                }
-              }}
-            />
-
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => {
-                  setIsRenaming(false);
-                  setNewName("");
-                }}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                Anuluj
-              </button>
-              <button
-                onClick={handleRename}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                disabled={!newName.trim() || newName.trim() === currentTaskList.name}>
-                Zapisz
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
+      <RenameModal
+        isOpen={isRenaming}
+        onClose={() => setIsRenaming(false)}
+        onConfirm={handleRename}
+        title="Zmień nazwę listy"
+        currentName={currentTaskList.name}
+        placeholder="Nowa nazwa listy"
+        isLoading={loading}
+      />
       {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96 shadow-xl">
-            <div className="flex items-center gap-3 mb-4">
-              <AlertTriangle size={24} className="text-red-500" />
-              <h3 className="text-lg font-semibold">Usuń listę zadań</h3>
-            </div>
-
-            <p className="text-gray-600 mb-2">
-              Czy na pewno chcesz usunąć listę <span className="font-semibold">"{currentTaskList.name}"</span>?
-            </p>
-            <p className="text-sm text-red-600 mb-6">Ta akcja usunie {totalCount} zadań i nie można jej cofnąć.</p>
-
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                Anuluj
-              </button>
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                Usuń listę
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Background overlay to close dropdown */}
-      {isOpen && <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>}
-
+      <DeleteConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDelete}
+        title="Usuń listę zadań"
+        message="Czy na pewno chcesz usunąć listę"
+        itemName={currentTaskList.name}
+        additionalInfo={`Liczba zadań, która zostanie usunięta: ${totalCount}`}
+        confirmButtonText="Usuń listę"
+        isLoading={loading}
+      />
       {/* Manage Sharing Modal */}
       <ManageTaskListSharingModal
         isOpen={showSharingModal}
@@ -221,6 +146,8 @@ export default function TaskListActions({ currentTaskList, loading = false }: Ta
         listId={currentTaskList.id}
         listName={currentTaskList.name}
       />
+      {/* Background overlay to close dropdown */}
+      {isOpen && <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>}
     </div>
   );
 }

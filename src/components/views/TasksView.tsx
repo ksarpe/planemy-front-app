@@ -19,7 +19,6 @@ export default function TasksView() {
     taskLists, 
     currentTaskList, 
     clickedTask, 
-    addTask,
     createTaskList,
     loading
   } = useTaskContext();
@@ -32,11 +31,6 @@ export default function TasksView() {
 
   // Get tasks from current list using new hook
   const tasks = useTasksForList(currentTaskList?.id || null);
-
-  const handleAddTask = async (title: string, description?: string | null, dueDate?: string | null) => {
-    if (!currentTaskList) return;
-    await addTask(currentTaskList.id, title, description, dueDate);
-  };
 
   const handleShareList = (listId: string) => {
     setShareListId(listId);
@@ -118,7 +112,6 @@ export default function TasksView() {
           <AddTaskModal
             isOpen={isTaskModalOpen}
             onClose={() => setIsTaskModalOpen(false)}
-            onSubmit={handleAddTask}
           />
         )}
 
