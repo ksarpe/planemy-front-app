@@ -1,4 +1,4 @@
-import { FolderPlus } from "lucide-react";
+import { ArrowBigRightDash, FolderPlus } from "lucide-react";
 import TaskListDropdown from "./TaskListDropdown";
 import TaskListActions from "./TaskListActions";
 import { useTaskContext } from "@/hooks/useTaskContext";
@@ -9,30 +9,36 @@ interface TaskViewHeaderProps {
 }
 
 export default function TaskViewHeader({ onNewListClick }: TaskViewHeaderProps) {
-  const { loading, currentTaskList } = useTaskContext();
+  const { currentTaskList, loading } = useTaskContext();
+  if (loading) return null;
   return (
     <div className="flex justify-between items-center">
       {/* Task List Dropdown and Actions */}
-      <div className="flex items-center gap-3">
-        {currentTaskList && <TaskListDropdown />}
-
-        {/* Task List Actions */}
-        {currentTaskList && <TaskListActions />}
-      </div>
-
-      {/* Action Buttons */}
-
       {currentTaskList && (
-        <div className="flex gap-2">
-          {/* New List Button */}
+        <>
+          <div className="flex items-center gap-3">
+            <TaskListDropdown />
+            <TaskListActions />
+            {/* New List Button */}
+            <button
+              onClick={onNewListClick}
+              className="flex items-center gap-2 bg-green-600 text-white px-4 rounded-lg hover:opacity-90 transition-all duration-200 min-h-[58px] shadow-sm hover:shadow-md cursor-pointer">
+              <FolderPlus size={18} />
+              <div className="flex flex-col text-left">
+                <span className="text-sm font-medium">Utwórz listę</span>
+              </div>
+            </button>
+          </div>
+          {/* Pomodoro Mode */}
           <button
             onClick={onNewListClick}
-            className="flex items-center gap-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-            disabled={loading}>
-            <FolderPlus size={18} />
-            Nowa lista
-          </button>
-        </div>
+            className="flex bg-orange-600 text-white px-4 rounded-lg hover:opacity-90 transition-all duration-200 min-h-[58px] shadow-sm hover:shadow-md cursor-pointer">
+            <div className="flex items-center gap-2">
+              <ArrowBigRightDash size={24} />
+              <span className="text-sm font-medium">Tryb Pomodoro</span>
+            </div>
+          </button>{" "}
+        </>
       )}
     </div>
   );

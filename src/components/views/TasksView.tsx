@@ -15,6 +15,7 @@ import {
   TaskDetails,
   EmptyStates,
 } from "@/components/ui/Tasks";
+import Spinner from "../ui/Utils/Spinner";
 
 export default function TasksView() {
   const { taskLists, currentTaskList, clickedTask, loading, createTaskList } = useTaskContext();
@@ -22,7 +23,7 @@ export default function TasksView() {
   const [isListModalOpen, setIsListModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareListId, setShareListId] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"all" | "pending" | "completed" | "overdue">("all");
+  const [filter, setFilter] = useState<"pending" | "completed" | "overdue">("pending");
 
   // Get tasks from current list using new hook
   const tasks = useTasksForList(currentTaskList?.id || null);
@@ -35,6 +36,17 @@ export default function TasksView() {
   const handleCreateTaskList = async (name: string) => {
     await createTaskList(name);
   };
+
+  if (loading || !currentTaskList) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <Spinner />
+          <p className="mt-4 text-gray-600">Ładowanie...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full p-4 gap-4">
@@ -63,7 +75,7 @@ export default function TasksView() {
             <TaskStatistics tasks={tasks} />
             <TaskAlerts tasks={tasks} />
             <TaskFilters filter={filter} onFilterChange={setFilter} tasks={tasks} />
-            <TaskList tasks={tasks} filter={filter} onAddTaskClick={() => setIsTaskModalOpen(true)} loading={loading} />
+            <TaskList tasks={tasks} filter={filter} onAddTaskClick={() => setIsTaskModalOpen(true)} />
             <TaskProgressIndicator tasks={tasks} />
           </>
         )}

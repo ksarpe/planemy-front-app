@@ -3,7 +3,7 @@ import { ChevronDown, List, Calendar, CheckCircle2 } from "lucide-react";
 import { useTaskContext } from "@/hooks/useTaskContext";
 
 export default function TaskListDropdown() {
-  const { taskLists, currentTaskList, setCurrentTaskList } = useTaskContext();
+  const { taskLists, currentTaskList, setCurrentTaskList, getTaskStats } = useTaskContext();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +31,7 @@ export default function TaskListDropdown() {
           {currentTaskList && (
             <div>
               <div className="font-medium text-gray-900">{currentTaskList.name}</div>
-              <div className="text-xs text-gray-500">Ilość zadań: {}</div>
+              <div className="text-xs text-gray-500">Ilość zadań: {getTaskStats(currentTaskList.id).total}</div>
             </div>
           )}
         </div>
@@ -45,7 +45,7 @@ export default function TaskListDropdown() {
       {isOpen && (
         <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
           {taskLists.map((list) => {
-            const stats = getTaskStatsForList(list);
+            const stats = getTaskStats(list.id);
             const isSelected = currentTaskList?.id === list.id;
 
             return (

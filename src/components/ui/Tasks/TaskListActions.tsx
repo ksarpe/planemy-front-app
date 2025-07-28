@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Settings, Edit3, Trash2, RotateCcw, AlertTriangle, Users } from "lucide-react";
-import { useTasksForList } from "@/firebase/tasks";
 import { useTaskContext } from "@/hooks/useTaskContext";
 import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
 import { DeleteConfirmationModal, RenameModal } from "../Common";
@@ -8,19 +7,23 @@ import { DeleteConfirmationModal, RenameModal } from "../Common";
 // Expandable actions for the task list
 // in the task list view
 export default function TaskListActions() {
-  const { renameTaskList, deleteTaskList, clearCompletedTasks, uncheckAllTasks, loading, currentTaskList } =
-    useTaskContext(); //context data
+  const {
+    renameTaskList,
+    deleteTaskList,
+    clearCompletedTasks,
+    uncheckAllTasks,
+    loading,
+    currentTaskList,
+    getTaskStats,
+  } = useTaskContext(); //context data
   const [isOpen, setIsOpen] = useState(false); // wether the dropdown is open
   const [isRenaming, setIsRenaming] = useState(false); // wether the rename modal is open
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // wether the delete confirmation modal is open
   const [showSharingModal, setShowSharingModal] = useState(false);
 
-  const tasks = useTasksForList(currentTaskList?.id || "");
-
   if (!currentTaskList) return null;
 
-  const completedCount = tasks.filter((task) => task.isCompleted).length;
-  const totalCount = tasks.length;
+  const { total, completed } = getTaskStats(currentTaskList.id);
 
   const handleRename = (newName: string) => {
     renameTaskList(currentTaskList.id, newName);
@@ -48,12 +51,11 @@ export default function TaskListActions() {
       {/* Settings Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-all duration-200 min-h-[52px]"
+        className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-all duration-200 min-h-[58px]"
         disabled={loading}>
         <Settings size={18} className="text-gray-500" />
         <div className="flex flex-col text-left">
           <span className="text-sm font-medium text-gray-900">Zarządzaj</span>
-          <span className="text-xs text-gray-500">{currentTaskList.name}</span>
         </div>
       </button>
 
@@ -84,18 +86,18 @@ export default function TaskListActions() {
             </button>
 
             {/* Clear Completed Tasks */}
-            {completedCount > 0 && (
+            {completed > 0 && (
               <button
                 onClick={handleClearCompleted}
                 className="w-full flex items-center gap-3 px-3 py-2 text-left text-orange-700 hover:bg-orange-50 rounded-lg transition-colors"
                 disabled={loading}>
                 <Trash2 size={16} />
-                <span className="text-sm">Usuń ukończone ({completedCount})</span>
+                <span className="text-sm">Usuń ukończone ({completed})</span>
               </button>
             )}
 
             {/* Uncheck All Tasks */}
-            {completedCount > 0 && (
+            {completed > 0 && (
               <button
                 onClick={handleUncheckAll}
                 className="w-full flex items-center gap-3 px-3 py-2 text-left text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
@@ -107,7 +109,10 @@ export default function TaskListActions() {
 
             {/* Delete List */}
             <button
-              onClick={() => { setShowDeleteConfirm(true); setIsOpen(false); }}
+              onClick={() => {
+                setShowDeleteConfirm(true);
+                setIsOpen(false);
+              }}
               className="w-full flex items-center gap-3 px-3 py-2 text-left text-red-700 hover:bg-red-50 rounded-lg transition-colors mt-2 border-t border-gray-100 pt-3"
               disabled={loading}>
               <AlertTriangle size={16} />
@@ -135,7 +140,7 @@ export default function TaskListActions() {
         title="Usuń listę zadań"
         message="Czy na pewno chcesz usunąć listę"
         itemName={currentTaskList.name}
-        additionalInfo={`Liczba zadań, która zostanie usunięta: ${totalCount}`}
+        additionalInfo={`Liczba zadań, która zostanie usunięta: ${total}`}
         confirmButtonText="Usuń listę"
         isLoading={loading}
       />

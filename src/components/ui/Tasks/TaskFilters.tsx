@@ -1,8 +1,8 @@
 import { TaskInterface } from "@/data/types";
 
 interface TaskFiltersProps {
-  filter: 'all' | 'pending' | 'completed' | 'overdue';
-  onFilterChange: (filter: 'all' | 'pending' | 'completed' | 'overdue') => void;
+  filter: 'pending' | 'completed' | 'overdue';
+  onFilterChange: (filter: 'pending' | 'completed' | 'overdue') => void;
   tasks: TaskInterface[];
 }
 
@@ -28,12 +28,6 @@ export default function TaskFilters({ filter, onFilterChange, tasks }: TaskFilte
 
   return (
     <div className="flex gap-2 flex-wrap">
-      <button
-        onClick={() => onFilterChange('all')}
-        className={getFilterButtonClass('all')}
-      >
-        Wszystkie ({tasks.length})
-      </button>
       <button
         onClick={() => onFilterChange('pending')}
         className={getFilterButtonClass('pending')}

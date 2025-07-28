@@ -1,10 +1,17 @@
-import { createContext, useEffect, useState, ReactNode } from "react";
-import type { TaskInterface, TaskListInterface, LabelInterface, SharedTaskList, SharePermission, UserProfile } from "@/data/types";
+import { createContext, useEffect, useState, ReactNode, useMemo } from "react";
+import type {
+  TaskInterface,
+  TaskListInterface,
+  LabelInterface,
+  SharedTaskList,
+  SharePermission,
+  UserProfile,
+} from "@/data/types";
 import { useToast } from "@/context/ToastContext";
 import { useAuth } from "@/context/AuthContext";
 import type { TaskContextProps } from "@/data/typesProps";
-import { 
-  useUserTaskLists, 
+import {
+  useUserTaskLists,
   useUserLabels,
   useUserPendingShares,
   createTaskList as createTaskListFirebase,
@@ -19,13 +26,11 @@ import {
   deleteLabel as deleteLabelFirebase,
   searchUsersByEmail,
   clearCompletedTasks as clearCompletedTasksFirebase,
-  uncheckAllTasks as uncheckAllTasksFirebase
+  uncheckAllTasks as uncheckAllTasksFirebase,
 } from "@/firebase/tasks";
-import {
-  shareTaskListWithUser,
-  acceptTaskListInvitation,
-  rejectTaskListInvitation
-} from "@/firebase/taskPermissions";
+import { shareTaskListWithUser, acceptTaskListInvitation, rejectTaskListInvitation } from "@/firebase/taskPermissions";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { db } from "@/firebase/config";
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 
@@ -34,12 +39,12 @@ export { TaskContext };
 export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const { showToast } = useToast();
   const { user } = useAuth();
-  
+
   // New task list system
   const taskListsFromFirebase = useUserTaskLists();
   const labelsFromFirebase = useUserLabels();
   const pendingSharesFromFirebase = useUserPendingShares();
-  
+
   // State
   const [taskLists, setTaskLists] = useState<TaskListInterface[]>([]);
   const [currentTaskList, setCurrentTaskList] = useState<TaskListInterface | null>(null);
@@ -49,6 +54,9 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLabels, setSelectedLabels] = useState<LabelInterface[]>([]);
   const [clickedTask, setClickedTask] = useState<TaskInterface | null>(null);
+
+  // Tasks cache - zadania pogrupowane według listId
+  const [tasksCache, setTasksCache] = useState<Record<string, TaskInterface[]>>({});
 
   // Update local state when Firebase data changes
   useEffect(() => {
@@ -65,7 +73,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   // Update current task list when task lists change (to reflect real-time updates)
   useEffect(() => {
     if (currentTaskList && taskLists.length > 0) {
-      const updatedList = taskLists.find(list => list.id === currentTaskList.id);
+      const updatedList = taskLists.find((list) => list.id === currentTaskList.id);
       if (updatedList) {
         setCurrentTaskList(updatedList);
       }
@@ -81,6 +89,39 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     console.log("TaskContext - pendingSharesFromFirebase length:", pendingSharesFromFirebase.length);
     setPendingShares(pendingSharesFromFirebase);
   }, [pendingSharesFromFirebase]);
+
+  // Listen to tasks for all user's task lists
+  useEffect(() => {
+    if (!user || taskLists.length === 0) {
+      setTasksCache({});
+      return;
+    }
+
+    const unsubscribes: (() => void)[] = [];
+
+    taskLists.forEach((taskList) => {
+      const tasksCollection = collection(db, "tasks");
+      const tasksQuery = query(tasksCollection, where("taskListId", "==", taskList.id));
+
+      const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
+        const tasks = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as TaskInterface[];
+
+        setTasksCache((prev) => ({
+          ...prev,
+          [taskList.id]: tasks,
+        }));
+      });
+
+      unsubscribes.push(unsubscribe);
+    });
+
+    return () => {
+      unsubscribes.forEach((unsubscribe) => unsubscribe());
+    };
+  }, [user, taskLists]);
 
   // Update clickedTask when taskLists change (to reflect real-time updates)
   useEffect(() => {
@@ -142,7 +183,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
   const shareTaskList = async (listId: string, userEmail: string, permission: SharePermission): Promise<void> => {
     console.log("TaskContext shareTaskList called:", { listId, userEmail, permission, userId: user?.uid });
-    
+
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby udostępnić listę");
       return;
@@ -205,11 +246,15 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const updateSharePermission = async (_listId: string, _userId: string, _permission: SharePermission): Promise<void> => {
+  const updateSharePermission = async (
+    _listId: string,
+    _userId: string,
+    _permission: SharePermission,
+  ): Promise<void> => {
     try {
       setLoading(true);
       // We need to find the permission ID for this user and list first
-      // This should be implemented to get the permission ID first  
+      // This should be implemented to get the permission ID first
       // For now, this function needs to be refactored to work with the new system
       showToast("error", "Funkcja aktualizacji uprawnień wymaga refaktoryzacji");
     } catch (error) {
@@ -245,11 +290,11 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
   // Task Functions
   const addTask = async (
-    listId: string, 
-    title: string, 
-    description?: string | null, 
-    dueDate?: string | null, 
-    labels?: LabelInterface[]
+    listId: string,
+    title: string,
+    description?: string | null,
+    dueDate?: string | null,
+    labels?: LabelInterface[],
   ): Promise<void> => {
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby dodać zadanie");
@@ -307,11 +352,11 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const moveTask = async (taskId: string, _fromListId: string, toListId: string): Promise<void> => {
     try {
       setLoading(true);
-      
+
       // For now, we'll update the taskListId directly instead of recreating the task
       // This is more efficient than remove + add
       await updateTaskInListFirebase(taskId, { taskListId: toListId });
-      
+
       showToast("success", "Zadanie zostało przeniesione!");
     } catch (error) {
       console.error("Error moving task:", error);
@@ -432,6 +477,27 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     showToast("success", "Funkcja konwersji do eventu zostanie dodana wkrótce.");
   };
 
+  // Task utilities
+  const getTasksForList = useMemo(
+    () =>
+      (listId: string): TaskInterface[] => {
+        return tasksCache[listId] || [];
+      },
+    [tasksCache],
+  );
+
+  const getTaskStats = useMemo(
+    () => (listId: string) => {
+      const tasks = getTasksForList(listId);
+      const total = tasks.length;
+      const completed = tasks.filter((task) => task.isCompleted).length;
+      const pending = total - completed;
+
+      return { total, completed, pending };
+    },
+    [getTasksForList],
+  );
+
   return (
     <TaskContext.Provider
       value={{
@@ -445,7 +511,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         renameTaskList,
         clearCompletedTasks,
         uncheckAllTasks,
-        
+
         // Sharing functionality
         shareTaskList,
         unshareTaskList,
@@ -455,14 +521,14 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         searchUsers,
         getSharedLists,
         getPendingShares,
-        
+
         // Tasks
         addTask,
         updateTask,
         removeTask,
         toggleTaskComplete,
         moveTask,
-        
+
         // Labels
         labels,
         createLabel,
@@ -470,14 +536,18 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         deleteLabel,
         addLabelToTask,
         removeLabelFromTask,
-        
+
         // UI State
         loading,
         searchQuery,
         setSearchQuery,
         selectedLabels,
         setSelectedLabels,
-        
+
+        // Task utilities
+        getTasksForList,
+        getTaskStats,
+
         // Legacy support
         clickedTask,
         setClickedTask,

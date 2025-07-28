@@ -63,7 +63,7 @@ export interface TaskContextProps {
   renameTaskList: (listId: string, newName: string) => Promise<void>;
   clearCompletedTasks: (listId: string) => Promise<void>;
   uncheckAllTasks: (listId: string) => Promise<void>;
-  
+
   // Sharing functionality
   shareTaskList: (listId: string, userEmail: string, permission: SharePermission) => Promise<void>;
   unshareTaskList: (listId: string, userId: string) => Promise<void>;
@@ -73,14 +73,24 @@ export interface TaskContextProps {
   searchUsers: (email: string) => Promise<UserProfile[]>;
   getSharedLists: () => TaskListInterface[];
   getPendingShares: () => SharedTaskList[];
-  
+
   // Tasks within lists
-  addTask: (listId: string, title: string, description?: string | null, dueDate?: string | null, labels?: LabelInterface[]) => Promise<void>;
+  addTask: (
+    listId: string,
+    title: string,
+    description?: string | null,
+    dueDate?: string | null,
+    labels?: LabelInterface[],
+  ) => Promise<void>;
   updateTask: (listId: string, taskId: string, updates: Partial<TaskInterface>) => Promise<void>;
   removeTask: (listId: string, taskId: string) => Promise<void>;
   toggleTaskComplete: (listId: string, taskId: string) => Promise<void>;
   moveTask: (taskId: string, fromListId: string, toListId: string) => Promise<void>;
-  
+
+  // Task utilities
+  getTasksForList: (listId: string) => TaskInterface[];
+  getTaskStats: (listId: string) => { total: number; completed: number; pending: number };
+
   // Labels
   labels: LabelInterface[];
   createLabel: (name: string, color: string, description?: string) => Promise<void>;
@@ -88,14 +98,14 @@ export interface TaskContextProps {
   deleteLabel: (labelId: string) => Promise<void>;
   addLabelToTask: (listId: string, taskId: string, label: LabelInterface) => Promise<void>;
   removeLabelFromTask: (listId: string, taskId: string, labelId: string) => Promise<void>;
-  
+
   // UI State
   loading: boolean;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   selectedLabels: LabelInterface[];
   setSelectedLabels: (labels: LabelInterface[]) => void;
-  
+
   // Legacy support (for backwards compatibility)
   clickedTask: TaskInterface | null;
   setClickedTask: (task: TaskInterface | null) => void;
@@ -110,22 +120,22 @@ export interface ShoppingContextProps {
   createList: (name: string, description?: string, emoji?: string, color?: string) => Promise<void>;
   updateList: (listId: string, updates: Partial<ShoppingListInterface>) => Promise<void>;
   deleteList: (listId: string) => Promise<void>;
-  
+
   // Shopping Items
-  addItem: (listId: string, item: Omit<ShoppingItemInterface, 'id' | 'addedAt'>) => Promise<void>;
+  addItem: (listId: string, item: Omit<ShoppingItemInterface, "id" | "addedAt">) => Promise<void>;
   updateItem: (listId: string, itemId: string, updates: Partial<ShoppingItemInterface>) => Promise<void>;
   removeItem: (listId: string, itemId: string) => Promise<void>;
   toggleItemComplete: (listId: string, itemId: string) => Promise<void>;
-  
+
   // Favorite Products
   favoriteProducts: FavoriteProductInterface[];
-  addToFavorites: (product: Omit<FavoriteProductInterface, 'id'>) => Promise<void>;
+  addToFavorites: (product: Omit<FavoriteProductInterface, "id">) => Promise<void>;
   removeFromFavorites: (productId: string) => Promise<void>;
   addFavoriteToList: (listId: string, product: FavoriteProductInterface, quantity?: number) => Promise<void>;
-  
+
   // Categories
   categories: ShoppingCategoryInterface[];
-  
+
   // UI State
   loading: boolean;
   searchQuery: string;
@@ -136,7 +146,7 @@ export interface ShoppingContextProps {
 
 export interface PaymentsContextProps {
   payments: PaymentInterface[];
-  addPayment: (paymentData: Omit<PaymentInterface, 'id' | 'userId'>) => Promise<void>;
+  addPayment: (paymentData: Omit<PaymentInterface, "id" | "userId">) => Promise<void>;
   markAsPaid: (paymentId: string) => Promise<void>;
   removePayment: (paymentId: string) => Promise<void>;
   togglePaymentStatus: (paymentId: string, isActive: boolean) => Promise<void>;
