@@ -68,7 +68,7 @@ export default function RenameModal({
   );
 
   return (
-    <BaseModal isOpen={isOpen} onClose={handleClose} title={title} actions={actions}>
+    <BaseModal isOpen={isOpen} onClose={handleClose} title={title} actions={actions} centered={false}>
       <input
         type="text"
         value={newName}

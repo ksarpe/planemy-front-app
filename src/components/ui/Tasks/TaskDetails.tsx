@@ -1,34 +1,12 @@
 import EditableText from "@/components/ui/Utils/EditableText";
 import { useTaskContext } from "@/hooks/useTaskContext";
-import { 
-  X, 
-  Calendar, 
-  CheckCircle2, 
-  Trash2,
-  CalendarPlus,
-  Edit3,
-  Tag
-} from "lucide-react";
+import { X, Calendar, CheckCircle2, Trash2, CalendarPlus, Edit3, Tag } from "lucide-react";
 
 export default function TaskDetails() {
-  const { 
-    updateTask, 
-    toggleTaskComplete,
-    removeTask,
-    convertToEvent, 
-    clickedTask, 
-    setClickedTask,
-    currentTaskList
-  } = useTaskContext();
+  const { updateTask, toggleTaskComplete, removeTask, convertToEvent, clickedTask, setClickedTask, currentTaskList } =
+    useTaskContext();
 
-  if (!clickedTask || !currentTaskList) {
-    return (
-      <div className="text-center text-gray-500 py-8">
-        <Calendar size={48} className="mx-auto mb-4 opacity-50" />
-        <p>Wybierz zadanie, aby zobaczyć szczegóły</p>
-      </div>
-    );
-  }
+  if (!clickedTask || !currentTaskList) return;
 
   const isOverdue = () => {
     if (clickedTask.isCompleted || !clickedTask.dueDate) return false;
@@ -48,10 +26,10 @@ export default function TaskDetails() {
 
   const formatDueDate = () => {
     if (!clickedTask.dueDate) return "Brak terminu";
-    
+
     const daysUntil = getDaysUntilDue()!;
-    const dateStr = new Date(clickedTask.dueDate).toLocaleDateString('pl-PL');
-    
+    const dateStr = new Date(clickedTask.dueDate).toLocaleDateString("pl-PL");
+
     if (clickedTask.isCompleted) {
       return `${dateStr}`;
     } else if (daysUntil < 0) {
@@ -83,115 +61,113 @@ export default function TaskDetails() {
   };
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6 pb-4 border-b">
-        <h2 className="text-lg font-semibold text-gray-800">Szczegóły zadania</h2>
-        <button
-          onClick={() => setClickedTask(null)}
-          className="text-gray-400 hover:text-gray-600 transition-colors"
-        >
-          <X size={20} />
-        </button>
-      </div>
-
-      {/* Task Content */}
-      <div className="flex-1 space-y-6">
-        {/* Title */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <Edit3 size={16} className="inline mr-1" />
-            Tytuł
-          </label>
-          <EditableText
-            value={clickedTask.title}
-            onSave={handleUpdateTitle}
-            className="text-lg font-medium"
-            placeholder="Tytuł zadania..."
-          />
+    <div className="w-1/3 bg-bg-alt dark:bg-bg-dark rounded-3xl p-6 shadow-md transition-all duration-300">
+      <div className="h-full flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6 pb-4 border-b">
+          <h2 className="text-lg font-semibold text-gray-800">Szczegóły zadania</h2>
+          <button onClick={() => setClickedTask(null)} className="text-gray-400 hover:text-gray-600 transition-colors">
+            <X size={20} />
+          </button>
         </div>
 
-        {/* Description */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <Edit3 size={16} className="inline mr-1" />
-            Opis
-          </label>
-          <EditableText
-            value={clickedTask.description || ""}
-            onSave={handleUpdateDescription}
-            placeholder="Dodaj opis zadania..."
-          />
-        </div>
-
-        {/* Labels */}
-        {clickedTask.labels && clickedTask.labels.length > 0 && (
+        {/* Task Content */}
+        <div className="flex-1 space-y-6">
+          {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Tag size={16} className="inline mr-1" />
-              Etykiety
+              <Edit3 size={16} className="inline mr-1" />
+              Tytuł
             </label>
-            <div className="flex flex-wrap gap-2">
-              {clickedTask.labels.map((label, index) => (
-                <span
-                  key={label.id || index}
-                  className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full"
-                  style={{ backgroundColor: label.color + '20', color: label.color }}
-                >
-                  <Tag size={12} />
-                  {label.name}
-                </span>
-              ))}
-            </div>
+            <EditableText
+              value={clickedTask.title}
+              onSave={handleUpdateTitle}
+              className="text-lg font-medium"
+              placeholder="Tytuł zadania..."
+            />
           </div>
-        )}
 
-        {/* Due Date */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <Calendar size={16} className={isOverdue() && !clickedTask.isCompleted ? "inline mr-1 text-red-500" : "inline mr-1 text-gray-500"} />
-            Termin wykonania
-          </label>
-          <p className={`text-sm ${
-            isOverdue() && !clickedTask.isCompleted ? "text-red-700" : "text-gray-700"
-          }`}>
-            {formatDueDate()}
-          </p>
-        </div>          
-      </div>
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Edit3 size={16} className="inline mr-1" />
+              Opis
+            </label>
+            <EditableText
+              value={clickedTask.description || ""}
+              onSave={handleUpdateDescription}
+              placeholder="Dodaj opis zadania..."
+            />
+          </div>
 
-      {/* Actions */}
-      <div className="space-y-3 pt-6 border-t">
-        {/* Toggle Complete */}
-        <button
-          onClick={handleToggleComplete}
-          className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-colors ${
-            clickedTask.isCompleted
-              ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
-              : "bg-green-50 text-green-700 hover:bg-green-100"
-          }`}
-        >
-          <CheckCircle2 size={18} />
-          {clickedTask.isCompleted ? "Oznacz jako nieukończone" : "Oznacz jako ukończone"}
-        </button>
+          {/* Labels */}
+          {clickedTask.labels && clickedTask.labels.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Tag size={16} className="inline mr-1" />
+                Etykiety
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {clickedTask.labels.map((label, index) => (
+                  <span
+                    key={label.id || index}
+                    className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full"
+                    style={{ backgroundColor: label.color + "20", color: label.color }}>
+                    <Tag size={12} />
+                    {label.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
-        {/* Convert to Event */}
-        <button
-          onClick={convertToEvent}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-purple-50 text-purple-700 rounded-lg font-medium hover:bg-purple-100 transition-colors"
-        >
-          <CalendarPlus size={18} />
-          Konwertuj na event
-        </button>
+          {/* Due Date */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Calendar
+                size={16}
+                className={
+                  isOverdue() && !clickedTask.isCompleted ? "inline mr-1 text-red-500" : "inline mr-1 text-gray-500"
+                }
+              />
+              Termin wykonania
+            </label>
+            <p className={`text-sm ${isOverdue() && !clickedTask.isCompleted ? "text-red-700" : "text-gray-700"}`}>
+              {formatDueDate()}
+            </p>
+          </div>
+        </div>
 
-        {/* Delete */}
-        <button
-          onClick={handleRemove}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-700 rounded-lg font-medium hover:bg-red-100 transition-colors"
-        >
-          <Trash2 size={18} />
-          Usuń zadanie
-        </button>
+        {/* Actions */}
+        <div className="space-y-3 pt-6 border-t">
+          {/* Toggle Complete */}
+          <button
+            onClick={handleToggleComplete}
+            className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-colors ${
+              clickedTask.isCompleted
+                ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
+                : "bg-green-50 text-green-700 hover:bg-green-100"
+            }`}>
+            <CheckCircle2 size={18} />
+            {clickedTask.isCompleted ? "Oznacz jako nieukończone" : "Oznacz jako ukończone"}
+          </button>
+
+          {/* Convert to Event */}
+          <button
+            onClick={convertToEvent}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-purple-50 text-purple-700 rounded-lg font-medium hover:bg-purple-100 transition-colors">
+            <CalendarPlus size={18} />
+            Konwertuj na event
+          </button>
+
+          {/* Delete */}
+          <button
+            onClick={handleRemove}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-700 rounded-lg font-medium hover:bg-red-100 transition-colors">
+            <Trash2 size={18} />
+            Usuń zadanie
+          </button>
+        </div>
       </div>
     </div>
   );

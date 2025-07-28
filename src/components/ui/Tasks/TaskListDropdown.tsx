@@ -1,20 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, List, Calendar, CheckCircle2 } from "lucide-react";
-import { TaskListInterface } from "@/data/types";
+import { useTaskContext } from "@/hooks/useTaskContext";
 
-interface TaskListDropdownProps {
-  taskLists: TaskListInterface[];
-  currentTaskList: TaskListInterface | null;
-  onTaskListChange: (list: TaskListInterface | null) => void;
-  getTaskStats?: (listId: string) => { completed: number; total: number; pending: number };
-}
-
-export default function TaskListDropdown({
-  taskLists,
-  currentTaskList,
-  onTaskListChange,
-  getTaskStats,
-}: TaskListDropdownProps) {
+export default function TaskListDropdown() {
+  const { taskLists, currentTaskList, setCurrentTaskList } = useTaskContext();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -31,14 +20,6 @@ export default function TaskListDropdown({
     };
   }, []);
 
-  const getTaskStatsForList = (list: TaskListInterface) => {
-    if (getTaskStats) {
-      return getTaskStats(list.id);
-    }
-    // Fallback for backward compatibility - show a simple message
-    return { completed: 0, total: 0, pending: 0 };
-  };
-
   return (
     <div className="relative" ref={dropdownRef}>
       {/* Trigger Button */}
@@ -50,7 +31,7 @@ export default function TaskListDropdown({
           {currentTaskList && (
             <div>
               <div className="font-medium text-gray-900">{currentTaskList.name}</div>
-              <div className="text-xs text-gray-500">Ilość zadań: {getTaskStatsForList(currentTaskList).total}</div>
+              <div className="text-xs text-gray-500">Ilość zadań: {}</div>
             </div>
           )}
         </div>
@@ -71,7 +52,7 @@ export default function TaskListDropdown({
               <button
                 key={list.id}
                 onClick={() => {
-                  onTaskListChange(list);
+                  setCurrentTaskList(list);
                   setIsOpen(false);
                 }}
                 className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 ${

@@ -20,12 +20,12 @@ interface ManageTaskListSharingModalProps {
   listName: string;
 }
 
-const ManageTaskListSharingModal: React.FC<ManageTaskListSharingModalProps> = ({
+export default function ManageTaskListSharingModal({
   isOpen,
   onClose,
   listId,
   listName
-}) => {
+}: ManageTaskListSharingModalProps) {
   const [sharedUsers, setSharedUsers] = useState<SharedUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [sharingEmail, setSharingEmail] = useState('');
@@ -274,5 +274,3 @@ const ManageTaskListSharingModal: React.FC<ManageTaskListSharingModalProps> = ({
     </div>
   );
 };
-
-export default ManageTaskListSharingModal;
