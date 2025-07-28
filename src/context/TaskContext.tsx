@@ -25,7 +25,7 @@ import {
   shareTaskListWithUser,
   acceptTaskListInvitation,
   rejectTaskListInvitation
-} from "@/firebase/taskNotifications";
+} from "@/firebase/taskPermissions";
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 

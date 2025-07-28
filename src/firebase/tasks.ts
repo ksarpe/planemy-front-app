@@ -16,18 +16,18 @@ export const useUserTaskLists = (): TaskListInterface[] => {
         }
 
         const taskListsCollection = collection(db, "taskLists");
-        const permissionsCollection = collection(db, "task_permissions");
         
-        // First, get all accepted permissions for this user
+        // First, get all accepted permissions for this user from the generic permissions system
         const permissionsQuery = query(
-            permissionsCollection, 
+            collection(db, "permissions"), 
             where("user_id", "==", user.uid),
+            where("object_type", "==", "task_list"),
             where("status", "==", "accepted")
         );
         
         const unsubscribePermissions = onSnapshot(permissionsQuery, async (permissionsSnapshot) => {
             const permissions = permissionsSnapshot.docs.map(doc => doc.data());
-            const listIds = permissions.map(p => p.list_id);
+            const listIds = permissions.map(p => p.object_id); // Changed from list_id to object_id
             
             // Also get lists where user is owner
             const ownListsQuery = query(taskListsCollection, where("userId", "==", user.uid));
@@ -375,10 +375,10 @@ export const shareTaskListWithUser = async (
 ): Promise<void> => {
     console.log("tasks.ts shareTaskListWithUser called:", { listId, targetUserEmail, permission, sharedByUserId });
     try {
-        const { shareTaskListWithUser: newShareFunction } = await import("./taskNotifications");
-        console.log("Calling taskNotifications.shareTaskListWithUser");
+        const { shareTaskListWithUser: newShareFunction } = await import("./taskPermissions");
+        console.log("Calling taskPermissionss.shareTaskListWithUser");
         await newShareFunction(listId, targetUserEmail, permission, sharedByUserId);
-        console.log("taskNotifications.shareTaskListWithUser completed successfully");
+        console.log("taskPermissionss.shareTaskListWithUser completed successfully");
     } catch (error) {
         console.error("Error sharing task list:", error);
         throw error;
@@ -388,7 +388,7 @@ export const shareTaskListWithUser = async (
 // Accept shared task list - now uses notifications collection
 export const acceptSharedTaskList = async (shareId: string): Promise<void> => {
     try {
-        const { acceptTaskListInvitation } = await import("./taskNotifications");
+        const { acceptTaskListInvitation } = await import("./taskPermissions");
         await acceptTaskListInvitation(shareId);
     } catch (error) {
         console.error("Error accepting shared task list:", error);
@@ -399,7 +399,7 @@ export const acceptSharedTaskList = async (shareId: string): Promise<void> => {
 // Reject shared task list - now uses notifications collection
 export const rejectSharedTaskList = async (shareId: string): Promise<void> => {
     try {
-        const { rejectTaskListInvitation } = await import("./taskNotifications");
+        const { rejectTaskListInvitation } = await import("./taskPermissions");
         await rejectTaskListInvitation(shareId);
     } catch (error) {
         console.error("Error rejecting shared task list:", error);
@@ -410,7 +410,7 @@ export const rejectSharedTaskList = async (shareId: string): Promise<void> => {
 // Revoke access to shared task list
 export const revokeTaskListAccess = async (listId: string, userId: string): Promise<void> => {
     try {
-        const { revokeTaskListAccess: revokeAccess } = await import("./taskNotifications");
+        const { revokeTaskListAccess: revokeAccess } = await import("./taskPermissions");
         await revokeAccess(listId, userId);
     } catch (error) {
         console.error("Error revoking task list access:", error);
@@ -421,7 +421,7 @@ export const revokeTaskListAccess = async (listId: string, userId: string): Prom
 // Get users with access to task list
 export const getTaskListSharedUsers = async (listId: string) => {
     try {
-        const { getTaskListSharedUsers: getSharedUsers } = await import("./taskNotifications");
+        const { getTaskListSharedUsers: getSharedUsers } = await import("./taskPermissions");
         return await getSharedUsers(listId);
     } catch (error) {
         console.error("Error getting shared users:", error);
@@ -444,7 +444,7 @@ export const useUserPendingShares = (): SharedTaskList[] => {
 
         const setupListener = async () => {
             try {
-                const { listenToUserPendingNotifications } = await import("./taskNotifications");
+                const { listenToUserPendingNotifications } = await import("./taskPermissions");
                 
                 console.log("Setting up pending notifications listener for user:", user.uid);
                 unsubscribe = listenToUserPendingNotifications(user.uid, (notifications: TaskListNotification[]) => {

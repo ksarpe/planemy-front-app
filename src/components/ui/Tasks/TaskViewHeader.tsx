@@ -2,32 +2,22 @@ import { FolderPlus, Share2 } from "lucide-react";
 import { TaskListInterface } from "@/data/types";
 import TaskListDropdown from "./TaskListDropdown";
 import TaskListActions from "./TaskListActions";
+import { useTaskContext } from "@/hooks/useTaskContext";
 
 interface TaskViewHeaderProps {
-  taskLists: TaskListInterface[];
+  taskLists: TaskListInterface[]
   currentTaskList: TaskListInterface | null;
-  onTaskListChange: (list: TaskListInterface | null) => void;
   onNewListClick: () => void;
   onShareListClick: (listId: string) => void;
-  onRenameList: (listId: string, newName: string) => void;
-  onDeleteList: (listId: string) => void;
-  onClearCompletedTasks: (listId: string) => void;
-  onUncheckAllTasks: (listId: string) => void;
-  loading: boolean;
 }
 
 export default function TaskViewHeader({
   taskLists,
   currentTaskList,
-  onTaskListChange,
   onNewListClick,
   onShareListClick,
-  onRenameList,
-  onDeleteList,
-  onClearCompletedTasks,
-  onUncheckAllTasks,
-  loading
 }: TaskViewHeaderProps) {
+  const { setCurrentTaskList, loading } = useTaskContext();
   return (
     <div className="flex justify-between items-center">
       {/* Task List Dropdown and Actions */}
@@ -36,7 +26,7 @@ export default function TaskViewHeader({
           <TaskListDropdown
             taskLists={taskLists}
             currentTaskList={currentTaskList}
-            onTaskListChange={onTaskListChange}
+            onTaskListChange={setCurrentTaskList}
           />
         )}
         
@@ -44,10 +34,6 @@ export default function TaskViewHeader({
         {currentTaskList && (
           <TaskListActions
             currentTaskList={currentTaskList}
-            onRenameList={onRenameList}
-            onDeleteList={onDeleteList}
-            onClearCompletedTasks={onClearCompletedTasks}
-            onUncheckAllTasks={onUncheckAllTasks}
             loading={loading}
           />
         )}

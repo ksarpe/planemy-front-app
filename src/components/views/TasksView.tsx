@@ -18,14 +18,9 @@ export default function TasksView() {
   const { 
     taskLists, 
     currentTaskList, 
-    setCurrentTaskList, 
     clickedTask, 
     addTask,
     createTaskList,
-    renameTaskList,
-    deleteTaskList,
-    clearCompletedTasks,
-    uncheckAllTasks,
     loading
   } = useTaskContext();
   
@@ -64,14 +59,8 @@ export default function TasksView() {
         <TaskViewHeader
           taskLists={taskLists}
           currentTaskList={currentTaskList}
-          onTaskListChange={setCurrentTaskList}
           onNewListClick={() => setIsListModalOpen(true)}
           onShareListClick={handleShareList}
-          onRenameList={renameTaskList}
-          onDeleteList={deleteTaskList}
-          onClearCompletedTasks={clearCompletedTasks}
-          onUncheckAllTasks={uncheckAllTasks}
-          loading={loading}
         />
 
         {/* No task lists state */}

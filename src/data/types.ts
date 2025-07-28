@@ -112,7 +112,23 @@ export interface UserProfile {
 // Sharing permission levels
 export type SharePermission = "view" | "edit" | "admin";
 
-// NEW: Task list permission entry for separate collection
+// Object types that can be shared
+export type ShareableObjectType = "task_list" | "event" | "shopping_list";
+
+// NEW: Generic permission entry for any shareable object
+export interface Permission {
+  id?: string; // Firestore document ID
+  object_id: string; // ID of the shared object (task list, event, shopping list)
+  object_type: ShareableObjectType; // Type of the shared object
+  user_id: string; // ID of the user with permission
+  role: SharePermission; // Permission level
+  granted_by: string; // ID of user who granted permission
+  granted_at: string; // ISO string timestamp
+  accepted_at?: string; // When user accepted invitation
+  status: "pending" | "accepted" | "rejected" | "revoked"; // Invitation status
+}
+
+// Legacy: Task list permission entry (for backwards compatibility)
 export interface TaskListPermission {
   id?: string; // Firestore document ID
   list_id: string; // ID of the task list
@@ -134,7 +150,20 @@ export interface SharedTaskList {
   acceptedAt?: string;
 }
 
-// Simple notification for task list sharing
+// Generic notification for any shared object
+export interface ShareNotification {
+  id?: string; // Firestore document ID
+  object_id: string; // ID of the shared object
+  object_type: ShareableObjectType; // Type of the shared object
+  object_name: string; // Name of the object for display
+  shared_by: string; // ID of user who shared
+  shared_with: string; // ID of user receiving notification
+  permission: SharePermission; // Permission level
+  shared_at: string; // ISO string timestamp
+  status: "pending" | "accepted" | "rejected" | "revoked"; // Notification status
+}
+
+// Legacy: Simple notification for task list sharing (for backwards compatibility)
 export interface TaskListNotification {
   id?: string; // Firestore document ID
   listId: string; // ID of the task list
