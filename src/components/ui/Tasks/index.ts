@@ -5,7 +5,6 @@ export { default as TaskListDropdown } from "./TaskListDropdown";
 export { default as TaskViewHeader } from "./TaskViewHeader";
 export { default as TaskStatistics } from "./TaskStatistics";
 export { default as TaskAlerts } from "./TaskAlerts";
-export { default as TaskFilters } from "./TaskFilters";
 export { default as TaskProgressIndicator } from "./TaskProgressIndicator";
 export { default as PendingSharesNotification } from "./PendingSharesNotification";
 export { default as CreateTaskListModal } from "./Modals/CreateTaskListModal";

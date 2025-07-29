@@ -9,7 +9,6 @@ import {
   TaskList,
   TaskStatistics,
   TaskAlerts,
-  TaskFilters,
   TaskProgressIndicator,
   PendingSharesNotification,
   TaskDetails,
@@ -57,7 +56,7 @@ export default function TasksView() {
       <div
         className={`${
           clickedTask ? "w-2/3" : "w-full"
-        } rounded-3xl shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-300`}>
+        } rounded-3xl shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-600`}>
         {/* Header with Task Lists */}
         <TaskViewHeader onNewListClick={() => setIsListModalOpen(true)} onShareListClick={handleShareList} />
 
@@ -71,13 +70,16 @@ export default function TasksView() {
 
         {/* Task list content */}
         {currentTaskList && (
-          <>
-            <TaskStatistics tasks={tasks} />
-            <TaskAlerts tasks={tasks} />
-            <TaskFilters filter={filter} onFilterChange={setFilter} tasks={tasks} />
-            <TaskList tasks={tasks} filter={filter} onAddTaskClick={() => setIsTaskModalOpen(true)} />
-            <TaskProgressIndicator tasks={tasks} />
-          </>
+          <div className="flex flex-col h-full justify-between">
+            <div>
+              <TaskStatistics tasks={tasks} filter={filter} onFilterChange={setFilter} />
+              <TaskAlerts tasks={tasks} />
+              <TaskList tasks={tasks} filter={filter} onAddTaskClick={() => setIsTaskModalOpen(true)} />
+            </div>
+            <div>
+              <TaskProgressIndicator tasks={tasks} />
+            </div>
+          </div>
         )}
 
         {/* Create Task List Modal */}
