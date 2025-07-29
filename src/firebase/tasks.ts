@@ -456,7 +456,7 @@ export const useUserPendingShares = (): SharedTaskList[] => {
                         sharedBy: notification.sharedBy,
                         permission: notification.permission,
                         sharedAt: notification.sharedAt,
-                        acceptedAt: undefined,
+                        acceptedAt: "",
                     })) as SharedTaskList[];
                     
                     console.log("useUserPendingShares - converted to SharedTaskList:", sharedTaskLists);

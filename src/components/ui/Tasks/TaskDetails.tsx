@@ -1,22 +1,26 @@
 import EditableText from "@/components/ui/Utils/EditableText";
 import { useTaskContext } from "@/hooks/useTaskContext";
-import { X, Calendar, CheckCircle2, Trash2, CalendarPlus, Edit3, Tag } from "lucide-react";
+import { Calendar, CheckCircle2, Trash2, CalendarPlus, Edit3, Tag, PanelRightClose } from "lucide-react";
+import { useState } from "react";
 
 export default function TaskDetails() {
   const { updateTask, toggleTaskComplete, removeTask, convertToEvent, clickedTask, setClickedTask, currentTaskList } =
     useTaskContext();
+  const [isEditingDate, setIsEditingDate] = useState(false);
+  const [tempDate, setTempDate] = useState("");
+  const [tempTime, setTempTime] = useState("");
 
   if (!clickedTask || !currentTaskList) return;
 
   const isOverdue = () => {
-    if (clickedTask.isCompleted || !clickedTask.dueDate) return false;
+    if (clickedTask.isCompleted || !clickedTask.dueDate || clickedTask.dueDate === "") return false;
     const today = new Date();
     const dueDate = new Date(clickedTask.dueDate);
     return dueDate < today;
   };
 
   const getDaysUntilDue = () => {
-    if (!clickedTask.dueDate) return null;
+    if (!clickedTask.dueDate || clickedTask.dueDate === "") return null;
     const today = new Date();
     const dueDate = new Date(clickedTask.dueDate);
     const diffTime = dueDate.getTime() - today.getTime();
@@ -25,7 +29,7 @@ export default function TaskDetails() {
   };
 
   const formatDueDate = () => {
-    if (!clickedTask.dueDate) return "Brak terminu";
+    if (!clickedTask.dueDate || clickedTask.dueDate === "") return "Brak terminu";
 
     const daysUntil = getDaysUntilDue()!;
     const dateStr = new Date(clickedTask.dueDate).toLocaleDateString("pl-PL");
@@ -51,6 +55,41 @@ export default function TaskDetails() {
     await updateTask(currentTaskList.id, clickedTask.id, { description: newDescription });
   };
 
+  const handleUpdateDueDate = async (newDueDate: string) => {
+    await updateTask(currentTaskList.id, clickedTask.id, { dueDate: newDueDate });
+    // Aktualizuj lokalny stan zadania
+    setClickedTask({ ...clickedTask, dueDate: newDueDate });
+    setIsEditingDate(false);
+  };
+
+  const handleRemoveDueDate = async () => {
+    await updateTask(currentTaskList.id, clickedTask.id, { dueDate: "" });
+    // Aktualizuj lokalny stan zadania
+    setClickedTask({ ...clickedTask, dueDate: "" });
+    setIsEditingDate(false);
+  };
+
+  // Inicjalizacja temp wartości przy rozpoczęciu edycji
+  const startEditingDate = () => {
+    if (clickedTask.dueDate && clickedTask.dueDate !== "") {
+      const date = new Date(clickedTask.dueDate);
+      setTempDate(date.toISOString().split('T')[0]);
+      setTempTime(date.toTimeString().split(' ')[0].slice(0, 5));
+    } else {
+      setTempDate("");
+      setTempTime("12:00");
+    }
+    setIsEditingDate(true);
+  };
+
+  // Aktualizacja daty na podstawie temp wartości
+  const updateDateFromTemp = () => {
+    if (tempDate && tempTime) {
+      const newDateTime = `${tempDate}T${tempTime}:00`;
+      handleUpdateDueDate(newDateTime);
+    }
+  };
+
   const handleToggleComplete = async () => {
     await toggleTaskComplete(currentTaskList.id, clickedTask.id);
   };
@@ -61,13 +100,12 @@ export default function TaskDetails() {
   };
 
   return (
-    <div className="w-1/3 bg-bg-alt dark:bg-bg-dark rounded-3xl p-6 shadow-md transition-all duration-300">
+    <div className="w-1/4 bg-bg-alt dark:bg-bg-dark rounded-lg p-6 shadow-md transition-all duration-300">
       <div className="h-full flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 pb-4 border-b">
-          <h2 className="text-lg font-semibold text-gray-800">Szczegóły zadania</h2>
+        <div className="flex items-center pb-4">
           <button onClick={() => setClickedTask(null)} className="text-gray-400 hover:text-gray-600 transition-colors">
-            <X size={20} />
+            <PanelRightClose size={20} />
           </button>
         </div>
 
@@ -132,9 +170,68 @@ export default function TaskDetails() {
               />
               Termin wykonania
             </label>
-            <p className={`text-sm ${isOverdue() && !clickedTask.isCompleted ? "text-red-700" : "text-gray-700"}`}>
-              {formatDueDate()}
-            </p>
+
+            {!isEditingDate ? (
+              <button
+                onClick={startEditingDate}
+                className="w-full flex items-center justify-between bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors cursor-pointer">
+                <p className={`text-sm ${isOverdue() && !clickedTask.isCompleted ? "text-red-700" : "text-gray-700"}`}>
+                  {formatDueDate()}
+                </p>
+                <Edit3 size={16} className="text-blue-600" />
+              </button>
+            ) : (
+              <div className="space-y-3 bg-white border border-gray-200 rounded-lg p-4">
+                {/* Data i godzina w jednym wierszu */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <label className="block text-xs font-medium text-gray-600">Data</label>
+                    <input
+                      type="date"
+                      value={tempDate}
+                      onChange={(e) => setTempDate(e.target.value)}
+                      onBlur={updateDateFromTemp}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          updateDateFromTemp();
+                        }
+                      }}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-xs font-medium text-gray-600">Godzina</label>
+                    <input
+                      type="time"
+                      value={tempTime}
+                      onChange={(e) => setTempTime(e.target.value)}
+                      onBlur={updateDateFromTemp}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          updateDateFromTemp();
+                        }
+                      }}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+
+                {/* Przyciski w drugim wierszu */}
+                <div className="flex gap-2 pt-2">
+                  <button
+                    onClick={() => setIsEditingDate(false)}
+                    className="flex-1 px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                    Anuluj
+                  </button>
+                  <button
+                    onClick={handleRemoveDueDate}
+                    className="flex-1 px-3 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors">
+                    Usuń termin
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

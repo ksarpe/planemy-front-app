@@ -7,7 +7,7 @@ interface TaskAlertsProps {
 
 export default function TaskAlerts({ tasks }: TaskAlertsProps) {
   // Calculate overdue tasks
-  const overdueTasks = tasks.filter(task => {
+  const overdueTasks = tasks.filter((task) => {
     if (task.isCompleted) return false;
     if (!task.dueDate) return false;
     const today = new Date();
@@ -16,7 +16,7 @@ export default function TaskAlerts({ tasks }: TaskAlertsProps) {
   });
 
   // Calculate due soon tasks (within 2 days)
-  const dueSoonTasks = tasks.filter(task => {
+  const dueSoonTasks = tasks.filter((task) => {
     if (task.isCompleted) return false;
     if (!task.dueDate) return false;
     const today = new Date();
@@ -31,21 +31,9 @@ export default function TaskAlerts({ tasks }: TaskAlertsProps) {
       {overdueTasks.length > 0 && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <h3 className="text-red-800 font-medium mb-2 flex items-center gap-2">
-            <AlertTriangle size={18} />
+            <AlertTriangle size={18} className="animate-pulse" />
             Masz {overdueTasks.length} przeterminowane zadania
           </h3>
-          <div className="space-y-1">
-            {overdueTasks.slice(0, 3).map(task => (
-              <div key={task.id} className="text-red-700 text-sm">
-                {task.title} - termin: {task.dueDate ? new Date(task.dueDate).toLocaleDateString('pl-PL') : 'Brak terminu'}
-              </div>
-            ))}
-            {overdueTasks.length > 3 && (
-              <div className="text-red-600 text-sm">
-                ...i {overdueTasks.length - 3} więcej
-              </div>
-            )}
-          </div>
         </div>
       )}
 
@@ -57,10 +45,10 @@ export default function TaskAlerts({ tasks }: TaskAlertsProps) {
             Zadania do wykonania w najbliższych dniach
           </h3>
           <div className="space-y-1">
-            {dueSoonTasks.map(task => (
+            {dueSoonTasks.map((task) => (
               <div key={task.id} className="text-yellow-700 text-sm flex justify-between">
                 <span>{task.title}</span>
-                <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString('pl-PL') : 'Brak terminu'}</span>
+                <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString("pl-PL") : "Brak terminu"}</span>
               </div>
             ))}
           </div>

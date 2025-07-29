@@ -9,8 +9,8 @@ interface TaskViewHeaderProps {
 }
 
 export default function TaskViewHeader({ onNewListClick }: TaskViewHeaderProps) {
-  const { currentTaskList, loading } = useTaskContext();
-  if (loading) return null;
+  const { currentTaskList } = useTaskContext();
+  if (!currentTaskList) return null;
   return (
     <div className="flex justify-between items-center">
       {/* Task List Dropdown and Actions */}

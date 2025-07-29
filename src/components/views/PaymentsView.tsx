@@ -11,30 +11,26 @@ export default function Payments() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Calculate statistics
-  const activePayments = payments.filter(p => p.isActive);
-  const totalMonthlyAmount = activePayments
-    .filter(p => p.cycle === 'monthly')
-    .reduce((sum, p) => sum + p.amount, 0);
-  
+  const activePayments = payments.filter((p) => p.isActive);
+  const totalMonthlyAmount = activePayments.filter((p) => p.cycle === "monthly").reduce((sum, p) => sum + p.amount, 0);
+
   const upcomingPayments = activePayments
-    .filter(p => {
+    .filter((p) => {
       const daysUntil = getDaysUntilPayment(p.nextPaymentDate);
       return daysUntil <= 7 && daysUntil >= 0;
     })
     .sort((a, b) => getDaysUntilPayment(a.nextPaymentDate) - getDaysUntilPayment(b.nextPaymentDate));
 
-  const overduePayments = activePayments.filter(p => getDaysUntilPayment(p.nextPaymentDate) < 0);
+  const overduePayments = activePayments.filter((p) => getDaysUntilPayment(p.nextPaymentDate) < 0);
 
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full rounded-3xl shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6">
-        
+      <div className="w-full rounded-lg shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6">
         {/* Header with Stats */}
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-2xl font-semibold mb-2">Płatności i Subskrypcje</h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              
               {/* Total Monthly */}
               <div className="bg-white dark:bg-bg-hover-dark rounded-lg p-4 shadow-sm">
                 <div className="flex items-center gap-2 text-green-600 mb-1">
@@ -52,9 +48,7 @@ export default function Payments() {
                   <Calendar size={18} />
                   <span className="text-sm font-medium">Nadchodzące (7 dni)</span>
                 </div>
-                <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">
-                  {upcomingPayments.length}
-                </div>
+                <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">{upcomingPayments.length}</div>
               </div>
 
               {/* Overdue Payments */}
@@ -63,17 +57,14 @@ export default function Payments() {
                   <TrendingDown size={18} />
                   <span className="text-sm font-medium">Przeterminowane</span>
                 </div>
-                <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">
-                  {overduePayments.length}
-                </div>
+                <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">{overduePayments.length}</div>
               </div>
             </div>
           </div>
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-          >
+            className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
             <Plus size={18} />
             Dodaj płatność
           </button>
@@ -86,7 +77,7 @@ export default function Payments() {
               ⚠️ Masz {overduePayments.length} przeterminowane płatności
             </h3>
             <div className="space-y-1">
-              {overduePayments.map(payment => (
+              {overduePayments.map((payment) => (
                 <div key={payment.id} className="text-red-700 text-sm">
                   {payment.name} - {Math.abs(getDaysUntilPayment(payment.nextPaymentDate))} dni temu
                 </div>
@@ -98,11 +89,9 @@ export default function Payments() {
         {/* Upcoming Payments */}
         {upcomingPayments.length > 0 && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h3 className="text-yellow-800 font-medium mb-2">
-              📅 Nadchodzące płatności (następne 7 dni)
-            </h3>
+            <h3 className="text-yellow-800 font-medium mb-2">📅 Nadchodzące płatności (następne 7 dni)</h3>
             <div className="space-y-1">
-              {upcomingPayments.map(payment => (
+              {upcomingPayments.map((payment) => (
                 <div key={payment.id} className="text-yellow-700 text-sm flex justify-between">
                   <span>{payment.name}</span>
                   <span>Za {getDaysUntilPayment(payment.nextPaymentDate)} dni</span>
@@ -124,16 +113,11 @@ export default function Payments() {
           {payments.length === 0 ? (
             <div className="text-center py-12">
               <DollarSign size={48} className="mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-500 mb-2">
-                Brak płatności
-              </h3>
-              <p className="text-gray-400 mb-4">
-                Dodaj swoją pierwszą płatność lub subskrypcję
-              </p>
+              <h3 className="text-lg font-medium text-gray-500 mb-2">Brak płatności</h3>
+              <p className="text-gray-400 mb-4">Dodaj swoją pierwszą płatność lub subskrypcję</p>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-              >
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
                 Dodaj płatność
               </button>
             </div>
@@ -147,11 +131,7 @@ export default function Payments() {
         </div>
 
         {/* Add Payment Modal */}
-        <AddPaymentModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSubmit={addPayment}
-        />
+        <AddPaymentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={addPayment} />
       </div>
     </div>
   );

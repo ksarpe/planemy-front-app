@@ -36,7 +36,7 @@ export default function TasksView() {
     await createTaskList(name);
   };
 
-  if (loading || !currentTaskList) {
+  if (!currentTaskList) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
@@ -55,8 +55,8 @@ export default function TasksView() {
       {/* Main panel */}
       <div
         className={`${
-          clickedTask ? "w-2/3" : "w-full"
-        } rounded-3xl shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-600`}>
+          clickedTask ? "w-3/4" : "w-full"
+        } rounded-lg shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-600`}>
         {/* Header with Task Lists */}
         <TaskViewHeader onNewListClick={() => setIsListModalOpen(true)} onShareListClick={handleShareList} />
 
@@ -71,7 +71,7 @@ export default function TasksView() {
         {/* Task list content */}
         {currentTaskList && (
           <div className="flex flex-col h-full justify-between">
-            <div>
+            <div className="space-y-4">
               <TaskStatistics tasks={tasks} filter={filter} onFilterChange={setFilter} />
               <TaskAlerts tasks={tasks} />
               <TaskList tasks={tasks} filter={filter} onAddTaskClick={() => setIsTaskModalOpen(true)} />

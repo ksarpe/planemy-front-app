@@ -13,7 +13,7 @@ export default function TaskStatistics({ tasks, onFilterChange, filter }: TaskSt
   const pendingTasks = tasks.filter((task) => !task.isCompleted);
   const overdueTasks = tasks.filter((task) => {
     if (task.isCompleted) return false;
-    if (!task.dueDate) return false;
+    if (!task.dueDate || task.dueDate === "") return false;
     const today = new Date();
     const dueDate = new Date(task.dueDate);
     return dueDate < today;
