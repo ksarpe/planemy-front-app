@@ -1,8 +1,10 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useState, ReactNode } from "react";
 import Toast from "@/components/ui/Utils/Toast";
 import type { ToastContextProps } from "@/data/typesProps";
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
+
+export { ToastContext };
 
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toast, setToast] = useState<{ type: string; message: string } | null>(
@@ -31,10 +33,3 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useToast = () => {
-  const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error("useToast must be used within a ToastProvider");
-  }
-  return context;
-};

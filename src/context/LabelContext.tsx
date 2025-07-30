@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { useAuth } from "./AuthContext";
-import { useToast } from "./ToastContext";
+import { useToast } from "@/hooks/useToastContext";
 import { LabelInterface } from "@/data/types";
 import {
   createLabel as createLabelFirebase,

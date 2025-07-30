@@ -7,7 +7,7 @@ import type {
   SharePermission,
   UserProfile,
 } from "@/data/types";
-import { useToast } from "@/context/ToastContext";
+import { useToast } from "@/hooks/useToastContext";
 import { useAuth } from "@/context/AuthContext";
 import type { TaskContextProps } from "@/data/typesProps";
 import {
@@ -253,6 +253,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   ): Promise<void> => {
     try {
       setLoading(true);
+      console.log(_listId, _userId, _permission);
       // We need to find the permission ID for this user and list first
       // This should be implemented to get the permission ID first
       // For now, this function needs to be refactored to work with the new system

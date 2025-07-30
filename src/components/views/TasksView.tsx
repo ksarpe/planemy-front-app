@@ -17,7 +17,7 @@ import Spinner from "../ui/Utils/Spinner";
 
 export default function TasksView() {
   const { taskLists, currentTaskList, clickedTask, loading, createTaskList } = useTaskContext();
-  const [isListModalOpen, setIsListModalOpen] = useState(false);
+  const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareListId, setShareListId] = useState<string | null>(null);
   const [filter, setFilter] = useState<"pending" | "completed" | "overdue">("pending");
@@ -54,12 +54,14 @@ export default function TasksView() {
       <div
         className={`${
           clickedTask ? "w-3/4" : "w-full"
-        } rounded-lg shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-600`}>
+        } relative rounded-lg shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-600`}>
         {/* Header with Task Lists */}
-        <TaskViewHeader onNewListClick={() => setIsListModalOpen(true)} onShareListClick={handleShareList} />
+        <TaskViewHeader onNewListClick={() => setIsCreateListModalOpen(true)} onShareListClick={handleShareList} />
 
         {/* No task lists state */}
-        {taskLists.length === 0 && <EmptyStates type="no-lists" onCreateListClick={() => setIsListModalOpen(true)} />}
+        {taskLists.length === 0 && (
+          <EmptyStates type="no-lists" onCreateListClick={() => setIsCreateListModalOpen(true)} />
+        )}
 
         {/* No current list selected */}
         {taskLists.length > 0 && !currentTaskList && (
@@ -82,8 +84,8 @@ export default function TasksView() {
 
         {/* Create Task List Modal */}
         <CreateTaskListModal
-          isOpen={isListModalOpen}
-          onClose={() => setIsListModalOpen(false)}
+          isOpen={isCreateListModalOpen}
+          onClose={() => setIsCreateListModalOpen(false)}
           onSubmit={handleCreateTaskList}
           loading={loading}
         />

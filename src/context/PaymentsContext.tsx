@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { PaymentInterface } from "@/data/types";
 import type { PaymentsContextProps } from "@/data/typesProps";
 import { useAuth } from "./AuthContext";
-import { useToast } from "./ToastContext";
+import { useToast } from "@/hooks/useToastContext";
 import { 
   useUserPayments, 
   addPayment as addPaymentToFirebase,

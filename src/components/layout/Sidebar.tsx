@@ -1,6 +1,6 @@
 import { usePreferencesContext } from "@/context/PreferencesContext";
 import { useAuth } from "@/context/AuthContext";
-import { useToast } from "@/context/ToastContext";
+import { useToast } from "@/hooks/useToastContext";
 import { Moon, Sun, LogOut, User, Tag } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import SidebarLink from "../ui/Sidebar/SidebarLink";

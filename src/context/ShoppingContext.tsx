@@ -6,7 +6,7 @@ import {
 } from "../data/types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
-import { useToast } from "./ToastContext";
+import { useToast } from "@/hooks/useToastContext";
 import { 
   useShoppingLists, 
   useFavoriteProducts,

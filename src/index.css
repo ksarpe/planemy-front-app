@@ -2,8 +2,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* custom imports css */
-@import "@/styles/aiassistant.css";
-@import "@/styles/calendar.css";
 
 @layer base {
   body {

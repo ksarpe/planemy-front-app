@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface CreateTaskListModalProps {
   isOpen: boolean;
@@ -7,26 +7,33 @@ interface CreateTaskListModalProps {
   loading: boolean;
 }
 
-export default function CreateTaskListModal({ 
-  isOpen, 
-  onClose, 
-  onSubmit, 
-  loading 
-}: CreateTaskListModalProps) {
+export default function CreateTaskListModal({ isOpen, onClose, onSubmit, loading }: CreateTaskListModalProps) {
   const [listName, setListName] = useState("");
+
+  // Handle Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!listName.trim()) return;
-    
+
     await onSubmit(listName.trim());
     setListName("");
     onClose();
   };
 
   const handleClose = () => {
-    setListName("");
     onClose();
+    setListName("");
   };
 
   if (!isOpen) return null;
@@ -37,9 +44,7 @@ export default function CreateTaskListModal({
         <h2 className="text-xl font-semibold mb-4">Utwórz nową listę zadań</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Nazwa listy
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Nazwa listy</label>
             <input
               type="text"
               value={listName}
@@ -53,15 +58,13 @@ export default function CreateTaskListModal({
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-            >
+              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
               Anuluj
             </button>
             <button
               type="submit"
               disabled={!listName.trim() || loading}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
-            >
+              className="px-4 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50">
               Utwórz
             </button>
           </div>

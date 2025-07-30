@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Settings, Edit3, Trash2, RotateCcw, AlertTriangle, Users } from "lucide-react";
 import { useTaskContext } from "@/hooks/useTaskContext";
 import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
@@ -20,6 +20,17 @@ export default function TaskListActions() {
   const [isRenaming, setIsRenaming] = useState(false); // wether the rename modal is open
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // wether the delete confirmation modal is open
   const [showSharingModal, setShowSharingModal] = useState(false);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen]);
 
   if (!currentTaskList) return null;
 
@@ -80,9 +91,9 @@ export default function TaskListActions() {
                 setShowSharingModal(true);
                 setIsOpen(false);
               }}
-              className="w-full flex items-center gap-3 px-3 py-2 text-left text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors">
+              className="w-full flex items-center gap-3 px-3 py-2 text-left text-blue-700 hover:bg-indigo-50 rounded-lg transition-colors">
               <Users size={16} />
-              <span className="text-sm">Zarządzaj udostępnianiem</span>
+              <span className="text-sm">Udostępnij</span>
             </button>
 
             {/* Clear Completed Tasks */}
