@@ -1,6 +1,5 @@
 import { PreferencesProvider } from "@/context/PreferencesContext";
 import { ToastProvider } from "@/context/ToastContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -12,14 +11,12 @@ import ProfileView from "@/components/views/ProfileView.tsx";
 import ShoppingView from "@/components/views/ShoppingView.tsx";
 import TasksView from "@/components/views/TasksView.tsx";
 import PaymentsView from "@/components/views/PaymentsView.tsx";
+import LabelsView from "@/components/views/LabelsView.tsx";
 
-//DEV
 import { AuthProvider } from "./context/AuthContext";
 import { ShoppingProvider } from "./context/ShoppingContext";
+import { LabelProvider } from "./context/LabelContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-//DEV
-
-const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -36,24 +33,25 @@ const router = createBrowserRouter([
       { path: "/profile", element: <ProfileView /> },
       { path: "/shopping", element: <ShoppingView /> },
       { path: "/payments", element: <PaymentsView /> },
+      { path: "/labels", element: <LabelsView /> },
       { path: "*", element: <NotFoundView /> },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  //Remove STRICT MODE for production to get rid of double logging
+  //Remove STRICT MODE for production (possibly it does it itself)
   <StrictMode>
     <AuthProvider>
-    <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <PreferencesProvider>
-          <ShoppingProvider>
-            <RouterProvider router={router} />
-          </ShoppingProvider>
+          <LabelProvider>
+            <ShoppingProvider>
+              <RouterProvider router={router} />
+            </ShoppingProvider>
+          </LabelProvider>
         </PreferencesProvider>
       </ToastProvider>
-    </QueryClientProvider>
     </AuthProvider>
-  </StrictMode>
+  </StrictMode>,
 );
