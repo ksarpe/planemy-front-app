@@ -25,7 +25,7 @@ export default function TaskListDropdown() {
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-all duration-200 min-w-[250px]">
+        className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-all duration-200 min-w-[250px] h-[64px]">
         <List size={18} className="text-gray-500" />
         <div className="flex-1 text-left">
           {currentTaskList && (

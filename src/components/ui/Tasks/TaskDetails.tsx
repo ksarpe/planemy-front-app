@@ -2,11 +2,13 @@ import EditableText from "@/components/ui/Utils/EditableText";
 import { useTaskContext } from "@/hooks/useTaskContext";
 import { Calendar, CheckCircle2, Trash2, CalendarPlus, Edit3, Tag, PanelRightClose } from "lucide-react";
 import { useState } from "react";
+import { DeleteConfirmationModal } from "../Common";
 
 export default function TaskDetails() {
   const { updateTask, toggleTaskComplete, removeTask, convertToEvent, clickedTask, setClickedTask, currentTaskList } =
     useTaskContext();
   const [isEditingDate, setIsEditingDate] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // wether the delete confirmation modal is open
   const [tempDate, setTempDate] = useState("");
   const [tempTime, setTempTime] = useState("");
 
@@ -73,8 +75,8 @@ export default function TaskDetails() {
   const startEditingDate = () => {
     if (clickedTask.dueDate && clickedTask.dueDate !== "") {
       const date = new Date(clickedTask.dueDate);
-      setTempDate(date.toISOString().split('T')[0]);
-      setTempTime(date.toTimeString().split(' ')[0].slice(0, 5));
+      setTempDate(date.toISOString().split("T")[0]);
+      setTempTime(date.toTimeString().split(" ")[0].slice(0, 5));
     } else {
       setTempDate("");
       setTempTime("12:00");
@@ -94,9 +96,10 @@ export default function TaskDetails() {
     await toggleTaskComplete(currentTaskList.id, clickedTask.id);
   };
 
-  const handleRemove = async () => {
-    await removeTask(currentTaskList.id, clickedTask.id);
+  const handleDelete = async () => {
+    setShowDeleteConfirm(false);
     setClickedTask(null);
+    await removeTask(currentTaskList.id, clickedTask.id);
   };
 
   return (
@@ -192,7 +195,7 @@ export default function TaskDetails() {
                       onChange={(e) => setTempDate(e.target.value)}
                       onBlur={updateDateFromTemp}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === "Enter") {
                           updateDateFromTemp();
                         }
                       }}
@@ -208,7 +211,7 @@ export default function TaskDetails() {
                       onChange={(e) => setTempTime(e.target.value)}
                       onBlur={updateDateFromTemp}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === "Enter") {
                           updateDateFromTemp();
                         }
                       }}
@@ -259,13 +262,23 @@ export default function TaskDetails() {
 
           {/* Delete */}
           <button
-            onClick={handleRemove}
+            onClick={() => setShowDeleteConfirm(true)}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-700 rounded-lg font-medium hover:bg-red-100 transition-colors">
             <Trash2 size={18} />
             Usuń zadanie
           </button>
         </div>
       </div>
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDelete}
+        title="Usuń zadanie"
+        message="Czy na pewno chcesz usunąć zadanie"
+        itemName={clickedTask.title}
+        confirmButtonText="Usuń zadanie"
+      />
     </div>
   );
 }

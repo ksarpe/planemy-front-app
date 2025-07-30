@@ -27,15 +27,57 @@
   --color-text-dark: white; /* Slate 200 */
   --color-bg-dark: rgb(24, 24, 24); /* Navy dark */
   --color-bg-hover-dark: #2e3b5d; /* blue 700 */
-  --color-bg-alt-dark: rgb(33, 33, 33) /* Slate 800 */
+  --color-bg-alt-dark: rgb(33, 33, 33); /* Slate 800 */
 }
 
 .scrollbar-hide {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer and Edge */
-  overflow-y: auto;
-  overflow-x: auto;
 }
-&::-webkit-scrollbar {
+
+.scrollbar-hide::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
+
+/* Hide horizontal scrollbar specifically */
+.hide-horizontal-scroll {
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+.hide-horizontal-scroll::-webkit-scrollbar:horizontal {
+  display: none; /* Safari and Chrome */
+}
+
+/* AI Textbox Space Fade Animation */
+@keyframes space-fade {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.ai-textbox-animated {
+  position: relative;
+  border-radius: 8px;
+  padding: 2px; /* Grubość ramki */
+  background: linear-gradient(
+    45deg,
+    #ff6b9d,
+    /* Różowy */ #c44569,
+    /* Ciemny różowy */ #6c5ce7,
+    /* Fioletowy */ #a29bfe,
+    /* Jasny fioletowy */ #fd79a8,
+    /* Różowy */ #e84393,
+    /* Magenta */ #ff6b9d /* Powrót do różowego */
+  );
+  background-size: 300% 300%;
+  animation: space-fade 4s ease-in-out infinite;
+}
+

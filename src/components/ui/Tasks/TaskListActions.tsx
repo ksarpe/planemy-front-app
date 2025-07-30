@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Settings, Edit3, Trash2, RotateCcw, AlertTriangle, Users } from "lucide-react";
 import { useTaskContext } from "@/hooks/useTaskContext";
 import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
-import { DeleteConfirmationModal, RenameModal } from "../Common";
+import { ActionButton, DeleteConfirmationModal, RenameModal } from "../Common";
 
 // Expandable actions for the task list
 // in the task list view
@@ -49,15 +49,15 @@ export default function TaskListActions() {
   return (
     <div className="relative">
       {/* Settings Button */}
-      <button
+      <ActionButton
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition-all duration-200 min-h-[58px]"
-        disabled={loading}>
-        <Settings size={18} className="text-gray-500" />
-        <div className="flex flex-col text-left">
-          <span className="text-sm font-medium text-gray-900">Zarządzaj</span>
-        </div>
-      </button>
+        icon={Settings}
+        iconSize={16}
+        text="Zarządzaj"
+        color="white"
+        size="xs"
+        className="w-full"
+      />
 
       {/* Dropdown Menu */}
       {isOpen && (
