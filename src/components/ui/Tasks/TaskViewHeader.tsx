@@ -9,13 +9,18 @@ interface TaskViewHeaderProps {
   onShareListClick: (listId: string) => void;
 }
 
+const placeholders = [
+  "@Co należałoby zrobić najpilniej?",
+  "@Pokaż mi zadania na ten tydzień",
+];
+
 export default function TaskViewHeader({ onNewListClick }: TaskViewHeaderProps) {
   const { currentTaskList } = useTaskContext();
 
   if (!currentTaskList) return null;
 
   return (
-    <div className="flex justify-between items-center gap-4">
+    <div className="flex justify-between items-center gap-3">
       {/* Task List Dropdown and Actions */}
       <div className="flex items-center gap-3 flex-shrink-0">
         <TaskListDropdown />
@@ -26,7 +31,7 @@ export default function TaskViewHeader({ onNewListClick }: TaskViewHeaderProps) 
             onClick={onNewListClick}
             icon={FolderPlus}
             iconSize={16}
-            text="Utwórz listę"
+            text="Nowa lista"
             color="green"
             size="xs"
             className="w-full"
@@ -35,7 +40,7 @@ export default function TaskViewHeader({ onNewListClick }: TaskViewHeaderProps) 
       </div>
 
       {/* AI Textbox - Center */}
-      <AITextbox placeholder="Zapytaj mnie o coś..." />
+      <AITextbox placeholder={placeholders} />
 
       {/* Pomodoro Mode - Right */}
       <div className="flex-shrink-0">

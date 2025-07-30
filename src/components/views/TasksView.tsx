@@ -4,7 +4,6 @@ import { useTasksForList } from "@/firebase/tasks";
 import {
   TaskViewHeader,
   CreateTaskListModal,
-  AddTaskModal,
   ManageTaskListSharingModal,
   TaskList,
   TaskStatistics,
@@ -18,7 +17,6 @@ import Spinner from "../ui/Utils/Spinner";
 
 export default function TasksView() {
   const { taskLists, currentTaskList, clickedTask, loading, createTaskList } = useTaskContext();
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isListModalOpen, setIsListModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareListId, setShareListId] = useState<string | null>(null);
@@ -74,7 +72,7 @@ export default function TasksView() {
             <div className="space-y-4">
               <TaskStatistics tasks={tasks} filter={filter} onFilterChange={setFilter} />
               <TaskAlerts tasks={tasks} />
-              <TaskList tasks={tasks} filter={filter} onAddTaskClick={() => setIsTaskModalOpen(true)} />
+              <TaskList tasks={tasks} filter={filter} />
             </div>
             <div>
               <TaskProgressIndicator tasks={tasks} />
@@ -89,10 +87,6 @@ export default function TasksView() {
           onSubmit={handleCreateTaskList}
           loading={loading}
         />
-
-        {/* Add Task Modal */}
-        {isTaskModalOpen && <AddTaskModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} />}
-
         {/* Share Task List Modal */}
         {isShareModalOpen && shareListId && currentTaskList && (
           <ManageTaskListSharingModal

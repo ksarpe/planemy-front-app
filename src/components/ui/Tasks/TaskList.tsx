@@ -1,16 +1,16 @@
 import { CheckCircle2, Plus } from "lucide-react";
 import TaskItem from "./TaskItem";
-import { useTaskContext } from "@/hooks/useTaskContext";
+import QuickAddTask from "./QuickAddTask";
 import { TaskInterface } from "@/data/types";
+import { useState } from "react";
 
 interface TaskListProps {
   filter: "all" | "pending" | "completed" | "overdue";
   tasks: TaskInterface[]; // Optional tasks prop for filtering
-  onAddTaskClick?: () => void; // Optional callback for adding tasks
 }
 
-export default function TaskList({ filter, tasks, onAddTaskClick }: TaskListProps) {
-  const { loading } = useTaskContext();
+export default function TaskList({ filter, tasks }: TaskListProps) {
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
   // Calculate filtered tasks
   const completedTasks = tasks.filter((task) => task.isCompleted);
   const pendingTasks = tasks.filter((task) => !task.isCompleted);
@@ -57,16 +57,19 @@ export default function TaskList({ filter, tasks, onAddTaskClick }: TaskListProp
         <CheckCircle2 size={48} className="mx-auto text-gray-400 mb-4" />
         <h3 className="text-lg font-medium text-gray-600 mb-2">Brak zadań</h3>
         <p className="text-gray-500">
-          {filter === "all" ? "Dodaj swoje pierwsze zadanie do tej listy." : `Brak zadań w kategorii "${filter}".`}
+          {filter === "all" ? "Dodaj swoje pierwsze zadanie do tej listy." : `Brak zadań w wybranej kategorii.`}
         </p>
-        <div className="mb-2 w-fit">
-          <button
-            onClick={onAddTaskClick}
-            className="w-full flex items-center justify-center gap-2 mt-2  border-l-4 border-green-700 bg-green-600 text-white px-2 py-1 rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer"
-            disabled={loading}>
-            <Plus size={18} />
-            <span className="text-sm">Dodaj nowe zadanie</span>
-          </button>
+        <div className="mb-2 w-full max-w-md mt-4">
+          {showQuickAdd ? (
+            <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
+          ) : (
+            <button
+              onClick={() => setShowQuickAdd(true)}
+              className="w-full flex items-center justify-center gap-2 border-l-4 border-green-700 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer">
+              <Plus size={18} />
+              <span className="text-sm">Nowe zadanie</span>
+            </button>
+          )}
         </div>
       </div>
     );
@@ -74,22 +77,24 @@ export default function TaskList({ filter, tasks, onAddTaskClick }: TaskListProp
 
   return (
     <div className="flex-1 min-h-0">
-      {/* Add Task Button */}
-      <div className="mb-2 w-fit">
-        <button
-          onClick={onAddTaskClick}
-          className="w-full flex items-center justify-center gap-2  border-l-4 border-green-700 bg-green-600 text-white px-2 py-1 rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer"
-          disabled={loading}>
-          <Plus size={18} />
-          <span className="text-sm">Dodaj nowe zadanie</span>
-        </button>
-      </div>
-
       <ul className="space-y-3 overflow-auto py-2">
         {sortedTasks.map((task) => (
           <TaskItem key={task.id} task={task} />
         ))}
       </ul>
+      {/* Add Task Button */}
+      <div className={`mb-3 ${showQuickAdd ? "w-full" : "w-fit"} mt-1`}>
+        {showQuickAdd ? (
+          <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
+        ) : (
+          <button
+            onClick={() => setShowQuickAdd(true)}
+            className="w-full flex items-center justify-center gap-2 border-l-4 border-green-700 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer">
+            <Plus size={18} />
+            <span className="text-sm">Nowe zadanie</span>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

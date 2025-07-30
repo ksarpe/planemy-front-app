@@ -1,4 +1,4 @@
-export {default as EmptyStates } from "./EmptyStates";
+export { default as EmptyStates } from "./EmptyStates";
 export { default as TaskList } from "./TaskList";
 export { default as TaskListActions } from "./TaskListActions";
 export { default as TaskListDropdown } from "./TaskListDropdown";
@@ -8,7 +8,7 @@ export { default as TaskAlerts } from "./TaskAlerts";
 export { default as TaskProgressIndicator } from "./TaskProgressIndicator";
 export { default as PendingSharesNotification } from "./PendingSharesNotification";
 export { default as CreateTaskListModal } from "./Modals/CreateTaskListModal";
-export { default as AddTaskModal } from "./Modals/AddTaskModal";
 export { default as ManageTaskListSharingModal } from "./Modals/ManageTaskListSharingModal";
 export { default as TaskDetails } from "./TaskDetails";
 export { default as ShareTaskListModal } from "./Modals/ShareTaskListModal";
+export { default as QuickAddTask } from "./QuickAddTask";
