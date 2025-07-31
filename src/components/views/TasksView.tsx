@@ -23,7 +23,7 @@ export default function TasksView() {
   const [filter, setFilter] = useState<"pending" | "completed" | "overdue">("pending");
 
   // Get tasks from current list using new hook
-  const tasks = useTasksForList(currentTaskList?.id || null);
+  const tasks = useTasksForList(currentTaskList!.id);
 
   const handleShareList = (listId: string) => {
     setShareListId(listId);

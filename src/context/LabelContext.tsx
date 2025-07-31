@@ -1,37 +1,13 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuthContext";
 import { useToast } from "@/hooks/useToastContext";
-import { LabelInterface } from "@/data/Utils/interfaces";
+import { LabelInterface, LabelContextType } from "@/data/Utils/interfaces";
 import {
   createLabel as createLabelFirebase,
   updateLabel as updateLabelFirebase,
   deleteLabel as deleteLabelFirebase,
   subscribeToUserLabels,
-  searchLabels,
-  getLabelsByColor,
-  bulkDeleteLabels,
 } from "@/api/labels";
-
-interface LabelContextType {
-  // Data
-  labels: LabelInterface[];
-  loading: boolean;
-  error: string | null;
-
-  // CRUD Operations
-  createLabel: (name: string, color: string, description?: string) => Promise<void>;
-  updateLabel: (labelId: string, updates: Partial<LabelInterface>) => Promise<void>;
-  deleteLabel: (labelId: string) => Promise<void>;
-  bulkDelete: (labelIds: string[]) => Promise<void>;
-
-  // Search & Filter
-  searchLabelsByName: (searchTerm: string) => Promise<LabelInterface[]>;
-  filterByColor: (color: string) => Promise<LabelInterface[]>;
-
-  // Utilities
-  getLabelById: (labelId: string) => LabelInterface | undefined;
-  refreshLabels: () => void;
-}
 
 const LabelContext = createContext<LabelContextType | undefined>(undefined);
 
@@ -124,54 +100,6 @@ export const LabelProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Bulk delete labels
-  const bulkDelete = async (labelIds: string[]): Promise<void> => {
-    try {
-      setLoading(true);
-      setError(null);
-      await bulkDeleteLabels(labelIds);
-      showToast("success", `Usunięto ${labelIds.length} etykiet!`);
-    } catch (error) {
-      console.error("Error bulk deleting labels:", error);
-      const errorMessage = error instanceof Error ? error.message : "Błąd podczas usuwania etykiet";
-      setError(errorMessage);
-      showToast("error", errorMessage);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Search labels by name
-  const searchLabelsByName = async (searchTerm: string): Promise<LabelInterface[]> => {
-    if (!user) return [];
-
-    try {
-      setError(null);
-      return await searchLabels(user.uid, searchTerm);
-    } catch (error) {
-      console.error("Error searching labels:", error);
-      const errorMessage = error instanceof Error ? error.message : "Błąd podczas wyszukiwania etykiet";
-      setError(errorMessage);
-      return [];
-    }
-  };
-
-  // Filter labels by color
-  const filterByColor = async (color: string): Promise<LabelInterface[]> => {
-    if (!user) return [];
-
-    try {
-      setError(null);
-      return await getLabelsByColor(user.uid, color);
-    } catch (error) {
-      console.error("Error filtering labels by color:", error);
-      const errorMessage = error instanceof Error ? error.message : "Błąd podczas filtrowania etykiet";
-      setError(errorMessage);
-      return [];
-    }
-  };
-
   // Get label by ID from current labels
   const getLabelById = (labelId: string): LabelInterface | undefined => {
     return labels.find((label) => label.id === labelId);
@@ -197,12 +125,6 @@ export const LabelProvider = ({ children }: { children: ReactNode }) => {
     createLabel,
     updateLabel,
     deleteLabel,
-    bulkDelete,
-
-    // Search & Filter
-    searchLabelsByName,
-    filterByColor,
-
     // Utilities
     getLabelById,
     refreshLabels,

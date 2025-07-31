@@ -8,6 +8,7 @@ export { PreferencesContext };
 export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [showWeekends, setShowWeekends] = useState(true);
   const [isSidebarClosed, setIsSidebarClosed] = useState(false);
+  const [mainListId, setMainListId] = useState<string | null>(null);
   const { isDark, toggleTheme } = useTheme();
 
   return (
@@ -19,6 +20,8 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         toggleTheme,
         isSidebarClosed,
         setIsSidebarClosed,
+        mainListId,
+        setMainListId,
       }}>
       {children}
     </PreferencesContext.Provider>

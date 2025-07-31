@@ -19,6 +19,8 @@ export interface PreferencesContextProps {
   toggleTheme: () => void;
   isSidebarClosed: boolean; // sidebar state
   setIsSidebarClosed: (isClosed: boolean) => void;
+  mainListId: string | null; // currently selected main list
+  setMainListId: (listId: string | null) => void;
 }
 
 export interface CalendarContextProps {

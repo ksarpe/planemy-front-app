@@ -32,3 +32,19 @@ export interface LabelInterface {
   description?: string;
   userId: string;
 }
+
+export interface LabelContextType {
+  // Data
+  labels: LabelInterface[];
+  loading: boolean;
+  error: string | null;
+
+  // CRUD Operations
+  createLabel: (name: string, color: string, description?: string) => Promise<void>;
+  updateLabel: (labelId: string, updates: Partial<LabelInterface>) => Promise<void>;
+  deleteLabel: (labelId: string) => Promise<void>;
+
+  // Utilities
+  getLabelById: (labelId: string) => LabelInterface | undefined;
+  refreshLabels: () => void;
+}

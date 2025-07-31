@@ -1,6 +1,39 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDocs } from "firebase/firestore";
 import { db } from "./config";
 import { LabelInterface } from "@/data/Utils/interfaces";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuthContext";
+
+// Hook to get user's labels
+export const useUserLabels = (): LabelInterface[] => {
+  const [labels, setLabels] = useState<LabelInterface[]>([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      setLabels([]);
+      return;
+    }
+
+    const labelsCollection = collection(db, "labels");
+    const userLabelsQuery = query(labelsCollection, where("userId", "==", user.uid));
+
+    const unsubscribe = onSnapshot(userLabelsQuery, (snapshot) => {
+      const labelList: LabelInterface[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as LabelInterface[];
+
+      setLabels(labelList);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [user]);
+
+  return labels;
+};
 
 // Create a new label
 export const createLabel = async (name: string, color: string, userId: string, description?: string): Promise<void> => {
@@ -133,22 +166,6 @@ export const searchLabels = async (userId: string, searchTerm: string): Promise<
   }
 };
 
-// Get labels by color
-export const getLabelsByColor = async (userId: string, color: string): Promise<LabelInterface[]> => {
-  try {
-    const labelsCollection = collection(db, "labels");
-    const colorLabelsQuery = query(labelsCollection, where("userId", "==", userId), where("color", "==", color));
-    const snapshot = await getDocs(colorLabelsQuery);
-
-    return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as LabelInterface[];
-  } catch (error) {
-    console.error("Error fetching labels by color:", error);
-    throw error;
-  }
-};
 
 // Bulk delete labels
 export const bulkDeleteLabels = async (labelIds: string[]): Promise<void> => {
@@ -157,35 +174,6 @@ export const bulkDeleteLabels = async (labelIds: string[]): Promise<void> => {
     await Promise.all(deletePromises);
   } catch (error) {
     console.error("Error bulk deleting labels:", error);
-    throw error;
-  }
-};
-
-// Get label statistics
-export const getLabelStats = async (userId: string) => {
-  try {
-    const labels = await getUserLabels(userId);
-
-    const stats = {
-      totalLabels: labels.length,
-      uniqueColors: new Set(labels.map((label) => label.color)).size,
-      averageNameLength:
-        labels.length > 0 ? Math.round(labels.reduce((sum, label) => sum + label.name.length, 0) / labels.length) : 0,
-      labelsWithDescription: labels.filter((label) => label.description && label.description.trim()).length,
-      mostUsedColors: Object.entries(
-        labels.reduce((acc, label) => {
-          acc[label.color] = (acc[label.color] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>),
-      )
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, 5)
-        .map(([color, count]) => ({ color, count })),
-    };
-
-    return stats;
-  } catch (error) {
-    console.error("Error calculating label stats:", error);
     throw error;
   }
 };

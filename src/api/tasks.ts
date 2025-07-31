@@ -16,7 +16,7 @@ import {
 import { useAuth } from "../hooks/useAuthContext";
 
 import type { TaskInterface, TaskListInterface, SharedTaskList } from "@/data/Tasks/interfaces";
-import type { LabelInterface, ShareNotification } from "@/data/Utils/interfaces";
+import type { ShareNotification } from "@/data/Utils/interfaces";
 import type { SharePermission } from "@/data/Utils/types";
 import type { UserProfile } from "@/data/User/interfaces";
 
@@ -90,7 +90,7 @@ export const useUserTaskLists = (): TaskListInterface[] => {
 };
 
 // Hook to get tasks for a specific task list
-export const useTasksForList = (taskListId: string | null): TaskInterface[] => {
+export const useTasksForList = (taskListId: string): TaskInterface[] => {
   const [tasks, setTasks] = useState<TaskInterface[]>([]);
 
   useEffect(() => {
@@ -117,36 +117,7 @@ export const useTasksForList = (taskListId: string | null): TaskInterface[] => {
   return tasks;
 };
 
-// Hook to get user's labels
-export const useUserLabels = (): LabelInterface[] => {
-  const [labels, setLabels] = useState<LabelInterface[]>([]);
-  const { user } = useAuth();
 
-  useEffect(() => {
-    if (!user) {
-      setLabels([]);
-      return;
-    }
-
-    const labelsCollection = collection(db, "labels");
-    const userLabelsQuery = query(labelsCollection, where("userId", "==", user.uid));
-
-    const unsubscribe = onSnapshot(userLabelsQuery, (snapshot) => {
-      const labelList: LabelInterface[] = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as LabelInterface[];
-
-      setLabels(labelList);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [user]);
-
-  return labels;
-};
 
 // Create a new task list
 export const createTaskList = async (name: string, userId: string): Promise<void> => {
@@ -199,7 +170,8 @@ export const addTaskToList = async (
 ): Promise<void> => {
   try {
     const tasksCollection = collection(db, "tasks");
-    const newTask: Omit<TaskInterface, "id"> = {
+    const newTask: TaskInterface = {
+      id: uuidv4(),
       title,
       description: description || "",
       dueDate: dueDate || "",
@@ -220,16 +192,24 @@ export const addTaskToList = async (
 // Update task - now updates task in tasks collection
 export const updateTaskInList = async (taskId: string, updates: Partial<TaskInterface>): Promise<void> => {
   try {
-    const taskDocRef = doc(db, "tasks", taskId);
-    await updateDoc(taskDocRef, {
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    });
+    const tasksCollection = collection(db, "tasks");
+    const taskQuery = query(tasksCollection, where("id", "==", taskId));
+    const snapshot = await getDocs(taskQuery);
+    
+    if (!snapshot.empty) {
+      const taskDoc = snapshot.docs[0];
+      await updateDoc(taskDoc.ref, {
+        ...updates,
+        updatedAt: new Date().toISOString(),
+      });
+    }
   } catch (error) {
     console.error("Error updating task:", error);
     throw error;
   }
-}; // Remove task from list - now deletes task from tasks collection
+};
+
+// Remove task from list - now deletes task from tasks collection
 export const removeTaskFromList = async (taskId: string): Promise<void> => {
   try {
     const taskDocRef = doc(db, "tasks", taskId);

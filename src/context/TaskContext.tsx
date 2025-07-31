@@ -6,9 +6,9 @@ import type { UserProfile } from "@/data/User/interfaces";
 
 import { useToast } from "@/hooks/useToastContext";
 import { useAuth } from "@/hooks/useAuthContext";
+import { useUserLabels } from "@/api/labels";
 import {
   useUserTaskLists,
-  useUserLabels,
   useUserPendingShares,
   createTaskList as createTaskListFirebase,
   updateTaskList as updateTaskListFirebase,
