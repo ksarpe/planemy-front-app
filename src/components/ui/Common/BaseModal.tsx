@@ -1,16 +1,5 @@
-import { ReactNode } from "react";
 import { X } from "lucide-react";
-
-interface BaseModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: ReactNode;
-  showCloseButton?: boolean;
-  maxWidth?: string;
-  actions?: ReactNode;
-  centered?: boolean;
-}
+import { BaseModalProps } from "@/data/Common/interfaces";
 
 export default function BaseModal({
   isOpen,

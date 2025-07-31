@@ -1,4 +1,6 @@
-import { TaskListNotification, SharePermission } from "../../data/types";
+import { ShareNotification } from "@/data/Utils/interfaces";
+import { SharePermission } from "@/data/Utils/types";
+
 import {
   shareObjectWithUser,
   acceptObjectInvitation,
@@ -39,7 +41,7 @@ export const rejectTaskListInvitation = async (notificationId: string): Promise<
  * Get pending notifications for user - DEPRECATED: Use generic permissions system instead
  * This function is kept for backwards compatibility but should not be used
  */
-export const getUserPendingNotifications = async (): Promise<TaskListNotification[]> => {
+export const getUserPendingNotifications = async (): Promise<ShareNotification[]> => {
   console.warn("getUserPendingNotifications is deprecated. Use generic permissions system instead.");
   return [];
 };
@@ -49,20 +51,21 @@ export const getUserPendingNotifications = async (): Promise<TaskListNotificatio
  */
 export const listenToUserPendingNotifications = (
   userId: string,
-  callback: (notifications: TaskListNotification[]) => void,
+  callback: (notifications: ShareNotification[]) => void,
 ) => {
-  // Use the generic listener but convert to TaskListNotification format for compatibility
+  // Use the generic listener but convert to ShareNotification format for compatibility
   return listenToGenericNotifications(userId, (genericNotifications) => {
-    const taskPermissions: TaskListNotification[] = genericNotifications
+    const taskPermissions: ShareNotification[] = genericNotifications
       .filter((notification) => notification.object_type === "task_list")
       .map((notification) => ({
         id: notification.id,
-        listId: notification.object_id,
-        listName: notification.object_name,
-        sharedBy: notification.shared_by,
-        sharedWith: notification.shared_with,
+        object_id: notification.object_id,
+        object_name: notification.object_name,
+        object_type: notification.object_type,
+        shared_by: notification.shared_by,
+        shared_with: notification.shared_with,
         permission: notification.permission,
-        sharedAt: notification.shared_at,
+        shared_at: notification.shared_at,
         status: notification.status, // Convert revoked to rejected for compatibility
       }));
 

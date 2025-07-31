@@ -1,11 +1,5 @@
 import { CheckCircle2, Clock, AlertTriangle } from "lucide-react";
-import { TaskInterface } from "@/data/types";
-
-interface TaskStatisticsProps {
-  filter: "pending" | "completed" | "overdue";
-  onFilterChange: (filter: "pending" | "completed" | "overdue") => void;
-  tasks: TaskInterface[];
-}
+import { TaskStatisticsProps } from "@/data/Tasks/interfaces";
 
 export default function TaskStatistics({ tasks, onFilterChange, filter }: TaskStatisticsProps) {
   // Calculate statistics

@@ -1,15 +1,11 @@
 import { createContext, useEffect, useState, ReactNode, useMemo } from "react";
-import type {
-  TaskInterface,
-  TaskListInterface,
-  LabelInterface,
-  SharedTaskList,
-  SharePermission,
-  UserProfile,
-} from "@/data/types";
+import type { TaskInterface, TaskListInterface, SharedTaskList, TaskContextProps } from "@/data/Tasks/interfaces";
+import type { LabelInterface } from "@/data/Utils/interfaces";
+import type { SharePermission } from "@/data/Utils/types";
+import type { UserProfile } from "@/data/User/interfaces";
+
 import { useToast } from "@/hooks/useToastContext";
 import { useAuth } from "@/hooks/useAuthContext";
-import type { TaskContextProps } from "@/data/typesProps";
 import {
   useUserTaskLists,
   useUserLabels,
@@ -179,7 +175,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const shareTaskList = async (listId: string, userEmail: string, permission: SharePermission): Promise<void> => {
-
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby udostępnić listę");
       return;

@@ -1,5 +1,5 @@
 import { Tag, Edit3, Trash2 } from "lucide-react";
-import { LabelInterface } from "@/data/types";
+import { LabelInterface } from "@/data/Utils/interfaces";
 
 interface LabelCardProps {
   label: LabelInterface;

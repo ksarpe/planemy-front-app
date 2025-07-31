@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import { Bot, Send } from "lucide-react";
+import { AITextboxProps } from "@/data/Common/interfaces";
 
-interface AITextboxProps {
-  placeholder?: string[];
-  disabled?: boolean;
-  className?: string;
-}
 
 export default function AITextbox({
   placeholder = ["Zapytaj mnie o coś..."],

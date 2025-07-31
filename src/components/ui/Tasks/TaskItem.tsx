@@ -1,10 +1,6 @@
-import type { TaskInterface } from "@/data/types";
 import { useTaskContext } from "@/hooks/useTaskContext";
 import { Calendar, AlertCircle, Clock, CheckCircle2 } from "lucide-react";
-
-interface TaskItemProps {
-  task: TaskInterface;
-}
+import type { TaskItemProps } from "@/data/Tasks/interfaces";
 
 export default function TaskItem({ task }: TaskItemProps) {
   const { clickedTask, setClickedTask, toggleTaskComplete, currentTaskList } = useTaskContext();

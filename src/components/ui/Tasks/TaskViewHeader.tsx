@@ -3,11 +3,7 @@ import TaskListDropdown from "./TaskListDropdown";
 import TaskListActions from "./TaskListActions";
 import { useTaskContext } from "@/hooks/useTaskContext";
 import { ActionButton, AITextbox } from "../Common";
-
-interface TaskViewHeaderProps {
-  onNewListClick: () => void;
-  onShareListClick: (listId: string) => void;
-}
+import type { TaskViewHeaderProps } from "@/data/Tasks/interfaces";
 
 const placeholders = [
   "@Co należałoby zrobić najpilniej?",

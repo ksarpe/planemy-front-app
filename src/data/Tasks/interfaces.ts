@@ -1,0 +1,179 @@
+import type { TaskListFilter, SharedUserStatus, EmptyListType } from "./types";
+import type { SharePermission } from "@/data/Utils/types";
+import type { LabelInterface } from "@/data/Utils/interfaces";
+import type { UserProfile } from "@/data/User/interfaces";
+
+export interface TaskInterface {
+  id: string;
+  title: string;
+  description?: string; // Optional textarea
+  dueDate?: string; // Optional datetime
+  isCompleted: boolean;
+  userId: string; // Creator of the task
+  taskListId: string; // Foreign key to TaskList
+  sharedBy?: string; // ID of user who originally created the task (for shared lists)
+  createdAt?: string;
+  updatedAt?: string;
+
+  //optional for frontend purposes
+}
+
+export interface TaskListInterface {
+  id: string;
+  name: string;
+  userId: string; // Owner of the list
+  createdAt?: string;
+  updatedAt?: string;
+
+  //frontend purpose
+  shared?: boolean; // Indicates if the list is shared
+  labels?: LabelInterface[]; // Optional array of labels for the list
+}
+
+export interface QuickTaskInterface {
+  id: number;
+  title: string;
+}
+
+export interface SharedTaskList {
+  id?: string; // For invitation documents
+  listId: string;
+  sharedBy: string; // user ID who shared
+  permission: SharePermission;
+  sharedAt: string;
+  acceptedAt?: string;
+}
+
+export interface TaskContextProps {
+  // Task Lists
+  taskLists: TaskListInterface[];
+  currentTaskList: TaskListInterface | null;
+  setCurrentTaskList: (taskList: TaskListInterface | null) => void;
+  createTaskList: (name: string) => Promise<void>;
+  updateTaskList: (listId: string, updates: Partial<TaskListInterface>) => Promise<void>;
+  deleteTaskList: (listId: string) => Promise<void>;
+  renameTaskList: (listId: string, newName: string) => Promise<void>;
+  clearCompletedTasks: (listId: string) => Promise<void>;
+  uncheckAllTasks: (listId: string) => Promise<void>;
+
+  // Sharing functionality
+  shareTaskList: (listId: string, userEmail: string, permission: SharePermission) => Promise<void>;
+  unshareTaskList: (listId: string, userId: string) => Promise<void>;
+  acceptSharedList: (shareId: string) => Promise<void>;
+  rejectSharedList: (shareId: string) => Promise<void>;
+  updateSharePermission: (listId: string, userId: string, permission: SharePermission) => Promise<void>;
+  searchUsers: (email: string) => Promise<UserProfile[]>;
+  getSharedLists: () => TaskListInterface[];
+  getPendingShares: () => SharedTaskList[];
+
+  // Tasks within lists
+  addTask: (
+    listId: string,
+    title: string,
+    description?: string | null,
+    dueDate?: string | null,
+    labels?: LabelInterface[],
+  ) => Promise<void>;
+  updateTask: (listId: string, taskId: string, updates: Partial<TaskInterface>) => Promise<void>;
+  removeTask: (listId: string, taskId: string) => Promise<void>;
+  toggleTaskComplete: (listId: string, taskId: string) => Promise<void>;
+  moveTask: (taskId: string, fromListId: string, toListId: string) => Promise<void>;
+
+  // Task utilities
+  getTasksForList: (listId: string) => TaskInterface[];
+  getTaskStats: (listId: string) => { total: number; completed: number; pending: number };
+
+  // Labels
+  labels: LabelInterface[];
+  createLabel: (name: string, color: string, description?: string) => Promise<void>;
+  updateLabel: (labelId: string, updates: Partial<LabelInterface>) => Promise<void>;
+  deleteLabel: (labelId: string) => Promise<void>;
+  addLabelToTask: (listId: string, taskId: string, label: LabelInterface) => Promise<void>;
+  removeLabelFromTask: (listId: string, taskId: string, labelId: string) => Promise<void>;
+
+  // UI State
+  loading: boolean;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  selectedLabels: LabelInterface[];
+  setSelectedLabels: (labels: LabelInterface[]) => void;
+
+  // Legacy support (for backwards compatibility)
+  clickedTask: TaskInterface | null;
+  setClickedTask: (task: TaskInterface | null) => void;
+  convertToEvent: () => void;
+}
+
+//Create
+export interface CreateTaskListModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (name: string) => Promise<void>;
+  loading: boolean;
+}
+export interface QuickAddTaskProps {
+  //quick add
+  onCancel: () => void;
+}
+
+//Sharing
+export interface SharedUser {
+  id: string;
+  email: string;
+  displayName?: string;
+  permission: SharePermission;
+  status: SharedUserStatus;
+}
+
+export interface ManageTaskListSharingModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  listId: string;
+  listName: string;
+}
+
+export interface ShareTaskListModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  taskListId: string;
+  taskListName: string;
+}
+
+//overall
+export interface EmptyStatesProps {
+  type: EmptyListType;
+  onCreateListClick: () => void;
+}
+
+export interface TaskListInfo {
+  name: string;
+  tasksCount: number;
+}
+
+export interface TaskAlertsProps {
+  tasks: TaskInterface[];
+}
+
+export interface TaskItemProps {
+  task: TaskInterface;
+}
+
+export interface TaskListProps {
+  filter: TaskListFilter;
+  tasks: TaskInterface[]; // Optional tasks prop for filtering
+}
+
+export interface TaskProgressIndicatorProps {
+  tasks: TaskInterface[];
+}
+
+export interface TaskStatisticsProps {
+  filter: TaskListFilter;
+  onFilterChange: (filter: TaskListFilter) => void;
+  tasks: TaskInterface[];
+}
+
+export interface TaskViewHeaderProps {
+  onNewListClick: () => void;
+  onShareListClick: (listId: string) => void;
+}

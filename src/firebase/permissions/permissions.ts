@@ -12,7 +12,8 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../config";
-import { Permission, ShareNotification, SharePermission, ShareableObjectType } from "../../data/types";
+import type { SharePermission, ShareableObjectType } from "@/data/Utils/types";
+import type { Permission, ShareNotification } from "@/data/Utils/interfaces";
 
 const PERMISSIONS_COLLECTION = "permissions";
 
@@ -257,8 +258,6 @@ export const listenToUserPendingNotifications = (
   return onSnapshot(
     q,
     async (snapshot) => {
-      console.log("listenToUserPendingNotifications - snapshot received, docs count:", snapshot.docs.length);
-
       const notifications: ShareNotification[] = [];
 
       for (const permissionDoc of snapshot.docs) {

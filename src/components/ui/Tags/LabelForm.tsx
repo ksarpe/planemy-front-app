@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus, Edit3 } from "lucide-react";
-import { LabelInterface } from "@/data/types";
+import { LabelInterface } from "@/data/Utils/interfaces";
 
 const predefinedColors = [
   "#EF4444",

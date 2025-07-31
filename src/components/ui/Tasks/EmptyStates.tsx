@@ -1,9 +1,5 @@
 import { ListTodo, List } from "lucide-react";
-
-interface EmptyStatesProps {
-  type: 'no-lists' | 'no-list-selected';
-  onCreateListClick: () => void;
-}
+import { EmptyStatesProps } from "@/data/Tasks/interfaces";
 
 export default function EmptyStates({ type, onCreateListClick }: EmptyStatesProps) {
   if (type === 'no-lists') {

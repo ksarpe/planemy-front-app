@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuthContext";
 import { useToast } from "@/hooks/useToastContext";
-import { LabelInterface } from "@/data/types";
+import { LabelInterface } from "@/data/Utils/interfaces";
 import {
   createLabel as createLabelFirebase,
   updateLabel as updateLabelFirebase,
@@ -170,7 +170,7 @@ export const LabelProvider = ({ children }: { children: ReactNode }) => {
       setError(errorMessage);
       return [];
     }
-  };  
+  };
 
   // Get label by ID from current labels
   const getLabelById = (labelId: string): LabelInterface | undefined => {

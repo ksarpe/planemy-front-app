@@ -1,4 +1,4 @@
-import { LabelInterface } from "@/data/types";
+import { LabelInterface } from "@/data/Utils/interfaces";
 import LabelCard from "./LabelCard";
 import AddLabelTile from "./AddLabelTile";
 import EmptyLabelsState from "./EmptyLabelsState";

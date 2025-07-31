@@ -1,18 +1,6 @@
 import { AlertTriangle } from "lucide-react";
 import BaseModal from "./BaseModal";
-
-interface DeleteConfirmationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title: string;
-  message: string;
-  itemName: string;
-  additionalInfo?: string;
-  confirmButtonText?: string;
-  cancelButtonText?: string;
-  isLoading?: boolean;
-}
+import { DeleteConfirmationModalProps } from "@/data/Common/interfaces";
 
 export default function DeleteConfirmationModal({
   isOpen,

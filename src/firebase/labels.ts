@@ -1,6 +1,6 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDocs } from "firebase/firestore";
 import { db } from "./config";
-import { LabelInterface } from "@/data/types";
+import { LabelInterface } from "@/data/Utils/interfaces";
 
 // Create a new label
 export const createLabel = async (name: string, color: string, userId: string, description?: string): Promise<void> => {

@@ -1,9 +1,5 @@
 import { TrendingUp } from "lucide-react";
-import { TaskInterface } from "@/data/types";
-
-interface TaskProgressIndicatorProps {
-  tasks: TaskInterface[];
-}
+import type { TaskProgressIndicatorProps } from "@/data/Tasks/interfaces";
 
 export default function TaskProgressIndicator({ tasks }: TaskProgressIndicatorProps) {
   const completedTasks = tasks.filter(task => task.isCompleted);

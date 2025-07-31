@@ -13,15 +13,11 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { useAuth } from "../hooks/useAuthContext";
-import {
-  TaskInterface,
-  TaskListInterface,
-  LabelInterface,
-  UserProfile,
-  SharedTaskList,
-  SharePermission,
-  TaskListNotification,
-} from "../data/types";
+
+import type { TaskInterface, TaskListInterface, SharedTaskList } from "@/data/Tasks/interfaces";
+import type { LabelInterface, ShareNotification } from "@/data/Utils/interfaces";
+import type { SharePermission } from "@/data/Utils/types";
+import type {UserProfile } from "@/data/User/interfaces";
 
 // Hook to get user's task lists (own + shared via permissions)
 export const useUserTaskLists = (): TaskListInterface[] => {
@@ -386,12 +382,9 @@ export const shareTaskListWithUser = async (
   permission: SharePermission,
   sharedByUserId: string,
 ): Promise<void> => {
-  console.log("tasks.ts shareTaskListWithUser called:", { listId, targetUserEmail, permission, sharedByUserId });
   try {
     const { shareTaskListWithUser: newShareFunction } = await import("./permissions/taskPermissions");
-    console.log("Calling taskPermissionss.shareTaskListWithUser");
     await newShareFunction(listId, targetUserEmail, permission, sharedByUserId);
-    console.log("taskPermissionss.shareTaskListWithUser completed successfully");
   } catch (error) {
     console.error("Error sharing task list:", error);
     throw error;
@@ -459,24 +452,20 @@ export const useUserPendingShares = (): SharedTaskList[] => {
       try {
         const { listenToUserPendingNotifications } = await import("./permissions/taskPermissions");
 
-        console.log("Setting up pending notifications listener for user:", user.uid);
-        unsubscribe = listenToUserPendingNotifications(user.uid, (notifications: TaskListNotification[]) => {
-          console.log("useUserPendingShares - notifications received:", notifications);
+        unsubscribe = listenToUserPendingNotifications(user.uid, (notifications: ShareNotification[]) => {
           // Convert TaskListNotification to SharedTaskList format for compatibility
-          const sharedTaskLists = notifications.map((notification: TaskListNotification) => ({
+          const sharedTaskLists = notifications.map((notification: ShareNotification) => ({
             id: notification.id,
-            listId: notification.listId,
-            sharedBy: notification.sharedBy,
+            listId: notification.object_id,
+            sharedBy: notification.shared_by,
             permission: notification.permission,
-            sharedAt: notification.sharedAt,
+            sharedAt: notification.shared_at,
             acceptedAt: "",
           })) as SharedTaskList[];
 
-          console.log("useUserPendingShares - converted to SharedTaskList:", sharedTaskLists);
           setPendingShares(sharedTaskLists);
         });
 
-        console.log("Pending notifications listener set up successfully");
       } catch (error) {
         console.error("Error setting up pending notifications listener:", error);
       }

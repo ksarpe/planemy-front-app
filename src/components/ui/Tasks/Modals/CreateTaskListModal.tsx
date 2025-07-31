@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
-
-interface CreateTaskListModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (name: string) => Promise<void>;
-  loading: boolean;
-}
+import { CreateTaskListModalProps } from "@/data/Tasks/interfaces";
 
 export default function CreateTaskListModal({ isOpen, onClose, onSubmit, loading }: CreateTaskListModalProps) {
   const [listName, setListName] = useState("");

@@ -7,7 +7,9 @@ import {
   getObjectSharedUsers,
   listenToUserPendingNotifications,
 } from "@/firebase/permissions/permissions";
-import { SharePermission, ShareNotification } from "../../data/types";
+import type { SharePermission } from "@/data/Utils/types";
+import type { ShareNotification } from "@/data/Utils/interfaces";
+
 
 /**
  * Share shopping list with user

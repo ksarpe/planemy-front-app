@@ -1,9 +1,5 @@
 import { AlertTriangle, Calendar } from "lucide-react";
-import { TaskInterface } from "@/data/types";
-
-interface TaskAlertsProps {
-  tasks: TaskInterface[];
-}
+import { TaskAlertsProps } from "@/data/Tasks/interfaces";
 
 export default function TaskAlerts({ tasks }: TaskAlertsProps) {
   // Calculate overdue tasks

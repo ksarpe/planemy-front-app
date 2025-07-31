@@ -6,12 +6,6 @@ import type {
   FavoriteProductInterface,
   ShoppingCategoryInterface,
   ShoppingItemInterface,
-  TaskInterface,
-  TaskListInterface,
-  LabelInterface,
-  UserProfile,
-  SharePermission,
-  SharedTaskList,
 } from "./types";
 
 export interface ToastContextProps {
@@ -48,66 +42,6 @@ export interface CalendarContextProps {
   goToday: () => void;
   loadNext: () => void;
   loadPrev: () => void;
-}
-
-export interface TaskContextProps {
-  // Task Lists
-  taskLists: TaskListInterface[];
-  currentTaskList: TaskListInterface | null;
-  setCurrentTaskList: (taskList: TaskListInterface | null) => void;
-  createTaskList: (name: string) => Promise<void>;
-  updateTaskList: (listId: string, updates: Partial<TaskListInterface>) => Promise<void>;
-  deleteTaskList: (listId: string) => Promise<void>;
-  renameTaskList: (listId: string, newName: string) => Promise<void>;
-  clearCompletedTasks: (listId: string) => Promise<void>;
-  uncheckAllTasks: (listId: string) => Promise<void>;
-
-  // Sharing functionality
-  shareTaskList: (listId: string, userEmail: string, permission: SharePermission) => Promise<void>;
-  unshareTaskList: (listId: string, userId: string) => Promise<void>;
-  acceptSharedList: (shareId: string) => Promise<void>;
-  rejectSharedList: (shareId: string) => Promise<void>;
-  updateSharePermission: (listId: string, userId: string, permission: SharePermission) => Promise<void>;
-  searchUsers: (email: string) => Promise<UserProfile[]>;
-  getSharedLists: () => TaskListInterface[];
-  getPendingShares: () => SharedTaskList[];
-
-  // Tasks within lists
-  addTask: (
-    listId: string,
-    title: string,
-    description?: string | null,
-    dueDate?: string | null,
-    labels?: LabelInterface[],
-  ) => Promise<void>;
-  updateTask: (listId: string, taskId: string, updates: Partial<TaskInterface>) => Promise<void>;
-  removeTask: (listId: string, taskId: string) => Promise<void>;
-  toggleTaskComplete: (listId: string, taskId: string) => Promise<void>;
-  moveTask: (taskId: string, fromListId: string, toListId: string) => Promise<void>;
-
-  // Task utilities
-  getTasksForList: (listId: string) => TaskInterface[];
-  getTaskStats: (listId: string) => { total: number; completed: number; pending: number };
-
-  // Labels
-  labels: LabelInterface[];
-  createLabel: (name: string, color: string, description?: string) => Promise<void>;
-  updateLabel: (labelId: string, updates: Partial<LabelInterface>) => Promise<void>;
-  deleteLabel: (labelId: string) => Promise<void>;
-  addLabelToTask: (listId: string, taskId: string, label: LabelInterface) => Promise<void>;
-  removeLabelFromTask: (listId: string, taskId: string, labelId: string) => Promise<void>;
-
-  // UI State
-  loading: boolean;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  selectedLabels: LabelInterface[];
-  setSelectedLabels: (labels: LabelInterface[]) => void;
-
-  // Legacy support (for backwards compatibility)
-  clickedTask: TaskInterface | null;
-  setClickedTask: (task: TaskInterface | null) => void;
-  convertToEvent: () => void;
 }
 
 export interface ShoppingContextProps {

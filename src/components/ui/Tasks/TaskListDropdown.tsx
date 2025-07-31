@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, List, Calendar, CheckCircle2, Users } from "lucide-react";
 import { useTaskContext } from "@/hooks/useTaskContext";
+import { TaskListInterface } from "@/data/Tasks/interfaces";
 
 export default function TaskListDropdown() {
   const { taskLists, currentTaskList, setCurrentTaskList, getTaskStats } = useTaskContext();
@@ -51,7 +52,7 @@ export default function TaskListDropdown() {
       {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
-          {taskLists.map((list) => {
+          {taskLists.map((list: TaskListInterface) => {
             const stats = getTaskStats(list.id);
             const isSelected = currentTaskList?.id === list.id;
 

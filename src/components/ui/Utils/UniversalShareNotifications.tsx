@@ -2,7 +2,8 @@ import { useAuth } from "@/hooks/useAuthContext";
 import { useToast } from "@/hooks/useToastContext";
 import { Check, X, Clock, UserCheck, Share2, Calendar, ShoppingBag, List } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ShareNotification, ShareableObjectType } from "@/data/types";
+import { ShareableObjectType } from "@/data/Utils/types";
+import { ShareNotification } from "@/data/Utils/interfaces";
 import {
   listenToUserPendingNotifications,
   acceptObjectInvitation,

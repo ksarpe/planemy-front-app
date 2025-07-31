@@ -1,18 +1,6 @@
 import { useState, useEffect } from "react";
 import BaseModal from "./BaseModal";
-
-interface RenameModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (newName: string) => void;
-  title: string;
-  currentName: string;
-  placeholder?: string;
-  confirmButtonText?: string;
-  cancelButtonText?: string;
-  isLoading?: boolean;
-  validateName?: (name: string) => boolean;
-}
+import { RenameModalProps } from "@/data/Common/interfaces";
 
 export default function RenameModal({
   isOpen,

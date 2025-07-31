@@ -37,7 +37,6 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   useEffect(() => {
-    console.log("CalendarContext - events updated:", events.length, events);
     if (Array.isArray(events) && events.length >= 0) {
       setIsInitialized(true);
     }

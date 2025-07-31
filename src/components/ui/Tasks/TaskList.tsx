@@ -1,14 +1,9 @@
 import { CheckCircle2, Plus } from "lucide-react";
 import TaskItem from "./TaskItem";
 import QuickAddTask from "./QuickAddTask";
-import { TaskInterface } from "@/data/types";
 import { useState } from "react";
 import { ActionButton } from "../Common";
-
-interface TaskListProps {
-  filter: "all" | "pending" | "completed" | "overdue";
-  tasks: TaskInterface[]; // Optional tasks prop for filtering
-}
+import type { TaskListProps } from "@/data/Tasks/interfaces";
 
 export default function TaskList({ filter, tasks }: TaskListProps) {
   const [showQuickAdd, setShowQuickAdd] = useState(false);
@@ -57,9 +52,6 @@ export default function TaskList({ filter, tasks }: TaskListProps) {
       <div className="text-center py-8 flex flex-col items-center">
         <CheckCircle2 size={48} className="mx-auto text-gray-400 mb-4" />
         <h3 className="text-lg font-medium text-gray-600 mb-2">Brak zadań</h3>
-        <p className="text-gray-500">
-          {filter === "all" ? "Dodaj swoje pierwsze zadanie do tej listy." : `Brak zadań w wybranej kategorii.`}
-        </p>
         <div className="mb-2 w-full max-w-md mt-4">
           {showQuickAdd ? (
             <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
