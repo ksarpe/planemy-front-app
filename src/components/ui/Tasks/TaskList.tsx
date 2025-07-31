@@ -3,6 +3,7 @@ import TaskItem from "./TaskItem";
 import QuickAddTask from "./QuickAddTask";
 import { TaskInterface } from "@/data/types";
 import { useState } from "react";
+import { ActionButton } from "../Common";
 
 interface TaskListProps {
   filter: "all" | "pending" | "completed" | "overdue";
@@ -87,12 +88,14 @@ export default function TaskList({ filter, tasks }: TaskListProps) {
         {showQuickAdd ? (
           <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
         ) : (
-          <button
+          <ActionButton
             onClick={() => setShowQuickAdd(true)}
-            className="w-full flex items-center justify-center gap-2 border-l-4 border-green-700 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer">
-            <Plus size={18} />
-            <span className="text-sm">Nowe zadanie</span>
-          </button>
+            icon={Plus}
+            iconSize={16}
+            text="Nowe zadanie"
+            color="green"
+            size="md"
+          />
         )}
       </div>
     </div>

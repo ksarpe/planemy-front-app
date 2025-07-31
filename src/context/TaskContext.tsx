@@ -58,35 +58,28 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   // Tasks cache - zadania pogrupowane według listId
   const [tasksCache, setTasksCache] = useState<Record<string, TaskInterface[]>>({});
 
-  // Update local state when Firebase data changes
   useEffect(() => {
+    if (taskListsFromFirebase.length === 0) return;
     setTaskLists(taskListsFromFirebase);
-  }, [taskListsFromFirebase]);
 
-  // Set first list as current if none selected and lists exist
-  useEffect(() => {
-    if (taskListsFromFirebase.length > 0 && !currentTaskList) {
+    if (!currentTaskList) {
+      // Brak wybranej listy – ustaw pierwszą
       setCurrentTaskList(taskListsFromFirebase[0]);
+      return;
     }
-  }, [taskListsFromFirebase, currentTaskList]);
 
-  // Update current task list when task lists change (to reflect real-time updates)
-  useEffect(() => {
-    if (currentTaskList && taskLists.length > 0) {
-      const updatedList = taskLists.find((list) => list.id === currentTaskList.id);
-      if (updatedList) {
-        setCurrentTaskList(updatedList);
-      }
+    // Znajdź aktualną wersję wybranej listy (np. po edycji nazwy)
+    const updatedList = taskListsFromFirebase.find((list) => list.id === currentTaskList.id);
+    if (updatedList) {
+      setCurrentTaskList(updatedList);
     }
-  }, [taskLists, currentTaskList]);
+  }, [taskListsFromFirebase, setCurrentTaskList, currentTaskList]);
 
   useEffect(() => {
     setLabels(labelsFromFirebase);
   }, [labelsFromFirebase]);
 
   useEffect(() => {
-    console.log("TaskContext - pendingSharesFromFirebase updated:", pendingSharesFromFirebase);
-    console.log("TaskContext - pendingSharesFromFirebase length:", pendingSharesFromFirebase.length);
     setPendingShares(pendingSharesFromFirebase);
   }, [pendingSharesFromFirebase]);
 

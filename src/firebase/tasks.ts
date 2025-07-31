@@ -47,6 +47,7 @@ export const useUserTaskLists = (): TaskListInterface[] => {
                             return {
                                 id: listDoc.id,
                                 ...listDoc.data(),
+                                shared: true,
                             } as TaskListInterface;
                         }
                         return null;

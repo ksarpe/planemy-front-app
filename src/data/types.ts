@@ -207,6 +207,9 @@ export interface TaskListInterface {
   userId: string; // Owner of the list
   createdAt?: string;
   updatedAt?: string;
+
+  //frontend purpose
+  shared?: boolean; // Indicates if the list is shared
 }
 
 // Legacy interface for backwards compatibility (if needed)

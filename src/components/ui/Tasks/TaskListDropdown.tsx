@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, List, Calendar, CheckCircle2 } from "lucide-react";
+import { ChevronDown, List, Calendar, CheckCircle2, Users } from "lucide-react";
 import { useTaskContext } from "@/hooks/useTaskContext";
 
 export default function TaskListDropdown() {
@@ -31,7 +31,14 @@ export default function TaskListDropdown() {
           {currentTaskList && (
             <div>
               <div className="font-medium text-gray-900">{currentTaskList.name}</div>
-              <div className="text-xs text-gray-500">Ilość zadań: {getTaskStats(currentTaskList.id).total}</div>
+              <div className="text-xs text-gray-500 flex items-center gap-2">
+                {currentTaskList.shared && (
+                  <span className="text-blue-600">
+                    <Users size={12} />
+                  </span>
+                )}
+                <span className="text-gray-400">Ilość zadań: {getTaskStats(currentTaskList.id).total} </span>
+              </div>
             </div>
           )}
         </div>
@@ -62,6 +69,11 @@ export default function TaskListDropdown() {
                   <div className="flex-1">
                     <div className={`font-medium ${isSelected ? "text-blue-900" : "text-gray-900"}`}>{list.name}</div>
                     <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                      {list.shared && (
+                        <span className="text-blue-600">
+                          <Users size={12} />
+                        </span>
+                      )}
                       <span className="flex items-center gap-1">
                         <Calendar size={12} />
                         {stats.total} zadań
