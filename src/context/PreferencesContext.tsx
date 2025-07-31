@@ -1,11 +1,11 @@
-import { createContext, useState, useContext, ReactNode } from "react";
+import { createContext, useState, ReactNode } from "react";
 import { useTheme } from "@/hooks/useTheme";
 import type { PreferencesContextProps } from "@/data/typesProps";
 
 const PreferencesContext = createContext<PreferencesContextProps | undefined>(undefined);
+export { PreferencesContext };
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
-  const [dayStartTime, setDayStartTime] = useState("07:00");
   const [showWeekends, setShowWeekends] = useState(true);
   const [isSidebarClosed, setIsSidebarClosed] = useState(false);
   const { isDark, toggleTheme } = useTheme();
@@ -13,8 +13,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   return (
     <PreferencesContext.Provider
       value={{
-        dayStartTime,
-        setDayStartTime,
         showWeekends,
         setShowWeekends,
         isDark,
@@ -27,10 +25,3 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function usePreferencesContext() {
-  const context = useContext(PreferencesContext);
-  if (!context) {
-    throw new Error("usePreferencesContext must be used within PreferencesProvider");
-  }
-  return context;
-}

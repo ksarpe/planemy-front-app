@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { EventInterface } from "../../../data/types";
-import { useCalendarContext } from "../../../context/CalendarContext";
+import { useCalendarContext } from "@/hooks/useCalendarContext";
 import { Edit2, Clock, User, X, Check } from "lucide-react";
 
 interface EventBlockProps {

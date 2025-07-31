@@ -19,8 +19,6 @@ export interface ToastContextProps {
 }
 
 export interface PreferencesContextProps {
-  dayStartTime: string; // keeps track of when calendar scroll should start
-  setDayStartTime: (time: string) => void;
   showWeekends: boolean;
   setShowWeekends: (show: boolean) => void;
   isDark: boolean; //theme

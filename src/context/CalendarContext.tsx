@@ -2,28 +2,10 @@ import type { CalendarClickContent, EventInterface } from "../data/types";
 import type { CalendarContextProps } from "../data/typesProps";
 import { useEvents, addEvent as firebaseAddEvent, updateEvent as firebaseUpdateEvent } from "../firebase/events";
 import { getDateKey } from "../utils/helpers";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 
-const CalendarContext = createContext<CalendarContextProps>({
-  currentDate: new Date(),
-  loadNext: () => {},
-  loadPrev: () => {},
-  goToday: () => {},
-  view: "month",
-  setView: () => {},
-  isInitialized: false,
-  setIsInitialized: () => {},
-  setCurrentDate: () => {},
-  events: [],
-  updateEvent: async () => {},
-  addEvent: async () => {},
-  hourlyEvents: {},
-  dailyEvents: {},
-  calendarClickContent: null,
-  setCalendarClickContent: () => {},
-  modalPosition: { top: 0, left: 0 },
-  setModalPosition: () => {},
-});
+const CalendarContext = createContext<CalendarContextProps | undefined>(undefined);
+export { CalendarContext };
 
 export const CalendarProvider = ({ children }: { children: React.ReactNode }) => {
   const today = new Date();
@@ -34,7 +16,7 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
   const [isInitialized, setIsInitialized] = useState(false);
 
   const events = useEvents();
-  
+
   const setModalPosition = (position: { top: number; left: number } | null) => {
     if (!position) {
       setActualModalPosition(null);
@@ -53,7 +35,7 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
     }
     setActualModalPosition(position);
   };
-  
+
   useEffect(() => {
     console.log("CalendarContext - events updated:", events.length, events);
     if (Array.isArray(events) && events.length >= 0) {
@@ -93,9 +75,6 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
       const startKey = getDateKey(start);
 
       if (event.allDay) {
-        const days = Math.ceil((stripTime(end).getTime() - stripTime(start).getTime()) / (1000 * 60 * 60 * 24)) + 1;
-        event.colSpan = days;
-
         daily[startKey] ||= [];
         daily[startKey].push(event);
       } else {
@@ -168,5 +147,3 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
     </CalendarContext.Provider>
   );
 };
-
-export const useCalendarContext = () => useContext(CalendarContext);

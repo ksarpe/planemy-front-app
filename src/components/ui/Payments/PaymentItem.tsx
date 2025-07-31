@@ -1,4 +1,4 @@
-import { usePaymentsContext } from "@/context/PaymentsContext";
+import { usePaymentsContext } from "@/hooks/usePaymentsContext";
 import { PaymentInterface } from "@/data/types";
 import { useState } from "react";
 import { 

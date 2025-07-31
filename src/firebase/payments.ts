@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import { db } from "./config";
-import { collection, onSnapshot, addDoc, query, where, serverTimestamp, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { useAuth } from "../context/AuthContext";
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  query,
+  where,
+  serverTimestamp,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+import { useAuth } from "../hooks/useAuthContext";
 
 export interface Payment {
   id: string;
@@ -57,7 +67,10 @@ export const useUserPayments = (): Payment[] => {
 };
 
 // Function to add a new payment/subscription
-export const addPayment = async (paymentData: Omit<Payment, 'id' | 'createdAt' | 'updatedAt' | 'userId'>, userId: string): Promise<void> => {
+export const addPayment = async (
+  paymentData: Omit<Payment, "id" | "createdAt" | "updatedAt" | "userId">,
+  userId: string,
+): Promise<void> => {
   try {
     if (!userId) throw new Error("User ID is required");
 
@@ -68,7 +81,7 @@ export const addPayment = async (paymentData: Omit<Payment, 'id' | 'createdAt' |
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
-    
+
     await addDoc(paymentsCollection, newPayment);
   } catch (error) {
     console.error("Error adding payment:", error);
@@ -81,7 +94,7 @@ export const updatePayment = async (paymentId: string, updateData: Partial<Payme
   try {
     const paymentsCollection = collection(db, "payments");
     const paymentDocRef = doc(paymentsCollection, paymentId);
-    
+
     await updateDoc(paymentDocRef, {
       ...updateData,
       updatedAt: serverTimestamp(),
@@ -108,10 +121,10 @@ export const removePayment = async (paymentId: string): Promise<void> => {
 export const markPaymentAsPaid = async (paymentId: string, payment: Payment): Promise<void> => {
   try {
     const nextDate = calculateNextPaymentDate(payment.cycle, new Date());
-    
+
     await updatePayment(paymentId, {
       isPaid: true,
-      lastPaymentDate: new Date().toISOString().split('T')[0],
+      lastPaymentDate: new Date().toISOString().split("T")[0],
       nextPaymentDate: nextDate,
     });
   } catch (error) {
@@ -131,25 +144,25 @@ export const togglePaymentStatus = async (paymentId: string, isActive: boolean):
 };
 
 // Helper function to calculate next payment date
-export const calculateNextPaymentDate = (cycle: Payment['cycle'], fromDate: Date = new Date()): string => {
+export const calculateNextPaymentDate = (cycle: Payment["cycle"], fromDate: Date = new Date()): string => {
   const date = new Date(fromDate);
-  
+
   switch (cycle) {
-    case 'weekly':
+    case "weekly":
       date.setDate(date.getDate() + 7);
       break;
-    case 'monthly':
+    case "monthly":
       date.setMonth(date.getMonth() + 1);
       break;
-    case 'quarterly':
+    case "quarterly":
       date.setMonth(date.getMonth() + 3);
       break;
-    case 'yearly':
+    case "yearly":
       date.setFullYear(date.getFullYear() + 1);
       break;
   }
-  
-  return date.toISOString().split('T')[0];
+
+  return date.toISOString().split("T")[0];
 };
 
 // Helper function to get days until next payment

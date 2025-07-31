@@ -4,8 +4,8 @@ import {
   FavoriteProductInterface,
   ShoppingCategoryInterface 
 } from "../data/types";
-import { createContext, useContext, useEffect, useState } from "react";
-import { useAuth } from "./AuthContext";
+import { createContext, useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuthContext";
 import { useToast } from "@/hooks/useToastContext";
 import { 
   useShoppingLists, 
@@ -55,6 +55,7 @@ interface ShoppingContextType {
 }
 
 const ShoppingContext = createContext<ShoppingContextType | undefined>(undefined);
+export { ShoppingContext };
 
 export const ShoppingProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
@@ -69,18 +70,9 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
 
   const loading = listsLoading || favoritesLoading;
 
-  // Debug logs
-  useEffect(() => {
-    console.log('ShoppingProvider - user:', user?.uid);
-    console.log('ShoppingProvider - listsLoading:', listsLoading);
-    console.log('ShoppingProvider - favoritesLoading:', favoritesLoading);
-    console.log('ShoppingProvider - shoppingLists count:', shoppingLists.length);
-  }, [user, listsLoading, favoritesLoading, shoppingLists.length]);
-
   // Set first list as current when lists load
   useEffect(() => {
     if (shoppingLists.length > 0 && !currentList) {
-      console.log('Setting current list to first list:', shoppingLists[0]);
       setCurrentList(shoppingLists[0]);
     }
   }, [shoppingLists, currentList]);
@@ -90,7 +82,6 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
     if (currentList && shoppingLists.length > 0) {
       const updatedCurrentList = shoppingLists.find(list => list.id === currentList.id);
       if (updatedCurrentList && JSON.stringify(updatedCurrentList) !== JSON.stringify(currentList)) {
-        console.log('Updating current list with new data:', updatedCurrentList);
         setCurrentList(updatedCurrentList);
       }
     }
@@ -310,12 +301,4 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
       {children}
     </ShoppingContext.Provider>
   );
-};
-
-export const useShoppingContext = () => {
-  const context = useContext(ShoppingContext);
-  if (!context) {
-    throw new Error("useShoppingContext must be used within a ShoppingProvider");
-  }
-  return context;
 };

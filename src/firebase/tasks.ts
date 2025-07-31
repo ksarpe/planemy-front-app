@@ -1,337 +1,349 @@
 import { useEffect, useState } from "react";
 import { db } from "./config";
-import { collection, onSnapshot, doc, deleteDoc, addDoc, query, where, updateDoc, getDocs, getDoc } from "firebase/firestore";
-import { useAuth } from "../context/AuthContext";
-import { TaskInterface, TaskListInterface, LabelInterface, UserProfile, SharedTaskList, SharePermission, TaskListNotification } from "../data/types";
+import {
+  collection,
+  onSnapshot,
+  doc,
+  deleteDoc,
+  addDoc,
+  query,
+  where,
+  updateDoc,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
+import { useAuth } from "../hooks/useAuthContext";
+import {
+  TaskInterface,
+  TaskListInterface,
+  LabelInterface,
+  UserProfile,
+  SharedTaskList,
+  SharePermission,
+  TaskListNotification,
+} from "../data/types";
 
 // Hook to get user's task lists (own + shared via permissions)
 export const useUserTaskLists = (): TaskListInterface[] => {
-    const [taskLists, setTaskLists] = useState<TaskListInterface[]>([]);
-    const { user } = useAuth();
+  const [taskLists, setTaskLists] = useState<TaskListInterface[]>([]);
+  const { user } = useAuth();
 
-    useEffect(() => {
-        if (!user) {
-            setTaskLists([]);
-            return;
+  useEffect(() => {
+    if (!user) {
+      setTaskLists([]);
+      return;
+    }
+
+    const taskListsCollection = collection(db, "taskLists");
+
+    // First, get all accepted permissions for this user from the generic permissions system
+    const permissionsQuery = query(
+      collection(db, "permissions"),
+      where("user_id", "==", user.uid),
+      where("object_type", "==", "task_list"),
+      where("status", "==", "accepted"),
+    );
+
+    const unsubscribePermissions = onSnapshot(permissionsQuery, async (permissionsSnapshot) => {
+      const permissions = permissionsSnapshot.docs.map((doc) => doc.data());
+      const listIds = permissions.map((p) => p.object_id); // Changed from list_id to object_id
+
+      // Also get lists where user is owner
+      const ownListsQuery = query(taskListsCollection, where("userId", "==", user.uid));
+
+      const unsubscribeOwn = onSnapshot(ownListsQuery, async (ownListsSnapshot) => {
+        const ownLists = ownListsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as TaskListInterface[];
+
+        // Get shared lists by IDs from permissions
+        let sharedLists: TaskListInterface[] = [];
+        if (listIds.length > 0) {
+          const sharedListsPromises = listIds.map(async (listId) => {
+            const listDoc = await getDoc(doc(taskListsCollection, listId));
+            if (listDoc.exists()) {
+              return {
+                id: listDoc.id,
+                ...listDoc.data(),
+                shared: true,
+              } as TaskListInterface;
+            }
+            return null;
+          });
+
+          const resolvedSharedLists = await Promise.all(sharedListsPromises);
+          sharedLists = resolvedSharedLists.filter((list) => list !== null) as TaskListInterface[];
         }
 
-        const taskListsCollection = collection(db, "taskLists");
-        
-        // First, get all accepted permissions for this user from the generic permissions system
-        const permissionsQuery = query(
-            collection(db, "permissions"), 
-            where("user_id", "==", user.uid),
-            where("object_type", "==", "task_list"),
-            where("status", "==", "accepted")
-        );
-        
-        const unsubscribePermissions = onSnapshot(permissionsQuery, async (permissionsSnapshot) => {
-            const permissions = permissionsSnapshot.docs.map(doc => doc.data());
-            const listIds = permissions.map(p => p.object_id); // Changed from list_id to object_id
-            
-            // Also get lists where user is owner
-            const ownListsQuery = query(taskListsCollection, where("userId", "==", user.uid));
-            
-            const unsubscribeOwn = onSnapshot(ownListsQuery, async (ownListsSnapshot) => {
-                const ownLists = ownListsSnapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                })) as TaskListInterface[];
-                
-                // Get shared lists by IDs from permissions
-                let sharedLists: TaskListInterface[] = [];
-                if (listIds.length > 0) {
-                    const sharedListsPromises = listIds.map(async (listId) => {
-                        const listDoc = await getDoc(doc(taskListsCollection, listId));
-                        if (listDoc.exists()) {
-                            return {
-                                id: listDoc.id,
-                                ...listDoc.data(),
-                                shared: true,
-                            } as TaskListInterface;
-                        }
-                        return null;
-                    });
-                    
-                    const resolvedSharedLists = await Promise.all(sharedListsPromises);
-                    sharedLists = resolvedSharedLists.filter(list => list !== null) as TaskListInterface[];
-                }
-                
-                // Combine own and shared lists, remove duplicates
-                const allLists = [...ownLists, ...sharedLists];
-                const uniqueLists = allLists.filter((list, index, self) => 
-                    index === self.findIndex(l => l.id === list.id)
-                );
-                
-                setTaskLists(uniqueLists);
-            });
-            
-            return unsubscribeOwn;
-        });
+        // Combine own and shared lists, remove duplicates
+        const allLists = [...ownLists, ...sharedLists];
+        const uniqueLists = allLists.filter((list, index, self) => index === self.findIndex((l) => l.id === list.id));
 
-        return unsubscribePermissions;
-    }, [user]);
+        setTaskLists(uniqueLists);
+      });
 
-    return taskLists;
+      return unsubscribeOwn;
+    });
+
+    return unsubscribePermissions;
+  }, [user]);
+
+  return taskLists;
 };
 
 // Hook to get tasks for a specific task list
 export const useTasksForList = (taskListId: string | null): TaskInterface[] => {
-    const [tasks, setTasks] = useState<TaskInterface[]>([]);
+  const [tasks, setTasks] = useState<TaskInterface[]>([]);
 
-    useEffect(() => {
-        if (!taskListId) {
-            setTasks([]);
-            return;
-        }
+  useEffect(() => {
+    if (!taskListId) {
+      setTasks([]);
+      return;
+    }
 
-        const tasksCollection = collection(db, "tasks");
-        const tasksQuery = query(tasksCollection, where("taskListId", "==", taskListId));
-        
-        const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
-            const tasksList = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            })) as TaskInterface[];
-            
-            setTasks(tasksList);
-        });
+    const tasksCollection = collection(db, "tasks");
+    const tasksQuery = query(tasksCollection, where("taskListId", "==", taskListId));
 
-        return unsubscribe;
-    }, [taskListId]);
+    const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
+      const tasksList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as TaskInterface[];
 
-    return tasks;
+      setTasks(tasksList);
+    });
+
+    return unsubscribe;
+  }, [taskListId]);
+
+  return tasks;
 };
 
 // Hook to get user's labels
 export const useUserLabels = (): LabelInterface[] => {
-    const [labels, setLabels] = useState<LabelInterface[]>([]);
-    const { user } = useAuth();
+  const [labels, setLabels] = useState<LabelInterface[]>([]);
+  const { user } = useAuth();
 
-    useEffect(() => {
-        if (!user) {
-            setLabels([]);
-            return;
-        }
+  useEffect(() => {
+    if (!user) {
+      setLabels([]);
+      return;
+    }
 
-        const labelsCollection = collection(db, "labels");
-        const userLabelsQuery = query(labelsCollection, where("userId", "==", user.uid));
+    const labelsCollection = collection(db, "labels");
+    const userLabelsQuery = query(labelsCollection, where("userId", "==", user.uid));
 
-        const unsubscribe = onSnapshot(userLabelsQuery, (snapshot) => {
-            const labelList: LabelInterface[] = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            })) as LabelInterface[];
+    const unsubscribe = onSnapshot(userLabelsQuery, (snapshot) => {
+      const labelList: LabelInterface[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as LabelInterface[];
 
-            setLabels(labelList);
-        });
+      setLabels(labelList);
+    });
 
-        return () => {
-            unsubscribe();
-        };
-    }, [user]);
+    return () => {
+      unsubscribe();
+    };
+  }, [user]);
 
-    return labels;
+  return labels;
 };
 
 // Create a new task list
 export const createTaskList = async (name: string, userId: string): Promise<void> => {
-    try {
-        const taskListsCollection = collection(db, "taskLists");
-        const newTaskList = {
-            name,
-            tasks: [],
-            labels: [],
-            userId,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        };
-        
-        await addDoc(taskListsCollection, newTaskList);
-    } catch (error) {
-        console.error("Error creating task list:", error);
-        throw error;
-    }
+  try {
+    const taskListsCollection = collection(db, "taskLists");
+    const newTaskList = {
+      name,
+      tasks: [],
+      labels: [],
+      userId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    await addDoc(taskListsCollection, newTaskList);
+  } catch (error) {
+    console.error("Error creating task list:", error);
+    throw error;
+  }
 };
 
 // Update task list
 export const updateTaskList = async (listId: string, updates: Partial<TaskListInterface>): Promise<void> => {
-    try {
-        const taskListDocRef = doc(db, "taskLists", listId);
-        await updateDoc(taskListDocRef, updates);
-    } catch (error) {
-        console.error("Error updating task list:", error);
-        throw error;
-    }
+  try {
+    const taskListDocRef = doc(db, "taskLists", listId);
+    await updateDoc(taskListDocRef, updates);
+  } catch (error) {
+    console.error("Error updating task list:", error);
+    throw error;
+  }
 };
 
 // Delete task list
 export const deleteTaskList = async (listId: string): Promise<void> => {
-    try {
-        const taskListDocRef = doc(db, "taskLists", listId);
-        await deleteDoc(taskListDocRef);
-    } catch (error) {
-        console.error("Error deleting task list:", error);
-        throw error;
-    }
+  try {
+    const taskListDocRef = doc(db, "taskLists", listId);
+    await deleteDoc(taskListDocRef);
+  } catch (error) {
+    console.error("Error deleting task list:", error);
+    throw error;
+  }
 };
 
 // Add task to list - now creates task in separate collection
 export const addTaskToList = async (
-    listId: string, 
-    title: string, 
-    userId: string,
-    description?: string | null, 
-    dueDate?: string | null,
-    labels?: LabelInterface[]
+  listId: string,
+  title: string,
+  userId: string,
+  description?: string | null,
+  dueDate?: string | null,
 ): Promise<void> => {
-    try {
-        const tasksCollection = collection(db, "tasks");
-        const newTask: Omit<TaskInterface, 'id'> = {
-            title,
-            description: description || "",
-            dueDate: dueDate || "",
-            isCompleted: false,
-            labels: labels || [],
-            userId,
-            taskListId: listId,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-        };
-        
-        await addDoc(tasksCollection, newTask);
-    } catch (error) {
-        console.error("Error adding task to list:", error);
-        throw error;
-    }
+  try {
+    const tasksCollection = collection(db, "tasks");
+    const newTask: Omit<TaskInterface, "id"> = {
+      title,
+      description: description || "",
+      dueDate: dueDate || "",
+      isCompleted: false,
+      userId,
+      taskListId: listId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    await addDoc(tasksCollection, newTask);
+  } catch (error) {
+    console.error("Error adding task to list:", error);
+    throw error;
+  }
 };
 
 // Update task - now updates task in tasks collection
-export const updateTaskInList = async (
-    taskId: string, 
-    updates: Partial<TaskInterface>
-): Promise<void> => {
-    try {
-        const taskDocRef = doc(db, "tasks", taskId);
-        await updateDoc(taskDocRef, {
-            ...updates,
-            updatedAt: new Date().toISOString()
-        });
-    } catch (error) {
-        console.error("Error updating task:", error);
-        throw error;
-    }
-};// Remove task from list - now deletes task from tasks collection
+export const updateTaskInList = async (taskId: string, updates: Partial<TaskInterface>): Promise<void> => {
+  try {
+    const taskDocRef = doc(db, "tasks", taskId);
+    await updateDoc(taskDocRef, {
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("Error updating task:", error);
+    throw error;
+  }
+}; // Remove task from list - now deletes task from tasks collection
 export const removeTaskFromList = async (taskId: string): Promise<void> => {
-    try {
-        const taskDocRef = doc(db, "tasks", taskId);
-        await deleteDoc(taskDocRef);
-    } catch (error) {
-        console.error("Error removing task from list:", error);
-        throw error;
-    }
+  try {
+    const taskDocRef = doc(db, "tasks", taskId);
+    await deleteDoc(taskDocRef);
+  } catch (error) {
+    console.error("Error removing task from list:", error);
+    throw error;
+  }
 };
 
 // Toggle task completion - now updates task in tasks collection
 export const toggleTaskCompletion = async (taskId: string): Promise<void> => {
-    try {
-        const taskDocRef = doc(db, "tasks", taskId);
-        const taskSnapshot = await getDoc(taskDocRef);
-        
-        if (taskSnapshot.exists()) {
-            const currentTask = taskSnapshot.data() as TaskInterface;
-            await updateDoc(taskDocRef, {
-                isCompleted: !currentTask.isCompleted,
-                updatedAt: new Date().toISOString()
-            });
-        }
-    } catch (error) {
-        console.error("Error toggling task completion:", error);
-        throw error;
+  try {
+    const taskDocRef = doc(db, "tasks", taskId);
+    const taskSnapshot = await getDoc(taskDocRef);
+
+    if (taskSnapshot.exists()) {
+      const currentTask = taskSnapshot.data() as TaskInterface;
+      await updateDoc(taskDocRef, {
+        isCompleted: !currentTask.isCompleted,
+        updatedAt: new Date().toISOString(),
+      });
     }
+  } catch (error) {
+    console.error("Error toggling task completion:", error);
+    throw error;
+  }
 };
 
 // Clear completed tasks from a list
 export const clearCompletedTasks = async (listId: string): Promise<void> => {
-    try {
-        const tasksCollection = collection(db, "tasks");
-        const completedTasksQuery = query(
-            tasksCollection, 
-            where("taskListId", "==", listId),
-            where("isCompleted", "==", true)
-        );
-        
-        const snapshot = await getDocs(completedTasksQuery);
-        const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
-        await Promise.all(deletePromises);
-    } catch (error) {
-        console.error("Error clearing completed tasks:", error);
-        throw error;
-    }
+  try {
+    const tasksCollection = collection(db, "tasks");
+    const completedTasksQuery = query(
+      tasksCollection,
+      where("taskListId", "==", listId),
+      where("isCompleted", "==", true),
+    );
+
+    const snapshot = await getDocs(completedTasksQuery);
+    const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
+    await Promise.all(deletePromises);
+  } catch (error) {
+    console.error("Error clearing completed tasks:", error);
+    throw error;
+  }
 };
 
 // Uncheck all tasks in a list
 export const uncheckAllTasks = async (listId: string): Promise<void> => {
-    try {
-        const tasksCollection = collection(db, "tasks");
-        const completedTasksQuery = query(
-            tasksCollection, 
-            where("taskListId", "==", listId),
-            where("isCompleted", "==", true)
-        );
-        
-        const snapshot = await getDocs(completedTasksQuery);
-        const updatePromises = snapshot.docs.map(doc => 
-            updateDoc(doc.ref, { 
-                isCompleted: false,
-                updatedAt: new Date().toISOString()
-            })
-        );
-        await Promise.all(updatePromises);
-    } catch (error) {
-        console.error("Error unchecking all tasks:", error);
-        throw error;
-    }
+  try {
+    const tasksCollection = collection(db, "tasks");
+    const completedTasksQuery = query(
+      tasksCollection,
+      where("taskListId", "==", listId),
+      where("isCompleted", "==", true),
+    );
+
+    const snapshot = await getDocs(completedTasksQuery);
+    const updatePromises = snapshot.docs.map((doc) =>
+      updateDoc(doc.ref, {
+        isCompleted: false,
+        updatedAt: new Date().toISOString(),
+      }),
+    );
+    await Promise.all(updatePromises);
+  } catch (error) {
+    console.error("Error unchecking all tasks:", error);
+    throw error;
+  }
 };
 
 // Create label
 export const createLabel = async (name: string, color: string, userId: string, description?: string): Promise<void> => {
-    try {
-        const labelsCollection = collection(db, "labels");
-        const newLabel = {
-            name,
-            color,
-            description,
-            userId,
-        };
-        
-        await addDoc(labelsCollection, newLabel);
-    } catch (error) {
-        console.error("Error creating label:", error);
-        throw error;
-    }
+  try {
+    const labelsCollection = collection(db, "labels");
+    const newLabel = {
+      name,
+      color,
+      description,
+      userId,
+    };
+
+    await addDoc(labelsCollection, newLabel);
+  } catch (error) {
+    console.error("Error creating label:", error);
+    throw error;
+  }
 };
 
 // Update label
 export const updateLabel = async (labelId: string, updates: Partial<LabelInterface>): Promise<void> => {
-    try {
-        const labelDocRef = doc(db, "labels", labelId);
-        await updateDoc(labelDocRef, updates);
-    } catch (error) {
-        console.error("Error updating label:", error);
-        throw error;
-    }
+  try {
+    const labelDocRef = doc(db, "labels", labelId);
+    await updateDoc(labelDocRef, updates);
+  } catch (error) {
+    console.error("Error updating label:", error);
+    throw error;
+  }
 };
 
 // Delete label
 export const deleteLabel = async (labelId: string): Promise<void> => {
-    try {
-        const labelDocRef = doc(db, "labels", labelId);
-        await deleteDoc(labelDocRef);
-    } catch (error) {
-        console.error("Error deleting label:", error);
-        throw error;
-    }
+  try {
+    const labelDocRef = doc(db, "labels", labelId);
+    await deleteDoc(labelDocRef);
+  } catch (error) {
+    console.error("Error deleting label:", error);
+    throw error;
+  }
 };
 
 // SHARING SYSTEM FUNCTIONS
@@ -345,7 +357,7 @@ export const deleteLabel = async (labelId: string): Promise<void> => {
 //             displayName,
 //             createdAt: new Date().toISOString(),
 //         };
-        
+
 //         await setDoc(doc(db, "users", userId), userProfile);
 //     } catch (error) {
 //         console.error("Error creating user profile:", error);
@@ -355,128 +367,128 @@ export const deleteLabel = async (labelId: string): Promise<void> => {
 
 // Search users by email
 export const searchUsersByEmail = async (email: string): Promise<UserProfile[]> => {
-    try {
-        const usersCollection = collection(db, "users");
-        const userQuery = query(usersCollection, where("email", "==", email));
-        const snapshot = await getDocs(userQuery);
-        
-        return snapshot.docs.map(doc => doc.data() as UserProfile);
-    } catch (error) {
-        console.error("Error searching users:", error);
-        throw error;
-    }
+  try {
+    const usersCollection = collection(db, "users");
+    const userQuery = query(usersCollection, where("email", "==", email));
+    const snapshot = await getDocs(userQuery);
+
+    return snapshot.docs.map((doc) => doc.data() as UserProfile);
+  } catch (error) {
+    console.error("Error searching users:", error);
+    throw error;
+  }
 };
 
 // Share task list with another user - now uses notifications collection
 export const shareTaskListWithUser = async (
-    listId: string, 
-    targetUserEmail: string, 
-    permission: SharePermission,
-    sharedByUserId: string
+  listId: string,
+  targetUserEmail: string,
+  permission: SharePermission,
+  sharedByUserId: string,
 ): Promise<void> => {
-    console.log("tasks.ts shareTaskListWithUser called:", { listId, targetUserEmail, permission, sharedByUserId });
-    try {
-        const { shareTaskListWithUser: newShareFunction } = await import("./taskPermissions");
-        console.log("Calling taskPermissionss.shareTaskListWithUser");
-        await newShareFunction(listId, targetUserEmail, permission, sharedByUserId);
-        console.log("taskPermissionss.shareTaskListWithUser completed successfully");
-    } catch (error) {
-        console.error("Error sharing task list:", error);
-        throw error;
-    }
+  console.log("tasks.ts shareTaskListWithUser called:", { listId, targetUserEmail, permission, sharedByUserId });
+  try {
+    const { shareTaskListWithUser: newShareFunction } = await import("./permissions/taskPermissions");
+    console.log("Calling taskPermissionss.shareTaskListWithUser");
+    await newShareFunction(listId, targetUserEmail, permission, sharedByUserId);
+    console.log("taskPermissionss.shareTaskListWithUser completed successfully");
+  } catch (error) {
+    console.error("Error sharing task list:", error);
+    throw error;
+  }
 };
 
 // Accept shared task list - now uses notifications collection
 export const acceptSharedTaskList = async (shareId: string): Promise<void> => {
-    try {
-        const { acceptTaskListInvitation } = await import("./taskPermissions");
-        await acceptTaskListInvitation(shareId);
-    } catch (error) {
-        console.error("Error accepting shared task list:", error);
-        throw error;
-    }
+  try {
+    const { acceptTaskListInvitation } = await import("./permissions/taskPermissions");
+    await acceptTaskListInvitation(shareId);
+  } catch (error) {
+    console.error("Error accepting shared task list:", error);
+    throw error;
+  }
 };
 
 // Reject shared task list - now uses notifications collection
 export const rejectSharedTaskList = async (shareId: string): Promise<void> => {
-    try {
-        const { rejectTaskListInvitation } = await import("./taskPermissions");
-        await rejectTaskListInvitation(shareId);
-    } catch (error) {
-        console.error("Error rejecting shared task list:", error);
-        throw error;
-    }
+  try {
+    const { rejectTaskListInvitation } = await import("./permissions/taskPermissions");
+    await rejectTaskListInvitation(shareId);
+  } catch (error) {
+    console.error("Error rejecting shared task list:", error);
+    throw error;
+  }
 };
 
 // Revoke access to shared task list
 export const revokeTaskListAccess = async (listId: string, userId: string): Promise<void> => {
-    try {
-        const { revokeTaskListAccess: revokeAccess } = await import("./taskPermissions");
-        await revokeAccess(listId, userId);
-    } catch (error) {
-        console.error("Error revoking task list access:", error);
-        throw error;
-    }
+  try {
+    const { revokeTaskListAccess: revokeAccess } = await import("./permissions/taskPermissions");
+    await revokeAccess(listId, userId);
+  } catch (error) {
+    console.error("Error revoking task list access:", error);
+    throw error;
+  }
 };
 
 // Get users with access to task list
 export const getTaskListSharedUsers = async (listId: string) => {
-    try {
-        const { getTaskListSharedUsers: getSharedUsers } = await import("./taskPermissions");
-        return await getSharedUsers(listId);
-    } catch (error) {
-        console.error("Error getting shared users:", error);
-        return [];
-    }
+  try {
+    const { getTaskListSharedUsers: getSharedUsers } = await import("./permissions/taskPermissions");
+    return await getSharedUsers(listId);
+  } catch (error) {
+    console.error("Error getting shared users:", error);
+    return [];
+  }
 };
 
 // Get pending share invitations for user - now uses notifications collection
 export const useUserPendingShares = (): SharedTaskList[] => {
-    const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
-    const { user } = useAuth();
+  const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
+  const { user } = useAuth();
 
-    useEffect(() => {
-        if (!user) {
-            setPendingShares([]);
-            return;
-        }
+  useEffect(() => {
+    if (!user) {
+      setPendingShares([]);
+      return;
+    }
 
-        let unsubscribe: (() => void) | undefined;
+    let unsubscribe: (() => void) | undefined;
 
-        const setupListener = async () => {
-            try {
-                const { listenToUserPendingNotifications } = await import("./taskPermissions");
-                
-                console.log("Setting up pending notifications listener for user:", user.uid);
-                unsubscribe = listenToUserPendingNotifications(user.uid, (notifications: TaskListNotification[]) => {
-                    console.log("useUserPendingShares - notifications received:", notifications);
-                    // Convert TaskListNotification to SharedTaskList format for compatibility
-                    const sharedTaskLists = notifications.map((notification: TaskListNotification) => ({
-                        id: notification.id,
-                        listId: notification.listId,
-                        sharedBy: notification.sharedBy,
-                        permission: notification.permission,
-                        sharedAt: notification.sharedAt,
-                        acceptedAt: "",
-                    })) as SharedTaskList[];
-                    
-                    console.log("useUserPendingShares - converted to SharedTaskList:", sharedTaskLists);
-                    setPendingShares(sharedTaskLists);
-                });
-                
-                console.log("Pending notifications listener set up successfully");
-            } catch (error) {
-                console.error("Error setting up pending notifications listener:", error);
-            }
-        };
-        
-        setupListener();
-        
-        return () => {
-            console.log("Cleaning up pending notifications listener");
-            unsubscribe?.();
-        };
-    }, [user]);
+    const setupListener = async () => {
+      try {
+        const { listenToUserPendingNotifications } = await import("./permissions/taskPermissions");
 
-    return pendingShares;
+        console.log("Setting up pending notifications listener for user:", user.uid);
+        unsubscribe = listenToUserPendingNotifications(user.uid, (notifications: TaskListNotification[]) => {
+          console.log("useUserPendingShares - notifications received:", notifications);
+          // Convert TaskListNotification to SharedTaskList format for compatibility
+          const sharedTaskLists = notifications.map((notification: TaskListNotification) => ({
+            id: notification.id,
+            listId: notification.listId,
+            sharedBy: notification.sharedBy,
+            permission: notification.permission,
+            sharedAt: notification.sharedAt,
+            acceptedAt: "",
+          })) as SharedTaskList[];
+
+          console.log("useUserPendingShares - converted to SharedTaskList:", sharedTaskLists);
+          setPendingShares(sharedTaskLists);
+        });
+
+        console.log("Pending notifications listener set up successfully");
+      } catch (error) {
+        console.error("Error setting up pending notifications listener:", error);
+      }
+    };
+
+    setupListener();
+
+    return () => {
+      console.log("Cleaning up pending notifications listener");
+      unsubscribe?.();
+    };
+  }, [user]);
+
+  return pendingShares;
 };

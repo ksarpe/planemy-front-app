@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { EventInterface } from "../../../data/types";
-import { useCalendarContext } from "../../../context/CalendarContext";
+import { useCalendarContext } from "@/hooks/useCalendarContext";
 import { Edit2, Clock, User, X, Check, Circle, Heart, Pill, Dumbbell, Car, Calendar } from "lucide-react";
 
 interface EnhancedEventBlockProps {
@@ -27,7 +27,6 @@ export default function EnhancedEventBlock({
     start: new Date(event.start).toISOString().slice(0, 16),
     end: new Date(event.end).toISOString().slice(0, 16),
     category: event.category,
-    displayType: event.displayType,
     icon: event.icon || "",
     color: event.color
   });
@@ -64,7 +63,6 @@ export default function EnhancedEventBlock({
       start: editData.start,
       end: editData.end,
       category: editData.category as EventInterface["category"],
-      displayType: editData.displayType as EventInterface["displayType"],
       icon: editData.icon,
       color: editData.color,
       updatedAt: new Date().toISOString()
@@ -81,7 +79,6 @@ export default function EnhancedEventBlock({
       start: new Date(event.start).toISOString().slice(0, 16),
       end: new Date(event.end).toISOString().slice(0, 16),
       category: event.category,
-      displayType: event.displayType,
       icon: event.icon || "",
       color: event.color
     });
@@ -90,7 +87,7 @@ export default function EnhancedEventBlock({
 
   const handleEventClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("Event clicked:", event.title, event.displayType);
+    console.log("Event clicked:", event.title);
     if (onClick) {
       onClick(e);
     } else if (!isEditing) {
@@ -142,220 +139,6 @@ export default function EnhancedEventBlock({
     return null;
   };
 
-  // Render based on display type
-
-  if (event.displayType === "icon") {
-    return (
-      <div className={`relative ${className}`}>
-        <div 
-          className="flex items-center space-x-1 p-1 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-          style={style}
-          onClick={handleEventClick}
-          title={event.title}
-        >
-          <div style={{ color: event.iconColor || "#6b7280" }}>
-            {getIcon()}
-          </div>
-          <span className="text-xs text-gray-600 dark:text-gray-400 truncate">
-            {event.title}
-          </span>
-        </div>
-        
-        {/* Details/Edit popup for icon events */}
-        {(showDetails || isEditing) && (
-          <div className="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg min-w-80 z-50 max-w-96">
-            {isEditing ? (
-              /* Edit mode */
-              <div className="p-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-gray-900 dark:text-white">Edit Event</h3>
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={handleSave}
-                      className="p-1 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded"
-                      title="Save"
-                    >
-                      <Check className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={handleCancel}
-                      className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
-                      title="Cancel"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Title
-                  </label>
-                  <input
-                    ref={titleInputRef}
-                    type="text"
-                    value={editData.title}
-                    onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Description
-                  </label>
-                  <textarea
-                    value={editData.description}
-                    onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    rows={2}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Start
-                    </label>
-                    <input
-                      type="datetime-local"
-                      value={editData.start}
-                      onChange={(e) => setEditData({ ...editData, start: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      End
-                    </label>
-                    <input
-                      type="datetime-local"
-                      value={editData.end}
-                      onChange={(e) => setEditData({ ...editData, end: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Category
-                    </label>
-                    <select
-                      value={editData.category}
-                      onChange={(e) => setEditData({ ...editData, category: e.target.value as EventInterface["category"] })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    >
-                      <option value="Important">Important</option>
-                      <option value="Meeting">Meeting</option>
-                      <option value="Holiday">Holiday</option>
-                      <option value="Health">Health</option>
-                      <option value="Personal">Personal</option>
-                      <option value="Work">Work</option>
-                      <option value="Travel">Travel</option>
-                      <option value="Fitness">Fitness</option>
-                      <option value="Social">Social</option>
-                      <option value="Finance">Finance</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Display
-                    </label>
-                    <select
-                      value={editData.displayType}
-                      onChange={(e) => setEditData({ ...editData, displayType: e.target.value as EventInterface["displayType"] })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    >
-                      <option value="standard">Standard</option>
-                      <option value="icon">Icon</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              /* Details mode */
-              <div className="p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white text-lg flex items-center space-x-2">
-                      {getIcon()}
-                      <span>{event.title}</span>
-                    </h3>
-                    <div className={`inline-block px-2 py-1 rounded text-xs text-white mt-1 ${getCategoryColor(event.category)}`}>
-                      {event.category}
-                    </div>
-                    {event.isRecurring && (
-                      <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                        🔄 Recurring event
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsEditing(true);
-                        setShowDetails(false);
-                      }}
-                      className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
-                      title="Edit"
-                    >
-                      <Edit2 className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowDetails(false);
-                      }}
-                      className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
-                      title="Close"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {event.description && (
-                  <div className="mb-3">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{event.description}</p>
-                  </div>
-                )}
-
-                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-2" />
-                    <span>{getTimeString()}</span>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <User className="h-4 w-4 mr-2" />
-                    <span>You</span>
-                  </div>
-
-                  {event.healthData && (
-                    <div className="mt-3 p-2 bg-gray-50 dark:bg-gray-700 rounded">
-                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Health Data: {event.healthData.type}
-                      </div>
-                      {event.healthData.notes && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {event.healthData.notes}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    );
-  }
-
   // Standard display type (default)
   return (
     <div className="relative" ref={editRef}>
@@ -374,11 +157,6 @@ export default function EnhancedEventBlock({
             <div className="text-white/80 text-xs mt-1 flex items-center">
               <Clock className="inline h-3 w-3 mr-1" />
               {getTimeString()}
-            </div>
-          )}
-          {event.healthData && (
-            <div className="text-white/80 text-xs mt-1">
-              {event.healthData.type}
             </div>
           )}
         </div>
@@ -487,14 +265,6 @@ export default function EnhancedEventBlock({
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Display
                   </label>
-                  <select
-                    value={editData.displayType}
-                    onChange={(e) => setEditData({ ...editData, displayType: e.target.value as EventInterface["displayType"] })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  >
-                    <option value="standard">Standard</option>
-                    <option value="icon">Icon</option>
-                  </select>
                 </div>
               </div>
             </div>
@@ -558,18 +328,6 @@ export default function EnhancedEventBlock({
                   <span>You</span>
                 </div>
 
-                {event.healthData && (
-                  <div className="mt-3 p-2 bg-gray-50 dark:bg-gray-700 rounded">
-                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Health Data: {event.healthData.type}
-                    </div>
-                    {event.healthData.notes && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {event.healthData.notes}
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
             </div>
           )}

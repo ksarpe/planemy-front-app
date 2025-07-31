@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Calendar, Clock, Tag, Check, Eye } from "lucide-react";
-import { useCalendarContext } from "../../../context/CalendarContext";
+import { useCalendarContext } from "@/hooks/useCalendarContext";
 import { EventInterface } from "../../../data/types";
 
 interface CreateEventModalProps {
@@ -20,7 +20,6 @@ export default function CreateEventModal({ isOpen, onClose, selectedDate }: Crea
     end: "",
     category: "Other" as EventInterface["category"],
     allDay: false,
-    displayType: "standard" as EventInterface["displayType"]
   });
 
   useEffect(() => {
@@ -45,7 +44,6 @@ export default function CreateEventModal({ isOpen, onClose, selectedDate }: Crea
         end: endTime.toISOString().slice(0, 16),
         category: "Other",
         allDay: false,
-        displayType: "standard"
       });
 
       // Focus title input after a short delay to ensure modal is rendered
@@ -99,9 +97,7 @@ export default function CreateEventModal({ isOpen, onClose, selectedDate }: Crea
         : eventData.end,
       category: eventData.category,
       allDay: eventData.allDay,
-      classNames: "",
       color: getCategoryColor(eventData.category),
-      displayType: eventData.displayType,
       isRecurring: false,
       isPrivate: false,
       visibility: "private",
@@ -257,14 +253,6 @@ export default function CreateEventModal({ isOpen, onClose, selectedDate }: Crea
               <Eye className="inline h-4 w-4 mr-1" />
               Display Type
             </label>
-            <select
-              value={eventData.displayType}
-              onChange={(e) => setEventData({ ...eventData, displayType: e.target.value as EventInterface["displayType"] })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              <option value="standard">Standard Block</option>
-              <option value="icon">Icon Only</option>
-            </select>
           </div>
 
           {/* Category preview */}

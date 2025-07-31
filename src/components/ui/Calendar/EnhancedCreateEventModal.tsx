@@ -1,23 +1,21 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Calendar, Clock, Tag, Check, Repeat, Heart, Circle, Pill } from "lucide-react";
-import { useCalendarContext } from "../../../context/CalendarContext";
-import { EventInterface, RecurrencePattern, EventDisplayType } from "../../../data/types";
-import { useAuth } from "../../../context/AuthContext";
+import { X, Calendar, Clock, Tag, Check, Repeat } from "lucide-react";
+import { useCalendarContext } from "@/hooks/useCalendarContext";
+import { EventInterface, RecurrencePattern } from "../../../data/types";
+import { useAuth } from "../../../hooks/useAuthContext";
 
 interface EnhancedCreateEventModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedDate?: Date;
   defaultCategory?: EventInterface["category"];
-  defaultDisplayType?: EventDisplayType;
 }
 
-export default function EnhancedCreateEventModal({ 
-  isOpen, 
-  onClose, 
+export default function EnhancedCreateEventModal({
+  isOpen,
+  onClose,
   selectedDate,
   defaultCategory = "Other",
-  defaultDisplayType = "standard"
 }: EnhancedCreateEventModalProps) {
   const { addEvent } = useCalendarContext();
   const { user } = useAuth();
@@ -31,7 +29,6 @@ export default function EnhancedCreateEventModal({
     end: "",
     category: defaultCategory as EventInterface["category"],
     allDay: false,
-    displayType: defaultDisplayType as EventDisplayType,
     icon: "",
     iconColor: "#6b7280",
     isRecurring: false,
@@ -43,14 +40,14 @@ export default function EnhancedCreateEventModal({
     location: "",
     // Health tracking fields
     healthType: "other" as "period" | "ovulation" | "medication" | "symptom" | "mood" | "weight" | "other",
-    healthNotes: ""
+    healthNotes: "",
   });
 
   useEffect(() => {
     if (isOpen) {
       const now = new Date();
       const defaultDate = selectedDate || now;
-      
+
       // Set default start time to current hour or next hour
       const startTime = new Date(defaultDate);
       startTime.setMinutes(0, 0, 0);
@@ -62,16 +59,15 @@ export default function EnhancedCreateEventModal({
       const endTime = new Date(startTime);
       endTime.setHours(startTime.getHours() + 1);
 
-      setEventData(prev => ({
+      setEventData((prev) => ({
         ...prev,
         title: "",
         description: "",
         start: startTime.toISOString().slice(0, 16),
         end: endTime.toISOString().slice(0, 16),
         category: defaultCategory,
-        displayType: defaultDisplayType,
         allDay: false,
-        isRecurring: false
+        isRecurring: false,
       }));
 
       // Focus title input after a short delay
@@ -79,7 +75,7 @@ export default function EnhancedCreateEventModal({
         titleInputRef.current?.focus();
       }, 100);
     }
-  }, [isOpen, selectedDate, defaultCategory, defaultDisplayType]);
+  }, [isOpen, selectedDate, defaultCategory]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -98,7 +94,7 @@ export default function EnhancedCreateEventModal({
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
-      
+
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
         document.removeEventListener("keydown", handleEscape);
@@ -109,7 +105,7 @@ export default function EnhancedCreateEventModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!eventData.title.trim() || !user?.uid) {
       titleInputRef.current?.focus();
       return;
@@ -117,22 +113,16 @@ export default function EnhancedCreateEventModal({
 
     const newEvent: Omit<EventInterface, "id" | "createdAt" | "updatedAt"> = {
       title: eventData.title.trim(),
-      start: eventData.allDay 
-        ? new Date(eventData.start).toISOString().split('T')[0]
-        : eventData.start,
-      end: eventData.allDay 
-        ? new Date(eventData.end).toISOString().split('T')[0]
-        : eventData.end,
+      start: eventData.allDay ? new Date(eventData.start).toISOString().split("T")[0] : eventData.start,
+      end: eventData.allDay ? new Date(eventData.end).toISOString().split("T")[0] : eventData.end,
       category: eventData.category,
       allDay: eventData.allDay,
       color: getCategoryColor(eventData.category),
-      displayType: eventData.displayType,
       iconColor: eventData.iconColor,
       isRecurring: eventData.isRecurring,
       isPrivate: eventData.isPrivate,
       visibility: eventData.isPrivate ? "private" : "public",
       userId: user.uid,
-      classNames: "",
       ...(eventData.description.trim() && { description: eventData.description.trim() }),
       ...(eventData.icon && { icon: eventData.icon }),
       ...(eventData.isRecurring && {
@@ -141,16 +131,16 @@ export default function EnhancedCreateEventModal({
           interval: eventData.recurrenceInterval,
           daysOfWeek: [],
           ...(eventData.recurrenceEndDate && { endDate: eventData.recurrenceEndDate }),
-          ...(eventData.recurrenceCount && { count: eventData.recurrenceCount })
-        }
+          ...(eventData.recurrenceCount && { count: eventData.recurrenceCount }),
+        },
       }),
       ...(eventData.location && { location: eventData.location }),
       ...(eventData.category === "Health" && {
         healthData: {
           type: eventData.healthType,
-          ...(eventData.healthNotes && { notes: eventData.healthNotes })
-        }
-      })
+          ...(eventData.healthNotes && { notes: eventData.healthNotes }),
+        },
+      }),
     };
 
     await addEvent(newEvent);
@@ -159,42 +149,42 @@ export default function EnhancedCreateEventModal({
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      "Important": "bg-red-500",
-      "Meeting": "bg-blue-500", 
-      "Holiday": "bg-green-500",
-      "Health": "bg-pink-500",
-      "Personal": "bg-purple-500",
-      "Work": "bg-indigo-500",
-      "Travel": "bg-orange-500",
-      "Fitness": "bg-emerald-500",
-      "Social": "bg-cyan-500",
-      "Finance": "bg-yellow-500",
-      "Other": "bg-gray-500"
+      Important: "bg-red-500",
+      Meeting: "bg-blue-500",
+      Holiday: "bg-green-500",
+      Health: "bg-pink-500",
+      Personal: "bg-purple-500",
+      Work: "bg-indigo-500",
+      Travel: "bg-orange-500",
+      Fitness: "bg-emerald-500",
+      Social: "bg-cyan-500",
+      Finance: "bg-yellow-500",
+      Other: "bg-gray-500",
     };
     return colors[category as keyof typeof colors] || "bg-gray-500";
   };
 
   const handleAllDayToggle = (checked: boolean) => {
-    setEventData(prev => {
+    setEventData((prev) => {
       if (checked) {
         // Convert to all-day format
-        const startDate = new Date(prev.start).toISOString().split('T')[0];
-        const endDate = new Date(prev.end).toISOString().split('T')[0];
+        const startDate = new Date(prev.start).toISOString().split("T")[0];
+        const endDate = new Date(prev.end).toISOString().split("T")[0];
         return {
           ...prev,
           allDay: true,
           start: startDate,
-          end: endDate
+          end: endDate,
         };
       } else {
         // Convert to timed format
-        const startTime = new Date(prev.start + 'T09:00');
-        const endTime = new Date(prev.end + 'T10:00');
+        const startTime = new Date(prev.start + "T09:00");
+        const endTime = new Date(prev.end + "T10:00");
         return {
           ...prev,
           allDay: false,
           start: startTime.toISOString().slice(0, 16),
-          end: endTime.toISOString().slice(0, 16)
+          end: endTime.toISOString().slice(0, 16),
         };
       }
     });
@@ -213,7 +203,7 @@ export default function EnhancedCreateEventModal({
           isRecurring: true,
           recurrencePattern: "monthly" as const,
           healthType: "period" as const,
-          isPrivate: true
+          isPrivate: true,
         };
       case "workout":
         return {
@@ -221,7 +211,7 @@ export default function EnhancedCreateEventModal({
           category: "Fitness" as const,
           displayType: "standard" as const,
           icon: "Dumbbell",
-          iconColor: "#10b981"
+          iconColor: "#10b981",
         };
       case "medication":
         return {
@@ -231,7 +221,7 @@ export default function EnhancedCreateEventModal({
           icon: "Pill",
           iconColor: "#3b82f6",
           isRecurring: true,
-          recurrencePattern: "daily" as const
+          recurrencePattern: "daily" as const,
         };
       default:
         return {};
@@ -239,24 +229,22 @@ export default function EnhancedCreateEventModal({
   };
 
   const applyTemplate = (template: Partial<typeof eventData>) => {
-    setEventData(prev => ({ ...prev, ...template }));
+    setEventData((prev) => ({ ...prev, ...template }));
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div 
+      <div
         ref={modalRef}
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-      >
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Create Event</h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-          >
+            className="p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -267,20 +255,17 @@ export default function EnhancedCreateEventModal({
           <div className="flex space-x-2">
             <button
               onClick={() => applyTemplate(getQuickEventTemplate("period"))}
-              className="px-3 py-1 text-xs bg-pink-100 text-pink-700 rounded-full hover:bg-pink-200 transition-colors"
-            >
+              className="px-3 py-1 text-xs bg-pink-100 text-pink-700 rounded-full hover:bg-pink-200 transition-colors">
               🩸 Period
             </button>
             <button
               onClick={() => applyTemplate(getQuickEventTemplate("workout"))}
-              className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors"
-            >
+              className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors">
               💪 Workout
             </button>
             <button
               onClick={() => applyTemplate(getQuickEventTemplate("medication"))}
-              className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors"
-            >
+              className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors">
               💊 Medication
             </button>
           </div>
@@ -290,9 +275,7 @@ export default function EnhancedCreateEventModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Event Title *
-            </label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Event Title *</label>
             <input
               ref={titleInputRef}
               type="text"
@@ -306,9 +289,7 @@ export default function EnhancedCreateEventModal({
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Description
-            </label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
             <textarea
               value={eventData.description}
               onChange={(e) => setEventData({ ...eventData, description: e.target.value })}
@@ -372,8 +353,7 @@ export default function EnhancedCreateEventModal({
               <select
                 value={eventData.category}
                 onChange={(e) => setEventData({ ...eventData, category: e.target.value as EventInterface["category"] })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              >
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                 <option value="Important">Important</option>
                 <option value="Meeting">Meeting</option>
                 <option value="Holiday">Holiday</option>
@@ -388,54 +368,11 @@ export default function EnhancedCreateEventModal({
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Display Type
-              </label>
-              <select
-                value={eventData.displayType}
-                onChange={(e) => setEventData({ ...eventData, displayType: e.target.value as EventDisplayType })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              >
-                <option value="standard">Standard Block</option>
-                <option value="icon">Icon Only</option>
-              </select>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Display Type</label>
             </div>
           </div>
 
           {/* Icon and Color (for icon display type) */}
-          {eventData.displayType === "icon" && (
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Icon
-                </label>
-                <select
-                  value={eventData.icon}
-                  onChange={(e) => setEventData({ ...eventData, icon: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                >
-                  <option value="">No Icon</option>
-                  <option value="Circle">● Circle</option>
-                  <option value="Heart">♥ Heart</option>
-                  <option value="Pill">💊 Pill</option>
-                  <option value="Dumbbell">🏋 Dumbbell</option>
-                  <option value="Car">🚗 Car</option>
-                  <option value="Calendar">📅 Calendar</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Icon Color
-                </label>
-                <input
-                  type="color"
-                  value={eventData.iconColor}
-                  onChange={(e) => setEventData({ ...eventData, iconColor: e.target.value })}
-                  className="w-full h-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-          )}
 
           {/* Recurring Event Options */}
           <div className="space-y-4">
@@ -447,7 +384,9 @@ export default function EnhancedCreateEventModal({
                 onChange={(e) => setEventData({ ...eventData, isRecurring: e.target.checked })}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <label htmlFor="isRecurring" className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+              <label
+                htmlFor="isRecurring"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
                 <Repeat className="h-4 w-4 mr-1" />
                 Recurring event
               </label>
@@ -464,14 +403,17 @@ export default function EnhancedCreateEventModal({
                       type="number"
                       min="1"
                       value={eventData.recurrenceInterval}
-                      onChange={(e) => setEventData({ ...eventData, recurrenceInterval: parseInt(e.target.value) || 1 })}
+                      onChange={(e) =>
+                        setEventData({ ...eventData, recurrenceInterval: parseInt(e.target.value) || 1 })
+                      }
                       className="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     />
                     <select
                       value={eventData.recurrencePattern}
-                      onChange={(e) => setEventData({ ...eventData, recurrencePattern: e.target.value as RecurrencePattern })}
-                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    >
+                      onChange={(e) =>
+                        setEventData({ ...eventData, recurrencePattern: e.target.value as RecurrencePattern })
+                      }
+                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                       <option value="daily">Day(s)</option>
                       <option value="weekly">Week(s)</option>
                       <option value="monthly">Month(s)</option>
@@ -498,17 +440,16 @@ export default function EnhancedCreateEventModal({
           {eventData.category === "Health" && (
             <div className="space-y-4 p-4 bg-pink-50 dark:bg-pink-900/20 rounded-lg">
               <h4 className="font-medium text-gray-900 dark:text-white">Health Tracking</h4>
-              
+
               <div className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Type
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type</label>
                   <select
                     value={eventData.healthType}
-                    onChange={(e) => setEventData({ ...eventData, healthType: e.target.value as typeof eventData.healthType })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  >
+                    onChange={(e) =>
+                      setEventData({ ...eventData, healthType: e.target.value as typeof eventData.healthType })
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                     <option value="period">Period</option>
                     <option value="ovulation">Ovulation</option>
                     <option value="medication">Medication</option>
@@ -521,9 +462,7 @@ export default function EnhancedCreateEventModal({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Notes
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes</label>
                 <textarea
                   value={eventData.healthNotes}
                   onChange={(e) => setEventData({ ...eventData, healthNotes: e.target.value })}
@@ -552,14 +491,10 @@ export default function EnhancedCreateEventModal({
           {/* Event Preview */}
           <div className="space-y-2">
             <span className="text-sm text-gray-600 dark:text-gray-400">Preview:</span>
-            <div className={`${getCategoryColor(eventData.category)} text-white px-3 py-2 rounded-md text-sm font-medium inline-flex items-center space-x-2`}>
-              {eventData.displayType === "icon" && eventData.icon && (
-                <span style={{ color: eventData.iconColor }}>
-                  {eventData.icon === "Circle" && <Circle className="h-3 w-3" />}
-                  {eventData.icon === "Heart" && <Heart className="h-3 w-3" />}
-                  {eventData.icon === "Pill" && <Pill className="h-3 w-3" />}
-                </span>
-              )}
+            <div
+              className={`${getCategoryColor(
+                eventData.category,
+              )} text-white px-3 py-2 rounded-md text-sm font-medium inline-flex items-center space-x-2`}>
               <span>{eventData.title || "Event Title"}</span>
               {eventData.isRecurring && <Repeat className="h-3 w-3" />}
             </div>
@@ -570,14 +505,12 @@ export default function EnhancedCreateEventModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-            >
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
               Cancel
             </button>
             <button
               type="submit"
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
-            >
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
               <Check className="h-4 w-4" />
               <span>Create Event</span>
             </button>

@@ -1,8 +1,8 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { PaymentInterface } from "@/data/types";
 import type { PaymentsContextProps } from "@/data/typesProps";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "@/hooks/useAuthContext";
 import { useToast } from "@/hooks/useToastContext";
 import { 
   useUserPayments, 
@@ -14,6 +14,7 @@ import {
 } from "../firebase/payments";
 
 const PaymentsContext = createContext<PaymentsContextProps | undefined>(undefined);
+export { PaymentsContext };
 
 export const PaymentsProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
@@ -97,12 +98,4 @@ export const PaymentsProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </PaymentsContext.Provider>
   );
-};
-
-export const usePaymentsContext = () => {
-  const context = useContext(PaymentsContext);
-  if (!context) {
-    throw new Error("usePaymentsContext must be used within a PaymentsProvider");
-  }
-  return context;
 };

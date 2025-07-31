@@ -15,21 +15,28 @@ export interface PaymentInterface {
   userId: string;
 }
 
-export interface InventoryItem {
-  id: string;
-  label: string;
-  xp: string;
-  icon: string;
-}
-
-export type EventColor = "bg-red-500" | "bg-blue-400" | "bg-yellow-500" | "bg-green-500" | "bg-purple-500" | "bg-pink-500" | "bg-indigo-500" | "bg-orange-500";
-export type EventCategory = "Important" | "Meeting" | "Holiday" | "Health" | "Personal" | "Work" | "Travel" | "Fitness" | "Social" | "Finance" | "Other";
-
-// Enum for recurring patterns
+export type EventColor =
+  | "bg-red-500"
+  | "bg-blue-400"
+  | "bg-yellow-500"
+  | "bg-green-500"
+  | "bg-purple-500"
+  | "bg-pink-500"
+  | "bg-indigo-500"
+  | "bg-orange-500";
+export type EventCategory =
+  | "Important"
+  | "Meeting"
+  | "Holiday"
+  | "Health"
+  | "Personal"
+  | "Work"
+  | "Travel"
+  | "Fitness"
+  | "Social"
+  | "Finance"
+  | "Other";
 export type RecurrencePattern = "daily" | "weekly" | "biweekly" | "monthly" | "quarterly" | "yearly" | "custom";
-
-// Enum for display types
-export type EventDisplayType = "standard" | "icon";
 
 // Recurrence rules interface
 export interface RecurrenceRule {
@@ -51,54 +58,34 @@ export interface EventInterface {
   start: string;
   end: string;
   allDay: boolean;
-  
+
   // Styling and display
   color: string;
-  displayType: EventDisplayType;
   icon?: string; // lucide icon name or emoji
   iconColor?: string;
-  
+
   // Recurrence
   isRecurring: boolean;
   recurrence?: RecurrenceRule;
   originalEventId?: string; // for recurring event instances
-  
+
   // Location and attendees
   location?: string;
   attendees?: string[];
-  
+
   // Privacy and permissions
   isPrivate: boolean;
   visibility: "public" | "private" | "shared";
-  
+
   // Metadata
   userId: string;
   createdAt: string;
   updatedAt: string;
-  
-  // Health tracking specific (for period tracking, etc.)
-  healthData?: {
-    type: "period" | "ovulation" | "medication" | "symptom" | "mood" | "weight" | "other";
-    notes?: string;
-    symptoms?: string[];
-  };
-  
-  // Legacy fields for backwards compatibility
-  classNames?: string;
-  colSpan?: number;
 }
 export interface CalendarClickContent {
   type: "event" | "date" | "date-range";
   data: EventInterface | Date | null;
-  additionalData?: AdditionalDataInterface;
 }
-
-export interface AdditionalDataInterface {
-  isPeriod: boolean;
-  isOvulation: boolean;
-}
-
-// NEW TASK SYSTEM - Updated according to system design
 
 // User interface for sharing system
 export interface UserProfile {
@@ -111,9 +98,8 @@ export interface UserProfile {
 
 // Sharing permission levels
 export type SharePermission = "view" | "edit" | "admin";
-
-// Object types that can be shared
-export type ShareableObjectType = "task_list" | "event" | "shopping_list";
+export type ShareableObjectType = "task_list" | "event" | "shopping_list" | "payment";
+type ShareStatus = "pending" | "accepted" | "rejected";
 
 // NEW: Generic permission entry for any shareable object
 export interface Permission {
@@ -125,7 +111,7 @@ export interface Permission {
   granted_by: string; // ID of user who granted permission
   granted_at: string; // ISO string timestamp
   accepted_at?: string; // When user accepted invitation
-  status: "pending" | "accepted" | "rejected" | "revoked"; // Invitation status
+  status: ShareStatus; // Invitation status
 }
 
 // Legacy: Task list permission entry (for backwards compatibility)
@@ -137,7 +123,7 @@ export interface TaskListPermission {
   granted_by: string; // ID of user who granted permission
   granted_at: string; // ISO string timestamp
   accepted_at?: string; // When user accepted invitation
-  status: "pending" | "accepted" | "rejected"; // Invitation status
+  status: ShareStatus; // Invitation status
 }
 
 // Legacy: Shared task list entry (for backwards compatibility)
@@ -160,7 +146,7 @@ export interface ShareNotification {
   shared_with: string; // ID of user receiving notification
   permission: SharePermission; // Permission level
   shared_at: string; // ISO string timestamp
-  status: "pending" | "accepted" | "rejected" | "revoked"; // Notification status
+  status: ShareStatus; // Notification status
 }
 
 // Legacy: Simple notification for task list sharing (for backwards compatibility)
@@ -172,7 +158,7 @@ export interface TaskListNotification {
   sharedWith: string; // ID of user receiving notification
   permission: SharePermission; // Permission level
   sharedAt: string; // ISO string timestamp
-  status: "pending" | "accepted" | "rejected"; // Notification status
+  status: ShareStatus; // Notification status
 }
 
 // Label interface for categorizing and organizing tasks
@@ -191,25 +177,26 @@ export interface TaskInterface {
   description?: string; // Optional textarea
   dueDate?: string; // Optional datetime
   isCompleted: boolean;
-  labels?: LabelInterface[]; // Optional array of labels
   userId: string; // Creator of the task
   taskListId: string; // Foreign key to TaskList
   sharedBy?: string; // ID of user who originally created the task (for shared lists)
   createdAt?: string;
   updatedAt?: string;
+
+  //optional for frontend purposes
 }
 
 // NEW TaskList interface according to system design - no longer contains tasks array
 export interface TaskListInterface {
   id: string;
   name: string;
-  labels?: LabelInterface[]; // Optional array of labels for the list
   userId: string; // Owner of the list
   createdAt?: string;
   updatedAt?: string;
 
   //frontend purpose
   shared?: boolean; // Indicates if the list is shared
+  labels?: LabelInterface[]; // Optional array of labels for the list
 }
 
 // Legacy interface for backwards compatibility (if needed)
@@ -266,10 +253,4 @@ export interface ShoppingCategoryInterface {
   emoji: string;
   color: string;
   order: number;
-}
-
-export interface HolidayInterface {
-  date: string;
-  localName: string;
-  category: string;
 }

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useCalendarContext } from "../../../context/CalendarContext";
+import { useCalendarContext } from "@/hooks/useCalendarContext";
 import { format, startOfWeek, endOfWeek, eachDayOfInterval, isToday, isSameDay } from "date-fns";
 import EnhancedEventBlock from "./EnhancedEventBlock";
 import { EventInterface } from "../../../data/types";

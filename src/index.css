@@ -2,6 +2,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* custom imports css */
+/* none */
 
 @layer base {
   body {
@@ -26,26 +27,6 @@
   --color-bg-dark: rgb(24, 24, 24); /* Navy dark */
   --color-bg-hover-dark: #2e3b5d; /* blue 700 */
   --color-bg-alt-dark: rgb(33, 33, 33); /* Slate 800 */
-}
-
-.scrollbar-hide {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer and Edge */
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
-}
-
-/* Hide horizontal scrollbar specifically */
-.hide-horizontal-scroll {
-  overflow-x: hidden;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer and Edge */
-}
-
-.hide-horizontal-scroll::-webkit-scrollbar:horizontal {
-  display: none; /* Safari and Chrome */
 }
 
 /* AI Textbox Space Fade Animation */

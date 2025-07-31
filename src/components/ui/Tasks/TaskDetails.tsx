@@ -1,6 +1,6 @@
 import EditableText from "@/components/ui/Utils/EditableText";
 import { useTaskContext } from "@/hooks/useTaskContext";
-import { Calendar, CheckCircle2, Trash2, CalendarPlus, Edit3, Tag, PanelRightClose } from "lucide-react";
+import { Calendar, CheckCircle2, Trash2, CalendarPlus, Edit3, PanelRightClose } from "lucide-react";
 import { useState } from "react";
 import { DeleteConfirmationModal } from "../Common";
 
@@ -140,27 +140,6 @@ export default function TaskDetails() {
               placeholder="Dodaj opis zadania..."
             />
           </div>
-
-          {/* Labels */}
-          {clickedTask.labels && clickedTask.labels.length > 0 && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <Tag size={16} className="inline mr-1" />
-                Etykiety
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {clickedTask.labels.map((label, index) => (
-                  <span
-                    key={label.id || index}
-                    className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full"
-                    style={{ backgroundColor: label.color + "20", color: label.color }}>
-                    <Tag size={12} />
-                    {label.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Due Date */}
           <div>

@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "@/hooks/useAuthContext";
 import { useToast } from "@/hooks/useToastContext";
 import { LabelInterface } from "@/data/types";
 import {

@@ -1,13 +1,13 @@
-import { 
+import {
   shareObjectWithUser,
   acceptObjectInvitation,
   rejectObjectInvitation,
   deletePermission,
   revokeObjectAccess,
   getObjectSharedUsers,
-  listenToUserPendingNotifications
-} from "./permissions";
-import { SharePermission, ShareNotification } from "../data/types";
+  listenToUserPendingNotifications,
+} from "@/firebase/permissions/permissions";
+import { SharePermission, ShareNotification } from "../../data/types";
 
 /**
  * Share event with user
@@ -16,7 +16,7 @@ export const shareEventWithUser = async (
   eventId: string,
   targetUserEmail: string,
   permission: SharePermission,
-  sharedByUserId: string
+  sharedByUserId: string,
 ): Promise<void> => {
   return shareObjectWithUser(eventId, "event", targetUserEmail, permission, sharedByUserId);
 };
@@ -45,29 +45,31 @@ export const deleteEventNotification = async (permissionId: string): Promise<voi
 /**
  * Revoke access to event
  */
-export const revokeEventAccess = async (
-  eventId: string,
-  userId: string
-): Promise<void> => {
+export const revokeEventAccess = async (eventId: string, userId: string): Promise<void> => {
   return revokeObjectAccess(eventId, "event", userId);
 };
 
 /**
  * Get users with access to an event
  */
-export const getEventSharedUsers = async (eventId: string): Promise<Array<{
-  id: string,
-  email: string, 
-  displayName?: string,
-  permission: SharePermission,
-  status: 'pending' | 'accepted'
-}>> => {
+export const getEventSharedUsers = async (
+  eventId: string,
+): Promise<
+  Array<{
+    id: string;
+    email: string;
+    displayName?: string;
+    permission: SharePermission;
+    status: "pending" | "accepted";
+  }>
+> => {
   const users = await getObjectSharedUsers(eventId, "event");
   // Filter out revoked users for compatibility
-  return users.filter(user => user.status !== 'revoked' && user.status !== 'rejected')
-    .map(user => ({
+  return users
+    .filter((user) => user.status !== "revoked" && user.status !== "rejected")
+    .map((user) => ({
       ...user,
-      status: user.status as 'pending' | 'accepted'
+      status: user.status as "pending" | "accepted",
     }));
 };
 
@@ -76,12 +78,10 @@ export const getEventSharedUsers = async (eventId: string): Promise<Array<{
  */
 export const listenToUserPendingEventNotifications = (
   userId: string,
-  callback: (notifications: ShareNotification[]) => void
+  callback: (notifications: ShareNotification[]) => void,
 ) => {
   return listenToUserPendingNotifications(userId, (genericNotifications) => {
-    const eventNotifications = genericNotifications.filter(
-      notification => notification.object_type === "event"
-    );
+    const eventNotifications = genericNotifications.filter((notification) => notification.object_type === "event");
     callback(eventNotifications);
   });
 };

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useCalendarContext } from "../../../context/CalendarContext";
+import { useCalendarContext } from "@/hooks/useCalendarContext";
 import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Grid3X3, AlignJustify } from "lucide-react";
 import { getVisibleMonthsInWeek } from "../../../utils/weeksHelper";
 import EnhancedCreateEventModal from "./EnhancedCreateEventModal";

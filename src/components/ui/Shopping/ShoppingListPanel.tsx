@@ -1,15 +1,7 @@
 import { useState, useEffect } from "react";
 import { ShoppingListInterface } from "../../../data/types";
-import { useShoppingContext } from "../../../context/ShoppingContext";
-import { 
-  Plus, 
-  MoreVertical, 
-  Edit2, 
-  Trash2, 
-  Share2,
-  RefreshCw,
-  Calendar
-} from "lucide-react";
+import { useShoppingContext } from "../../../hooks/useShoppingContext";
+import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Calendar } from "lucide-react";
 
 interface ShoppingListPanelProps {
   lists: ShoppingListInterface[];
@@ -18,12 +10,7 @@ interface ShoppingListPanelProps {
   onAddList: () => void;
 }
 
-function ShoppingListPanel({ 
-  lists, 
-  currentList, 
-  onSelectList, 
-  onAddList 
-}: ShoppingListPanelProps) {
+function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: ShoppingListPanelProps) {
   const { deleteList, updateList } = useShoppingContext();
   const [editingListId, setEditingListId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
@@ -33,8 +20,8 @@ function ShoppingListPanel({
   useEffect(() => {
     const handleClickOutside = () => setShowOptionsId(null);
     if (showOptionsId) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
+      document.addEventListener("click", handleClickOutside);
+      return () => document.removeEventListener("click", handleClickOutside);
     }
   }, [showOptionsId]);
 
@@ -57,30 +44,30 @@ function ShoppingListPanel({
   };
 
   const handleDeleteList = async (listId: string) => {
-    if (window.confirm('Czy na pewno chcesz usunąć tę listę?')) {
+    if (window.confirm("Czy na pewno chcesz usunąć tę listę?")) {
       await deleteList(listId);
     }
   };
 
   const clearCompletedItems = async (list: ShoppingListInterface) => {
-    const clearedItems = list.items.filter(item => !item.isCompleted);
+    const clearedItems = list.items.filter((item) => !item.isCompleted);
     await updateList(list.id, { items: clearedItems });
   };
 
   const getListStats = (list: ShoppingListInterface) => {
     const total = list.items.length;
-    const completed = list.items.filter(item => item.isCompleted).length;
+    const completed = list.items.filter((item) => item.isCompleted).length;
     return { total, completed, pending: total - completed };
   };
 
   const formatDate = (date: Date) => {
     const now = new Date();
     const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) return "Dzisiaj";
     if (diffDays === 1) return "Wczoraj";
     if (diffDays < 7) return `${diffDays} dni temu`;
-    return date.toLocaleDateString('pl-PL');
+    return date.toLocaleDateString("pl-PL");
   };
 
   return (
@@ -90,8 +77,7 @@ function ShoppingListPanel({
         <h3 className="text-lg font-semibold">Moje listy</h3>
         <button
           onClick={onAddList}
-          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-        >
+          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
           <Plus size={16} />
         </button>
       </div>
@@ -104,8 +90,7 @@ function ShoppingListPanel({
             <p className="text-sm text-gray-500 mb-3">Brak list zakupów</p>
             <button
               onClick={onAddList}
-              className="text-sm bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-            >
+              className="text-sm bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors">
               Utwórz pierwszą listę
             </button>
           </div>
@@ -120,20 +105,16 @@ function ShoppingListPanel({
                 key={list.id}
                 className={`p-3 rounded-lg border transition-all cursor-pointer ${
                   isSelected
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-bg-hover-dark'
+                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                    : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-bg-hover-dark"
                 }`}
-                onClick={() => !isEditing && onSelectList(list)}
-              >
+                onClick={() => !isEditing && onSelectList(list)}>
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <span 
-                      className="text-xl flex-shrink-0"
-                      style={{ color: list.color }}
-                    >
+                    <span className="text-xl flex-shrink-0" style={{ color: list.color }}>
                       {list.emoji}
                     </span>
-                    
+
                     <div className="flex-1 min-w-0">
                       {isEditing ? (
                         <input
@@ -142,8 +123,8 @@ function ShoppingListPanel({
                           onChange={(e) => setEditName(e.target.value)}
                           onBlur={() => handleSaveEdit(list.id)}
                           onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleSaveEdit(list.id);
-                            if (e.key === 'Escape') handleCancelEdit();
+                            if (e.key === "Enter") handleSaveEdit(list.id);
+                            if (e.key === "Escape") handleCancelEdit();
                           }}
                           className="w-full px-2 py-1 border border-blue-500 rounded text-sm focus:outline-none"
                           autoFocus
@@ -152,19 +133,13 @@ function ShoppingListPanel({
                       ) : (
                         <div>
                           <h4 className="font-medium text-sm truncate">{list.name}</h4>
-                          {list.description && (
-                            <p className="text-xs text-gray-500 truncate">{list.description}</p>
-                          )}
+                          {list.description && <p className="text-xs text-gray-500 truncate">{list.description}</p>}
                         </div>
                       )}
-                      
+
                       <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
                         <span>{stats.total} produktów</span>
-                        {stats.completed > 0 && (
-                          <span className="text-green-600">
-                            {stats.completed} kupione
-                          </span>
-                        )}
+                        {stats.completed > 0 && <span className="text-green-600">{stats.completed} kupione</span>}
                         <span className="flex items-center gap-1">
                           <Calendar size={10} />
                           {formatDate(list.updatedAt)}
@@ -180,11 +155,10 @@ function ShoppingListPanel({
                           e.stopPropagation();
                           setShowOptionsId(showOptionsId === list.id ? null : list.id);
                         }}
-                        className="p-1 hover:bg-gray-100 dark:hover:bg-bg-hover-dark rounded transition-colors"
-                      >
+                        className="p-1 hover:bg-gray-100 dark:hover:bg-bg-hover-dark rounded transition-colors">
                         <MoreVertical size={14} />
                       </button>
-                      
+
                       {showOptionsId === list.id && (
                         <div className="absolute right-0 top-8 bg-white dark:bg-bg-dark border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-10 min-w-[150px]">
                           <button
@@ -193,8 +167,7 @@ function ShoppingListPanel({
                               handleStartEdit(list);
                               setShowOptionsId(null);
                             }}
-                            className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-bg-hover-dark rounded-t-lg flex items-center gap-2 text-sm"
-                          >
+                            className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-bg-hover-dark rounded-t-lg flex items-center gap-2 text-sm">
                             <Edit2 size={14} />
                             Edytuj nazwę
                           </button>
@@ -205,8 +178,7 @@ function ShoppingListPanel({
                               setShowOptionsId(null);
                             }}
                             disabled={stats.completed === 0}
-                            className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-bg-hover-dark disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
-                          >
+                            className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-bg-hover-dark disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm">
                             <RefreshCw size={14} />
                             Wyczyść kupione
                           </button>
@@ -216,8 +188,7 @@ function ShoppingListPanel({
                               console.log("Share list", list.id);
                               setShowOptionsId(null);
                             }}
-                            className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-bg-hover-dark flex items-center gap-2 text-sm"
-                          >
+                            className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-bg-hover-dark flex items-center gap-2 text-sm">
                             <Share2 size={14} />
                             Udostępnij
                           </button>
@@ -227,8 +198,7 @@ function ShoppingListPanel({
                               handleDeleteList(list.id);
                               setShowOptionsId(null);
                             }}
-                            className="w-full px-3 py-2 text-left hover:bg-red-50 text-red-600 rounded-b-lg flex items-center gap-2 text-sm"
-                          >
+                            className="w-full px-3 py-2 text-left hover:bg-red-50 text-red-600 rounded-b-lg flex items-center gap-2 text-sm">
                             <Trash2 size={14} />
                             Usuń
                           </button>
@@ -242,10 +212,9 @@ function ShoppingListPanel({
                 {stats.total > 0 && (
                   <div className="mt-2">
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
-                      <div 
+                      <div
                         className="bg-green-500 h-1.5 rounded-full transition-all duration-300"
-                        style={{ width: `${(stats.completed / stats.total) * 100}%` }}
-                      ></div>
+                        style={{ width: `${(stats.completed / stats.total) * 100}%` }}></div>
                     </div>
                   </div>
                 )}

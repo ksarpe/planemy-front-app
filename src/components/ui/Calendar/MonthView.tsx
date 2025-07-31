@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useCalendarContext } from "../../../context/CalendarContext";
+import { useCalendarContext } from "@/hooks/useCalendarContext";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, isToday } from "date-fns";
 import EnhancedEventBlock from "./EnhancedEventBlock";
 import { EventInterface } from "../../../data/types";
@@ -94,7 +94,7 @@ export default function MonthView() {
                   {/* Events */}
                   <div className="px-2 pb-2 space-y-1">
                     {/* Standard events */}
-                    {dayEvents.filter(e => e.displayType === "standard").slice(0, 2).map((event, eventIndex) => (
+                    {dayEvents.slice(0, 2).map((event, eventIndex) => (
                       <EnhancedEventBlock
                         key={`${event.id}-${eventIndex}`}
                         event={event}
@@ -103,16 +103,6 @@ export default function MonthView() {
                       />
                     ))}
 
-                    {/* Icon events in a row */}
-                    <div className="flex flex-wrap gap-1">
-                      {dayEvents.filter(e => e.displayType === "icon").map((event, eventIndex) => (
-                        <EnhancedEventBlock
-                          key={`${event.id}-${eventIndex}`}
-                          event={event}
-                          showTime={false}
-                        />
-                      ))}
-                    </div>
                     
                     {dayEvents.length > 3 && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 pl-2 py-1">

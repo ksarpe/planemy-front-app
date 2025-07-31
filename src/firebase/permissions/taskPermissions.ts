@@ -1,13 +1,13 @@
-import { TaskListNotification, SharePermission } from "../data/types";
-import { 
+import { TaskListNotification, SharePermission } from "../../data/types";
+import {
   shareObjectWithUser,
   acceptObjectInvitation,
   rejectObjectInvitation,
   deletePermission,
   revokeObjectAccess,
   getObjectSharedUsers,
-  listenToUserPendingNotifications as listenToGenericNotifications
-} from "./permissions";
+  listenToUserPendingNotifications as listenToGenericNotifications,
+} from "@/firebase/permissions/permissions";
 
 /**
  * Share task list with user - UPDATED to use generic permissions system
@@ -16,7 +16,7 @@ export const shareTaskListWithUser = async (
   listId: string,
   targetUserEmail: string,
   permission: SharePermission,
-  sharedByUserId: string
+  sharedByUserId: string,
 ): Promise<void> => {
   return shareObjectWithUser(listId, "task_list", targetUserEmail, permission, sharedByUserId);
 };
@@ -49,13 +49,13 @@ export const getUserPendingNotifications = async (): Promise<TaskListNotificatio
  */
 export const listenToUserPendingNotifications = (
   userId: string,
-  callback: (notifications: TaskListNotification[]) => void
+  callback: (notifications: TaskListNotification[]) => void,
 ) => {
   // Use the generic listener but convert to TaskListNotification format for compatibility
   return listenToGenericNotifications(userId, (genericNotifications) => {
     const taskPermissions: TaskListNotification[] = genericNotifications
-      .filter(notification => notification.object_type === "task_list")
-      .map(notification => ({
+      .filter((notification) => notification.object_type === "task_list")
+      .map((notification) => ({
         id: notification.id,
         listId: notification.object_id,
         listName: notification.object_name,
@@ -63,9 +63,9 @@ export const listenToUserPendingNotifications = (
         sharedWith: notification.shared_with,
         permission: notification.permission,
         sharedAt: notification.shared_at,
-        status: notification.status === "revoked" ? "rejected" : notification.status // Convert revoked to rejected for compatibility
+        status: notification.status, // Convert revoked to rejected for compatibility
       }));
-    
+
     callback(taskPermissions);
   });
 };
@@ -80,28 +80,30 @@ export const deleteNotification = async (notificationId: string): Promise<void> 
 /**
  * Revoke access to task list - UPDATED to use generic permissions system
  */
-export const revokeTaskListAccess = async (
-  listId: string, 
-  userId: string
-): Promise<void> => {
+export const revokeTaskListAccess = async (listId: string, userId: string): Promise<void> => {
   return revokeObjectAccess(listId, "task_list", userId);
 };
 
 /**
  * Get users with access to a task list - UPDATED to use generic permissions system
  */
-export const getTaskListSharedUsers = async (listId: string): Promise<Array<{
-  id: string,
-  email: string, 
-  displayName?: string,
-  permission: SharePermission,
-  status: 'pending' | 'accepted'
-}>> => {
+export const getTaskListSharedUsers = async (
+  listId: string,
+): Promise<
+  Array<{
+    id: string;
+    email: string;
+    displayName?: string;
+    permission: SharePermission;
+    status: "pending" | "accepted";
+  }>
+> => {
   const users = await getObjectSharedUsers(listId, "task_list");
   // Filter out revoked users for compatibility
-  return users.filter(user => user.status !== 'revoked' && user.status !== 'rejected')
-    .map(user => ({
+  return users
+    .filter((user) => user.status !== "revoked" && user.status !== "rejected")
+    .map((user) => ({
       ...user,
-      status: user.status as 'pending' | 'accepted'
+      status: user.status as "pending" | "accepted",
     }));
 };

@@ -8,7 +8,7 @@ import type {
   UserProfile,
 } from "@/data/types";
 import { useToast } from "@/hooks/useToastContext";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuthContext";
 import type { TaskContextProps } from "@/data/typesProps";
 import {
   useUserTaskLists,
@@ -28,7 +28,11 @@ import {
   clearCompletedTasks as clearCompletedTasksFirebase,
   uncheckAllTasks as uncheckAllTasksFirebase,
 } from "@/firebase/tasks";
-import { shareTaskListWithUser, acceptTaskListInvitation, rejectTaskListInvitation } from "@/firebase/taskPermissions";
+import {
+  shareTaskListWithUser,
+  acceptTaskListInvitation,
+  rejectTaskListInvitation,
+} from "@/firebase/permissions/taskPermissions";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase/config";
 
@@ -175,7 +179,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const shareTaskList = async (listId: string, userEmail: string, permission: SharePermission): Promise<void> => {
-    console.log("TaskContext shareTaskList called:", { listId, userEmail, permission, userId: user?.uid });
 
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby udostępnić listę");
@@ -184,9 +187,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       setLoading(true);
-      console.log("Calling shareTaskListWithUser from tasks.ts");
       await shareTaskListWithUser(listId, userEmail, permission, user.uid);
-      console.log("shareTaskListWithUser completed successfully");
       showToast("success", "Lista została udostępniona!");
     } catch (error) {
       console.error("Error sharing task list:", error);
@@ -238,7 +239,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateSharePermission = async (
     _listId: string,
     _userId: string,
@@ -277,8 +277,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getPendingShares = (): SharedTaskList[] => {
-    console.log("TaskContext getPendingShares called, returning:", pendingShares);
-    console.log("TaskContext getPendingShares length:", pendingShares.length);
     return pendingShares;
   };
 
@@ -288,7 +286,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     title: string,
     description?: string | null,
     dueDate?: string | null,
-    labels?: LabelInterface[],
   ): Promise<void> => {
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby dodać zadanie");
@@ -297,7 +294,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       setLoading(true);
-      await addTaskToListFirebase(listId, title, user.uid, description, dueDate, labels);
+      await addTaskToListFirebase(listId, title, user.uid, description, dueDate);
       showToast("success", "Zadanie zostało dodane!");
     } catch (error) {
       console.error("Error adding task:", error);

@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { FavoriteProductInterface } from "@/data/types";
-import { useShoppingContext } from "../../../context/ShoppingContext";
-import { 
-  Plus, 
-  Star, 
-  Trash2, 
-  Search,
-  Package
-} from "lucide-react";
+import { useShoppingContext } from "../../../hooks/useShoppingContext";
+import { Plus, Star, Trash2, Search, Package } from "lucide-react";
 
 interface FavoriteProductsPanelProps {
   products: FavoriteProductInterface[];
@@ -18,9 +12,10 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
   const { removeFromFavorites, addFavoriteToList } = useShoppingContext();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.category.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleAddToList = async (product: FavoriteProductInterface) => {
@@ -29,7 +24,7 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
   };
 
   const handleRemoveFromFavorites = async (productId: string) => {
-    if (window.confirm('Czy na pewno chcesz usunąć ten produkt z ulubionych?')) {
+    if (window.confirm("Czy na pewno chcesz usunąć ten produkt z ulubionych?")) {
       await removeFromFavorites(productId);
     }
   };
@@ -37,7 +32,7 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
   const formatLastUsed = (date: Date) => {
     const now = new Date();
     const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) return "Dzisiaj";
     if (diffDays === 1) return "Wczoraj";
     if (diffDays < 7) return `${diffDays} dni temu`;
@@ -50,7 +45,7 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
       {/* Header */}
       <div className="mb-4">
         <h3 className="text-lg font-semibold mb-3">Ulubione produkty</h3>
-        
+
         {/* Search */}
         <div className="relative">
           <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -72,9 +67,7 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
               <>
                 <Star size={32} className="mx-auto text-gray-400 mb-2" />
                 <p className="text-sm text-gray-500 mb-1">Brak ulubionych produktów</p>
-                <p className="text-xs text-gray-400">
-                  Dodawaj produkty do ulubionych podczas tworzenia
-                </p>
+                <p className="text-xs text-gray-400">Dodawaj produkty do ulubionych podczas tworzenia</p>
               </>
             ) : (
               <>
@@ -87,8 +80,7 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
           filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-bg-hover-dark transition-colors"
-            >
+              className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-bg-hover-dark transition-colors">
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
@@ -98,23 +90,19 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
                       {product.usageCount}
                     </span>
                   </div>
-                  
+
                   <div className="text-xs text-gray-500 space-y-1">
                     <div>{product.category}</div>
                     {product.price && (
-                      <div className="font-medium">{product.price.toFixed(2)} zł / {product.unit}</div>
+                      <div className="font-medium">
+                        {product.price.toFixed(2)} zł / {product.unit}
+                      </div>
                     )}
-                    {product.brand && (
-                      <div>Marka: {product.brand}</div>
-                    )}
+                    {product.brand && <div>Marka: {product.brand}</div>}
                     <div>Ostatnio: {formatLastUsed(product.lastUsed)}</div>
                   </div>
-                  
-                  {product.notes && (
-                    <div className="text-xs text-gray-400 mt-1 italic">
-                      {product.notes}
-                    </div>
-                  )}
+
+                  {product.notes && <div className="text-xs text-gray-400 mt-1 italic">{product.notes}</div>}
                 </div>
 
                 <div className="flex flex-col gap-1 ml-2">
@@ -122,17 +110,15 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
                     <button
                       onClick={() => handleAddToList(product)}
                       className="p-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                      title="Dodaj do listy"
-                    >
+                      title="Dodaj do listy">
                       <Plus size={12} />
                     </button>
                   )}
-                  
+
                   <button
                     onClick={() => handleRemoveFromFavorites(product.id)}
                     className="p-1.5 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-                    title="Usuń z ulubionych"
-                  >
+                    title="Usuń z ulubionych">
                     <Trash2 size={12} />
                   </button>
                 </div>
@@ -148,7 +134,11 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
           <div className="text-xs text-gray-500 space-y-1">
             <div>Łącznie ulubionych: {products.length}</div>
             <div>
-              Najczęściej używane: {products.slice(0, 3).map(p => p.name).join(", ")}
+              Najczęściej używane:{" "}
+              {products
+                .slice(0, 3)
+                .map((p) => p.name)
+                .join(", ")}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useShoppingContext } from "../../context/ShoppingContext";
+import { useShoppingContext } from "@/hooks/useShoppingContext";
 import {
   Plus,
   Search,

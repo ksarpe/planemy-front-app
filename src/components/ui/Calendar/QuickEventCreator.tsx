@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Calendar, Heart, Pill, Dumbbell, Coffee, Plus, X } from "lucide-react";
-import { useCalendarContext } from "../../../context/CalendarContext";
-import { useAuth } from "../../../context/AuthContext";
+import { useCalendarContext } from "@/hooks/useCalendarContext";
+import { useAuth } from "../../../hooks/useAuthContext";
 import { EventInterface } from "../../../data/types";
 
 interface QuickEventCreatorProps {
@@ -33,15 +33,15 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
         recurrence: {
           pattern: "monthly" as const,
           interval: 1,
-          daysOfWeek: []
+          daysOfWeek: [],
         },
         isPrivate: true,
         visibility: "private" as const,
         healthData: {
           type: "period" as const,
-          notes: "Regular cycle tracking"
-        }
-      }
+          notes: "Regular cycle tracking",
+        },
+      },
     },
     {
       id: "medication",
@@ -60,13 +60,13 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
         recurrence: {
           pattern: "daily" as const,
           interval: 1,
-          daysOfWeek: []
+          daysOfWeek: [],
         },
         healthData: {
           type: "medication" as const,
-          notes: "Daily medication reminder"
-        }
-      }
+          notes: "Daily medication reminder",
+        },
+      },
     },
     {
       id: "workout",
@@ -79,8 +79,8 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
         category: "Fitness" as const,
         displayType: "standard" as const,
         icon: "Dumbbell",
-        iconColor: "#10b981"
-      }
+        iconColor: "#10b981",
+      },
     },
     {
       id: "coffee",
@@ -92,16 +92,16 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
         title: "Coffee Break",
         category: "Personal" as const,
         displayType: "standard" as const,
-        allDay: false
-      }
-    }
+        allDay: false,
+      },
+    },
   ];
 
   const createQuickEvent = async (template: Partial<EventInterface> & { description?: string }) => {
     if (!user?.uid || !selectedDate) return;
 
     setIsCreating(true);
-    
+
     try {
       const startDate = new Date(selectedDate);
       const endDate = new Date(selectedDate);
@@ -135,22 +135,16 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
       const eventData: Omit<EventInterface, "id" | "createdAt" | "updatedAt"> = {
         title: template.title || "Event",
         category: template.category || "Other",
-        displayType: template.displayType || "standard",
         allDay: template.allDay || false,
         isRecurring: template.isRecurring || false,
         isPrivate: template.isPrivate || false,
         visibility: template.visibility || "public",
         ...template,
-        start: template.allDay 
-          ? startDate.toISOString().split('T')[0]
-          : startDate.toISOString(),
-        end: template.allDay 
-          ? endDate.toISOString().split('T')[0]
-          : endDate.toISOString(),
+        start: template.allDay ? startDate.toISOString().split("T")[0] : startDate.toISOString(),
+        end: template.allDay ? endDate.toISOString().split("T")[0] : endDate.toISOString(),
         color: template.color || getCategoryColor(template.category || "Other"),
         userId: user.uid,
-        classNames: "",
-        description: template.description
+        description: template.description,
       };
 
       await addEvent(eventData);
@@ -164,27 +158,25 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      "Health": "bg-pink-500",
-      "Fitness": "bg-green-500",
-      "Personal": "bg-purple-500",
-      "Work": "bg-blue-500",
-      "Other": "bg-gray-500"
+      Health: "bg-pink-500",
+      Fitness: "bg-green-500",
+      Personal: "bg-purple-500",
+      Work: "bg-blue-500",
+      Other: "bg-gray-500",
     };
     return colors[category as keyof typeof colors] || "bg-gray-500";
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 ${className}`}>
+    <div
+      className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 ${className}`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
           <Plus className="h-5 w-5 mr-2" />
           Quick Add
         </h3>
         {onClose && (
-          <button
-            onClick={onClose}
-            className="p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-          >
+          <button onClick={onClose} className="p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
             <X className="h-4 w-4" />
           </button>
         )}
@@ -193,10 +185,10 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
       {selectedDate && (
         <div className="mb-4 text-sm text-gray-600 dark:text-gray-400 flex items-center">
           <Calendar className="h-4 w-4 mr-1" />
-          {selectedDate.toLocaleDateString("en", { 
-            weekday: "short", 
-            month: "short", 
-            day: "numeric" 
+          {selectedDate.toLocaleDateString("en", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
           })}
         </div>
       )}
@@ -212,8 +204,7 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
               hover:shadow-md hover:scale-105 active:scale-95
               disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
               flex flex-col items-start space-y-1
-            `}
-          >
+            `}>
             <div className="flex items-center space-x-2">
               {event.icon}
               <span className="font-medium text-sm">{event.title}</span>

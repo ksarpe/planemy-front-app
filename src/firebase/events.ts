@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
-import { 
-  collection, 
-  doc, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  where, 
-  onSnapshot, 
+import {
+  collection,
+  doc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  onSnapshot,
   Timestamp,
-  getDocs
+  getDocs,
 } from "firebase/firestore";
 import { db } from "./config";
 import { EventInterface, RecurrenceRule } from "../data/types";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuthContext";
 
 // Hook to get all events for current user
 export const useEvents = (): EventInterface[] => {
@@ -21,30 +21,23 @@ export const useEvents = (): EventInterface[] => {
   const { user } = useAuth();
 
   useEffect(() => {
-    console.log("useEvents - user:", user?.uid);
     if (!user?.uid) return;
 
     const eventsRef = collection(db, "events");
-    const q = query(
-      eventsRef,
-      where("userId", "==", user.uid)
-    );
+    const q = query(eventsRef, where("userId", "==", user.uid));
 
-    console.log("useEvents - setting up listener for user:", user.uid);
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const eventsData = snapshot.docs.map(doc => ({
+      const eventsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
         createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
         updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || new Date().toISOString(),
       })) as EventInterface[];
 
-      console.log("Firebase - events loaded:", eventsData.length, eventsData);
 
       // Expand recurring events
       const expandedEvents = expandRecurringEvents(eventsData);
-      console.log("Firebase - expanded events:", expandedEvents.length, expandedEvents);
       setEvents(expandedEvents);
     });
 
@@ -57,15 +50,13 @@ export const useEvents = (): EventInterface[] => {
 // Add a new event
 export const addEvent = async (eventData: Omit<EventInterface, "id" | "createdAt" | "updatedAt">): Promise<string> => {
   try {
-    console.log("addEvent - trying to add:", eventData);
     const now = Timestamp.now();
     const docRef = await addDoc(collection(db, "events"), {
       ...eventData,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     });
-    
-    console.log("Event added with ID:", docRef.id);
+
     return docRef.id;
   } catch (error) {
     console.error("Error adding event:", error);
@@ -79,10 +70,9 @@ export const updateEvent = async (eventId: string, updates: Partial<EventInterfa
     const eventRef = doc(db, "events", eventId);
     await updateDoc(eventRef, {
       ...updates,
-      updatedAt: Timestamp.now()
+      updatedAt: Timestamp.now(),
     });
-    
-    console.log("Event updated:", eventId);
+
   } catch (error) {
     console.error("Error updating event:", error);
     throw error;
@@ -104,19 +94,15 @@ export const deleteEvent = async (eventId: string): Promise<void> => {
 export const deleteRecurringSeries = async (originalEventId: string, userId: string): Promise<void> => {
   try {
     const eventsRef = collection(db, "events");
-    const q = query(
-      eventsRef,
-      where("userId", "==", userId),
-      where("originalEventId", "==", originalEventId)
-    );
-    
+    const q = query(eventsRef, where("userId", "==", userId), where("originalEventId", "==", originalEventId));
+
     const snapshot = await getDocs(q);
-    const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
-    
+    const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
+
     // Also delete the original event
     await deleteDoc(doc(db, "events", originalEventId));
     await Promise.all(deletePromises);
-    
+
     console.log("Recurring series deleted:", originalEventId);
   } catch (error) {
     console.error("Error deleting recurring series:", error);
@@ -131,7 +117,7 @@ const expandRecurringEvents = (events: EventInterface[]): EventInterface[] => {
   const futureLimit = new Date();
   futureLimit.setFullYear(futureLimit.getFullYear() + 2); // Expand 2 years into future
 
-  events.forEach(event => {
+  events.forEach((event) => {
     if (!event.isRecurring || !event.recurrence) {
       expandedEvents.push(event);
       return;
@@ -146,37 +132,34 @@ const expandRecurringEvents = (events: EventInterface[]): EventInterface[] => {
 };
 
 // Generate recurring event instances
-const generateRecurringInstances = (
-  baseEvent: EventInterface, 
-  startDate: Date, 
-  endDate: Date
-): EventInterface[] => {
+const generateRecurringInstances = (baseEvent: EventInterface, startDate: Date, endDate: Date): EventInterface[] => {
   const instances: EventInterface[] = [];
   const { recurrence } = baseEvent;
-  
+
   if (!recurrence) return [baseEvent];
 
   const eventStart = new Date(baseEvent.start);
   const eventEnd = new Date(baseEvent.end);
   const duration = eventEnd.getTime() - eventStart.getTime();
-  
+
   let currentDate = new Date(eventStart);
   let instanceCount = 0;
-  
+
   // Ensure we start from a reasonable date
   if (currentDate < startDate) {
     currentDate = new Date(startDate);
   }
 
-  while (currentDate <= endDate && instanceCount < 1000) { // Safety limit
+  while (currentDate <= endDate && instanceCount < 1000) {
+    // Safety limit
     // Check if we've reached count limit
     if (recurrence.count && instanceCount >= recurrence.count) break;
-    
+
     // Check if we've reached end date
     if (recurrence.endDate && currentDate > new Date(recurrence.endDate)) break;
-    
+
     // Check if this date is in exceptions
-    const dateStr = currentDate.toISOString().split('T')[0];
+    const dateStr = currentDate.toISOString().split("T")[0];
     if (recurrence.exceptions?.includes(dateStr)) {
       currentDate = getNextRecurrenceDate(currentDate, recurrence);
       continue;
@@ -185,7 +168,7 @@ const generateRecurringInstances = (
     // Create instance
     const instanceStart = new Date(currentDate);
     const instanceEnd = new Date(currentDate.getTime() + duration);
-    
+
     instances.push({
       ...baseEvent,
       id: `${baseEvent.id}_${instanceCount}`,
@@ -204,20 +187,20 @@ const generateRecurringInstances = (
 // Calculate next occurrence date based on recurrence pattern
 const getNextRecurrenceDate = (currentDate: Date, recurrence: RecurrenceRule): Date => {
   const nextDate = new Date(currentDate);
-  
+
   switch (recurrence.pattern) {
     case "daily":
       nextDate.setDate(nextDate.getDate() + recurrence.interval);
       break;
-      
+
     case "weekly":
-      nextDate.setDate(nextDate.getDate() + (7 * recurrence.interval));
+      nextDate.setDate(nextDate.getDate() + 7 * recurrence.interval);
       break;
-      
+
     case "biweekly":
       nextDate.setDate(nextDate.getDate() + 14);
       break;
-      
+
     case "monthly":
       if (recurrence.monthlyType === "date") {
         nextDate.setMonth(nextDate.getMonth() + recurrence.interval);
@@ -226,19 +209,19 @@ const getNextRecurrenceDate = (currentDate: Date, recurrence: RecurrenceRule): D
         nextDate.setMonth(nextDate.getMonth() + recurrence.interval);
       }
       break;
-      
+
     case "quarterly":
-      nextDate.setMonth(nextDate.getMonth() + (3 * recurrence.interval));
+      nextDate.setMonth(nextDate.getMonth() + 3 * recurrence.interval);
       break;
-      
+
     case "yearly":
       nextDate.setFullYear(nextDate.getFullYear() + recurrence.interval);
       break;
-      
+
     default:
       nextDate.setDate(nextDate.getDate() + 1);
   }
-  
+
   return nextDate;
 };
 
@@ -246,12 +229,12 @@ const getNextRecurrenceDate = (currentDate: Date, recurrence: RecurrenceRule): D
 export const createPeriodEvent = async (
   startDate: string,
   durationDays: number = 5,
-  userId: string
+  userId: string,
 ): Promise<string> => {
   const start = new Date(startDate);
   const end = new Date(start);
   end.setDate(end.getDate() + durationDays);
-  
+
   const periodEvent: Omit<EventInterface, "id" | "createdAt" | "updatedAt"> = {
     title: "Period",
     description: "Monthly period tracking",
@@ -260,24 +243,18 @@ export const createPeriodEvent = async (
     end: end.toISOString(),
     allDay: true,
     color: "bg-pink-500",
-    displayType: "icon",
     icon: "Circle",
     iconColor: "#ec4899",
     isRecurring: true,
     recurrence: {
       pattern: "monthly",
       interval: 1,
-      monthlyType: "date"
+      monthlyType: "date",
     },
     isPrivate: true,
     visibility: "private",
     userId,
-    classNames: "",
-    healthData: {
-      type: "period",
-      notes: "Regular cycle tracking"
-    }
   };
-  
+
   return await addEvent(periodEvent);
 };

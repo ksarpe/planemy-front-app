@@ -1,10 +1,8 @@
-import { usePreferencesContext } from "@/context/PreferencesContext";
+import { usePreferencesContext } from "@/hooks/usePreferencesContext";
 import { useState } from "react";
 
-import { dayStartOptions } from "@/data/data";
-
 export default function ProfileView() {
-  const { dayStartTime, setDayStartTime, isDark, toggleTheme } = usePreferencesContext();
+  const { isDark, toggleTheme } = usePreferencesContext();
   const [username, setUsername] = useState("Kasper Janowski");
   const [email, setEmail] = useState("2299kasper@gmail.com");
 
@@ -37,21 +35,7 @@ export default function ProfileView() {
         <div className="flex items-center gap-3">
           <span className="text-sm">Dark Mode</span>
           <input type="checkbox" checked={isDark} onChange={toggleTheme} />
-        </div>
-
-        <div className="flex items-center gap-3">
-          <span className="text-sm">Day start time</span>
-          <select
-            value={dayStartTime}
-            onChange={(e) => setDayStartTime(e.target.value)}
-            className="rounded-full border border-primary px-3 py-1 bg-white dark:bg-gray-800 text-sm">
-            {dayStartOptions.map(({ value, label }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
+        </div>    
       </section>
 
       <button className="bg-primary text-white px-4 py-2 rounded hover:opacity-90 text-sm">💾 Save Changes</button>

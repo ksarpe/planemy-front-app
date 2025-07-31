@@ -1,6 +1,6 @@
 import type { TaskInterface } from "@/data/types";
 import { useTaskContext } from "@/hooks/useTaskContext";
-import { Calendar, AlertCircle, Clock, CheckCircle2, Tag } from "lucide-react";
+import { Calendar, AlertCircle, Clock, CheckCircle2 } from "lucide-react";
 
 interface TaskItemProps {
   task: TaskInterface;
@@ -103,23 +103,6 @@ export default function TaskItem({ task }: TaskItemProps) {
                 }`}>
                 {task.description}
               </p>
-            )}
-
-            {/* Labels */}
-            {task.labels && task.labels.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-2">
-                {task.labels.map((label, index) => (
-                  <span
-                    key={label.id || index}
-                    className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full transition-all duration-200 ${
-                      clickedTask?.id === task.id ? "shadow-sm" : ""
-                    }`}
-                    style={{ backgroundColor: label.color + "20", color: label.color }}>
-                    <Tag size={10} />
-                    {label.name}
-                  </span>
-                ))}
-              </div>
             )}
 
             {/* Due date */}

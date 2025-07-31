@@ -1,13 +1,13 @@
-import { useAuth } from "@/context/AuthContext";
-import { useToast } from "@/context/ToastContext";
+import { useAuth } from "@/hooks/useAuthContext";
+import { useToast } from "@/hooks/useToastContext";
 import { Check, X, Clock, UserCheck, Share2, Calendar, ShoppingBag, List } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ShareNotification, ShareableObjectType } from "@/data/types";
-import { 
+import {
   listenToUserPendingNotifications,
   acceptObjectInvitation,
-  rejectObjectInvitation
-} from "@/firebase/permissions";
+  rejectObjectInvitation,
+} from "@/firebase/permissions/permissions";
 
 // Icon mapping for different object types
 const getObjectIcon = (objectType: ShareableObjectType) => {
@@ -64,7 +64,7 @@ export default function UniversalShareNotifications() {
 
   const handleAccept = async (notificationId: string) => {
     if (!notificationId) return;
-    
+
     try {
       setLoading(true);
       await acceptObjectInvitation(notificationId);
@@ -79,7 +79,7 @@ export default function UniversalShareNotifications() {
 
   const handleReject = async (notificationId: string) => {
     if (!notificationId) return;
-    
+
     try {
       setLoading(true);
       await rejectObjectInvitation(notificationId);
@@ -99,52 +99,53 @@ export default function UniversalShareNotifications() {
       {notifications.map((notification) => {
         const ObjectIcon = getObjectIcon(notification.object_type);
         const objectTypeText = getObjectTypeText(notification.object_type);
-        
+
         return (
           <div
             key={notification.id}
-            className="bg-white border border-blue-200 rounded-lg shadow-lg p-4 max-w-sm animate-in slide-in-from-right duration-300"
-          >
+            className="bg-white border border-blue-200 rounded-lg shadow-lg p-4 max-w-sm animate-in slide-in-from-right duration-300">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <ObjectIcon size={16} className="text-blue-600" />
               </div>
-              
+
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <UserCheck size={14} className="text-gray-500" />
                   <span className="text-sm text-gray-600">Nowe udostępnienie</span>
                 </div>
-                
+
                 <p className="text-sm font-medium text-gray-900 mb-1">
                   {objectTypeText}: "{notification.object_name}"
                 </p>
-                
+
                 <p className="text-xs text-gray-500 mb-2">
-                  Uprawnienie: {notification.permission === "view" ? "podgląd" : 
-                              notification.permission === "edit" ? "edycja" : "administrator"}
+                  Uprawnienie:{" "}
+                  {notification.permission === "view"
+                    ? "podgląd"
+                    : notification.permission === "edit"
+                    ? "edycja"
+                    : "administrator"}
                 </p>
-                
+
                 <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
                   <Clock size={12} />
-                  <span>{new Date(notification.shared_at).toLocaleDateString('pl-PL')}</span>
+                  <span>{new Date(notification.shared_at).toLocaleDateString("pl-PL")}</span>
                 </div>
-                
+
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleAccept(notification.id!)}
                     disabled={loading}
-                    className="flex items-center gap-1 px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors disabled:opacity-50"
-                  >
+                    className="flex items-center gap-1 px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors disabled:opacity-50">
                     <Check size={12} />
                     Akceptuj
                   </button>
-                  
+
                   <button
                     onClick={() => handleReject(notification.id!)}
                     disabled={loading}
-                    className="flex items-center gap-1 px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors disabled:opacity-50"
-                  >
+                    className="flex items-center gap-1 px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors disabled:opacity-50">
                     <X size={12} />
                     Odrzuć
                   </button>

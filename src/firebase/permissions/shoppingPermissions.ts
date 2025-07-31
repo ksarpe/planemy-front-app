@@ -1,13 +1,13 @@
-import { 
+import {
   shareObjectWithUser,
   acceptObjectInvitation,
   rejectObjectInvitation,
   deletePermission,
   revokeObjectAccess,
   getObjectSharedUsers,
-  listenToUserPendingNotifications
-} from "./permissions";
-import { SharePermission, ShareNotification } from "../data/types";
+  listenToUserPendingNotifications,
+} from "@/firebase/permissions/permissions";
+import { SharePermission, ShareNotification } from "../../data/types";
 
 /**
  * Share shopping list with user
@@ -16,7 +16,7 @@ export const shareShoppingListWithUser = async (
   listId: string,
   targetUserEmail: string,
   permission: SharePermission,
-  sharedByUserId: string
+  sharedByUserId: string,
 ): Promise<void> => {
   return shareObjectWithUser(listId, "shopping_list", targetUserEmail, permission, sharedByUserId);
 };
@@ -45,29 +45,31 @@ export const deleteShoppingListNotification = async (permissionId: string): Prom
 /**
  * Revoke access to shopping list
  */
-export const revokeShoppingListAccess = async (
-  listId: string,
-  userId: string
-): Promise<void> => {
+export const revokeShoppingListAccess = async (listId: string, userId: string): Promise<void> => {
   return revokeObjectAccess(listId, "shopping_list", userId);
 };
 
 /**
  * Get users with access to a shopping list
  */
-export const getShoppingListSharedUsers = async (listId: string): Promise<Array<{
-  id: string,
-  email: string, 
-  displayName?: string,
-  permission: SharePermission,
-  status: 'pending' | 'accepted'
-}>> => {
+export const getShoppingListSharedUsers = async (
+  listId: string,
+): Promise<
+  Array<{
+    id: string;
+    email: string;
+    displayName?: string;
+    permission: SharePermission;
+    status: "pending" | "accepted";
+  }>
+> => {
   const users = await getObjectSharedUsers(listId, "shopping_list");
   // Filter out revoked users for compatibility
-  return users.filter(user => user.status !== 'revoked' && user.status !== 'rejected')
-    .map(user => ({
+  return users
+    .filter((user) => user.status !== "revoked" && user.status !== "rejected")
+    .map((user) => ({
       ...user,
-      status: user.status as 'pending' | 'accepted'
+      status: user.status as "pending" | "accepted",
     }));
 };
 
@@ -76,11 +78,11 @@ export const getShoppingListSharedUsers = async (listId: string): Promise<Array<
  */
 export const listenToUserPendingShoppingNotifications = (
   userId: string,
-  callback: (notifications: ShareNotification[]) => void
+  callback: (notifications: ShareNotification[]) => void,
 ) => {
   return listenToUserPendingNotifications(userId, (genericNotifications) => {
     const shoppingNotifications = genericNotifications.filter(
-      notification => notification.object_type === "shopping_list"
+      (notification) => notification.object_type === "shopping_list",
     );
     callback(shoppingNotifications);
   });

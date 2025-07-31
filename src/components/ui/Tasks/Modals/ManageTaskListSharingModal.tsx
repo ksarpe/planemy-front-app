@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { X, UserPlus, Mail, Clock, CheckCircle, UserX } from 'lucide-react';
 import { getTaskListSharedUsers, revokeTaskListAccess, shareTaskListWithUser } from '@/firebase/tasks';
 import { SharePermission } from '@/data/types';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/hooks/useAuthContext';
 import { useToast } from "@/hooks/useToastContext";
 
 interface SharedUser {
