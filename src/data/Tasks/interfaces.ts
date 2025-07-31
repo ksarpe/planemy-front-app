@@ -30,10 +30,10 @@ export interface TaskListInterface {
   labels?: LabelInterface[]; // Optional array of labels for the list
 }
 
-export interface QuickTaskInterface {
-  id: number;
-  title: string;
-}
+// export interface QuickTaskInterface {
+//   id: number;
+//   title: string;
+// }
 
 export interface SharedTaskList {
   id?: string; // For invitation documents

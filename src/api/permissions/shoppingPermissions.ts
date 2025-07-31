@@ -6,10 +6,9 @@ import {
   revokeObjectAccess,
   getObjectSharedUsers,
   listenToUserPendingNotifications,
-} from "@/firebase/permissions/permissions";
+} from "@/api/permissions/permissions";
 import type { SharePermission } from "@/data/Utils/types";
 import type { ShareNotification } from "@/data/Utils/interfaces";
-
 
 /**
  * Share shopping list with user

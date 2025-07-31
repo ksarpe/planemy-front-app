@@ -1,14 +1,14 @@
-import { 
-  ShoppingListInterface, 
-  ShoppingItemInterface, 
+import {
+  ShoppingListInterface,
+  ShoppingItemInterface,
   FavoriteProductInterface,
-  ShoppingCategoryInterface 
+  ShoppingCategoryInterface,
 } from "../data/types";
 import { createContext, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuthContext";
 import { useToast } from "@/hooks/useToastContext";
-import { 
-  useShoppingLists, 
+import {
+  useShoppingLists,
   useFavoriteProducts,
   addShoppingList,
   updateShoppingList,
@@ -19,8 +19,8 @@ import {
   addFavoriteProduct,
   updateFavoriteProduct,
   deleteFavoriteProduct,
-  defaultCategories
-} from "../firebase/shopping";
+  defaultCategories,
+} from "../api/shopping";
 
 interface ShoppingContextType {
   // Shopping Lists
@@ -30,22 +30,22 @@ interface ShoppingContextType {
   createList: (name: string, description?: string, emoji?: string, color?: string) => Promise<void>;
   updateList: (listId: string, updates: Partial<ShoppingListInterface>) => Promise<void>;
   deleteList: (listId: string) => Promise<void>;
-  
+
   // Shopping Items
-  addItem: (listId: string, item: Omit<ShoppingItemInterface, 'id' | 'addedAt'>) => Promise<void>;
+  addItem: (listId: string, item: Omit<ShoppingItemInterface, "id" | "addedAt">) => Promise<void>;
   updateItem: (listId: string, itemId: string, updates: Partial<ShoppingItemInterface>) => Promise<void>;
   removeItem: (listId: string, itemId: string) => Promise<void>;
   toggleItemComplete: (listId: string, itemId: string) => Promise<void>;
-  
+
   // Favorite Products
   favoriteProducts: FavoriteProductInterface[];
-  addToFavorites: (product: Omit<FavoriteProductInterface, 'id' | 'userId'>) => Promise<void>;
+  addToFavorites: (product: Omit<FavoriteProductInterface, "id" | "userId">) => Promise<void>;
   removeFromFavorites: (productId: string) => Promise<void>;
   addFavoriteToList: (listId: string, product: FavoriteProductInterface, quantity?: number) => Promise<void>;
-  
+
   // Categories
   categories: ShoppingCategoryInterface[];
-  
+
   // UI State
   loading: boolean;
   searchQuery: string;
@@ -62,7 +62,7 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
   const { showToast } = useToast();
   const { shoppingLists, loading: listsLoading } = useShoppingLists();
   const { favoriteProducts, loading: favoritesLoading } = useFavoriteProducts();
-  
+
   const [currentList, setCurrentList] = useState<ShoppingListInterface | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -80,7 +80,7 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
   // Update current list when shoppingLists change (e.g., after adding an item)
   useEffect(() => {
     if (currentList && shoppingLists.length > 0) {
-      const updatedCurrentList = shoppingLists.find(list => list.id === currentList.id);
+      const updatedCurrentList = shoppingLists.find((list) => list.id === currentList.id);
       if (updatedCurrentList && JSON.stringify(updatedCurrentList) !== JSON.stringify(currentList)) {
         setCurrentList(updatedCurrentList);
       }
@@ -95,7 +95,7 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
     }
 
     try {
-      const newList: Omit<ShoppingListInterface, 'id' | 'createdAt' | 'updatedAt'> = {
+      const newList: Omit<ShoppingListInterface, "id" | "createdAt" | "updatedAt"> = {
         name,
         description,
         emoji: emoji || "📝",
@@ -128,7 +128,7 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       await deleteShoppingList(listId);
       if (currentList?.id === listId) {
-        setCurrentList(shoppingLists.find(list => list.id !== listId) || null);
+        setCurrentList(shoppingLists.find((list) => list.id !== listId) || null);
       }
       showToast("success", "Lista została usunięta");
     } catch (error) {
@@ -138,7 +138,7 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   // Shopping Items Operations
-  const addItem = async (listId: string, item: Omit<ShoppingItemInterface, 'id' | 'addedAt'>) => {
+  const addItem = async (listId: string, item: Omit<ShoppingItemInterface, "id" | "addedAt">) => {
     if (!user?.uid) {
       showToast("error", "Musisz być zalogowany");
       return;
@@ -180,21 +180,21 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
     if (!user?.uid) return;
 
     try {
-      const list = shoppingLists.find(l => l.id === listId);
-      const item = list?.items.find(i => i.id === itemId);
-      
+      const list = shoppingLists.find((l) => l.id === listId);
+      const item = list?.items.find((i) => i.id === itemId);
+
       if (item) {
         const updateData: Partial<ShoppingItemInterface> = {
-          isCompleted: !item.isCompleted
+          isCompleted: !item.isCompleted,
         };
-        
+
         if (!item.isCompleted) {
           updateData.completedAt = new Date();
         } else {
           // Remove completedAt field when uncompleting item
           updateData.completedAt = null;
         }
-        
+
         await updateItemInList(listId, itemId, updateData, user.uid);
       }
     } catch (error) {
@@ -204,7 +204,7 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   // Favorite Products Operations
-  const addToFavorites = async (product: Omit<FavoriteProductInterface, 'id' | 'userId'>) => {
+  const addToFavorites = async (product: Omit<FavoriteProductInterface, "id" | "userId">) => {
     if (!user?.uid) {
       showToast("error", "Musisz być zalogowany");
       return;
@@ -213,9 +213,9 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       const productWithUserId = {
         ...product,
-        userId: user.uid
+        userId: user.uid,
       };
-      
+
       await addFavoriteProduct(productWithUserId);
       showToast("success", "Produkt dodany do ulubionych");
     } catch (error) {
@@ -237,7 +237,7 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
   const addFavoriteToList = async (listId: string, product: FavoriteProductInterface, quantity = 1) => {
     if (!user?.uid) return;
 
-    const newItem: Omit<ShoppingItemInterface, 'id' | 'addedAt'> = {
+    const newItem: Omit<ShoppingItemInterface, "id" | "addedAt"> = {
       name: product.name,
       quantity,
       unit: product.unit,
@@ -250,13 +250,13 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
 
     try {
       await addItemToList(listId, newItem, user.uid);
-      
+
       // Update usage count for favorite product
       await updateFavoriteProduct(product.id, {
         usageCount: product.usageCount + 1,
-        lastUsed: new Date()
+        lastUsed: new Date(),
       });
-      
+
       showToast("success", "Ulubiony produkt dodany do listy");
     } catch (error) {
       console.error("Error adding favorite to list:", error);
@@ -274,30 +274,29 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
         createList,
         updateList,
         deleteList,
-        
+
         // Shopping Items
         addItem,
         updateItem,
         removeItem,
         toggleItemComplete,
-        
+
         // Favorite Products
         favoriteProducts,
         addToFavorites,
         removeFromFavorites,
         addFavoriteToList,
-        
+
         // Categories
         categories,
-        
+
         // UI State
         loading,
         searchQuery,
         setSearchQuery,
         selectedCategory,
         setSelectedCategory,
-      }}
-    >
+      }}>
       {children}
     </ShoppingContext.Provider>
   );

@@ -2,7 +2,7 @@ import { useTaskContext } from "@/hooks/useTaskContext";
 import { Check, X, Clock, UserCheck, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/firebase/config";
+import { db } from "@/api/config";
 import type { TaskListInfo } from "@/data/Tasks/interfaces";
 import type { SharedTaskList } from "@/data/Tasks/interfaces";
 

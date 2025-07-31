@@ -10,7 +10,7 @@ import {
   searchLabels,
   getLabelsByColor,
   bulkDeleteLabels,
-} from "@/firebase/labels";
+} from "@/api/labels";
 
 interface LabelContextType {
   // Data

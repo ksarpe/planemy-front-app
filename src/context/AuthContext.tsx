@@ -1,14 +1,14 @@
 import { createContext, useEffect, useState } from "react";
-import { 
-  User, 
-  onAuthStateChanged, 
+import {
+  User,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
   updateProfile,
-  AuthError
+  AuthError,
 } from "firebase/auth";
-import { auth } from "../firebase/config";
+import { auth } from "../api/config";
 
 interface AuthContextType {
   user: User | null;
@@ -72,34 +72,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     logout,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-
 
 // Helper function to convert Firebase auth error codes to user-friendly messages
 const getAuthErrorMessage = (errorCode: string): string => {
   switch (errorCode) {
-    case 'auth/user-not-found':
-      return 'Nie znaleziono użytkownika z tym adresem email.';
-    case 'auth/wrong-password':
-      return 'Nieprawidłowe hasło.';
-    case 'auth/email-already-in-use':
-      return 'Ten adres email jest już używany.';
-    case 'auth/weak-password':
-      return 'Hasło jest zbyt słabe.';
-    case 'auth/invalid-email':
-      return 'Nieprawidłowy adres email.';
-    case 'auth/user-disabled':
-      return 'To konto zostało wyłączone.';
-    case 'auth/too-many-requests':
-      return 'Zbyt wiele nieudanych prób logowania. Spróbuj ponownie później.';
-    case 'auth/network-request-failed':
-      return 'Błąd połączenia z siecią.';
+    case "auth/user-not-found":
+      return "Nie znaleziono użytkownika z tym adresem email.";
+    case "auth/wrong-password":
+      return "Nieprawidłowe hasło.";
+    case "auth/email-already-in-use":
+      return "Ten adres email jest już używany.";
+    case "auth/weak-password":
+      return "Hasło jest zbyt słabe.";
+    case "auth/invalid-email":
+      return "Nieprawidłowy adres email.";
+    case "auth/user-disabled":
+      return "To konto zostało wyłączone.";
+    case "auth/too-many-requests":
+      return "Zbyt wiele nieudanych prób logowania. Spróbuj ponownie później.";
+    case "auth/network-request-failed":
+      return "Błąd połączenia z siecią.";
     default:
-      return 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.';
+      return "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";
   }
 };

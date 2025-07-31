@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { X, DollarSign, Calendar, Tag, RefreshCw } from "lucide-react";
 import { PaymentInterface } from "@/data/types";
-import { calculateNextPaymentDate } from "@/firebase/payments";
+import { calculateNextPaymentDate } from "@/api/payments";
 
 interface AddPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (paymentData: Omit<PaymentInterface, 'id' | 'userId'>) => Promise<void>;
+  onSubmit: (paymentData: Omit<PaymentInterface, "id" | "userId">) => Promise<void>;
 }
 
 export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalProps) => {
@@ -14,8 +14,8 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
     name: "",
     amount: "",
     currency: "PLN",
-    cycle: "monthly" as PaymentInterface['cycle'],
-    category: "subscription" as PaymentInterface['category'],
+    cycle: "monthly" as PaymentInterface["cycle"],
+    category: "subscription" as PaymentInterface["category"],
     description: "",
     reminderDays: 3,
     autoRenew: true,
@@ -24,19 +24,19 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedDate, setSelectedDate] = useState(() => {
     const today = new Date();
-    return today.toISOString().split('T')[0];
+    return today.toISOString().split("T")[0];
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.amount) {
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const paymentData: Omit<PaymentInterface, 'id' | 'userId'> = {
+      const paymentData: Omit<PaymentInterface, "id" | "userId"> = {
         name: formData.name,
         amount: parseFloat(formData.amount),
         currency: formData.currency,
@@ -51,7 +51,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
       };
 
       await onSubmit(paymentData);
-      
+
       // Reset form
       setFormData({
         name: "",
@@ -63,7 +63,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
         reminderDays: 3,
         autoRenew: true,
       });
-      setSelectedDate(new Date().toISOString().split('T')[0]);
+      setSelectedDate(new Date().toISOString().split("T")[0]);
       onClose();
     } catch (error) {
       console.error("Error submitting payment:", error);
@@ -72,8 +72,8 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
     }
   };
 
-  const handleCycleChange = (cycle: PaymentInterface['cycle']) => {
-    setFormData(prev => ({ ...prev, cycle }));
+  const handleCycleChange = (cycle: PaymentInterface["cycle"]) => {
+    setFormData((prev) => ({ ...prev, cycle }));
     // Auto-calculate next payment date based on cycle
     const nextDate = calculateNextPaymentDate(cycle, new Date(selectedDate));
     setSelectedDate(nextDate);
@@ -86,10 +86,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-6 border-b">
           <h2 className="text-xl font-semibold text-gray-800">Dodaj nową płatność</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
             <X size={24} />
           </button>
         </div>
@@ -97,13 +94,11 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nazwa płatności *
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nazwa płatności *</label>
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="np. Netflix, Prąd, Ubezpieczenie"
               required
@@ -113,16 +108,14 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
           {/* Amount and Currency */}
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Kwota *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Kwota *</label>
               <div className="relative">
                 <DollarSign size={18} className="absolute left-3 top-2.5 text-gray-400" />
                 <input
                   type="number"
                   step="0.01"
                   value={formData.amount}
-                  onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, amount: e.target.value }))}
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="0.00"
                   required
@@ -130,14 +123,11 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               </div>
             </div>
             <div className="w-20">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Waluta
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Waluta</label>
               <select
                 value={formData.currency}
-                onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value }))}
-                className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+                onChange={(e) => setFormData((prev) => ({ ...prev, currency: e.target.value }))}
+                className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="PLN">PLN</option>
                 <option value="EUR">EUR</option>
                 <option value="USD">USD</option>
@@ -153,9 +143,10 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
             </label>
             <select
               value={formData.category}
-              onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value as PaymentInterface['category'] }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, category: e.target.value as PaymentInterface["category"] }))
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="subscription">Subskrypcja</option>
               <option value="utility">Media/Rachunki</option>
               <option value="insurance">Ubezpieczenie</option>
@@ -173,21 +164,20 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
             </label>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { value: 'weekly', label: 'Tygodniowo' },
-                { value: 'monthly', label: 'Miesięcznie' },
-                { value: 'quarterly', label: 'Kwartalnie' },
-                { value: 'yearly', label: 'Rocznie' },
+                { value: "weekly", label: "Tygodniowo" },
+                { value: "monthly", label: "Miesięcznie" },
+                { value: "quarterly", label: "Kwartalnie" },
+                { value: "yearly", label: "Rocznie" },
               ].map((option) => (
                 <button
                   key={option.value}
                   type="button"
-                  onClick={() => handleCycleChange(option.value as PaymentInterface['cycle'])}
+                  onClick={() => handleCycleChange(option.value as PaymentInterface["cycle"])}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     formData.cycle === option.value
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}>
                   {option.label}
                 </button>
               ))}
@@ -210,27 +200,23 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
 
           {/* Reminder Days */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Przypomnienie (dni wcześniej)
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Przypomnienie (dni wcześniej)</label>
             <input
               type="number"
               min="0"
               max="30"
               value={formData.reminderDays}
-              onChange={(e) => setFormData(prev => ({ ...prev, reminderDays: parseInt(e.target.value) }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, reminderDays: parseInt(e.target.value) }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Opis (opcjonalnie)
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Opis (opcjonalnie)</label>
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={2}
               placeholder="Dodatkowe informacje..."
@@ -243,7 +229,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               type="checkbox"
               id="autoRenew"
               checked={formData.autoRenew}
-              onChange={(e) => setFormData(prev => ({ ...prev, autoRenew: e.target.checked }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, autoRenew: e.target.checked }))}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="autoRenew" className="ml-2 block text-sm text-gray-700">
@@ -256,15 +242,13 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
-            >
+              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors">
               Anuluj
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
               {isSubmitting ? "Dodawanie..." : "Dodaj płatność"}
             </button>
           </div>

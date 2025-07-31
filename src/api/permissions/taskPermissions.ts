@@ -9,7 +9,7 @@ import {
   revokeObjectAccess,
   getObjectSharedUsers,
   listenToUserPendingNotifications as listenToGenericNotifications,
-} from "@/firebase/permissions/permissions";
+} from "@/api/permissions/permissions";
 
 /**
  * Share task list with user - UPDATED to use generic permissions system

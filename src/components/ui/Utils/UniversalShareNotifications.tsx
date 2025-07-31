@@ -8,7 +8,7 @@ import {
   listenToUserPendingNotifications,
   acceptObjectInvitation,
   rejectObjectInvitation,
-} from "@/firebase/permissions/permissions";
+} from "@/api/permissions/permissions";
 
 // Icon mapping for different object types
 const getObjectIcon = (objectType: ShareableObjectType) => {

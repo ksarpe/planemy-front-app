@@ -4,7 +4,7 @@ import { useState } from "react";
 import PaymentItem from "@/components/ui/Payments/PaymentItem";
 import { AddPaymentModal } from "@/components/ui/Payments/AddPaymentModal";
 import { Plus, TrendingUp, TrendingDown, DollarSign, Calendar } from "lucide-react";
-import { getDaysUntilPayment } from "@/firebase/payments";
+import { getDaysUntilPayment } from "@/api/payments";
 
 export default function Payments() {
   const { payments, addPayment } = usePaymentsContext();

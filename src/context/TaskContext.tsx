@@ -17,20 +17,22 @@ import {
   updateTaskInList as updateTaskInListFirebase,
   removeTaskFromList as removeTaskFromListFirebase,
   toggleTaskCompletion as toggleTaskCompletionFirebase,
-  createLabel as createLabelFirebase,
-  updateLabel as updateLabelFirebase,
-  deleteLabel as deleteLabelFirebase,
   searchUsersByEmail,
   clearCompletedTasks as clearCompletedTasksFirebase,
   uncheckAllTasks as uncheckAllTasksFirebase,
-} from "@/firebase/tasks";
+} from "@/api/tasks";
+import {
+  createLabel as createLabelFirebase,
+  updateLabel as updateLabelFirebase,
+  deleteLabel as deleteLabelFirebase,
+} from "@/api/labels";
 import {
   shareTaskListWithUser,
   acceptTaskListInvitation,
   rejectTaskListInvitation,
-} from "@/firebase/permissions/taskPermissions";
+} from "@/api/permissions/taskPermissions";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
-import { db } from "@/firebase/config";
+import { db } from "@/api/config";
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 

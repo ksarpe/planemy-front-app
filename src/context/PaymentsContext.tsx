@@ -4,14 +4,14 @@ import type { PaymentInterface } from "@/data/types";
 import type { PaymentsContextProps } from "@/data/typesProps";
 import { useAuth } from "@/hooks/useAuthContext";
 import { useToast } from "@/hooks/useToastContext";
-import { 
-  useUserPayments, 
+import {
+  useUserPayments,
   addPayment as addPaymentToFirebase,
   removePayment as removePaymentFromFirebase,
   markPaymentAsPaid as markPaymentAsPaidFirebase,
   togglePaymentStatus as togglePaymentStatusFirebase,
-  updatePayment as updatePaymentFirebase
-} from "../firebase/payments";
+  updatePayment as updatePaymentFirebase,
+} from "../api/payments";
 
 const PaymentsContext = createContext<PaymentsContextProps | undefined>(undefined);
 export { PaymentsContext };
@@ -28,7 +28,7 @@ export const PaymentsProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [initialPayments]);
 
-  const addPayment = async (paymentData: Omit<PaymentInterface, 'id' | 'userId'>) => {
+  const addPayment = async (paymentData: Omit<PaymentInterface, "id" | "userId">) => {
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby dodać płatność");
       return;
@@ -45,9 +45,9 @@ export const PaymentsProvider = ({ children }: { children: ReactNode }) => {
 
   const markAsPaid = async (paymentId: string) => {
     try {
-      const payment = payments.find(p => p.id === paymentId);
+      const payment = payments.find((p) => p.id === paymentId);
       if (!payment) return;
-      
+
       await markPaymentAsPaidFirebase(paymentId, payment);
       showToast("success", "Płatność została oznaczona jako opłacona!");
     } catch (error) {
@@ -69,7 +69,7 @@ export const PaymentsProvider = ({ children }: { children: ReactNode }) => {
   const togglePaymentStatus = async (paymentId: string, isActive: boolean) => {
     try {
       await togglePaymentStatusFirebase(paymentId, isActive);
-      showToast("success", `Płatność została ${isActive ? 'aktywowana' : 'dezaktywowana'}!`);
+      showToast("success", `Płatność została ${isActive ? "aktywowana" : "dezaktywowana"}!`);
     } catch (error) {
       console.error("Error toggling payment status:", error);
       showToast("error", "Błąd podczas zmiany statusu płatności");
@@ -87,14 +87,15 @@ export const PaymentsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <PaymentsContext.Provider value={{ 
-      payments, 
-      addPayment, 
-      markAsPaid, 
-      removePayment, 
-      togglePaymentStatus,
-      updatePayment 
-    }}>
+    <PaymentsContext.Provider
+      value={{
+        payments,
+        addPayment,
+        markAsPaid,
+        removePayment,
+        togglePaymentStatus,
+        updatePayment,
+      }}>
       {children}
     </PaymentsContext.Provider>
   );

@@ -1,6 +1,6 @@
 import type { CalendarClickContent, EventInterface } from "../data/types";
 import type { CalendarContextProps } from "../data/typesProps";
-import { useEvents, addEvent as firebaseAddEvent, updateEvent as firebaseUpdateEvent } from "../firebase/events";
+import { useEvents, addEvent as firebaseAddEvent, updateEvent as firebaseUpdateEvent } from "../api/events";
 import { getDateKey } from "../utils/helpers";
 import { createContext, useEffect, useMemo, useState } from "react";
 

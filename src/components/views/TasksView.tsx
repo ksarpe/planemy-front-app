@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTaskContext } from "@/hooks/useTaskContext";
-import { useTasksForList } from "@/firebase/tasks";
+import { useTasksForList } from "@/api/tasks";
 import {
   TaskViewHeader,
   CreateTaskListModal,

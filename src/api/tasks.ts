@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { db } from "./config";
 import {
   collection,
@@ -17,7 +18,7 @@ import { useAuth } from "../hooks/useAuthContext";
 import type { TaskInterface, TaskListInterface, SharedTaskList } from "@/data/Tasks/interfaces";
 import type { LabelInterface, ShareNotification } from "@/data/Utils/interfaces";
 import type { SharePermission } from "@/data/Utils/types";
-import type {UserProfile } from "@/data/User/interfaces";
+import type { UserProfile } from "@/data/User/interfaces";
 
 // Hook to get user's task lists (own + shared via permissions)
 export const useUserTaskLists = (): TaskListInterface[] => {
@@ -151,10 +152,9 @@ export const useUserLabels = (): LabelInterface[] => {
 export const createTaskList = async (name: string, userId: string): Promise<void> => {
   try {
     const taskListsCollection = collection(db, "taskLists");
-    const newTaskList = {
+    const newTaskList: TaskListInterface = {
+      id: uuidv4(),
       name,
-      tasks: [],
-      labels: [],
       userId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -302,46 +302,6 @@ export const uncheckAllTasks = async (listId: string): Promise<void> => {
   }
 };
 
-// Create label
-export const createLabel = async (name: string, color: string, userId: string, description?: string): Promise<void> => {
-  try {
-    const labelsCollection = collection(db, "labels");
-    const newLabel = {
-      name,
-      color,
-      description,
-      userId,
-    };
-
-    await addDoc(labelsCollection, newLabel);
-  } catch (error) {
-    console.error("Error creating label:", error);
-    throw error;
-  }
-};
-
-// Update label
-export const updateLabel = async (labelId: string, updates: Partial<LabelInterface>): Promise<void> => {
-  try {
-    const labelDocRef = doc(db, "labels", labelId);
-    await updateDoc(labelDocRef, updates);
-  } catch (error) {
-    console.error("Error updating label:", error);
-    throw error;
-  }
-};
-
-// Delete label
-export const deleteLabel = async (labelId: string): Promise<void> => {
-  try {
-    const labelDocRef = doc(db, "labels", labelId);
-    await deleteDoc(labelDocRef);
-  } catch (error) {
-    console.error("Error deleting label:", error);
-    throw error;
-  }
-};
-
 // SHARING SYSTEM FUNCTIONS
 
 // Function to create user profile (called when user registers)
@@ -465,7 +425,6 @@ export const useUserPendingShares = (): SharedTaskList[] => {
 
           setPendingShares(sharedTaskLists);
         });
-
       } catch (error) {
         console.error("Error setting up pending notifications listener:", error);
       }
