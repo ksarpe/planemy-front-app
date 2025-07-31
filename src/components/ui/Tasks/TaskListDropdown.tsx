@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, List, Calendar, CheckCircle2, Users } from "lucide-react";
 import { useTaskContext } from "@/hooks/useTaskContext";
+import { usePreferencesContext } from "@/hooks/usePreferencesContext";
 import { TaskListInterface } from "@/data/Tasks/interfaces";
 
 export default function TaskListDropdown() {
   const { taskLists, currentTaskList, setCurrentTaskList, getTaskStats } = useTaskContext();
+  const { mainListId } = usePreferencesContext();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -69,7 +71,8 @@ export default function TaskListDropdown() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className={`font-medium ${isSelected ? "text-blue-900" : "text-gray-900"}`}>{list.name}</div>
-                    <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                    {mainListId === list.id && <span className="text-xs font-light">domyślna</span>}
+                    <div className="flex items-center gap-3 text-xs text-gray-500">
                       {list.shared && (
                         <span className="text-blue-600">
                           <Users size={12} />

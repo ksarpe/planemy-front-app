@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import SidebarLink from "../ui/Sidebar/SidebarLink";
 
 export default function Sidebar() {
-  const { isDark, toggleTheme, isSidebarClosed } = usePreferencesContext();
+  const { isDark, toggleTheme } = usePreferencesContext();
   const { user, logout } = useAuth();
   const { showToast } = useToast();
 
@@ -18,10 +18,6 @@ export default function Sidebar() {
       showToast("error", error instanceof Error ? error.message : "Błąd podczas wylogowywania");
     }
   };
-
-  if (isSidebarClosed) {
-    return null; // or return a placeholder if needed
-  }
 
   return (
     // whole sidebar with logo,links and bottom content
@@ -45,17 +41,17 @@ export default function Sidebar() {
       <div className="flex flex-col gap-2">
         {/* Theme toggle and logout */}
         <div className="flex flex-col justify-between px-2 gap-2">
-            <NavLink
+          <NavLink
             to="/labels"
             className="flex items-center gap-2 text-text dark:text-text-dark hover:dark:text-bg-hover-dark">
             <Tag size={20} />
             <span className="text-sm hover:text-purple-500 hover:cursor-pointer">Etykiety</span>
-            </NavLink>
-          <button
-            onClick={toggleTheme}
-            className="flex items-center gap-2 text-text dark:text-text-dark ">
+          </NavLink>
+          <button onClick={toggleTheme} className="flex items-center gap-2 text-text dark:text-text-dark ">
             {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            <span className="text-sm hover:text-primary hover:dark:text-bg-hover-dark hover:cursor-pointer">{isDark ? "Light Mode" : "Dark Mode"}</span>
+            <span className="text-sm hover:text-primary hover:dark:text-bg-hover-dark hover:cursor-pointer">
+              {isDark ? "Light Mode" : "Dark Mode"}
+            </span>
           </button>
         </div>
         {/* User info */}

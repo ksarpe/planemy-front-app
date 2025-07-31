@@ -67,6 +67,8 @@ export interface TaskContextProps {
   getPendingShares: () => SharedTaskList[];
 
   // Tasks within lists
+  tasksCache: Record<string, TaskInterface[]>;
+  setTasksCache: (cache: Record<string, TaskInterface[]>) => void;
   addTask: (
     listId: string,
     title: string,

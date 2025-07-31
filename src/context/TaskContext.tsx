@@ -33,13 +33,14 @@ import {
 } from "@/api/permissions/taskPermissions";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/api/config";
-
+import { usePreferencesContext } from "@/hooks/usePreferencesContext";
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 
 export { TaskContext };
 
 export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const { showToast } = useToast();
+  const { mainListId } = usePreferencesContext();
   const { user } = useAuth();
 
   // New task list system
@@ -66,7 +67,11 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
     if (!currentTaskList) {
       // Brak wybranej listy – ustaw pierwszą
-      setCurrentTaskList(taskListsFromFirebase[0]);
+      setCurrentTaskList(
+        mainListId
+          ? taskListsFromFirebase.find((list) => list.id === mainListId) || taskListsFromFirebase[0]
+          : taskListsFromFirebase[0],
+      );
       return;
     }
 
@@ -75,7 +80,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     if (updatedList) {
       setCurrentTaskList(updatedList);
     }
-  }, [taskListsFromFirebase, setCurrentTaskList, currentTaskList]);
+  }, [taskListsFromFirebase, setCurrentTaskList, currentTaskList, mainListId]);
 
   useEffect(() => {
     setLabels(labelsFromFirebase);
@@ -511,6 +516,8 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         getPendingShares,
 
         // Tasks
+        tasksCache,
+        setTasksCache,
         addTask,
         updateTask,
         removeTask,

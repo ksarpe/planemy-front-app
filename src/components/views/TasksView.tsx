@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTaskContext } from "@/hooks/useTaskContext";
-import { useTasksForList } from "@/api/tasks";
 import {
   TaskViewHeader,
   CreateTaskListModal,
@@ -16,14 +15,13 @@ import {
 import Spinner from "../ui/Utils/Spinner";
 
 export default function TasksView() {
-  const { taskLists, currentTaskList, clickedTask, loading, createTaskList } = useTaskContext();
+  const { taskLists, currentTaskList, clickedTask, loading, createTaskList, tasksCache } = useTaskContext();
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareListId, setShareListId] = useState<string | null>(null);
   const [filter, setFilter] = useState<"pending" | "completed" | "overdue">("pending");
 
   // Get tasks from current list using new hook
-  const tasks = useTasksForList(currentTaskList!.id);
 
   const handleShareList = (listId: string) => {
     setShareListId(listId);
@@ -44,6 +42,8 @@ export default function TasksView() {
       </div>
     );
   }
+
+  const tasks = tasksCache[currentTaskList!.id] || [];
 
   return (
     <div className="flex h-full p-4 gap-4">

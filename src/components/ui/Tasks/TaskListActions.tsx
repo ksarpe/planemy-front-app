@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Settings, Edit3, Trash2, RotateCcw, Users, CircleChevronUp } from "lucide-react";
 import { useTaskContext } from "@/hooks/useTaskContext";
+import { usePreferencesContext } from "@/hooks/usePreferencesContext";
 import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
 import { ActionButton, DeleteConfirmationModal, RenameModal, BasicDropdown, BasicDropdownItem } from "../Common";
 
@@ -16,6 +17,7 @@ export default function TaskListActions() {
     currentTaskList,
     getTaskStats,
   } = useTaskContext(); //context data
+  const { updateSettings, mainListId } = usePreferencesContext(); // preferences context for main list
   const [isRenaming, setIsRenaming] = useState(false); // wether the rename modal is open
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // wether the delete confirmation modal is open
   const [showSharingModal, setShowSharingModal] = useState(false);
@@ -62,9 +64,14 @@ export default function TaskListActions() {
         <BasicDropdownItem icon={Edit3} onClick={() => setIsRenaming(true)}>
           Zmień nazwę
         </BasicDropdownItem>
-        <BasicDropdownItem icon={CircleChevronUp} variant="green" onClick={() => setIsRenaming(true)}>
-          Ustaw jako domyślna
-        </BasicDropdownItem>
+        {mainListId != currentTaskList.id && (
+          <BasicDropdownItem
+            icon={CircleChevronUp}
+            variant="green"
+            onClick={() => updateSettings({ defaultTaskListId: currentTaskList!.id })}>
+            Ustaw jako domyślna
+          </BasicDropdownItem>
+        )}
         <BasicDropdownItem icon={Users} variant="blue" onClick={() => setShowSharingModal(true)}>
           Udostępnij
         </BasicDropdownItem>

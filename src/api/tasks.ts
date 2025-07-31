@@ -89,36 +89,6 @@ export const useUserTaskLists = (): TaskListInterface[] => {
   return taskLists;
 };
 
-// Hook to get tasks for a specific task list
-export const useTasksForList = (taskListId: string): TaskInterface[] => {
-  const [tasks, setTasks] = useState<TaskInterface[]>([]);
-
-  useEffect(() => {
-    if (!taskListId) {
-      setTasks([]);
-      return;
-    }
-
-    const tasksCollection = collection(db, "tasks");
-    const tasksQuery = query(tasksCollection, where("taskListId", "==", taskListId));
-
-    const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
-      const tasksList = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as TaskInterface[];
-
-      setTasks(tasksList);
-    });
-
-    return unsubscribe;
-  }, [taskListId]);
-
-  return tasks;
-};
-
-
-
 // Create a new task list
 export const createTaskList = async (name: string, userId: string): Promise<void> => {
   try {
@@ -141,8 +111,18 @@ export const createTaskList = async (name: string, userId: string): Promise<void
 // Update task list
 export const updateTaskList = async (listId: string, updates: Partial<TaskListInterface>): Promise<void> => {
   try {
-    const taskListDocRef = doc(db, "taskLists", listId);
-    await updateDoc(taskListDocRef, updates);
+    const taskListsCollection = collection(db, "taskLists");
+    const taskListQuery = query(taskListsCollection, where("id", "==", listId));
+    const snapshot = await getDocs(taskListQuery);
+
+    if (!snapshot.empty) {
+      const taskListDoc = snapshot.docs[0];
+      await updateDoc(taskListDoc.ref, {
+        ...updates,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+    
   } catch (error) {
     console.error("Error updating task list:", error);
     throw error;
@@ -152,8 +132,14 @@ export const updateTaskList = async (listId: string, updates: Partial<TaskListIn
 // Delete task list
 export const deleteTaskList = async (listId: string): Promise<void> => {
   try {
-    const taskListDocRef = doc(db, "taskLists", listId);
-    await deleteDoc(taskListDocRef);
+    const taskListsCollection = collection(db, "taskLists");
+    const taskListQuery = query(taskListsCollection, where("id", "==", listId));
+    const snapshot = await getDocs(taskListQuery);
+
+    if (!snapshot.empty) {
+      const taskListDoc = snapshot.docs[0];
+      await deleteDoc(taskListDoc.ref);
+    }
   } catch (error) {
     console.error("Error deleting task list:", error);
     throw error;
@@ -195,7 +181,7 @@ export const updateTaskInList = async (taskId: string, updates: Partial<TaskInte
     const tasksCollection = collection(db, "tasks");
     const taskQuery = query(tasksCollection, where("id", "==", taskId));
     const snapshot = await getDocs(taskQuery);
-    
+
     if (!snapshot.empty) {
       const taskDoc = snapshot.docs[0];
       await updateDoc(taskDoc.ref, {

@@ -7,6 +7,7 @@ import type {
   ShoppingCategoryInterface,
   ShoppingItemInterface,
 } from "./types";
+import { UserSettings } from "./User/interfaces";
 
 export interface ToastContextProps {
   showToast: (type: "success" | "error" | "warning", message: string) => void;
@@ -17,10 +18,9 @@ export interface PreferencesContextProps {
   setShowWeekends: (show: boolean) => void;
   isDark: boolean; //theme
   toggleTheme: () => void;
-  isSidebarClosed: boolean; // sidebar state
-  setIsSidebarClosed: (isClosed: boolean) => void;
   mainListId: string | null; // currently selected main list
   setMainListId: (listId: string | null) => void;
+  updateSettings: (settings: Partial<UserSettings>) => Promise<void>;
 }
 
 export interface CalendarContextProps {

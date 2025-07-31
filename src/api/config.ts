@@ -2,7 +2,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyAgow86EH5CFjYyUKtp7S5ZrIrf_-l5Qco",
   authDomain: "budget-tracker-a96f3.firebaseapp.com",
