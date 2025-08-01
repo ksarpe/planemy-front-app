@@ -5,13 +5,14 @@ import type { SharePermission } from "@/data/Utils/types";
 import type { UserProfile } from "@/data/User/interfaces";
 import type { LabelInterface } from "@/data/Utils/interfaces";
 
-import { useToastContext } from "@/hooks/useToastContext";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { useLabelContext } from "@/hooks/useLabelContext";
-import { usePreferencesContext } from "@/hooks/usePreferencesContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
+import { useAuthContext } from "@/hooks/context/useAuthContext";
+import { useLabelContext } from "@/hooks/context/useLabelContext";
+import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
+
+import { useTaskLists } from "@/hooks/tasks/useTasksLists";
 
 import {
-  useUserTaskLists,
   useUserPendingShares,
   createTaskList as createTaskListFirebase,
   updateTaskList as updateTaskListFirebase,
@@ -42,10 +43,9 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const { labelConnectionsByType } = useLabelContext();
   const { user } = useAuthContext();
   // New task list system
-  const taskListsFromFirebase = useUserTaskLists();
+  const { data: taskLists } = useTaskLists();
   const pendingSharesFromFirebase = useUserPendingShares();
   // State
-  const [taskLists, setTaskLists] = useState<TaskListInterface[]>([]);
   const [currentTaskList, setCurrentTaskList] = useState<TaskListInterface | null>(null);
   const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
   const [loading, setLoading] = useState(false);
@@ -53,36 +53,28 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   // Tasks cache - zadania pogrupowane według listId
   const [tasksCache, setTasksCache] = useState<Record<string, TaskInterface[]>>({});
 
-  // FOR WHAT:
-  // Updating Task Lists, Setting Current Task List, Keeping Task List in sync with Firebase
   useEffect(() => {
-    // --- Step 1: Synchronize the main lists array ---
-    setTaskLists(taskListsFromFirebase);
-
-    if (taskListsFromFirebase.length === 0) {
+    // Jeśli dane jeszcze się ładują lub nie ma list, nie rób nic lub wyczyść stan.
+    if (!taskLists || taskLists.length === 0) {
       setCurrentTaskList(null);
       return;
     }
 
-    // --- Step 2: Safely determine and set the current task list ---
-    setCurrentTaskList((prevCurrentTaskList) => {
-      const listStillExists =
-        prevCurrentTaskList && taskListsFromFirebase.some((list) => list.id === prevCurrentTaskList.id);
+    // Sprawdzamy, czy aktualnie wybrana lista wciąż istnieje w nowo pobranych danych.
+    const currentListExists = currentTaskList && taskLists.some((list) => list.id === currentTaskList.id);
 
-      if (listStillExists) {
-        // Find the updated version of the list.
-        // We add `!` because the `listStillExists` check above guarantees
-        // that find() will return a TaskListInterface, not undefined.
-        return taskListsFromFirebase.find((list) => list.id === prevCurrentTaskList.id)!;
-      }
-
-      // If the list no longer exists, select a new default.
-      // This part is safe because the check for `taskListsFromFirebase.length > 0`
-      // at the beginning of the hook guarantees `taskListsFromFirebase[0]` exists.
-      return taskListsFromFirebase.find((list) => list.id === mainListId) || taskListsFromFirebase[0];
-    });
-  }, [taskListsFromFirebase, mainListId, setCurrentTaskList]);
-
+    // Jeśli nie istnieje (lub nigdy nie była ustawiona), ustaw nową domyślną.
+    if (!currentListExists) {
+      const defaultList = taskLists.find((list) => list.id === mainListId) || taskLists[0];
+      setCurrentTaskList(defaultList);
+    }
+    // Jeśli istnieje, nie musimy nic robić, bo `currentTaskList` jest już poprawny.
+    // Można ewentualnie dodać logikę odświeżającą, jeśli np. zmieniła się nazwa.
+    else {
+      const updatedList = taskLists.find((list) => list.id === currentTaskList.id);
+      setCurrentTaskList(updatedList || null);
+    }
+  }, [taskLists, mainListId, currentTaskList]);
   useEffect(() => {
     setPendingShares(pendingSharesFromFirebase);
   }, [pendingSharesFromFirebase]);
@@ -91,7 +83,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   // and asign labels to tasks also
   // TASKS CACHE
   useEffect(() => {
-    if (!user || taskLists.length === 0) {
+    if (!user || !taskLists || taskLists.length === 0) {
       setTasksCache({});
       return;
     }
@@ -168,10 +160,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       await deleteTaskListFirebase(listId);
       showToast("success", "Lista zadań została usunięta!");
-      // Reset current list if it was deleted
-      if (currentTaskList?.id === listId) {
-        setCurrentTaskList(null);
-      }
     } catch (error) {
       console.error("Error deleting task list:", error);
       showToast("error", "Błąd podczas usuwania listy zadań");
@@ -426,7 +414,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     <TaskContext.Provider
       value={{
         // Task Lists
-        taskLists,
+        taskLists: taskLists || [],
         currentTaskList,
         setCurrentTaskList,
         createTaskList,

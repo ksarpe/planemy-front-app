@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { X, UserPlus, Mail, Clock, CheckCircle, UserX } from "lucide-react";
 import { getTaskListSharedUsers, revokeTaskListAccess, shareTaskListWithUser } from "@/api/tasks";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { useToastContext } from "@/hooks/useToastContext";
+import { useAuthContext } from "@/hooks/context/useAuthContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 
 import type { SharedUser, ManageTaskListSharingModalProps } from "@/data/Tasks/interfaces";
 import type { SharePermission } from "@/data/Utils/types";

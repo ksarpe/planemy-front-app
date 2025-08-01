@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FavoriteProductInterface } from "@/data/types";
-import { useShoppingContext } from "../../../hooks/useShoppingContext";
+import { useShoppingContext } from "../../../hooks/context/useShoppingContext";
 import { Plus, Star, Trash2, Search, Package } from "lucide-react";
 
 interface FavoriteProductsPanelProps {

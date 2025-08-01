@@ -2,8 +2,8 @@ import { createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { PaymentInterface } from "@/data/types";
 import type { PaymentsContextProps } from "@/data/typesProps";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { useToastContext } from "@/hooks/useToastContext";
+import { useAuthContext } from "@/hooks/context/useAuthContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 import {
   useUserPayments,
   addPayment as addPaymentToFirebase,

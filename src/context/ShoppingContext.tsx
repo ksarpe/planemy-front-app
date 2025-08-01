@@ -5,8 +5,8 @@ import {
   ShoppingCategoryInterface,
 } from "../data/types";
 import { createContext, useEffect, useState } from "react";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { useToastContext } from "@/hooks/useToastContext";
+import { useAuthContext } from "@/hooks/context/useAuthContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 import {
   useShoppingLists,
   useFavoriteProducts,

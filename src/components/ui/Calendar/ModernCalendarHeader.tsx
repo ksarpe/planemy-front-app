@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useCalendarContext } from "@/hooks/useCalendarContext";
+import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Grid3X3, AlignJustify } from "lucide-react";
 import { getVisibleMonthsInWeek } from "../../../utils/weeksHelper";
 import EnhancedCreateEventModal from "./EnhancedCreateEventModal";
@@ -20,10 +20,10 @@ export default function CalendarHeader() {
 
   const formatToday = () => {
     const today = new Date();
-    return today.toLocaleDateString("en", { 
-      weekday: "short", 
-      month: "short", 
-      day: "numeric" 
+    return today.toLocaleDateString("en", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -41,8 +41,7 @@ export default function CalendarHeader() {
           {/* Today button */}
           <button
             onClick={goToday}
-            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          >
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             Today
           </button>
 
@@ -51,23 +50,19 @@ export default function CalendarHeader() {
             <button
               onClick={loadPrev}
               className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              title="Previous"
-            >
+              title="Previous">
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={loadNext}
               className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              title="Next"
-            >
+              title="Next">
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
 
           {/* Current date display */}
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-            {getDateDisplay()}
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">{getDateDisplay()}</h2>
         </div>
 
         {/* Right side - Actions and view controls */}
@@ -76,8 +71,7 @@ export default function CalendarHeader() {
           <button
             ref={createButtonRef}
             onClick={() => setShowCreateEvent(!showCreateEvent)}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
-          >
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
             <Plus className="h-4 w-4" />
             <span>Create</span>
           </button>
@@ -90,8 +84,7 @@ export default function CalendarHeader() {
                 view === "month"
                   ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
                   : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-              }`}
-            >
+              }`}>
               <Grid3X3 className="h-4 w-4" />
               <span>Month</span>
             </button>
@@ -101,8 +94,7 @@ export default function CalendarHeader() {
                 view === "week"
                   ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
                   : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-              }`}
-            >
+              }`}>
               <AlignJustify className="h-4 w-4" />
               <span>Week</span>
             </button>
@@ -117,10 +109,7 @@ export default function CalendarHeader() {
       </div>
 
       {/* Create Event Modal */}
-      <EnhancedCreateEventModal
-        isOpen={showCreateEvent}
-        onClose={() => setShowCreateEvent(false)}
-      />
+      <EnhancedCreateEventModal isOpen={showCreateEvent} onClose={() => setShowCreateEvent(false)} />
     </div>
   );
 }

@@ -18,7 +18,7 @@ import {
   FavoriteProductInterface,
   ShoppingCategoryInterface,
 } from "../data/types";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/context/useAuthContext";
 import { useState, useEffect } from "react";
 
 // Default categories

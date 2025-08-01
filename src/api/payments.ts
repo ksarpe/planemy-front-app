@@ -11,7 +11,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/context/useAuthContext";
 
 export interface Payment {
   id: string;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useShoppingContext } from "../../../hooks/useShoppingContext";
+import { useShoppingContext } from "../../../hooks/context/useShoppingContext";
 import { X, Plus, Palette } from "lucide-react";
 
 interface AddListModalProps {

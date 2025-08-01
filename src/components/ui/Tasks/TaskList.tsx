@@ -70,11 +70,6 @@ export default function TaskList({ filter, tasks }: TaskListProps) {
 
   return (
     <div className="flex-1 min-h-0">
-      <ul className="space-y-3 overflow-auto py-2">
-        {sortedTasks.map((task) => (
-          <TaskItem key={task.id} task={task} />
-        ))}
-      </ul>
       {/* Add Task Button */}
       <div className={`mb-3 ${showQuickAdd ? "w-full" : "w-fit"} mt-1`}>
         {showQuickAdd ? (
@@ -90,6 +85,11 @@ export default function TaskList({ filter, tasks }: TaskListProps) {
           />
         )}
       </div>
+      <ul className="space-y-3 overflow-auto py-2">
+        {sortedTasks.map((task) => (
+          <TaskItem key={task.id} task={task} />
+        ))}
+      </ul>
     </div>
   );
 }

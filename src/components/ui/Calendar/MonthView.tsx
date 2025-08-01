@@ -1,6 +1,16 @@
 import { useMemo } from "react";
-import { useCalendarContext } from "@/hooks/useCalendarContext";
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, isToday } from "date-fns";
+import { useCalendarContext } from "@/hooks/context/useCalendarContext";
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  isSameMonth,
+  isSameDay,
+  isToday,
+} from "date-fns";
 import EnhancedEventBlock from "./EnhancedEventBlock";
 import { EventInterface } from "../../../data/types";
 
@@ -11,10 +21,10 @@ export default function MonthView() {
   const monthEnd = endOfMonth(currentDate);
   const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 }); // Monday start
   const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
-  
+
   const calendarDays = eachDayOfInterval({
     start: calendarStart,
-    end: calendarEnd
+    end: calendarEnd,
   });
 
   const weeks = useMemo(() => {
@@ -26,21 +36,21 @@ export default function MonthView() {
   }, [calendarDays]);
 
   const getEventsForDay = (day: Date): EventInterface[] => {
-    return events.filter(event => {
+    return events.filter((event) => {
       const eventStart = new Date(event.start);
       const eventEnd = new Date(event.end);
-      
+
       if (event.allDay) {
         return isSameDay(eventStart, day);
       }
-      
+
       // Check if the day falls within the event's time range
       const dayStart = new Date(day);
       dayStart.setHours(0, 0, 0, 0);
       const dayEnd = new Date(day);
       dayEnd.setHours(23, 59, 59, 999);
-      
-      return (eventStart <= dayEnd && eventEnd >= dayStart);
+
+      return eventStart <= dayEnd && eventEnd >= dayStart;
     });
   };
 
@@ -53,8 +63,7 @@ export default function MonthView() {
         {weekDays.map((day) => (
           <div
             key={day}
-            className="p-3 text-center text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide"
-          >
+            className="p-3 text-center text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
             {day}
           </div>
         ))}
@@ -63,7 +72,9 @@ export default function MonthView() {
       {/* Calendar grid */}
       <div className="flex-1 grid grid-rows-6">
         {weeks.map((week, weekIndex) => (
-          <div key={weekIndex} className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+          <div
+            key={weekIndex}
+            className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
             {week.map((day, dayIndex) => {
               const dayEvents = getEventsForDay(day);
               const isCurrentMonth = isSameMonth(day, currentDate);
@@ -74,8 +85,7 @@ export default function MonthView() {
                   key={dayIndex}
                   className={`relative border-r border-gray-200 dark:border-gray-700 last:border-r-0 min-h-[120px] ${
                     !isCurrentMonth ? "bg-gray-50 dark:bg-gray-800/50" : "bg-white dark:bg-gray-900"
-                  } hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors`}
-                >
+                  } hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors`}>
                   {/* Day number */}
                   <div className="p-2">
                     <div
@@ -85,8 +95,7 @@ export default function MonthView() {
                           : isCurrentMonth
                           ? "text-gray-900 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20"
                           : "text-gray-400 dark:text-gray-600"
-                      }`}
-                    >
+                      }`}>
                       {format(day, "d")}
                     </div>
                   </div>
@@ -103,7 +112,6 @@ export default function MonthView() {
                       />
                     ))}
 
-                    
                     {dayEvents.length > 3 && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 pl-2 py-1">
                         +{dayEvents.length - 3} more
@@ -121,8 +129,7 @@ export default function MonthView() {
                           e.stopPropagation();
                           // TODO: Open add event modal with this date pre-selected
                           console.log("Add event for", format(day, "yyyy-MM-dd"));
-                        }}
-                      >
+                        }}>
                         +
                       </button>
                     </div>

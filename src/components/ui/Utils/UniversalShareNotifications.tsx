@@ -1,5 +1,5 @@
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { useToastContext } from "@/hooks/useToastContext";
+import { useAuthContext } from "@/hooks/context/useAuthContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 import { Check, X, Clock, UserCheck, Share2, Calendar, ShoppingBag, List } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ShareableObjectType } from "@/data/Utils/types";

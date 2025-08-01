@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ShoppingListInterface } from "../../../data/types";
-import { useShoppingContext } from "../../../hooks/useShoppingContext";
+import { useShoppingContext } from "../../../hooks/context/useShoppingContext";
 import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Calendar } from "lucide-react";
 
 interface ShoppingListPanelProps {

@@ -2,7 +2,7 @@ import { collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot
 import { db } from "./config";
 import { LabelConnection, LabelInterface } from "@/data/Utils/interfaces";
 import { useEffect, useState } from "react";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { v4 as uuidv4 } from "uuid";
 
 // Hook to get user's labels

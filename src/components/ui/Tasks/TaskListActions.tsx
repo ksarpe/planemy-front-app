@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Settings, Edit3, Trash2, RotateCcw, Users, CircleChevronUp } from "lucide-react";
-import { useTaskContext } from "@/hooks/useTaskContext";
-import { usePreferencesContext } from "@/hooks/usePreferencesContext";
+import { useTaskContext } from "@/hooks/context/useTaskContext";
+import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
 import { ActionButton, DeleteConfirmationModal, RenameModal, BasicDropdown, BasicDropdownItem } from "../Common";
 

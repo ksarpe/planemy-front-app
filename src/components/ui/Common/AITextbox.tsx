@@ -34,9 +34,9 @@ export default function AITextbox({
         // Po 2.5s przejdź do następnego placeholder
         setTimeout(() => {
           setCurrentPlaceholderIndex((prev) => (prev + 1) % placeholder.length);
-        }, 2500);
+        }, 6000);
       }
-    }, 80); // Szybkość pisania - 80ms na znak
+    }, 50); // Szybkość pisania - 120ms na znak
 
     return () => clearInterval(typingInterval);
   }, [currentPlaceholderIndex, placeholder, isFocused, message]);

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTaskContext } from "@/hooks/useTaskContext";
+import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { X, Share2, Search, UserPlus, Check, AlertCircle } from "lucide-react";
 import { UserProfile } from "@/data/User/interfaces";
 import type { SharePermission } from "@/data/Utils/types";

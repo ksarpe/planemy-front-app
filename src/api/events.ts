@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import { db } from "./config";
 import { EventInterface, RecurrenceRule } from "../data/types";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/context/useAuthContext";
 
 // Hook to get all events for current user
 export const useEvents = (): EventInterface[] => {

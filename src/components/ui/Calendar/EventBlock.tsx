@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { EventInterface } from "../../../data/types";
-import { useCalendarContext } from "@/hooks/useCalendarContext";
+import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { Edit2, Clock, User, X, Check } from "lucide-react";
 
 interface EventBlockProps {
@@ -19,9 +19,9 @@ export default function EventBlock({ event, style, className = "", isPreview = f
     title: event.title,
     start: new Date(event.start).toISOString().slice(0, 16),
     end: new Date(event.end).toISOString().slice(0, 16),
-    category: event.category
+    category: event.category,
   });
-  
+
   const editRef = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
@@ -52,9 +52,9 @@ export default function EventBlock({ event, style, className = "", isPreview = f
       title: editData.title,
       start: editData.start,
       end: editData.end,
-      category: editData.category as EventInterface["category"]
+      category: editData.category as EventInterface["category"],
     };
-    
+
     await updateEvent(updatedEvent);
     setIsEditing(false);
   };
@@ -64,7 +64,7 @@ export default function EventBlock({ event, style, className = "", isPreview = f
       title: event.title,
       start: new Date(event.start).toISOString().slice(0, 16),
       end: new Date(event.end).toISOString().slice(0, 16),
-      category: event.category
+      category: event.category,
     });
     setIsEditing(false);
   };
@@ -80,11 +80,11 @@ export default function EventBlock({ event, style, className = "", isPreview = f
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      "Important": "bg-red-500 border-red-600",
-      "Meeting": "bg-blue-500 border-blue-600", 
-      "Holiday": "bg-green-500 border-green-600",
-      "Other": "bg-purple-500 border-purple-600",
-      "Test": "bg-yellow-500 border-yellow-600"
+      Important: "bg-red-500 border-red-600",
+      Meeting: "bg-blue-500 border-blue-600",
+      Holiday: "bg-green-500 border-green-600",
+      Other: "bg-purple-500 border-purple-600",
+      Test: "bg-yellow-500 border-yellow-600",
     };
     return colors[category as keyof typeof colors] || "bg-gray-500 border-gray-600";
   };
@@ -92,24 +92,26 @@ export default function EventBlock({ event, style, className = "", isPreview = f
   const getTimeString = () => {
     const start = new Date(event.start);
     const end = new Date(event.end);
-    
+
     if (event.allDay) {
       return "All day";
     }
-    
-    return `${start.toLocaleTimeString("en", { hour: "numeric", minute: "2-digit" })} - ${end.toLocaleTimeString("en", { hour: "numeric", minute: "2-digit" })}`;
+
+    return `${start.toLocaleTimeString("en", { hour: "numeric", minute: "2-digit" })} - ${end.toLocaleTimeString("en", {
+      hour: "numeric",
+      minute: "2-digit",
+    })}`;
   };
 
   if (isPreview) {
     return (
-      <div 
-        className={`${getCategoryColor(event.category)} text-white text-xs p-1 rounded-md shadow-sm border-l-4 ${className}`}
-        style={style}
-      >
+      <div
+        className={`${getCategoryColor(
+          event.category,
+        )} text-white text-xs p-1 rounded-md shadow-sm border-l-4 ${className}`}
+        style={style}>
         <div className="font-medium truncate">{event.title}</div>
-        {!event.allDay && (
-          <div className="text-white/80 text-xs">{getTimeString()}</div>
-        )}
+        {!event.allDay && <div className="text-white/80 text-xs">{getTimeString()}</div>}
       </div>
     );
   }
@@ -118,10 +120,11 @@ export default function EventBlock({ event, style, className = "", isPreview = f
     <div className="relative" ref={editRef}>
       {/* Main event block */}
       <div
-        className={`${getCategoryColor(event.category)} text-white rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer border-l-4 ${className}`}
+        className={`${getCategoryColor(
+          event.category,
+        )} text-white rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer border-l-4 ${className}`}
         style={style}
-        onClick={handleEventClick}
-      >
+        onClick={handleEventClick}>
         <div className="p-2">
           <div className="font-medium text-sm truncate">{event.title}</div>
           {!event.allDay && (
@@ -145,24 +148,20 @@ export default function EventBlock({ event, style, className = "", isPreview = f
                   <button
                     onClick={handleSave}
                     className="p-1 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded"
-                    title="Save"
-                  >
+                    title="Save">
                     <Check className="h-4 w-4" />
                   </button>
                   <button
                     onClick={handleCancel}
                     className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
-                    title="Cancel"
-                  >
+                    title="Cancel">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Title
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
                 <input
                   ref={titleInputRef}
                   type="text"
@@ -174,9 +173,7 @@ export default function EventBlock({ event, style, className = "", isPreview = f
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Start
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start</label>
                   <input
                     type="datetime-local"
                     value={editData.start}
@@ -185,9 +182,7 @@ export default function EventBlock({ event, style, className = "", isPreview = f
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    End
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End</label>
                   <input
                     type="datetime-local"
                     value={editData.end}
@@ -198,14 +193,11 @@ export default function EventBlock({ event, style, className = "", isPreview = f
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Category
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
                 <select
                   value={editData.category}
                   onChange={(e) => setEditData({ ...editData, category: e.target.value as EventInterface["category"] })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                >
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                   <option value="Important">Important</option>
                   <option value="Meeting">Meeting</option>
                   <option value="Holiday">Holiday</option>
@@ -220,7 +212,10 @@ export default function EventBlock({ event, style, className = "", isPreview = f
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white text-lg">{event.title}</h3>
-                  <div className={`inline-block px-2 py-1 rounded text-xs text-white mt-1 ${getCategoryColor(event.category)}`}>
+                  <div
+                    className={`inline-block px-2 py-1 rounded text-xs text-white mt-1 ${getCategoryColor(
+                      event.category,
+                    )}`}>
                     {event.category}
                   </div>
                 </div>
@@ -232,8 +227,7 @@ export default function EventBlock({ event, style, className = "", isPreview = f
                       setShowDetails(false);
                     }}
                     className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
-                    title="Edit"
-                  >
+                    title="Edit">
                     <Edit2 className="h-4 w-4" />
                   </button>
                   <button
@@ -242,8 +236,7 @@ export default function EventBlock({ event, style, className = "", isPreview = f
                       setShowDetails(false);
                     }}
                     className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
-                    title="Close"
-                  >
+                    title="Close">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
@@ -254,7 +247,7 @@ export default function EventBlock({ event, style, className = "", isPreview = f
                   <Clock className="h-4 w-4 mr-2" />
                   <span>{getTimeString()}</span>
                 </div>
-                
+
                 <div className="flex items-center">
                   <User className="h-4 w-4 mr-2" />
                   <span>You</span>

@@ -1,4 +1,4 @@
-import { useCalendarContext } from "@/hooks/useCalendarContext";
+import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import MonthView from "./MonthView";
 import WeekView from "./WeekView";
 

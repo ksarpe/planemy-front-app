@@ -1,14 +1,11 @@
 import { ArrowBigRightDash, FolderPlus } from "lucide-react";
 import TaskListDropdown from "./TaskListDropdown";
 import TaskListActions from "./TaskListActions";
-import { useTaskContext } from "@/hooks/useTaskContext";
+import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { ActionButton, AITextbox } from "../Common";
 import type { TaskViewHeaderProps } from "@/data/Tasks/interfaces";
 
-const placeholders = [
-  "@Co należałoby zrobić najpilniej?",
-  "@Pokaż mi zadania na ten tydzień",
-];
+const placeholders = ["@Co należałoby zrobić najpilniej?", "@Pokaż mi zadania na ten tydzień"];
 
 export default function TaskViewHeader({ onNewListClick }: TaskViewHeaderProps) {
   const { currentTaskList } = useTaskContext();

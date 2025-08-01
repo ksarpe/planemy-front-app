@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, List, Calendar, CheckCircle2, Users } from "lucide-react";
-import { useTaskContext } from "@/hooks/useTaskContext";
-import { usePreferencesContext } from "@/hooks/usePreferencesContext";
+import { useTaskContext } from "@/hooks/context/useTaskContext";
+import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { TaskListInterface } from "@/data/Tasks/interfaces";
 
 export default function TaskListDropdown() {

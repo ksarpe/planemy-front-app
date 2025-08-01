@@ -1,4 +1,4 @@
-import { useLabelContext } from "@/hooks/useLabelContext";
+import { useLabelContext } from "@/hooks/context/useLabelContext";
 import { LabelInterface } from "@/data/Utils/interfaces";
 import { useState } from "react";
 import LabelForm from "@/components/ui/Tags/LabelForm";

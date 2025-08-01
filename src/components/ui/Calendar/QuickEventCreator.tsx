@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Calendar, Heart, Pill, Dumbbell, Coffee, Plus, X } from "lucide-react";
-import { useCalendarContext } from "@/hooks/useCalendarContext";
-import { useAuthContext } from "../../../hooks/useAuthContext";
+import { useCalendarContext } from "@/hooks/context/useCalendarContext";
+import { useAuthContext } from "../../../hooks/context/useAuthContext";
 import { EventInterface } from "../../../data/types";
 
 interface QuickEventCreatorProps {

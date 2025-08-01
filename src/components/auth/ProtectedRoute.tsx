@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/context/useAuthContext";
 import { AuthContainer } from "./AuthContainer";
 import Spinner from "../ui/Utils/Spinner";
 

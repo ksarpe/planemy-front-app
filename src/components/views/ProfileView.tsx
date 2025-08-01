@@ -1,4 +1,4 @@
-import { usePreferencesContext } from "@/hooks/usePreferencesContext";
+import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { useState } from "react";
 
 export default function ProfileView() {
@@ -35,7 +35,7 @@ export default function ProfileView() {
         <div className="flex items-center gap-3">
           <span className="text-sm">Dark Mode</span>
           <input type="checkbox" checked={isDark} onChange={toggleTheme} />
-        </div>    
+        </div>
       </section>
 
       <button className="bg-primary text-white px-4 py-2 rounded hover:opacity-90 text-sm">💾 Save Changes</button>

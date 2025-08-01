@@ -1,5 +1,5 @@
-import { useTaskContext } from "@/hooks/useTaskContext";
-import { useLabelContext } from "@/hooks/useLabelContext";
+import { useTaskContext } from "@/hooks/context/useTaskContext";
+import { useLabelContext } from "@/hooks/context/useLabelContext";
 import { Calendar, AlertCircle, Clock, CheckCircle2, Tag, Trash } from "lucide-react";
 import type { TaskItemProps } from "@/data/Tasks/interfaces";
 import { ActionButton, BasicDropdown, BasicDropdownItem } from "../Common";
@@ -184,14 +184,17 @@ export default function TaskItem({ task }: TaskItemProps) {
                     trigger={
                       <div
                         key={label.id}
-                        className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full"
+                        className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full cursor-pointer"
                         style={{ backgroundColor: label.color + "20", color: label.color }}>
                         <Tag size={12} />
                         {label.name}
                       </div>
                     }>
-                    <BasicDropdownItem icon={Trash} variant="red" onClick={() => removeLabelConnection(task.id,"task", label.id)}>
-                      Usuń
+                    <BasicDropdownItem
+                      icon={Trash}
+                      variant="red"
+                      onClick={() => removeLabelConnection(task.id, "task", label.id)}>
+                      Usuń etykietę
                     </BasicDropdownItem>
                   </BasicDropdown>
                 </div>

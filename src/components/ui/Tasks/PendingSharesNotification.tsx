@@ -1,4 +1,4 @@
-import { useTaskContext } from "@/hooks/useTaskContext";
+import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { Check, X, Clock, UserCheck, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";

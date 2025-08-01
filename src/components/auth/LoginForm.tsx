@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { useToastContext } from "@/hooks/useToastContext";
+import { useAuthContext } from "@/hooks/context/useAuthContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");

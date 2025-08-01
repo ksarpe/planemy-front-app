@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ShoppingItemInterface } from "../../../data/types";
-import { useShoppingContext } from "../../../hooks/useShoppingContext";
+import { useShoppingContext } from "../../../hooks/context/useShoppingContext";
 import { Check, Edit2, Trash2, Star, Plus, Minus, Heart } from "lucide-react";
 
 interface ShoppingItemProps {

@@ -3,9 +3,9 @@ import { useTheme } from "@/hooks/useTheme";
 import type { PreferencesContextProps } from "@/data/typesProps";
 
 import { getUserSettings, updateUserSettings } from "@/api/user_settings";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { UserSettings } from "@/data/User/interfaces";
-import { useToastContext } from "@/hooks/useToastContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 
 const PreferencesContext = createContext<PreferencesContextProps | undefined>(undefined);
 export { PreferencesContext };

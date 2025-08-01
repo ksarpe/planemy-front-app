@@ -1,5 +1,5 @@
 import EditableText from "@/components/ui/Utils/EditableText";
-import { useTaskContext } from "@/hooks/useTaskContext";
+import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { Calendar, CheckCircle2, Trash2, CalendarPlus, Edit3, PanelRightClose } from "lucide-react";
 import { useState } from "react";
 import { DeleteConfirmationModal } from "../Common";

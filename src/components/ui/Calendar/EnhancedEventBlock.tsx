@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { EventInterface } from "../../../data/types";
-import { useCalendarContext } from "@/hooks/useCalendarContext";
+import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { Edit2, Clock, User, X, Check, Circle, Heart, Pill, Dumbbell, Car, Calendar } from "lucide-react";
 
 interface EnhancedEventBlockProps {
@@ -11,12 +11,12 @@ interface EnhancedEventBlockProps {
   showTime?: boolean;
 }
 
-export default function EnhancedEventBlock({ 
-  event, 
-  style, 
-  className = "", 
+export default function EnhancedEventBlock({
+  event,
+  style,
+  className = "",
   onClick,
-  showTime = true 
+  showTime = true,
 }: EnhancedEventBlockProps) {
   const { updateEvent } = useCalendarContext();
   const [isEditing, setIsEditing] = useState(false);
@@ -28,9 +28,9 @@ export default function EnhancedEventBlock({
     end: new Date(event.end).toISOString().slice(0, 16),
     category: event.category,
     icon: event.icon || "",
-    color: event.color
+    color: event.color,
   });
-  
+
   const editRef = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
@@ -65,9 +65,9 @@ export default function EnhancedEventBlock({
       category: editData.category as EventInterface["category"],
       icon: editData.icon,
       color: editData.color,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
-    
+
     await updateEvent(updatedEvent);
     setIsEditing(false);
   };
@@ -80,7 +80,7 @@ export default function EnhancedEventBlock({
       end: new Date(event.end).toISOString().slice(0, 16),
       category: event.category,
       icon: event.icon || "",
-      color: event.color
+      color: event.color,
     });
     setIsEditing(false);
   };
@@ -98,17 +98,17 @@ export default function EnhancedEventBlock({
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      "Important": "bg-red-500 border-red-600",
-      "Meeting": "bg-blue-500 border-blue-600", 
-      "Holiday": "bg-green-500 border-green-600",
-      "Health": "bg-pink-500 border-pink-600",
-      "Personal": "bg-purple-500 border-purple-600",
-      "Work": "bg-indigo-500 border-indigo-600",
-      "Travel": "bg-orange-500 border-orange-600",
-      "Fitness": "bg-emerald-500 border-emerald-600",
-      "Social": "bg-cyan-500 border-cyan-600",
-      "Finance": "bg-yellow-500 border-yellow-600",
-      "Other": "bg-gray-500 border-gray-600"
+      Important: "bg-red-500 border-red-600",
+      Meeting: "bg-blue-500 border-blue-600",
+      Holiday: "bg-green-500 border-green-600",
+      Health: "bg-pink-500 border-pink-600",
+      Personal: "bg-purple-500 border-purple-600",
+      Work: "bg-indigo-500 border-indigo-600",
+      Travel: "bg-orange-500 border-orange-600",
+      Fitness: "bg-emerald-500 border-emerald-600",
+      Social: "bg-cyan-500 border-cyan-600",
+      Finance: "bg-yellow-500 border-yellow-600",
+      Other: "bg-gray-500 border-gray-600",
     };
     return colors[category as keyof typeof colors] || event.color || "bg-gray-500 border-gray-600";
   };
@@ -116,24 +116,34 @@ export default function EnhancedEventBlock({
   const getTimeString = () => {
     const start = new Date(event.start);
     const end = new Date(event.end);
-    
+
     if (event.allDay) {
       return "All day";
     }
-    
-    return `${start.toLocaleTimeString("en", { hour: "numeric", minute: "2-digit" })} - ${end.toLocaleTimeString("en", { hour: "numeric", minute: "2-digit" })}`;
+
+    return `${start.toLocaleTimeString("en", { hour: "numeric", minute: "2-digit" })} - ${end.toLocaleTimeString("en", {
+      hour: "numeric",
+      minute: "2-digit",
+    })}`;
   };
 
   const getIcon = () => {
     if (event.icon) {
       switch (event.icon) {
-        case "Circle": return <Circle className="h-3 w-3" />;
-        case "Heart": return <Heart className="h-3 w-3" />;
-        case "Pill": return <Pill className="h-3 w-3" />;
-        case "Dumbbell": return <Dumbbell className="h-3 w-3" />;
-        case "Car": return <Car className="h-3 w-3" />;
-        case "Calendar": return <Calendar className="h-3 w-3" />;
-        default: return <span className="text-xs">{event.icon}</span>;
+        case "Circle":
+          return <Circle className="h-3 w-3" />;
+        case "Heart":
+          return <Heart className="h-3 w-3" />;
+        case "Pill":
+          return <Pill className="h-3 w-3" />;
+        case "Dumbbell":
+          return <Dumbbell className="h-3 w-3" />;
+        case "Car":
+          return <Car className="h-3 w-3" />;
+        case "Calendar":
+          return <Calendar className="h-3 w-3" />;
+        default:
+          return <span className="text-xs">{event.icon}</span>;
       }
     }
     return null;
@@ -144,10 +154,11 @@ export default function EnhancedEventBlock({
     <div className="relative" ref={editRef}>
       {/* Main event block */}
       <div
-        className={`${getCategoryColor(event.category)} text-white rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer border-l-4 ${className}`}
+        className={`${getCategoryColor(
+          event.category,
+        )} text-white rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer border-l-4 ${className}`}
         style={style}
-        onClick={handleEventClick}
-      >
+        onClick={handleEventClick}>
         <div className="p-2">
           <div className="font-medium text-sm truncate flex items-center space-x-1">
             {getIcon()}
@@ -174,24 +185,20 @@ export default function EnhancedEventBlock({
                   <button
                     onClick={handleSave}
                     className="p-1 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded"
-                    title="Save"
-                  >
+                    title="Save">
                     <Check className="h-4 w-4" />
                   </button>
                   <button
                     onClick={handleCancel}
                     className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
-                    title="Cancel"
-                  >
+                    title="Cancel">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Title
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
                 <input
                   ref={titleInputRef}
                   type="text"
@@ -202,9 +209,7 @@ export default function EnhancedEventBlock({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Description
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
                 <textarea
                   value={editData.description}
                   onChange={(e) => setEditData({ ...editData, description: e.target.value })}
@@ -215,9 +220,7 @@ export default function EnhancedEventBlock({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Start
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start</label>
                   <input
                     type="datetime-local"
                     value={editData.start}
@@ -226,9 +229,7 @@ export default function EnhancedEventBlock({
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    End
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End</label>
                   <input
                     type="datetime-local"
                     value={editData.end}
@@ -240,14 +241,13 @@ export default function EnhancedEventBlock({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Category
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
                   <select
                     value={editData.category}
-                    onChange={(e) => setEditData({ ...editData, category: e.target.value as EventInterface["category"] })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  >
+                    onChange={(e) =>
+                      setEditData({ ...editData, category: e.target.value as EventInterface["category"] })
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                     <option value="Important">Important</option>
                     <option value="Meeting">Meeting</option>
                     <option value="Holiday">Holiday</option>
@@ -262,9 +262,7 @@ export default function EnhancedEventBlock({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Display
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Display</label>
                 </div>
               </div>
             </div>
@@ -277,13 +275,14 @@ export default function EnhancedEventBlock({
                     {getIcon()}
                     <span>{event.title}</span>
                   </h3>
-                  <div className={`inline-block px-2 py-1 rounded text-xs text-white mt-1 ${getCategoryColor(event.category)}`}>
+                  <div
+                    className={`inline-block px-2 py-1 rounded text-xs text-white mt-1 ${getCategoryColor(
+                      event.category,
+                    )}`}>
                     {event.category}
                   </div>
                   {event.isRecurring && (
-                    <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                      🔄 Recurring event
-                    </div>
+                    <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">🔄 Recurring event</div>
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
@@ -294,8 +293,7 @@ export default function EnhancedEventBlock({
                       setShowDetails(false);
                     }}
                     className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
-                    title="Edit"
-                  >
+                    title="Edit">
                     <Edit2 className="h-4 w-4" />
                   </button>
                   <button
@@ -304,8 +302,7 @@ export default function EnhancedEventBlock({
                       setShowDetails(false);
                     }}
                     className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
-                    title="Close"
-                  >
+                    title="Close">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
@@ -322,12 +319,11 @@ export default function EnhancedEventBlock({
                   <Clock className="h-4 w-4 mr-2" />
                   <span>{getTimeString()}</span>
                 </div>
-                
+
                 <div className="flex items-center">
                   <User className="h-4 w-4 mr-2" />
                   <span>You</span>
                 </div>
-
               </div>
             </div>
           )}

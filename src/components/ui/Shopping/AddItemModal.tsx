@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useShoppingContext } from "../../../hooks/useShoppingContext";
+import { useShoppingContext } from "../../../hooks/context/useShoppingContext";
 import { X, Plus, Star } from "lucide-react";
 import { FavoriteProductInterface } from "../../../data/types";
 
