@@ -1,8 +1,9 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDocs } from "firebase/firestore";
 import { db } from "./config";
-import { LabelInterface } from "@/data/Utils/interfaces";
+import { LabelConnection, LabelInterface } from "@/data/Utils/interfaces";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuthContext";
+import { v4 as uuidv4 } from "uuid";
 
 // Hook to get user's labels
 export const useUserLabels = (): LabelInterface[] => {
@@ -34,6 +35,39 @@ export const useUserLabels = (): LabelInterface[] => {
 
   return labels;
 };
+
+export function useLabelConnections() {
+  const { user } = useAuth();
+  const labels = useUserLabels();
+  const [connections, setConnections] = useState<Map<string, Map<string, LabelInterface[]>>>(new Map());
+
+  useEffect(() => {
+    if (!user) return;
+
+    const q = query(collection(db, "label_connections"), where("userId", "==", user.uid));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const labelMap = new Map(labels.map(l => [l.id, l]));
+      const newMap = new Map<string, Map<string, LabelInterface[]>>();
+
+      snapshot.docs.forEach((doc) => {
+        const data = doc.data() as LabelConnection;
+        const label = labelMap.get(data.labelId);
+        if (!label) return;
+
+        const typeMap = newMap.get(data.objectType) || new Map();
+        const existing = typeMap.get(data.objectId) || [];
+        typeMap.set(data.objectId, [...existing, label]);
+        newMap.set(data.objectType, typeMap);
+      });
+
+      setConnections(newMap);
+    });
+
+    return () => unsubscribe();
+  }, [user, labels]);
+
+  return connections;
+}
 
 // Create a new label
 export const createLabel = async (name: string, color: string, userId: string, description?: string): Promise<void> => {
@@ -78,6 +112,26 @@ export const deleteLabel = async (labelId: string): Promise<void> => {
     await deleteDoc(labelDocRef);
   } catch (error) {
     console.error("Error deleting label:", error);
+    throw error;
+  }
+};
+
+// Create label connection for tasks or other objects
+export const createLabelConnectionFirebase = async (userId: string, objectId: string, object_type: string, labelId: string): Promise<void> => {
+  try {
+    const connectionsCollection = collection(db, "labelConnections");
+    const newConnection = {
+      id: uuidv4(),
+      userId,
+      objectId,
+      object_type,
+      labelId,
+      createdAt: new Date().toISOString(),
+    };
+
+    await addDoc(connectionsCollection, newConnection);
+  } catch (error) {
+    console.error("Error creating label connection:", error);
     throw error;
   }
 };

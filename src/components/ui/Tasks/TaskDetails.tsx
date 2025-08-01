@@ -50,22 +50,22 @@ export default function TaskDetails() {
   };
 
   const handleUpdateTitle = async (newTitle: string) => {
-    await updateTask(currentTaskList.id, clickedTask.id, { title: newTitle });
+    await updateTask(clickedTask.id, { title: newTitle });
   };
 
   const handleUpdateDescription = async (newDescription: string) => {
-    await updateTask(currentTaskList.id, clickedTask.id, { description: newDescription });
+    await updateTask(clickedTask.id, { description: newDescription });
   };
 
   const handleUpdateDueDate = async (newDueDate: string) => {
-    await updateTask(currentTaskList.id, clickedTask.id, { dueDate: newDueDate });
+    await updateTask(clickedTask.id, { dueDate: newDueDate });
     // Aktualizuj lokalny stan zadania
     setClickedTask({ ...clickedTask, dueDate: newDueDate });
     setIsEditingDate(false);
   };
 
   const handleRemoveDueDate = async () => {
-    await updateTask(currentTaskList.id, clickedTask.id, { dueDate: "" });
+    await updateTask(clickedTask.id, { dueDate: "" });
     // Aktualizuj lokalny stan zadania
     setClickedTask({ ...clickedTask, dueDate: "" });
     setIsEditingDate(false);
@@ -93,13 +93,13 @@ export default function TaskDetails() {
   };
 
   const handleToggleComplete = async () => {
-    await toggleTaskComplete(currentTaskList.id, clickedTask.id);
+    await toggleTaskComplete(clickedTask.id);
   };
 
   const handleDelete = async () => {
     setShowDeleteConfirm(false);
     setClickedTask(null);
-    await removeTask(currentTaskList.id, clickedTask.id);
+    await removeTask(clickedTask.id);
   };
 
   return (

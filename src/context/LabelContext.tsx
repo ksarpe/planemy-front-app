@@ -7,6 +7,8 @@ import {
   updateLabel as updateLabelFirebase,
   deleteLabel as deleteLabelFirebase,
   subscribeToUserLabels,
+  createLabelConnectionFirebase,
+  useLabelConnections as useLabelConnectionsFirebase
 } from "@/api/labels";
 
 const LabelContext = createContext<LabelContextType | undefined>(undefined);
@@ -16,6 +18,8 @@ export const LabelProvider = ({ children }: { children: ReactNode }) => {
   const { showToast } = useToast();
 
   const [labels, setLabels] = useState<LabelInterface[]>([]);
+  const labelConnectionsByType = useLabelConnectionsFirebase();
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -100,6 +104,30 @@ export const LabelProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const createLabelConnection = async (objectId: string, object_type: string, labelId: string): Promise<void> => {
+    if (!user) {
+      showToast("error", "Musisz być zalogowany, aby dodać etykietę");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      // Implement the logic to create a label connection in your database
+      // This is a placeholder function, replace with actual implementation
+      await createLabelConnectionFirebase(user.uid, objectId, object_type, labelId);
+      showToast("success", "Etykieta została dodana do obiektu!");
+    } catch (error) {
+      console.error("Error creating label connection:", error);
+      const errorMessage = error instanceof Error ? error.message : "Błąd podczas dodawania etykiety";
+      setError(errorMessage);
+      showToast("error", errorMessage);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Get label by ID from current labels
   const getLabelById = (labelId: string): LabelInterface | undefined => {
     return labels.find((label) => label.id === labelId);
@@ -125,6 +153,11 @@ export const LabelProvider = ({ children }: { children: ReactNode }) => {
     createLabel,
     updateLabel,
     deleteLabel,
+
+    //Label Connections
+    createLabelConnection,
+    labelConnectionsByType,
+
     // Utilities
     getLabelById,
     refreshLabels,

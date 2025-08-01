@@ -1,12 +1,10 @@
 import { createContext, useEffect, useState, ReactNode, useMemo } from "react";
 import type { TaskInterface, TaskListInterface, SharedTaskList, TaskContextProps } from "@/data/Tasks/interfaces";
-import type { LabelInterface } from "@/data/Utils/interfaces";
 import type { SharePermission } from "@/data/Utils/types";
 import type { UserProfile } from "@/data/User/interfaces";
 
 import { useToast } from "@/hooks/useToastContext";
 import { useAuth } from "@/hooks/useAuthContext";
-import { useUserLabels } from "@/api/labels";
 import {
   useUserTaskLists,
   useUserPendingShares,
@@ -21,11 +19,7 @@ import {
   clearCompletedTasks as clearCompletedTasksFirebase,
   uncheckAllTasks as uncheckAllTasksFirebase,
 } from "@/api/tasks";
-import {
-  createLabel as createLabelFirebase,
-  updateLabel as updateLabelFirebase,
-  deleteLabel as deleteLabelFirebase,
-} from "@/api/labels";
+
 import {
   shareTaskListWithUser,
   acceptTaskListInvitation,
@@ -45,17 +39,14 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
   // New task list system
   const taskListsFromFirebase = useUserTaskLists();
-  const labelsFromFirebase = useUserLabels();
   const pendingSharesFromFirebase = useUserPendingShares();
 
   // State
   const [taskLists, setTaskLists] = useState<TaskListInterface[]>([]);
   const [currentTaskList, setCurrentTaskList] = useState<TaskListInterface | null>(null);
-  const [labels, setLabels] = useState<LabelInterface[]>([]);
   const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedLabels, setSelectedLabels] = useState<LabelInterface[]>([]);
   const [clickedTask, setClickedTask] = useState<TaskInterface | null>(null);
 
   // Tasks cache - zadania pogrupowane według listId
@@ -83,14 +74,12 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   }, [taskListsFromFirebase, setCurrentTaskList, currentTaskList, mainListId]);
 
   useEffect(() => {
-    setLabels(labelsFromFirebase);
-  }, [labelsFromFirebase]);
-
-  useEffect(() => {
     setPendingShares(pendingSharesFromFirebase);
   }, [pendingSharesFromFirebase]);
 
   // Listen to tasks for all user's task lists
+  // and asign labels to tasks also
+  // TASKS CACHE
   useEffect(() => {
     if (!user || taskLists.length === 0) {
       setTasksCache({});
@@ -104,10 +93,14 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       const tasksQuery = query(tasksCollection, where("taskListId", "==", taskList.id));
 
       const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
-        const tasks = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as TaskInterface[];
+        const tasks = snapshot.docs.map((doc) => {
+          const data = doc.data() as Omit<TaskInterface, "id" | "labels">;
+          return {
+            ...data,
+            id: doc.data().id || doc.id, // Ensure id is set correctly
+            labels: [], // brakujące pole tylko po stronie frontu
+          };
+        });
 
         setTasksCache((prev) => ({
           ...prev,
@@ -306,7 +299,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateTask = async (_listId: string, taskId: string, updates: Partial<TaskInterface>): Promise<void> => {
+  const updateTask = async (taskId: string, updates: Partial<TaskInterface>): Promise<void> => {
     try {
       setLoading(true);
       await updateTaskInListFirebase(taskId, updates);
@@ -319,7 +312,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const removeTask = async (_listId: string, taskId: string): Promise<void> => {
+  const removeTask = async (taskId: string): Promise<void> => {
     try {
       setLoading(true);
       await removeTaskFromListFirebase(taskId);
@@ -332,7 +325,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const toggleTaskComplete = async (_listId: string, taskId: string): Promise<void> => {
+  const toggleTaskComplete = async (taskId: string): Promise<void> => {
     try {
       await toggleTaskCompletionFirebase(taskId);
       showToast("success", "Status zadania został zmieniony!");
@@ -356,74 +349,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       showToast("error", "Błąd podczas przenoszenia zadania");
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Label Functions
-  const createLabel = async (name: string, color: string, description?: string): Promise<void> => {
-    if (!user) {
-      showToast("error", "Musisz być zalogowany, aby utworzyć etykietę");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      await createLabelFirebase(name, color, user.uid, description);
-      showToast("success", "Etykieta została utworzona!");
-    } catch (error) {
-      console.error("Error creating label:", error);
-      showToast("error", "Błąd podczas tworzenia etykiety");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateLabel = async (labelId: string, updates: Partial<LabelInterface>): Promise<void> => {
-    try {
-      setLoading(true);
-      await updateLabelFirebase(labelId, updates);
-      showToast("success", "Etykieta została zaktualizowana!");
-    } catch (error) {
-      console.error("Error updating label:", error);
-      showToast("error", "Błąd podczas aktualizacji etykiety");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteLabel = async (labelId: string): Promise<void> => {
-    try {
-      setLoading(true);
-      await deleteLabelFirebase(labelId);
-      showToast("success", "Etykieta została usunięta!");
-    } catch (error) {
-      console.error("Error deleting label:", error);
-      showToast("error", "Błąd podczas usuwania etykiety");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const addLabelToTask = async (_listId: string, _taskId: string, _label: LabelInterface): Promise<void> => {
-    try {
-      // Temporary implementation - we'll need to create a getTaskById function later
-      // For now, we'll show a message that this feature needs to be implemented
-      showToast("warning", "Funkcja dodawania etykiet zostanie zaimplementowana wkrótce");
-    } catch (error) {
-      console.error("Error adding label to task:", error);
-      showToast("error", "Błąd podczas dodawania etykiety");
-    }
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const removeLabelFromTask = async (_listId: string, _taskId: string, _labelId: string): Promise<void> => {
-    try {
-      // Temporary implementation - we'll need to create a getTaskById function later
-      showToast("warning", "Funkcja usuwania etykiet zostanie zaimplementowana wkrótce");
-    } catch (error) {
-      console.error("Error removing label from task:", error);
-      showToast("error", "Błąd podczas usuwania etykiety");
     }
   };
 
@@ -524,20 +449,10 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         toggleTaskComplete,
         moveTask,
 
-        // Labels
-        labels,
-        createLabel,
-        updateLabel,
-        deleteLabel,
-        addLabelToTask,
-        removeLabelFromTask,
-
         // UI State
         loading,
         searchQuery,
         setSearchQuery,
-        selectedLabels,
-        setSelectedLabels,
 
         // Task utilities
         getTasksForList,

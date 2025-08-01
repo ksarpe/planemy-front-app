@@ -1,6 +1,5 @@
 import type { SharePermission, ShareStatus, ShareableObjectType } from "@/data/Utils/types";
 
-
 export interface ShareNotification {
   id?: string; // Firestore document ID
   object_id: string; // ID of the shared object
@@ -33,6 +32,15 @@ export interface LabelInterface {
   userId: string;
 }
 
+export interface LabelConnection {
+  id: string;
+  userId: string;
+  objectId: string;
+  objectType: string;
+  labelId: string;
+  createdAt: string;
+}
+
 export interface LabelContextType {
   // Data
   labels: LabelInterface[];
@@ -43,6 +51,10 @@ export interface LabelContextType {
   createLabel: (name: string, color: string, description?: string) => Promise<void>;
   updateLabel: (labelId: string, updates: Partial<LabelInterface>) => Promise<void>;
   deleteLabel: (labelId: string) => Promise<void>;
+
+  //Label Connections
+  createLabelConnection: (objectId: string, object_type: string, labelId: string) => Promise<void>;
+  labelConnectionsByType: Map<string, Map<string, LabelInterface[]>>;
 
   // Utilities
   getLabelById: (labelId: string) => LabelInterface | undefined;

@@ -16,6 +16,7 @@ export interface TaskInterface {
   updatedAt?: string;
 
   //optional for frontend purposes
+  labels?: LabelInterface[]; // Optional array of labels for the task
 }
 
 export interface TaskListInterface {
@@ -76,29 +77,20 @@ export interface TaskContextProps {
     dueDate?: string | null,
     labels?: LabelInterface[],
   ) => Promise<void>;
-  updateTask: (listId: string, taskId: string, updates: Partial<TaskInterface>) => Promise<void>;
-  removeTask: (listId: string, taskId: string) => Promise<void>;
-  toggleTaskComplete: (listId: string, taskId: string) => Promise<void>;
+  updateTask: (taskId: string, updates: Partial<TaskInterface>) => Promise<void>;
+  removeTask: (taskId: string) => Promise<void>;
+  toggleTaskComplete: (taskId: string) => Promise<void>;
   moveTask: (taskId: string, fromListId: string, toListId: string) => Promise<void>;
 
   // Task utilities
   getTasksForList: (listId: string) => TaskInterface[];
   getTaskStats: (listId: string) => { total: number; completed: number; pending: number };
 
-  // Labels
-  labels: LabelInterface[];
-  createLabel: (name: string, color: string, description?: string) => Promise<void>;
-  updateLabel: (labelId: string, updates: Partial<LabelInterface>) => Promise<void>;
-  deleteLabel: (labelId: string) => Promise<void>;
-  addLabelToTask: (listId: string, taskId: string, label: LabelInterface) => Promise<void>;
-  removeLabelFromTask: (listId: string, taskId: string, labelId: string) => Promise<void>;
 
   // UI State
   loading: boolean;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  selectedLabels: LabelInterface[];
-  setSelectedLabels: (labels: LabelInterface[]) => void;
 
   // Legacy support (for backwards compatibility)
   clickedTask: TaskInterface | null;

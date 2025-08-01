@@ -25,19 +25,24 @@ export default function ActionButton({
   size = "md",
   disabled = false,
   className = "",
+  justIcon = false,
 }: ActionButtonProps) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`
+      className={
+        justIcon
+          ? `cursor-pointer hover:text-blue-500`
+          : `
         flex items-center gap-2 rounded-lg transition-all duration-200 
         shadow-sm hover:shadow-md cursor-pointer
         ${colorClasses[color]} 
         ${sizeClasses[size]}
         ${disabled ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"}
         ${className}
-      `}>
+      `
+      }>
       <Icon size={iconSize} />
       <span className="text-sm font-medium">{text}</span>
     </button>

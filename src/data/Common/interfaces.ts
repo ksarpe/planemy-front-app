@@ -34,6 +34,7 @@ export interface ActionButtonProps {
   size: ActionButtonSize;
   disabled?: boolean;
   className?: string;
+  justIcon?: boolean; // If true, button will only show the icon without text
 }
 
 // AI Textbox

@@ -50,7 +50,7 @@ export const useUserTaskLists = (): TaskListInterface[] => {
 
       const unsubscribeOwn = onSnapshot(ownListsQuery, async (ownListsSnapshot) => {
         const ownLists = ownListsSnapshot.docs.map((doc) => ({
-          id: doc.id,
+          id: doc.data().id || doc.id,
           ...doc.data(),
         })) as TaskListInterface[];
 
@@ -198,8 +198,15 @@ export const updateTaskInList = async (taskId: string, updates: Partial<TaskInte
 // Remove task from list - now deletes task from tasks collection
 export const removeTaskFromList = async (taskId: string): Promise<void> => {
   try {
-    const taskDocRef = doc(db, "tasks", taskId);
-    await deleteDoc(taskDocRef);
+    const tasksCollection = collection(db, "tasks");
+    const taskQuery = query(tasksCollection, where("id", "==", taskId));
+    console.log(taskId)
+    const snapshot = await getDocs(taskQuery);
+
+    if (!snapshot.empty) {
+      const taskDoc = snapshot.docs[0];
+      await deleteDoc(taskDoc.ref);
+    }
   } catch (error) {
     console.error("Error removing task from list:", error);
     throw error;
@@ -209,12 +216,13 @@ export const removeTaskFromList = async (taskId: string): Promise<void> => {
 // Toggle task completion - now updates task in tasks collection
 export const toggleTaskCompletion = async (taskId: string): Promise<void> => {
   try {
-    const taskDocRef = doc(db, "tasks", taskId);
-    const taskSnapshot = await getDoc(taskDocRef);
+    const tasksCollection = collection(db, "tasks");
+    const taskQuery = query(tasksCollection, where("id", "==", taskId));
+    const snapshot = await getDocs(taskQuery);
 
-    if (taskSnapshot.exists()) {
-      const currentTask = taskSnapshot.data() as TaskInterface;
-      await updateDoc(taskDocRef, {
+    if (!snapshot.empty) {
+      const currentTask = snapshot.docs[0].data() as TaskInterface;
+      await updateDoc(snapshot.docs[0].ref, {
         isCompleted: !currentTask.isCompleted,
         updatedAt: new Date().toISOString(),
       });
