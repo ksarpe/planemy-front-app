@@ -11,7 +11,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { useAuth } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 export interface Payment {
   id: string;
@@ -34,7 +34,7 @@ export interface Payment {
 
 export const useUserPayments = (): Payment[] => {
   const [payments, setPayments] = useState<Payment[]>([]);
-  const { user } = useAuth();
+  const { user } = useAuthContext();
 
   useEffect(() => {
     if (!user) {

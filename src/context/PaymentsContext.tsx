@@ -2,8 +2,8 @@ import { createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { PaymentInterface } from "@/data/types";
 import type { PaymentsContextProps } from "@/data/typesProps";
-import { useAuth } from "@/hooks/useAuthContext";
-import { useToast } from "@/hooks/useToastContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useToastContext } from "@/hooks/useToastContext";
 import {
   useUserPayments,
   addPayment as addPaymentToFirebase,
@@ -17,8 +17,8 @@ const PaymentsContext = createContext<PaymentsContextProps | undefined>(undefine
 export { PaymentsContext };
 
 export const PaymentsProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
-  const { showToast } = useToast();
+  const { user } = useAuthContext();
+  const { showToast } = useToastContext();
   const initialPayments = useUserPayments();
   const [payments, setPayments] = useState<PaymentInterface[]>([]);
 

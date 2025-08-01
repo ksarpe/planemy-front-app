@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useAuth } from "../../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import { AuthContainer } from "./AuthContainer";
 import Spinner from "../ui/Utils/Spinner";
 
@@ -8,7 +8,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { user, loading } = useAuth();
+  const { user, loading } = useAuthContext();
 
   if (loading) {
     return (

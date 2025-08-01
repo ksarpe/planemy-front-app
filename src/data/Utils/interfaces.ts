@@ -53,10 +53,14 @@ export interface LabelContextType {
   deleteLabel: (labelId: string) => Promise<void>;
 
   //Label Connections
-  createLabelConnection: (objectId: string, object_type: string, labelId: string) => Promise<void>;
+  createLabelConnection: (objectId: string, objectType: string, labelId: string) => Promise<void>;
+  removeLabelConnection: (objectId: string, objectType: string, labelId: string) => Promise<void>;
+  removeAllLabelsFromObject: (objectId: string, objectType: string) => Promise<void>;
   labelConnectionsByType: Map<string, Map<string, LabelInterface[]>>;
 
   // Utilities
   getLabelById: (labelId: string) => LabelInterface | undefined;
+  getLabelsForObject: (objectId: string, objectType: string) => LabelInterface[];
+  hasLabel: (objectId: string, objectType: string, labelId: string) => boolean;
   refreshLabels: () => void;
 }

@@ -2,13 +2,13 @@ import { collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot
 import { db } from "./config";
 import { LabelConnection, LabelInterface } from "@/data/Utils/interfaces";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuthContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { v4 as uuidv4 } from "uuid";
 
 // Hook to get user's labels
 export const useUserLabels = (): LabelInterface[] => {
   const [labels, setLabels] = useState<LabelInterface[]>([]);
-  const { user } = useAuth();
+  const { user } = useAuthContext();
 
   useEffect(() => {
     if (!user) {
@@ -37,16 +37,19 @@ export const useUserLabels = (): LabelInterface[] => {
 };
 
 export function useLabelConnections() {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const labels = useUserLabels();
   const [connections, setConnections] = useState<Map<string, Map<string, LabelInterface[]>>>(new Map());
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || labels.length === 0) {
+      setConnections(new Map());
+      return;
+    }
 
-    const q = query(collection(db, "label_connections"), where("userId", "==", user.uid));
+    const q = query(collection(db, "labelConnections"), where("userId", "==", user.uid));
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const labelMap = new Map(labels.map(l => [l.id, l]));
+      const labelMap = new Map(labels.map((l) => [l.id, l]));
       const newMap = new Map<string, Map<string, LabelInterface[]>>();
 
       snapshot.docs.forEach((doc) => {
@@ -117,14 +120,19 @@ export const deleteLabel = async (labelId: string): Promise<void> => {
 };
 
 // Create label connection for tasks or other objects
-export const createLabelConnectionFirebase = async (userId: string, objectId: string, object_type: string, labelId: string): Promise<void> => {
+export const createLabelConnectionFirebase = async (
+  userId: string,
+  objectId: string,
+  objectType: string,
+  labelId: string,
+): Promise<void> => {
   try {
     const connectionsCollection = collection(db, "labelConnections");
     const newConnection = {
       id: uuidv4(),
       userId,
       objectId,
-      object_type,
+      objectType,
       labelId,
       createdAt: new Date().toISOString(),
     };
@@ -132,6 +140,56 @@ export const createLabelConnectionFirebase = async (userId: string, objectId: st
     await addDoc(connectionsCollection, newConnection);
   } catch (error) {
     console.error("Error creating label connection:", error);
+    throw error;
+  }
+};
+
+// Remove label connection
+export const removeLabelConnectionFirebase = async (
+  userId: string,
+  objectId: string,
+  objectType: string,
+  labelId: string,
+): Promise<void> => {
+  try {
+    const connectionsCollection = collection(db, "labelConnections");
+    const q = query(
+      connectionsCollection,
+      where("userId", "==", userId),
+      where("objectId", "==", objectId),
+      where("objectType", "==", objectType),
+      where("labelId", "==", labelId),
+    );
+
+    const snapshot = await getDocs(q);
+    const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
+    await Promise.all(deletePromises);
+  } catch (error) {
+    console.error("Error removing label connection:", error);
+    throw error;
+  }
+};
+
+// Remove all label connections for an object
+export const removeAllLabelConnectionsForObject = async (
+  userId: string,
+  objectId: string,
+  objectType: string,
+): Promise<void> => {
+  try {
+    const connectionsCollection = collection(db, "labelConnections");
+    const q = query(
+      connectionsCollection,
+      where("userId", "==", userId),
+      where("objectId", "==", objectId),
+      where("objectType", "==", objectType),
+    );
+
+    const snapshot = await getDocs(q);
+    const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
+    await Promise.all(deletePromises);
+  } catch (error) {
+    console.error("Error removing all label connections for object:", error);
     throw error;
   }
 };
@@ -219,7 +277,6 @@ export const searchLabels = async (userId: string, searchTerm: string): Promise<
     throw error;
   }
 };
-
 
 // Bulk delete labels
 export const bulkDeleteLabels = async (labelIds: string[]): Promise<void> => {

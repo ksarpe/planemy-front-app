@@ -89,9 +89,7 @@ export interface TaskContextProps {
 
   // UI State
   loading: boolean;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-
+  
   // Legacy support (for backwards compatibility)
   clickedTask: TaskInterface | null;
   setClickedTask: (task: TaskInterface | null) => void;

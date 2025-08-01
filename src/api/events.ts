@@ -13,19 +13,18 @@ import {
 } from "firebase/firestore";
 import { db } from "./config";
 import { EventInterface, RecurrenceRule } from "../data/types";
-import { useAuth } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 // Hook to get all events for current user
 export const useEvents = (): EventInterface[] => {
   const [events, setEvents] = useState<EventInterface[]>([]);
-  const { user } = useAuth();
+  const { user } = useAuthContext();
 
   useEffect(() => {
     if (!user?.uid) return;
 
     const eventsRef = collection(db, "events");
     const q = query(eventsRef, where("userId", "==", user.uid));
-
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const eventsData = snapshot.docs.map((doc) => ({
@@ -34,7 +33,6 @@ export const useEvents = (): EventInterface[] => {
         createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
         updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || new Date().toISOString(),
       })) as EventInterface[];
-
 
       // Expand recurring events
       const expandedEvents = expandRecurringEvents(eventsData);
@@ -72,7 +70,6 @@ export const updateEvent = async (eventId: string, updates: Partial<EventInterfa
       ...updates,
       updatedAt: Timestamp.now(),
     });
-
   } catch (error) {
     console.error("Error updating event:", error);
     throw error;

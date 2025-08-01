@@ -13,7 +13,7 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore";
-import { useAuth } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 import type { TaskInterface, TaskListInterface, SharedTaskList } from "@/data/Tasks/interfaces";
 import type { ShareNotification } from "@/data/Utils/interfaces";
@@ -23,7 +23,7 @@ import type { UserProfile } from "@/data/User/interfaces";
 // Hook to get user's task lists (own + shared via permissions)
 export const useUserTaskLists = (): TaskListInterface[] => {
   const [taskLists, setTaskLists] = useState<TaskListInterface[]>([]);
-  const { user } = useAuth();
+  const { user } = useAuthContext();
 
   useEffect(() => {
     if (!user) {
@@ -122,7 +122,6 @@ export const updateTaskList = async (listId: string, updates: Partial<TaskListIn
         updatedAt: new Date().toISOString(),
       });
     }
-    
   } catch (error) {
     console.error("Error updating task list:", error);
     throw error;
@@ -200,7 +199,7 @@ export const removeTaskFromList = async (taskId: string): Promise<void> => {
   try {
     const tasksCollection = collection(db, "tasks");
     const taskQuery = query(tasksCollection, where("id", "==", taskId));
-    console.log(taskId)
+    console.log(taskId);
     const snapshot = await getDocs(taskQuery);
 
     if (!snapshot.empty) {
@@ -372,7 +371,7 @@ export const getTaskListSharedUsers = async (listId: string) => {
 // Get pending share invitations for user - now uses notifications collection
 export const useUserPendingShares = (): SharedTaskList[] => {
   const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
-  const { user } = useAuth();
+  const { user } = useAuthContext();
 
   useEffect(() => {
     if (!user) {

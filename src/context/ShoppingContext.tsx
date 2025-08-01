@@ -5,8 +5,8 @@ import {
   ShoppingCategoryInterface,
 } from "../data/types";
 import { createContext, useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuthContext";
-import { useToast } from "@/hooks/useToastContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useToastContext } from "@/hooks/useToastContext";
 import {
   useShoppingLists,
   useFavoriteProducts,
@@ -58,8 +58,8 @@ const ShoppingContext = createContext<ShoppingContextType | undefined>(undefined
 export { ShoppingContext };
 
 export const ShoppingProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
-  const { showToast } = useToast();
+  const { user } = useAuthContext();
+  const { showToast } = useToastContext();
   const { shoppingLists, loading: listsLoading } = useShoppingLists();
   const { favoriteProducts, loading: favoritesLoading } = useFavoriteProducts();
 

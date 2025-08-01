@@ -3,16 +3,16 @@ import { useTheme } from "@/hooks/useTheme";
 import type { PreferencesContextProps } from "@/data/typesProps";
 
 import { getUserSettings, updateUserSettings } from "@/api/user_settings";
-import { useAuth } from "@/hooks/useAuthContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { UserSettings } from "@/data/User/interfaces";
-import { useToast } from "@/hooks/useToastContext";
+import { useToastContext } from "@/hooks/useToastContext";
 
 const PreferencesContext = createContext<PreferencesContextProps | undefined>(undefined);
 export { PreferencesContext };
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
-  const { showToast } = useToast();
-  const { user } = useAuth();
+  const { showToast } = useToastContext();
+  const { user } = useAuthContext();
   const [showWeekends, setShowWeekends] = useState(true);
   const [mainListId, setMainListId] = useState<string | null>(null);
   const { isDark, toggleTheme } = useTheme();

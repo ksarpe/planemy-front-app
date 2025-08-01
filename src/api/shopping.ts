@@ -18,7 +18,7 @@ import {
   FavoriteProductInterface,
   ShoppingCategoryInterface,
 } from "../data/types";
-import { useAuth } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 import { useState, useEffect } from "react";
 
 // Default categories
@@ -210,18 +210,16 @@ export const getUserFavoriteProducts = async (userId: string): Promise<FavoriteP
 
 // Real-time hooks
 export const useShoppingLists = () => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const [shoppingLists, setShoppingLists] = useState<ShoppingListInterface[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     if (!user?.uid) {
       setShoppingLists([]);
       setLoading(false);
       return;
     }
-
 
     // Try without orderBy first to see if it's an index issue
     const q = query(collection(db, "shoppingLists"), where("userId", "==", user.uid));
@@ -229,7 +227,6 @@ export const useShoppingLists = () => {
     const unsubscribe = onSnapshot(
       q,
       (querySnapshot) => {
-
         const lists = querySnapshot.docs.map((doc) => {
           return {
             id: doc.id,
@@ -274,18 +271,16 @@ export const useShoppingLists = () => {
 };
 
 export const useFavoriteProducts = () => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const [favoriteProducts, setFavoriteProducts] = useState<FavoriteProductInterface[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     if (!user?.uid) {
       setFavoriteProducts([]);
       setLoading(false);
       return;
     }
-
 
     // Try without orderBy first to see if it's an index issue
     const q = query(collection(db, "favoriteProducts"), where("userId", "==", user.uid));
@@ -293,7 +288,6 @@ export const useFavoriteProducts = () => {
     const unsubscribe = onSnapshot(
       q,
       (querySnapshot) => {
-
         const products = querySnapshot.docs.map((doc) => {
           return {
             id: doc.id,

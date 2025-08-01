@@ -1,14 +1,14 @@
 import { usePreferencesContext } from "@/hooks/usePreferencesContext";
-import { useAuth } from "@/hooks/useAuthContext";
-import { useToast } from "@/hooks/useToastContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useToastContext } from "@/hooks/useToastContext";
 import { Moon, Sun, LogOut, User, Tag } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import SidebarLink from "../ui/Sidebar/SidebarLink";
 
 export default function Sidebar() {
   const { isDark, toggleTheme } = usePreferencesContext();
-  const { user, logout } = useAuth();
-  const { showToast } = useToast();
+  const { user, logout } = useAuthContext();
+  const { showToast } = useToastContext();
 
   const handleLogout = async () => {
     try {

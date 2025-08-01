@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { X, Calendar, Clock, Tag, Check, Repeat } from "lucide-react";
 import { useCalendarContext } from "@/hooks/useCalendarContext";
 import { EventInterface, RecurrencePattern } from "../../../data/types";
-import { useAuth } from "../../../hooks/useAuthContext";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 interface EnhancedCreateEventModalProps {
   isOpen: boolean;
@@ -18,7 +18,7 @@ export default function EnhancedCreateEventModal({
   defaultCategory = "Other",
 }: EnhancedCreateEventModalProps) {
   const { addEvent } = useCalendarContext();
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const modalRef = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
 

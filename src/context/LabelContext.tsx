@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import { useAuth } from "@/hooks/useAuthContext";
-import { useToast } from "@/hooks/useToastContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useToastContext } from "@/hooks/useToastContext";
 import { LabelInterface, LabelContextType } from "@/data/Utils/interfaces";
 import {
   createLabel as createLabelFirebase,
@@ -8,14 +8,16 @@ import {
   deleteLabel as deleteLabelFirebase,
   subscribeToUserLabels,
   createLabelConnectionFirebase,
-  useLabelConnections as useLabelConnectionsFirebase
+  removeLabelConnectionFirebase,
+  removeAllLabelConnectionsForObject,
+  useLabelConnections as useLabelConnectionsFirebase,
 } from "@/api/labels";
 
 const LabelContext = createContext<LabelContextType | undefined>(undefined);
 
 export const LabelProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
-  const { showToast } = useToast();
+  const { user } = useAuthContext();
+  const { showToast } = useToastContext();
 
   const [labels, setLabels] = useState<LabelInterface[]>([]);
   const labelConnectionsByType = useLabelConnectionsFirebase();
@@ -104,7 +106,7 @@ export const LabelProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const createLabelConnection = async (objectId: string, object_type: string, labelId: string): Promise<void> => {
+  const createLabelConnection = async (objectId: string, objectType: string, labelId: string): Promise<void> => {
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby dodać etykietę");
       return;
@@ -113,9 +115,10 @@ export const LabelProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
+      console.log(user.uid);
       // Implement the logic to create a label connection in your database
       // This is a placeholder function, replace with actual implementation
-      await createLabelConnectionFirebase(user.uid, objectId, object_type, labelId);
+      await createLabelConnectionFirebase(user.uid, objectId, objectType, labelId);
       showToast("success", "Etykieta została dodana do obiektu!");
     } catch (error) {
       console.error("Error creating label connection:", error);
@@ -128,9 +131,66 @@ export const LabelProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const removeLabelConnection = async (objectId: string, objectType: string, labelId: string): Promise<void> => {
+    if (!user) {
+      showToast("error", "Musisz być zalogowany, aby usunąć etykietę");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      await removeLabelConnectionFirebase(user.uid, objectId, objectType, labelId);
+      showToast("success", "Etykieta została usunięta z obiektu!");
+    } catch (error) {
+      console.error("Error removing label connection:", error);
+      const errorMessage = error instanceof Error ? error.message : "Błąd podczas usuwania etykiety";
+      setError(errorMessage);
+      showToast("error", errorMessage);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removeAllLabelsFromObject = async (objectId: string, objectType: string): Promise<void> => {
+    if (!user) {
+      showToast("error", "Musisz być zalogowany, aby usunąć etykiety");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      await removeAllLabelConnectionsForObject(user.uid, objectId, objectType);
+      showToast("success", "Wszystkie etykiety zostały usunięte z obiektu!");
+    } catch (error) {
+      console.error("Error removing all label connections:", error);
+      const errorMessage = error instanceof Error ? error.message : "Błąd podczas usuwania etykiet";
+      setError(errorMessage);
+      showToast("error", errorMessage);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Get label by ID from current labels
   const getLabelById = (labelId: string): LabelInterface | undefined => {
     return labels.find((label) => label.id === labelId);
+  };
+
+  // Get labels for a specific object
+  const getLabelsForObject = (objectId: string, objectType: string): LabelInterface[] => {
+    const typeMap = labelConnectionsByType.get(objectType);
+    if (!typeMap) return [];
+    return typeMap.get(objectId) || [];
+  };
+
+  // Check if object has a specific label
+  const hasLabel = (objectId: string, objectType: string, labelId: string): boolean => {
+    const objectLabels = getLabelsForObject(objectId, objectType);
+    return objectLabels.some((label) => label.id === labelId);
   };
 
   // Manually refresh labels (if needed)
@@ -156,10 +216,14 @@ export const LabelProvider = ({ children }: { children: ReactNode }) => {
 
     //Label Connections
     createLabelConnection,
+    removeLabelConnection,
+    removeAllLabelsFromObject,
     labelConnectionsByType,
 
     // Utilities
     getLabelById,
+    getLabelsForObject,
+    hasLabel,
     refreshLabels,
   };
 

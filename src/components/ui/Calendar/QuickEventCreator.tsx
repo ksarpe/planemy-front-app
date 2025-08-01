@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Calendar, Heart, Pill, Dumbbell, Coffee, Plus, X } from "lucide-react";
 import { useCalendarContext } from "@/hooks/useCalendarContext";
-import { useAuth } from "../../../hooks/useAuthContext";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import { EventInterface } from "../../../data/types";
 
 interface QuickEventCreatorProps {
@@ -12,7 +12,7 @@ interface QuickEventCreatorProps {
 
 export default function QuickEventCreator({ selectedDate, onClose, className = "" }: QuickEventCreatorProps) {
   const { addEvent } = useCalendarContext();
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   const [isCreating, setIsCreating] = useState(false);
 
   const quickEvents = [

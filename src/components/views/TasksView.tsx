@@ -54,7 +54,7 @@ export default function TasksView() {
       <div
         className={`${
           clickedTask ? "w-3/4" : "w-full"
-        } relative rounded-lg shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-600`}>
+        } relative rounded-lg shadow-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-600`}>
         {/* Header with Task Lists */}
         <TaskViewHeader onNewListClick={() => setIsCreateListModalOpen(true)} onShareListClick={handleShareList} />
 

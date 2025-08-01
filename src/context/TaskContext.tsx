@@ -1,10 +1,15 @@
 import { createContext, useEffect, useState, ReactNode, useMemo } from "react";
+
 import type { TaskInterface, TaskListInterface, SharedTaskList, TaskContextProps } from "@/data/Tasks/interfaces";
 import type { SharePermission } from "@/data/Utils/types";
 import type { UserProfile } from "@/data/User/interfaces";
+import type { LabelInterface } from "@/data/Utils/interfaces";
 
-import { useToast } from "@/hooks/useToastContext";
-import { useAuth } from "@/hooks/useAuthContext";
+import { useToastContext } from "@/hooks/useToastContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useLabelContext } from "@/hooks/useLabelContext";
+import { usePreferencesContext } from "@/hooks/usePreferencesContext";
+
 import {
   useUserTaskLists,
   useUserPendingShares,
@@ -27,51 +32,56 @@ import {
 } from "@/api/permissions/taskPermissions";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/api/config";
-import { usePreferencesContext } from "@/hooks/usePreferencesContext";
-const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 
+const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 export { TaskContext };
 
 export const TaskProvider = ({ children }: { children: ReactNode }) => {
-  const { showToast } = useToast();
+  const { showToast } = useToastContext();
   const { mainListId } = usePreferencesContext();
-  const { user } = useAuth();
-
+  const { labelConnectionsByType } = useLabelContext();
+  const { user } = useAuthContext();
   // New task list system
   const taskListsFromFirebase = useUserTaskLists();
   const pendingSharesFromFirebase = useUserPendingShares();
-
   // State
   const [taskLists, setTaskLists] = useState<TaskListInterface[]>([]);
   const [currentTaskList, setCurrentTaskList] = useState<TaskListInterface | null>(null);
   const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [clickedTask, setClickedTask] = useState<TaskInterface | null>(null);
-
   // Tasks cache - zadania pogrupowane według listId
   const [tasksCache, setTasksCache] = useState<Record<string, TaskInterface[]>>({});
 
+  // FOR WHAT:
+  // Updating Task Lists, Setting Current Task List, Keeping Task List in sync with Firebase
   useEffect(() => {
-    if (taskListsFromFirebase.length === 0) return;
+    // --- Step 1: Synchronize the main lists array ---
     setTaskLists(taskListsFromFirebase);
 
-    if (!currentTaskList) {
-      // Brak wybranej listy – ustaw pierwszą
-      setCurrentTaskList(
-        mainListId
-          ? taskListsFromFirebase.find((list) => list.id === mainListId) || taskListsFromFirebase[0]
-          : taskListsFromFirebase[0],
-      );
+    if (taskListsFromFirebase.length === 0) {
+      setCurrentTaskList(null);
       return;
     }
 
-    // Znajdź aktualną wersję wybranej listy (np. po edycji nazwy)
-    const updatedList = taskListsFromFirebase.find((list) => list.id === currentTaskList.id);
-    if (updatedList) {
-      setCurrentTaskList(updatedList);
-    }
-  }, [taskListsFromFirebase, setCurrentTaskList, currentTaskList, mainListId]);
+    // --- Step 2: Safely determine and set the current task list ---
+    setCurrentTaskList((prevCurrentTaskList) => {
+      const listStillExists =
+        prevCurrentTaskList && taskListsFromFirebase.some((list) => list.id === prevCurrentTaskList.id);
+
+      if (listStillExists) {
+        // Find the updated version of the list.
+        // We add `!` because the `listStillExists` check above guarantees
+        // that find() will return a TaskListInterface, not undefined.
+        return taskListsFromFirebase.find((list) => list.id === prevCurrentTaskList.id)!;
+      }
+
+      // If the list no longer exists, select a new default.
+      // This part is safe because the check for `taskListsFromFirebase.length > 0`
+      // at the beginning of the hook guarantees `taskListsFromFirebase[0]` exists.
+      return taskListsFromFirebase.find((list) => list.id === mainListId) || taskListsFromFirebase[0];
+    });
+  }, [taskListsFromFirebase, mainListId, setCurrentTaskList]);
 
   useEffect(() => {
     setPendingShares(pendingSharesFromFirebase);
@@ -86,6 +96,10 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
+    //Task label connections =
+    const taskLabelConnections = labelConnectionsByType.get("task") || new Map<string, LabelInterface[]>();
+    console.log("Task label connections:", taskLabelConnections);
+
     const unsubscribes: (() => void)[] = [];
 
     taskLists.forEach((taskList) => {
@@ -95,10 +109,11 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
         const tasks = snapshot.docs.map((doc) => {
           const data = doc.data() as Omit<TaskInterface, "id" | "labels">;
+          const taskId = doc.data().id || doc.id;
           return {
             ...data,
-            id: doc.data().id || doc.id, // Ensure id is set correctly
-            labels: [], // brakujące pole tylko po stronie frontu
+            id: taskId,
+            labels: taskLabelConnections.get(taskId) || [],
           };
         });
 
@@ -114,16 +129,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
-  }, [user, taskLists]);
-
-  // Update clickedTask when taskLists change (to reflect real-time updates)
-  useEffect(() => {
-    if (clickedTask && currentTaskList) {
-      // Note: Tasks are now fetched separately via useTasksForList hook
-      // The clickedTask state will be managed differently or removed
-      // For now, we'll keep the existing task object without updating from embedded tasks array
-    }
-  }, [taskLists, clickedTask, currentTaskList]);
+  }, [user, taskLists, labelConnectionsByType]);
 
   // Task List Functions
   const createTaskList = async (name: string): Promise<void> => {
@@ -451,8 +457,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
         // UI State
         loading,
-        searchQuery,
-        setSearchQuery,
 
         // Task utilities
         getTasksForList,

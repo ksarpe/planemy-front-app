@@ -1,13 +1,12 @@
 import { useTaskContext } from "@/hooks/useTaskContext";
 import { useLabelContext } from "@/hooks/useLabelContext";
-import { Calendar, AlertCircle, Clock, CheckCircle2, Tag } from "lucide-react";
+import { Calendar, AlertCircle, Clock, CheckCircle2, Tag, Trash } from "lucide-react";
 import type { TaskItemProps } from "@/data/Tasks/interfaces";
 import { ActionButton, BasicDropdown, BasicDropdownItem } from "../Common";
 
 export default function TaskItem({ task }: TaskItemProps) {
   const { clickedTask, setClickedTask, toggleTaskComplete, currentTaskList } = useTaskContext();
-  const { labels, createLabelConnection } = useLabelContext();
-
+  const { labels, createLabelConnection, removeLabelConnection } = useLabelContext();
 
   const getDaysUntilDue = () => {
     if (!task.dueDate || task.dueDate === "") return null;
@@ -134,7 +133,9 @@ export default function TaskItem({ task }: TaskItemProps) {
           {task.isCompleted && <span className="text-xs text-green-600 font-medium">Ukończone</span>}
           {isOverdue() && <span className="text-xs text-red-600 font-medium">Przeterminowane</span>}
           {isDueSoon() && <span className="text-xs text-yellow-600 font-medium">Pilne</span>}
-          {labels.length > 0 && task.labels?.length === 0 && (
+
+          {/* If task has no labels, show the button to add labels */}
+          {task.labels?.length === 0 && !task.isCompleted ? (
             <div onClick={(e) => e.stopPropagation()}>
               <BasicDropdown
                 trigger={
@@ -166,11 +167,35 @@ export default function TaskItem({ task }: TaskItemProps) {
                     </BasicDropdownItem>
                   ))
                 ) : (
+                  // if no labels are available, show a message
                   <BasicDropdownItem icon={Tag} onClick={() => {}}>
                     Brak dostępnych tagów
                   </BasicDropdownItem>
                 )}
               </BasicDropdown>
+            </div>
+          ) : (
+            // If task has some labels, show them (for now we can only have one label per task)
+            <div>
+              {/* even though there is a map, we cannot add more labels so just one (frontend purposes) */}
+              {task.labels?.map((label) => (
+                <div onClick={(e) => e.stopPropagation()}>
+                  <BasicDropdown
+                    trigger={
+                      <div
+                        key={label.id}
+                        className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full"
+                        style={{ backgroundColor: label.color + "20", color: label.color }}>
+                        <Tag size={12} />
+                        {label.name}
+                      </div>
+                    }>
+                    <BasicDropdownItem icon={Trash} variant="red" onClick={() => removeLabelConnection(task.id,"task", label.id)}>
+                      Usuń
+                    </BasicDropdownItem>
+                  </BasicDropdown>
+                </div>
+              ))}
             </div>
           )}
         </div>
