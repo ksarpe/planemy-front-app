@@ -87,13 +87,6 @@ export interface ManageTaskListSharingModalProps {
   listName: string;
 }
 
-export interface ShareTaskListModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  taskListId: string;
-  taskListName: string;
-}
-
 //overall
 export interface EmptyStatesProps {
   type: EmptyListType;

@@ -10,5 +10,5 @@ export { default as PendingSharesNotification } from "./PendingSharesNotificatio
 export { default as CreateTaskListModal } from "./Modals/CreateTaskListModal";
 export { default as ManageTaskListSharingModal } from "./Modals/ManageTaskListSharingModal";
 export { default as TaskDetails } from "./TaskDetails";
-export { default as ShareTaskListModal } from "./Modals/ShareTaskListModal";
+
 export { default as QuickAddTask } from "./QuickAddTask";

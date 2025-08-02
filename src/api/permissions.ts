@@ -1,66 +1,14 @@
-import {
-  collection,
-  doc,
-  addDoc,
-  query,
-  where,
-  getDocs,
-  updateDoc,
-  deleteDoc,
-  onSnapshot,
-  orderBy,
-  getDoc,
-} from "firebase/firestore";
+import { collection, doc, addDoc, query, where, getDocs, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { db } from "@/api/config";
 import type { SharePermission, ShareableObjectType } from "@/data/Utils/types";
-import type { Permission, ShareNotification } from "@/data/Utils/interfaces";
+import type { Permission } from "@/data/Utils/interfaces";
 
 const PERMISSIONS_COLLECTION = "permissions";
-
-
-
-/**
- * Get object name by type and ID
- */
-const getObjectName = async (objectType: ShareableObjectType, objectId: string): Promise<string> => {
-  try {
-    let collection_name: string;
-    let default_name: string;
-
-    switch (objectType) {
-      case "task_list":
-        collection_name = "taskLists";
-        default_name = "Lista zadań";
-        break;
-      case "event":
-        collection_name = "events";
-        default_name = "Wydarzenie";
-        break;
-      case "shopping_list":
-        collection_name = "shoppingLists";
-        default_name = "Lista zakupów";
-        break;
-      default:
-        return "Obiekt";
-    }
-
-    const objectDoc = await getDoc(doc(db, collection_name, objectId));
-    if (objectDoc.exists()) {
-      const data = objectDoc.data();
-      return data.name || data.title || default_name;
-    }
-
-    return default_name;
-  } catch (error) {
-    console.error(`Error fetching ${objectType} name:`, error);
-    return "Obiekt";
-  }
-};
 
 /**
  * Generic function to share any object with user
  */
-export const shareObjectWithUser = async (
+export const shareObjectWithUserApi = async (
   objectId: string,
   objectType: ShareableObjectType,
   targetUserEmail: string,
@@ -68,10 +16,7 @@ export const shareObjectWithUser = async (
   sharedByUserId: string,
 ): Promise<void> => {
   try {
-    // Find target user by email
-    console.log("Searching for user with email:", targetUserEmail);
     const users = await searchUsersByEmail(targetUserEmail);
-    console.log("Found users:", users);
 
     if (users.length === 0) {
       console.error("User not found with email:", targetUserEmail);
@@ -82,25 +27,26 @@ export const shareObjectWithUser = async (
     console.log("Target user found:", targetUser);
 
     // Verify object exists based on type
-    let collection_name: string;
-    switch (objectType) {
-      case "task_list":
-        collection_name = "taskLists";
-        break;
-      case "event":
-        collection_name = "events";
-        break;
-      case "shopping_list":
-        collection_name = "shoppingLists";
-        break;
-      default:
-        throw new Error("Invalid object type");
-    }
+    //TODO: remove, jsut stick with ShareableObjectType
+    // let collection_name: string;
+    // switch (objectType) {
+    //   case "task_list":
+    //     collection_name = "taskLists";
+    //     break;
+    //   case "event":
+    //     collection_name = "events";
+    //     break;
+    //   case "shopping_list":
+    //     collection_name = "shoppingLists";
+    //     break;
+    //   default:
+    //     throw new Error("Invalid object type");
+    // }
 
-    const objectDoc = await getDoc(doc(db, collection_name, objectId));
-    if (!objectDoc.exists()) {
-      throw new Error(`${objectType} not found`);
-    }
+    // const objectDoc = await getDoc(doc(db, collection_name, objectId));
+    // if (!objectDoc.exists()) {
+    //   throw new Error(`${objectType} not found in ${collection_name} with ID: ${objectId}`);
+    // }
 
     // Check if permission already exists for this user and object
     const permissionsCollection = collection(db, PERMISSIONS_COLLECTION);
@@ -133,6 +79,34 @@ export const shareObjectWithUser = async (
   } catch (error) {
     console.error("Error sharing object:", error);
     throw error;
+  }
+};
+
+/**
+ * Get pending shares for user
+ */
+export const getPendingSharesApi = async (objectType: ShareableObjectType, userId: string): Promise<Permission[]> => {
+  try {
+    const permissionsCollection = collection(db, PERMISSIONS_COLLECTION);
+    const q = query(
+      permissionsCollection,
+      where("object_type", "==", objectType),
+      where("user_id", "==", userId),
+      where("status", "==", "pending"),
+      //orderBy("granted_at", "desc"),
+    );
+
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as Permission),
+    );
+  } catch (error) {
+    console.error("Error getting pending shares:", error);
+    return [];
   }
 };
 
@@ -180,95 +154,95 @@ export const rejectObjectInvitation = async (permissionId: string): Promise<void
 /**
  * Get pending notifications for user (all object types)
  */
-export const getUserPendingNotifications = async (userId: string): Promise<ShareNotification[]> => {
-  try {
-    const permissionsCollection = collection(db, PERMISSIONS_COLLECTION);
-    const q = query(
-      permissionsCollection,
-      where("user_id", "==", userId),
-      where("status", "==", "pending"),
-      orderBy("granted_at", "desc"),
-    );
+// export const getUserPendingNotifications = async (userId: string): Promise<ShareNotification[]> => {
+//   try {
+//     const permissionsCollection = collection(db, PERMISSIONS_COLLECTION);
+//     const q = query(
+//       permissionsCollection,
+//       where("user_id", "==", userId),
+//       where("status", "==", "pending"),
+//       orderBy("granted_at", "desc"),
+//     );
 
-    const snapshot = await getDocs(q);
-    const notifications: ShareNotification[] = [];
+//     const snapshot = await getDocs(q);
+//     const notifications: ShareNotification[] = [];
 
-    for (const permissionDoc of snapshot.docs) {
-      const permissionData = permissionDoc.data() as Permission;
+//     for (const permissionDoc of snapshot.docs) {
+//       const permissionData = permissionDoc.data() as Permission;
 
-      // Get object name
-      const objectName = await getObjectName(permissionData.object_type, permissionData.object_id);
+//       // Get object name
+//       const objectName = await getObjectName(permissionData.object_type, permissionData.object_id);
 
-      const notification: ShareNotification = {
-        id: permissionDoc.id,
-        object_id: permissionData.object_id,
-        object_type: permissionData.object_type,
-        object_name: objectName,
-        shared_by: permissionData.granted_by,
-        shared_with: permissionData.user_id,
-        permission: permissionData.role,
-        shared_at: permissionData.granted_at,
-        status: permissionData.status,
-      };
+//       const notification: ShareNotification = {
+//         id: permissionDoc.id,
+//         object_id: permissionData.object_id,
+//         object_type: permissionData.object_type,
+//         object_name: objectName,
+//         shared_by: permissionData.granted_by,
+//         shared_with: permissionData.user_id,
+//         permission: permissionData.role,
+//         shared_at: permissionData.granted_at,
+//         status: permissionData.status,
+//       };
 
-      notifications.push(notification);
-    }
+//       notifications.push(notification);
+//     }
 
-    return notifications;
-  } catch (error) {
-    console.error("Error getting pending notifications:", error);
-    return [];
-  }
-};
+//     return notifications;
+//   } catch (error) {
+//     console.error("Error getting pending notifications:", error);
+//     return [];
+//   }
+// };
 
 /**
  * Real-time listener for user's pending notifications (all object types)
  */
-export const listenToUserPendingNotifications = (
-  userId: string,
-  callback: (notifications: ShareNotification[]) => void,
-) => {
-  const q = query(
-    collection(db, PERMISSIONS_COLLECTION),
-    where("user_id", "==", userId),
-    where("status", "==", "pending"),
-    orderBy("granted_at", "desc"),
-  );
+// export const listenToUserPendingNotifications = (
+//   userId: string,
+//   callback: (notifications: ShareNotification[]) => void,
+// ) => {
+//   const q = query(
+//     collection(db, PERMISSIONS_COLLECTION),
+//     where("user_id", "==", userId),
+//     where("status", "==", "pending"),
+//     orderBy("granted_at", "desc"),
+//   );
 
-  return onSnapshot(
-    q,
-    async (snapshot) => {
-      const notifications: ShareNotification[] = [];
+//   return onSnapshot(
+//     q,
+//     async (snapshot) => {
+//       const notifications: ShareNotification[] = [];
 
-      for (const permissionDoc of snapshot.docs) {
-        const permissionData = permissionDoc.data() as Permission;
-        console.log("listenToUserPendingNotifications - permission data:", permissionData);
+//       for (const permissionDoc of snapshot.docs) {
+//         const permissionData = permissionDoc.data() as Permission;
+//         console.log("listenToUserPendingNotifications - permission data:", permissionData);
 
-        // Get object name
-        const objectName = await getObjectName(permissionData.object_type, permissionData.object_id);
+//         // Get object name
+//         const objectName = await getObjectName(permissionData.object_type, permissionData.object_id);
 
-        const notification: ShareNotification = {
-          id: permissionDoc.id,
-          object_id: permissionData.object_id,
-          object_type: permissionData.object_type,
-          object_name: objectName,
-          shared_by: permissionData.granted_by,
-          shared_with: permissionData.user_id,
-          permission: permissionData.role,
-          shared_at: permissionData.granted_at,
-          status: permissionData.status,
-        };
+//         const notification: ShareNotification = {
+//           id: permissionDoc.id,
+//           object_id: permissionData.object_id,
+//           object_type: permissionData.object_type,
+//           object_name: objectName,
+//           shared_by: permissionData.granted_by,
+//           shared_with: permissionData.user_id,
+//           permission: permissionData.role,
+//           shared_at: permissionData.granted_at,
+//           status: permissionData.status,
+//         };
 
-        notifications.push(notification);
-      }
+//         notifications.push(notification);
+//       }
 
-      callback(notifications);
-    },
-    (error) => {
-      console.error("listenToUserPendingNotifications - error:", error);
-    },
-  );
-};
+//       callback(notifications);
+//     },
+//     (error) => {
+//       console.error("listenToUserPendingNotifications - error:", error);
+//     },
+//   );
+// };
 
 /**
  * Delete permission/notification
@@ -294,7 +268,7 @@ export const getObjectSharedUsers = async (
     email: string;
     displayName?: string;
     permission: SharePermission;
-    status: "pending" | "accepted" | "rejected"
+    status: "pending" | "accepted" | "rejected";
   }>
 > => {
   try {
@@ -345,7 +319,7 @@ export const getObjectSharedUsers = async (
           email: userData.email,
           displayName: userData.displayName,
           permission: permission?.data().role as SharePermission,
-          status: permission?.data().status as "pending" | "accepted" | "rejected"
+          status: permission?.data().status as "pending" | "accepted" | "rejected",
         };
         console.log("User result:", result);
         return result;
@@ -364,7 +338,7 @@ export const getObjectSharedUsers = async (
       email: string;
       displayName?: string;
       permission: SharePermission;
-      status: "pending" | "accepted" | "rejected"
+      status: "pending" | "accepted" | "rejected";
     }>;
   } catch (error) {
     console.error("Error getting object shared users:", error);

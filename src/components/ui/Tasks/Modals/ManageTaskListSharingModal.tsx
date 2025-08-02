@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { X, UserPlus, Mail, Clock, CheckCircle } from "lucide-react";
-import { shareObjectWithUser } from "@/api/permissions";
+import React, { useState } from "react";
+import { X, UserPlus } from "lucide-react";
+import { useShareObject } from "@/hooks/permissions/usePermissions";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 
-import type { SharedUser, ManageTaskListSharingModalProps } from "@/data/Tasks/interfaces";
+import type { ManageTaskListSharingModalProps } from "@/data/Tasks/interfaces";
 import type { SharePermission } from "@/data/Utils/types";
 
 export default function ManageTaskListSharingModal({
@@ -13,33 +13,12 @@ export default function ManageTaskListSharingModal({
   listId,
   listName,
 }: ManageTaskListSharingModalProps) {
-  const [sharedUsers, setSharedUsers] = useState<SharedUser[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { mutate: shareObject } = useShareObject();
   const [sharingEmail, setSharingEmail] = useState("");
   const [sharingPermission, setSharingPermission] = useState<SharePermission>("view");
   const [isSharing, setIsSharing] = useState(false);
   const { user } = useAuthContext();
   const { showToast } = useToastContext();
-
-  // Load shared users when modal opens
-  const loadSharedUsers = useCallback(async () => {
-    setLoading(true);
-    try {
-      const users = await getTaskListSharedUsers(listId);
-      setSharedUsers(users);
-    } catch (error) {
-      console.error("Error loading shared users:", error);
-      showToast("error", "Błąd podczas ładowania udostępnień");
-    } finally {
-      setLoading(false);
-    }
-  }, [listId, showToast]);
-
-  useEffect(() => {
-    if (isOpen && listId) {
-      loadSharedUsers();
-    }
-  }, [isOpen, listId, loadSharedUsers]);
 
   const handleShareWithUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,52 +26,25 @@ export default function ManageTaskListSharingModal({
 
     setIsSharing(true);
     try {
-      await shareObjectWithUser(listId, "task_list", sharingEmail.trim(), sharingPermission, user.uid);
-      setSharingEmail("");
-      setSharingPermission("view");
-      await loadSharedUsers();
-      showToast("success", "Zaproszenie zostało wysłane");
+      shareObject(
+        {
+          objectId: listId,
+          objectType: "task_list",
+          targetUserEmail: sharingEmail.trim(),
+          permission: sharingPermission,
+        },
+        {
+          onSuccess: () => {
+            setSharingEmail("");
+            setSharingPermission("view");
+            showToast("success", "Zaproszenie zostało wysłane");
+          },
+        },
+      );
     } catch (error: unknown) {
       console.error("Error sharing list:", error);
-      const errorMessage = error instanceof Error ? error.message : "Błąd podczas udostępniania";
-      showToast("error", errorMessage);
     } finally {
       setIsSharing(false);
-    }
-  };
-
-  const getStatusIcon = (status: "pending" | "accepted") => {
-    switch (status) {
-      case "pending":
-        return <Clock className="w-4 h-4 text-yellow-500" />;
-      case "accepted":
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
-      default:
-        return null;
-    }
-  };
-
-  const getStatusText = (status: "pending" | "accepted") => {
-    switch (status) {
-      case "pending":
-        return "Oczekuje";
-      case "accepted":
-        return "Zaakceptowane";
-      default:
-        return status;
-    }
-  };
-
-  const getPermissionText = (permission: SharePermission) => {
-    switch (permission) {
-      case "view":
-        return "Tylko odczyt";
-      case "edit":
-        return "Edycja";
-      case "admin":
-        return "Administrator";
-      default:
-        return permission;
     }
   };
 
@@ -144,7 +96,6 @@ export default function ManageTaskListSharingModal({
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="view">Tylko odczyt</option>
                   <option value="edit">Edycja</option>
-                  <option value="admin">Administrator</option>
                 </select>
               </div>
               <button
@@ -157,14 +108,10 @@ export default function ManageTaskListSharingModal({
           </div>
 
           {/* Current sharing list */}
-          <div>
+          {/* <div>
             <h3 className="text-lg font-medium text-gray-900 mb-4">Aktualne udostępnienia ({sharedUsers.length})</h3>
 
-            {loading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              </div>
-            ) : sharedUsers.length === 0 ? (
+            { sharedUsers.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <Mail className="w-12 h-12 mx-auto mb-4 text-gray-300" />
                 <p>Brak udostępnień</p>
@@ -203,7 +150,7 @@ export default function ManageTaskListSharingModal({
                 ))}
               </div>
             )}
-          </div>
+          </div> */}
         </div>
 
         <div className="flex justify-end space-x-3 p-6 border-t bg-gray-50">

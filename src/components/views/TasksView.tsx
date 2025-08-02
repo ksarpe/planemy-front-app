@@ -51,7 +51,7 @@ export default function TasksView() {
   return (
     <div className="flex h-full p-4 gap-4">
       {/* Pending Shares Notification */}
-      <PendingSharesNotification />
+      <PendingSharesNotification object_type="task_list" />
 
       {/* Main panel */}
       <div

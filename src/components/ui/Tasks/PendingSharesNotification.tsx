@@ -1,59 +1,19 @@
-import { useTaskContext } from "@/hooks/context/useTaskContext";
-import { Check, X, Clock, UserCheck, Share2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/api/config";
-import type { TaskListInfo } from "@/data/Tasks/interfaces";
-import type { SharedTaskList } from "@/data/Tasks/interfaces";
+import { Clock, UserCheck, Share2 } from "lucide-react";
+import { usePendingShares } from "@/hooks/permissions/usePermissions";
+import { ShareableObjectType } from "@/data/Utils/types";
+import { Permission } from "@/data/Utils/interfaces";
 
-export default function PendingSharesNotification() {
-  const { getPendingShares, acceptSharedList, rejectSharedList } = useTaskContext();
-  const [taskListsInfo, setTaskListsInfo] = useState<{ [listId: string]: TaskListInfo }>({});
+export default function PendingSharesNotification({ object_type }: { object_type: ShareableObjectType }) {
+  const { data: getPendingShares } = usePendingShares(object_type);
 
-  const pendingShares = getPendingShares();
-
-  // Fetch task list information for each pending share
-  useEffect(() => {
-    const fetchTaskListsInfo = async () => {
-      const newTaskListsInfo: { [listId: string]: TaskListInfo } = {};
-
-      for (const share of pendingShares) {
-        if (!taskListsInfo[share.listId]) {
-          try {
-            const taskListDoc = await getDoc(doc(db, "taskLists", share.listId));
-            if (taskListDoc.exists()) {
-              const data = taskListDoc.data();
-              newTaskListsInfo[share.listId] = {
-                name: data.name || "Lista zadań",
-                tasksCount: data.tasks?.length || 0,
-              };
-            }
-          } catch (error) {
-            console.error("Error fetching task list info:", error);
-            newTaskListsInfo[share.listId] = {
-              name: "Lista zadań",
-              tasksCount: 0,
-            };
-          }
-        }
-      }
-
-      if (Object.keys(newTaskListsInfo).length > 0) {
-        setTaskListsInfo((prev) => ({ ...prev, ...newTaskListsInfo }));
-      }
-    };
-
-    if (pendingShares.length > 0) {
-      fetchTaskListsInfo();
-    }
-  }, [pendingShares, taskListsInfo]);
+  const pendingShares = getPendingShares ? getPendingShares : [];
 
   if (pendingShares.length === 0) return null;
 
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2">
-      {pendingShares.map((share: SharedTaskList) => {
-        const taskListInfo = taskListsInfo[share.listId];
+      {pendingShares.map((share: Permission) => {
+        //const taskListInfo = taskListsInfo[share.object_id];
 
         return (
           <div
@@ -70,36 +30,34 @@ export default function PendingSharesNotification() {
                   <span className="text-sm text-gray-600">Nowe udostępnienie</span>
                 </div>
 
-                <p className="text-sm font-medium text-gray-900 mb-1">
-                  {taskListInfo ? `Lista "${taskListInfo.name}"` : "Lista zadań została udostępniona"}
-                </p>
+                <p className="text-sm font-medium text-gray-900 mb-1">Lista zadań została udostępniona</p>
 
-                {taskListInfo && (
+                {/* {taskListInfo && (
                   <p className="text-xs text-gray-500 mb-2">
                     {taskListInfo.tasksCount}{" "}
                     {taskListInfo.tasksCount === 1 ? "zadanie" : taskListInfo.tasksCount < 5 ? "zadania" : "zadań"}
                   </p>
-                )}
+                )} */}
 
                 <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
                   <Clock size={12} />
-                  <span>{new Date(share.sharedAt).toLocaleDateString("pl-PL")}</span>
+                  <span>{new Date(share.granted_at).toLocaleDateString("pl-PL")}</span>
                 </div>
 
                 <div className="flex gap-2">
-                  <button
+                  {/* <button
                     onClick={() => acceptSharedList(share.id!)}
                     className="flex items-center gap-1 px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors disabled:opacity-50">
                     <Check size={12} />
                     Akceptuj
-                  </button>
+                  </button> */}
 
-                  <button
+                  {/* <button
                     onClick={() => rejectSharedList(share.id!)}
                     className="flex items-center gap-1 px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors disabled:opacity-50">
                     <X size={12} />
                     Odrzuć
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
