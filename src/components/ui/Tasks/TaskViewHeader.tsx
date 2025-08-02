@@ -16,7 +16,7 @@ export default function TaskViewHeader({ onNewListClick, tasks }: TaskViewHeader
     <div className="flex justify-between items-center gap-3">
       {/* Task List Dropdown and Actions */}
       <div className="flex items-center gap-3 flex-shrink-0">
-        <TaskListDropdown tasks={tasks}/>
+        <TaskListDropdown />
         <div className="h-[58px] w-[140px] flex flex-col gap-1">
           <TaskListActions tasks={tasks} />
           {/* New List Button */}

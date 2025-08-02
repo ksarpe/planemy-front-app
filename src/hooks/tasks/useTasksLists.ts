@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
-import { fetchUserTaskListsApi, createTaskListApi, deleteTaskListApi, updateTaskList } from "@/api/tasks_lists";
+import { useTaskContext } from "@/hooks/context/useTaskContext";
+import { fetchUserTaskListsApi, createTaskListApi, deleteTaskListApi, updateTaskListApi } from "@/api/tasks_lists";
 import type { TaskListInterface } from "@/data/Tasks/interfaces";
+import { v4 as uuidv4 } from "uuid";
 
 // --- QUERIES ----
 export const useTaskLists = () => {
@@ -19,13 +21,19 @@ export const useTaskLists = () => {
 export const useCreateTaskList = () => {
   const { user } = useAuthContext();
   const { showToast } = useToastContext();
+  const { setCurrentTaskListId } = useTaskContext();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (listName: string) => createTaskListApi(listName, user!.uid),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["taskLists"] });
+    mutationFn: async (listName: string) => {
+      const id = uuidv4(); // Generujemy ID tutaj
+      await createTaskListApi(listName, user!.uid, id);
+      return id; // Zwracamy ID, aby było dostępne w onSuccess
+    },
+    onSuccess: async (newId) => {
       showToast("success", "Lista zadań została utworzona!");
+      await queryClient.invalidateQueries({ queryKey: ["taskLists"] });
+      setCurrentTaskListId(newId);
     },
     onError: (error) => {
       console.error("Error creating task list:", error); //DEBUG
@@ -57,7 +65,7 @@ export const useUpdateTaskList = () => {
 
   return useMutation({
     mutationFn: ({ listId, updates }: { listId: string; updates: Partial<TaskListInterface> }) =>
-      updateTaskList(listId, updates),
+      updateTaskListApi(listId, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["taskLists"] });
       showToast("success", "Lista zadań została zaktualizowana!");

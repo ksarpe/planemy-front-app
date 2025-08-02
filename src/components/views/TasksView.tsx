@@ -14,12 +14,13 @@ import {
   EmptyStates,
 } from "@/components/ui/Tasks";
 import Spinner from "../ui/Utils/Spinner";
-import { useTaskLists } from "@/hooks/tasks/useTasksLists";
+import { useTaskLists, useCreateTaskList } from "@/hooks/tasks/useTasksLists";
 
 export default function TasksView() {
-  const { currentTaskListId, currentTaskList, clickedTask, createTaskList } = useTaskContext();
+  const { currentTaskListId, currentTaskList, clickedTask } = useTaskContext();
   const { data: taskLists, isLoading: areListsLoading } = useTaskLists();
   const { data: tasksData, isLoading: loading } = useTasks(currentTaskListId);
+  const { mutate: createTaskList } = useCreateTaskList();
   const tasks = tasksData ? tasksData : [];
 
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
@@ -35,12 +36,12 @@ export default function TasksView() {
   };
 
   const handleCreateTaskList = async (name: string) => {
-    await createTaskList(name);
+    createTaskList(name);
   };
 
   if (areListsLoading) {
     return (
-      <div className="...">
+      <div className="flex flex-col items-center justify-center h-full">
         <Spinner />
         <p>Ładowanie list...</p>
       </div>
@@ -58,7 +59,11 @@ export default function TasksView() {
           clickedTask ? "w-3/4" : "w-full"
         } relative rounded-lg shadow-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-600`}>
         {/* Header with Task Lists */}
-        <TaskViewHeader tasks={tasks}onNewListClick={() => setIsCreateListModalOpen(true)} onShareListClick={handleShareList} />
+        <TaskViewHeader
+          tasks={tasks}
+          onNewListClick={() => setIsCreateListModalOpen(true)}
+          onShareListClick={handleShareList}
+        />
 
         {!currentTaskList && (!taskLists || taskLists.length === 0) && (
           <EmptyStates type="no-lists" onCreateListClick={() => setIsCreateListModalOpen(true)} />

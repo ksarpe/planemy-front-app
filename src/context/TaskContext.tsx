@@ -11,7 +11,7 @@ import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 
 // Task hooks (React Query)
-import { useTaskLists, useCreateTaskList, useDeleteTaskList, useUpdateTaskList } from "@/hooks/tasks/useTasksLists";
+import { useTaskLists, useDeleteTaskList, useUpdateTaskList } from "@/hooks/tasks/useTasksLists";
 import {
   useMoveTask,
   useClearCompletedTasks,
@@ -37,7 +37,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
   // React Query hooks for task lists
   const { data: taskLists } = useTaskLists();
-  const { mutate: createTaskListMutation } = useCreateTaskList();
   const { mutate: deleteTaskListMutation } = useDeleteTaskList();
   const { mutate: updateTaskListMutation } = useUpdateTaskList();
 
@@ -84,20 +83,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   }, [pendingSharesFromFirebase]);
 
   // ====== Task List Functions ======
-
-  const createTaskList = (name: string): Promise<void> => {
-    if (!user) {
-      showToast("error", "Musisz być zalogowany, aby utworzyć listę zadań");
-      return Promise.reject(new Error("User not authenticated"));
-    }
-
-    return new Promise<void>((resolve, reject) => {
-      createTaskListMutation(name, {
-        onSuccess: () => resolve(),
-        onError: (error) => reject(error),
-      });
-    });
-  };
 
   const updateTaskList = (listId: string, updates: Partial<TaskListInterface>): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
@@ -250,7 +235,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         currentTaskList,
         currentTaskListId,
         setCurrentTaskListId,
-        createTaskList,
         updateTaskList,
         deleteTaskList,
         renameTaskList,

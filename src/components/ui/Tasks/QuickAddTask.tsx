@@ -2,11 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import { Plus, X, Check } from "lucide-react";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import type { QuickAddTaskProps } from "@/data/Tasks/interfaces";
+import { useCreateTask } from "@/hooks/tasks/useTasks";
 
 export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
-  const { addTask, currentTaskList } = useTaskContext();
+  const { currentTaskList } = useTaskContext();
+  const { mutate: createTask } = useCreateTask();
   const [taskTitle, setTaskTitle] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Obsługa kliknięcia poza komponentem
@@ -29,21 +30,22 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
   const handleSubmit = async () => {
     if (!taskTitle.trim() || !currentTaskList) return;
 
-    setIsSubmitting(true);
     try {
-      await addTask(
-        currentTaskList.id,
-        taskTitle.trim(),
-        null, // description
-        null, // dueDate
-        [], // labels
+      createTask(
+        {
+          listId: currentTaskList.id,
+          title: taskTitle.trim(),
+        },
+        {
+          onSuccess: () => {
+            // To wykona się dopiero po pomyślnym dodaniu zadania do bazy
+            setTaskTitle(""); // Czyścimy input
+            onCancel(); // Zamykamy komponent
+          },
+        },
       );
-      setTaskTitle("");
-      onCancel(); // Zamknij quick add po dodaniu
     } catch (error) {
       console.error("Error adding task:", error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -73,7 +75,6 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
           onChange={(e) => setTaskTitle(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Wpisz nazwę zadania..."
-          disabled={isSubmitting}
           autoFocus
           className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-gray-900 placeholder-gray-500"
         />
@@ -83,7 +84,6 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
           {/* Confirm Button */}
           <button
             onClick={handleSubmit}
-            disabled={!taskTitle.trim() || isSubmitting}
             className="p-1 text-green-600 hover:text-green-700 hover:bg-green-100 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Dodaj zadanie (Enter)">
             <Check size={16} />
@@ -92,7 +92,6 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
           {/* Cancel Button */}
           <button
             onClick={onCancel}
-            disabled={isSubmitting}
             className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
             title="Anuluj (Escape)">
             <X size={16} />

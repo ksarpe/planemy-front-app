@@ -29,6 +29,8 @@ export interface TaskListInterface {
   //frontend purpose
   shared?: boolean; // Indicates if the list is shared
   labels?: LabelInterface[]; // Optional array of labels for the list
+  totalTasks?: number;
+  completedTasks?: number;
 }
 
 // export interface QuickTaskInterface {
@@ -51,7 +53,6 @@ export interface TaskContextProps {
   currentTaskList: TaskListInterface | null;
   currentTaskListId: string | null;
   setCurrentTaskListId: (listId: string | null) => void;
-  createTaskList: (name: string) => Promise<void>;
   updateTaskList: (listId: string, updates: Partial<TaskListInterface>) => Promise<void>;
   deleteTaskList: (listId: string) => Promise<void>;
   renameTaskList: (listId: string, newName: string) => Promise<void>;

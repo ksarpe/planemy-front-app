@@ -2,13 +2,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 import {
-  addTaskToList,
   updateTaskInList,
   removeTaskFromList,
   toggleTaskCompletion,
   clearCompletedTasks,
   uncheckAllTasks,
 } from "@/api/tasks_lists";
+import { createTaskApi } from "@/api/tasks";
 import { fetchTasksForListApi } from "@/api/tasks";
 import type { TaskInterface } from "@/data/Tasks/interfaces";
 
@@ -62,7 +62,7 @@ export const useCreateTask = () => {
       title: string;
       description?: string | null;
       dueDate?: string | null;
-    }) => addTaskToList(listId, title, user!.uid, description, dueDate),
+    }) => createTaskApi(listId, title, user!.uid, description, dueDate),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Zadanie zostało dodane!");

@@ -2,22 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown, List, Calendar, CheckCircle2, Users } from "lucide-react";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
-import { TaskInterface, TaskListInterface } from "@/data/Tasks/interfaces";
+import { TaskListInterface } from "@/data/Tasks/interfaces";
 
-export default function TaskListDropdown({ tasks }: { tasks: TaskInterface[] }) {
+export default function TaskListDropdown() {
   const { taskLists, currentTaskList, setCurrentTaskListId } = useTaskContext();
   const { mainListId } = usePreferencesContext();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const { total, completed } = tasks.reduce(
-    (acc, task) => {
-      acc.total += 1;
-      if (task.isCompleted) acc.completed += 1;
-      return acc;
-    },
-    { total: 0, completed: 0 }
-  );
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -49,7 +40,7 @@ export default function TaskListDropdown({ tasks }: { tasks: TaskInterface[] }) 
                     <Users size={12} />
                   </span>
                 )}
-                <span className="text-gray-400">Ilość zadań: {total} </span>
+                <span className="text-gray-400">Ilość zadań: {currentTaskList.totalTasks ?? 0} </span>
               </div>
             </div>
           )}
@@ -88,14 +79,12 @@ export default function TaskListDropdown({ tasks }: { tasks: TaskInterface[] }) 
                       )}
                       <span className="flex items-center gap-1">
                         <Calendar size={12} />
-                        {total} zadań
+                        {list.totalTasks ?? 0} zadań
                       </span>
-                      {completed > 0 && (
-                        <span className="flex items-center gap-1 text-green-600">
-                          <CheckCircle2 size={12} />
-                          {completed} ukończonych
-                        </span>
-                      )}
+                      <span className="flex items-center gap-1 text-green-600">
+                        <CheckCircle2 size={12} />
+                        {list.completedTasks ?? 0} ukończonych
+                      </span>
                     </div>
                   </div>
                   {isSelected && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}

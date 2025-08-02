@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { db } from "./config";
-import { collection, deleteDoc, addDoc, query, where, updateDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  addDoc,
+  query,
+  where,
+  updateDoc,
+  getDocs,
+  getCountFromServer,
+} from "firebase/firestore";
 import { useAuthContext } from "../hooks/context/useAuthContext";
 
 import type { TaskInterface, TaskListInterface, SharedTaskList } from "@/data/Tasks/interfaces";
@@ -19,30 +27,59 @@ export const fetchUserTaskListsApi = async (userId: string): Promise<TaskListInt
   if (!userId) {
     return [];
   }
-  //TODO: fetch also shared task lists
-  const taskListsCollection = collection(db, "taskLists"); //TODO: change to task_list?s?
-  const ownListsQuery = query(taskListsCollection, where("userId", "==", userId));
 
+  // Krok 1: Pobierz podstawowe dane o listach (tak jak wcześniej)
+  // TODO: Dodać logikę pobierania list udostępnionych
+  const taskListsCollection = collection(db, "taskLists");
+  const ownListsQuery = query(taskListsCollection, where("userId", "==", userId));
   const snapshot = await getDocs(ownListsQuery);
 
-  const lists = snapshot.docs.map((doc) => ({
-    id: doc.data().id || doc.id, // TODO BC change boz some lists might not have 'id' field after migration
+  const listsWithoutCounts = snapshot.docs.map((doc) => ({
+    id: doc.data().id || doc.id,
     ...doc.data(),
   })) as TaskListInterface[];
 
-  // Change to
-  // const response = await fetch(`/api/task-lists`);
-  // return response.json();
+  // Krok 2: Dla każdej listy, stwórz obietnicę (Promise), która pobierze jej statystyki
+  const enrichedListsPromises = listsWithoutCounts.map(async (list) => {
+    const tasksCollection = collection(db, "tasks");
 
-  return lists;
+    // Zapytanie o wszystkie zadania w tej liście
+    const totalTasksQuery = query(tasksCollection, where("taskListId", "==", list.id));
+    // Zapytanie o ukończone zadania w tej liście
+    const completedTasksQuery = query(
+      tasksCollection,
+      where("taskListId", "==", list.id),
+      where("isCompleted", "==", true),
+    );
+
+    // Użyj `getCountFromServer` do efektywnego liczenia
+    const totalPromise = getCountFromServer(totalTasksQuery);
+    const completedPromise = getCountFromServer(completedTasksQuery);
+
+    // Wykonaj oba zapytania o zliczenie równolegle
+    const [totalSnapshot, completedSnapshot] = await Promise.all([totalPromise, completedPromise]);
+
+    // Zwróć oryginalny obiekt listy wzbogacony o nowe dane
+    return {
+      ...list,
+      totalTasks: totalSnapshot.data().count,
+      completedTasks: completedSnapshot.data().count,
+    };
+  });
+
+  // Krok 3: Poczekaj, aż wszystkie obietnice pobrania statystyk się zakończą
+  const enrichedLists = await Promise.all(enrichedListsPromises);
+
+  // Krok 4: Zwróć w pełni wzbogacone listy
+  return enrichedLists;
 };
 
 // Create a new task list
-export const createTaskListApi = async (name: string, userId: string): Promise<void> => {
+export const createTaskListApi = async (name: string, userId: string, id: string): Promise<void> => {
   try {
     const taskListsCollection = collection(db, "taskLists");
     const newTaskList: TaskListInterface = {
-      id: uuidv4(),
+      id,
       name,
       userId,
       createdAt: new Date().toISOString(),
@@ -57,7 +94,7 @@ export const createTaskListApi = async (name: string, userId: string): Promise<v
 };
 
 // Update task list
-export const updateTaskList = async (listId: string, updates: Partial<TaskListInterface>): Promise<void> => {
+export const updateTaskListApi = async (listId: string, updates: Partial<TaskListInterface>): Promise<void> => {
   try {
     const taskListsCollection = collection(db, "taskLists");
     const taskListQuery = query(taskListsCollection, where("id", "==", listId));
@@ -89,35 +126,6 @@ export const deleteTaskListApi = async (listId: string): Promise<void> => {
     }
   } catch (error) {
     console.error("Error deleting task list:", error);
-    throw error;
-  }
-};
-
-// Add task to list - now creates task in separate collection
-export const addTaskToList = async (
-  listId: string,
-  title: string,
-  userId: string,
-  description?: string | null,
-  dueDate?: string | null,
-): Promise<void> => {
-  try {
-    const tasksCollection = collection(db, "tasks");
-    const newTask: TaskInterface = {
-      id: uuidv4(),
-      title,
-      description: description || "",
-      dueDate: dueDate || "",
-      isCompleted: false,
-      userId,
-      taskListId: listId,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    await addDoc(tasksCollection, newTask);
-  } catch (error) {
-    console.error("Error adding task to list:", error);
     throw error;
   }
 };
