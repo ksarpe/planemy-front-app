@@ -5,6 +5,11 @@ import { useEffect, useState } from "react";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { v4 as uuidv4 } from "uuid";
 
+const LABELS_COLLECTION = "labels";
+const LABEL_CONNECTIONS_COLLECTION = "labelConnections";
+
+
+
 // Hook to get user's labels
 export const useUserLabels = (): LabelInterface[] => {
   const [labels, setLabels] = useState<LabelInterface[]>([]);
@@ -16,7 +21,7 @@ export const useUserLabels = (): LabelInterface[] => {
       return;
     }
 
-    const labelsCollection = collection(db, "labels");
+    const labelsCollection = collection(db, LABELS_COLLECTION);
     const userLabelsQuery = query(labelsCollection, where("userId", "==", user.uid));
 
     const unsubscribe = onSnapshot(userLabelsQuery, (snapshot) => {
@@ -47,7 +52,7 @@ export function useLabelConnections() {
       return;
     }
 
-    const q = query(collection(db, "labelConnections"), where("userId", "==", user.uid));
+    const q = query(collection(db, LABEL_CONNECTIONS_COLLECTION), where("userId", "==", user.uid));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const labelMap = new Map(labels.map((l) => [l.id, l]));
       const newMap = new Map<string, Map<string, LabelInterface[]>>();

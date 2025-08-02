@@ -181,7 +181,7 @@ export default function TaskItem({ task }: TaskItemProps) {
             <div>
               {/* even though there is a map, we cannot add more labels so just one (frontend purposes) */}
               {task.labels?.map((label) => (
-                <div onClick={(e) => e.stopPropagation()}>
+                <div onClick={(e) => e.stopPropagation()} key={label.id}>
                   <BasicDropdown
                     trigger={
                       <div

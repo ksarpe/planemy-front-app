@@ -2,12 +2,59 @@ import { TaskInterface } from "@/data/Tasks/interfaces";
 import { db } from "./config";
 import { addDoc, collection, deleteDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
+import { LabelInterface } from "@/data/Utils/interfaces";
 
 export const fetchTasksForListApi = async (listId: string): Promise<TaskInterface[]> => {
+  if (!listId) return [];
+
+  // --- Krok 1: Pobierz stronę z zadaniami ---
   const tasksCollection = collection(db, "tasks");
-  const q = query(tasksCollection, where("taskListId", "==", listId));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as TaskInterface[];
+  const tasksQuery = query(tasksCollection, where("taskListId", "==", listId));
+  const tasksSnapshot = await getDocs(tasksQuery);
+  const tasks = tasksSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as TaskInterface[];
+
+  if (tasks.length === 0) {
+    // Jeśli nie ma zadań, zwróć je od razu z pustą tablicą etykiet
+    return tasks.map((task) => ({ ...task, labels: [] }));
+  }
+
+  // --- Krok 2: Zbierz ID wszystkich pobranych zadań ---
+  const taskIds = tasks.map((task) => task.id);
+  // --- Krok 3: Pobierz wszystkie powiązania dla tych zadań za jednym zamachem ---
+  const connectionsCollection = collection(db, "labelConnections");
+  const connectionsQuery = query(connectionsCollection, where("objectId", "in", taskIds));
+  const connectionsSnapshot = await getDocs(connectionsQuery);
+  const connections = connectionsSnapshot.docs.map((doc) => doc.data());
+
+  if (connections.length === 0) {
+    // Jeśli nie ma powiązań, zwróć zadania z pustą tablicą etykiet
+    return tasks.map((task) => ({ ...task, labels: [] }));
+  }
+
+  // --- Krok 4: Zbierz unikalne ID wszystkich potrzebnych etykiet ---
+  const labelIds = [...new Set(connections.map((conn) => conn.labelId))];
+
+  // --- Krok 5: Pobierz pełne dane wszystkich potrzebnych etykiet ---
+  const labelsCollection = collection(db, "labels");
+  const labelsQuery = query(labelsCollection, where("id", "in", labelIds));
+  const labelsSnapshot = await getDocs(labelsQuery);
+  
+
+  // Stwórz mapę dla łatwego i szybkiego dostępu (klucz: id etykiety, wartość: obiekt etykiety)
+  const labelsMap = new Map<string, LabelInterface>(
+    labelsSnapshot.docs.map((doc) => [doc.id, doc.data() as LabelInterface]),
+  );
+  // --- Krok 6: Połącz wszystko w całość (Join po stronie klienta) ---
+  return tasks.map((task) => {
+    // Znajdź powiązania dla bieżącego zadania
+    const taskConnections = connections.filter((conn) => conn.objectId === task.id);
+    // Na podstawie powiązańskich ID, znajdź pełne obiekty etykiet w mapie
+    const taskLabels = taskConnections.map((conn) => labelsMap.get(conn.labelId)).filter(Boolean) as LabelInterface[]; // .filter(Boolean) usuwa ewentualne puste wyniki
+    return {
+      ...task,
+      labels: taskLabels, // Dołącz gotową tablicę pełnych obiektów etykiet
+    };
+  });
 };
 
 // Add task to list - now creates task in separate collection

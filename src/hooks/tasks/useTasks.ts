@@ -7,15 +7,15 @@ import { createTaskApi, updateTaskApi, removeTaskApi, completeTaskApi } from "@/
 import { fetchTasksForListApi } from "@/api/tasks";
 import type { TaskInterface } from "@/data/Tasks/interfaces";
 
-// --- QUERIES dla zadań ---
 
-// Hook do pobierania zadań z konkretnej listy (przydatny dla komponentów które potrzebują tylko zadania z jednej listy)
 export const useTasks = (listId: string | null) => {
   return useQuery({
     queryKey: ["tasks", listId],
     queryFn: () => fetchTasksForListApi(listId!),
-    enabled: !!listId,
+    enabled: !!listId, //listId must be defined to fetch tasks
   });
+  //!null -> !true -> false
+  //!"abc" -> !false -> true
 };
 // Plik: src/hooks/tasks/useTasks.js (ulepszona wersja)
 
