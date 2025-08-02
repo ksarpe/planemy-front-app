@@ -3,7 +3,6 @@ import {
   acceptObjectInvitation,
   rejectObjectInvitation,
   deletePermission,
-  revokeObjectAccess,
   getObjectSharedUsers,
   listenToUserPendingNotifications,
 } from "@/api/permissions/permissions";
@@ -43,13 +42,6 @@ export const deleteEventNotification = async (permissionId: string): Promise<voi
 };
 
 /**
- * Revoke access to event
- */
-export const revokeEventAccess = async (eventId: string, userId: string): Promise<void> => {
-  return revokeObjectAccess(eventId, "event", userId);
-};
-
-/**
  * Get users with access to an event
  */
 export const getEventSharedUsers = async (
@@ -64,9 +56,9 @@ export const getEventSharedUsers = async (
   }>
 > => {
   const users = await getObjectSharedUsers(eventId, "event");
-  // Filter out revoked users for compatibility
+  // Filter out rejected users for compatibility
   return users
-    .filter((user) => user.status !== "revoked" && user.status !== "rejected")
+    .filter((user) => user.status !== "rejected")
     .map((user) => ({
       ...user,
       status: user.status as "pending" | "accepted",

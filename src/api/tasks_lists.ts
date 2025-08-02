@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { useAuthContext } from "../hooks/context/useAuthContext";
 
-import type { TaskInterface, TaskListInterface, SharedTaskList } from "@/data/Tasks/interfaces";
+import type { TaskListInterface, SharedTaskList } from "@/data/Tasks/interfaces";
 import type { ShareNotification } from "@/data/Utils/interfaces";
 import type { SharePermission } from "@/data/Utils/types";
 import type { UserProfile } from "@/data/User/interfaces";
@@ -130,64 +130,6 @@ export const deleteTaskListApi = async (listId: string): Promise<void> => {
   }
 };
 
-// Update task - now updates task in tasks collection
-export const updateTaskInList = async (taskId: string, updates: Partial<TaskInterface>): Promise<void> => {
-  try {
-    const tasksCollection = collection(db, "tasks");
-    const taskQuery = query(tasksCollection, where("id", "==", taskId));
-    const snapshot = await getDocs(taskQuery);
-
-    if (!snapshot.empty) {
-      const taskDoc = snapshot.docs[0];
-      await updateDoc(taskDoc.ref, {
-        ...updates,
-        updatedAt: new Date().toISOString(),
-      });
-    }
-  } catch (error) {
-    console.error("Error updating task:", error);
-    throw error;
-  }
-};
-
-// Remove task from list - now deletes task from tasks collection
-export const removeTaskFromList = async (taskId: string): Promise<void> => {
-  try {
-    const tasksCollection = collection(db, "tasks");
-    const taskQuery = query(tasksCollection, where("id", "==", taskId));
-    console.log(taskId);
-    const snapshot = await getDocs(taskQuery);
-
-    if (!snapshot.empty) {
-      const taskDoc = snapshot.docs[0];
-      await deleteDoc(taskDoc.ref);
-    }
-  } catch (error) {
-    console.error("Error removing task from list:", error);
-    throw error;
-  }
-};
-
-// Toggle task completion - now updates task in tasks collection
-export const toggleTaskCompletion = async (taskId: string): Promise<void> => {
-  try {
-    const tasksCollection = collection(db, "tasks");
-    const taskQuery = query(tasksCollection, where("id", "==", taskId));
-    const snapshot = await getDocs(taskQuery);
-
-    if (!snapshot.empty) {
-      const currentTask = snapshot.docs[0].data() as TaskInterface;
-      await updateDoc(snapshot.docs[0].ref, {
-        isCompleted: !currentTask.isCompleted,
-        updatedAt: new Date().toISOString(),
-      });
-    }
-  } catch (error) {
-    console.error("Error toggling task completion:", error);
-    throw error;
-  }
-};
-
 // Clear completed tasks from a list
 export const clearCompletedTasks = async (listId: string): Promise<void> => {
   try {
@@ -298,17 +240,6 @@ export const rejectSharedTaskList = async (shareId: string): Promise<void> => {
     await rejectTaskListInvitation(shareId);
   } catch (error) {
     console.error("Error rejecting shared task list:", error);
-    throw error;
-  }
-};
-
-// Revoke access to shared task list
-export const revokeTaskListAccess = async (listId: string, userId: string): Promise<void> => {
-  try {
-    const { revokeTaskListAccess: revokeAccess } = await import("./permissions/taskPermissions");
-    await revokeAccess(listId, userId);
-  } catch (error) {
-    console.error("Error revoking task list access:", error);
     throw error;
   }
 };

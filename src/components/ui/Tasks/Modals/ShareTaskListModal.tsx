@@ -6,7 +6,7 @@ import type { SharePermission } from "@/data/Utils/types";
 import type { ShareTaskListModalProps } from "@/data/Tasks/interfaces";
 
 export default function ShareTaskListModal({ isOpen, onClose, taskListId, taskListName }: ShareTaskListModalProps) {
-  const { shareTaskList, searchUsers, loading } = useTaskContext();
+  const { shareTaskList, searchUsers } = useTaskContext();
 
   const [userEmail, setUserEmail] = useState("");
   const [permission, setPermission] = useState<SharePermission>("view");
@@ -217,7 +217,7 @@ export default function ShareTaskListModal({ isOpen, onClose, taskListId, taskLi
                 </button>
                 <button
                   onClick={handleShare}
-                  disabled={!selectedUser || loading}
+                  disabled={!selectedUser}
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 flex items-center gap-2">
                   <Share2 size={16} />
                   Udostępnij

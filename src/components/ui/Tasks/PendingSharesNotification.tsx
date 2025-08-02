@@ -7,7 +7,7 @@ import type { TaskListInfo } from "@/data/Tasks/interfaces";
 import type { SharedTaskList } from "@/data/Tasks/interfaces";
 
 export default function PendingSharesNotification() {
-  const { getPendingShares, acceptSharedList, rejectSharedList, loading } = useTaskContext();
+  const { getPendingShares, acceptSharedList, rejectSharedList } = useTaskContext();
   const [taskListsInfo, setTaskListsInfo] = useState<{ [listId: string]: TaskListInfo }>({});
 
   const pendingShares = getPendingShares();
@@ -89,7 +89,6 @@ export default function PendingSharesNotification() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => acceptSharedList(share.id!)}
-                    disabled={loading}
                     className="flex items-center gap-1 px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors disabled:opacity-50">
                     <Check size={12} />
                     Akceptuj
@@ -97,7 +96,6 @@ export default function PendingSharesNotification() {
 
                   <button
                     onClick={() => rejectSharedList(share.id!)}
-                    disabled={loading}
                     className="flex items-center gap-1 px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors disabled:opacity-50">
                     <X size={12} />
                     Odrzuć

@@ -2,26 +2,26 @@ import { useState } from "react";
 import { Settings, Edit3, Trash2, RotateCcw, Users, CircleChevronUp } from "lucide-react";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
+import { useDeleteTaskList, useUpdateTaskList } from "@/hooks/tasks/useTasksLists";
+import { useClearCompletedTasks, useUncheckAllTasks } from "@/hooks/tasks/useTasks";
 import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
 import { ActionButton, DeleteConfirmationModal, RenameModal, BasicDropdown, BasicDropdownItem } from "../Common";
-import { TaskInterface } from "@/data/Tasks/interfaces";
+import type { TaskInterface } from "@/data/Tasks/interfaces";
 
 // Expandable actions for the task list
 // in the task list view
 export default function TaskListActions({ tasks }: { tasks: TaskInterface[] }) {
-  const {
-    renameTaskList,
-    deleteTaskList,
-    clearCompletedTasks,
-    uncheckAllTasks,
-    currentTaskList,
-  } = useTaskContext(); //context data
+  const { currentTaskList, currentTaskListId } = useTaskContext(); //context data
+  const { mutate: deleteTaskList } = useDeleteTaskList(); // mutation for deleting task list
+  const { mutate: updateTaskList } = useUpdateTaskList(); // mutation for updating task list
+  const { mutate: clearCompletedTasks } = useClearCompletedTasks(); // mutation for clearing completed tasks
+  const { mutate: uncheckAllTasks } = useUncheckAllTasks(); // mutation for unchecking all tasks
   const { updateSettings, mainListId } = usePreferencesContext(); // preferences context for main list
   const [isRenaming, setIsRenaming] = useState(false); // wether the rename modal is open
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // wether the delete confirmation modal is open
   const [showSharingModal, setShowSharingModal] = useState(false);
 
-  if (!currentTaskList) return null;
+  if (!currentTaskListId) return null; //actually you cannot come here if currentTaskListId is null, but just in case
 
   const { total, completed } = tasks.reduce(
     (acc, task) => {
@@ -29,25 +29,25 @@ export default function TaskListActions({ tasks }: { tasks: TaskInterface[] }) {
       if (task.isCompleted) acc.completed += 1;
       return acc;
     },
-    { total: 0, completed: 0 }
+    { total: 0, completed: 0 },
   );
 
   const handleRename = (newName: string) => {
-    renameTaskList(currentTaskList.id, newName);
+    updateTaskList({ listId: currentTaskListId, updates: { name: newName } });
     setIsRenaming(false);
   };
 
   const handleDelete = () => {
-    deleteTaskList(currentTaskList.id);
+    deleteTaskList(currentTaskListId);
     setShowDeleteConfirm(false);
   };
 
   const handleClearCompleted = () => {
-    clearCompletedTasks(currentTaskList.id);
+    clearCompletedTasks(currentTaskListId);
   };
 
   const handleUncheckAll = () => {
-    uncheckAllTasks(currentTaskList.id);
+    uncheckAllTasks(currentTaskListId);
   };
 
   return (
@@ -70,7 +70,7 @@ export default function TaskListActions({ tasks }: { tasks: TaskInterface[] }) {
         <BasicDropdownItem icon={Edit3} onClick={() => setIsRenaming(true)}>
           Zmień nazwę
         </BasicDropdownItem>
-        {mainListId != currentTaskList.id && (
+        {mainListId != currentTaskList!.id && (
           <BasicDropdownItem
             icon={CircleChevronUp}
             variant="green"
@@ -82,7 +82,7 @@ export default function TaskListActions({ tasks }: { tasks: TaskInterface[] }) {
           Udostępnij
         </BasicDropdownItem>
         {completed > 0 && (
-          <BasicDropdownItem icon={Trash2} variant="orange"  onClick={handleClearCompleted}>
+          <BasicDropdownItem icon={Trash2} variant="orange" onClick={handleClearCompleted}>
             Usuń ukończone ({completed})
           </BasicDropdownItem>
         )}
@@ -91,11 +91,7 @@ export default function TaskListActions({ tasks }: { tasks: TaskInterface[] }) {
             Odznacz wszystkie
           </BasicDropdownItem>
         )}
-        <BasicDropdownItem
-          icon={Trash2}
-          variant="red"
-          separator={true}
-          onClick={() => setShowDeleteConfirm(true)}>
+        <BasicDropdownItem icon={Trash2} variant="red" separator={true} onClick={() => setShowDeleteConfirm(true)}>
           Usuń listę
         </BasicDropdownItem>
       </BasicDropdown>
@@ -106,7 +102,7 @@ export default function TaskListActions({ tasks }: { tasks: TaskInterface[] }) {
         onClose={() => setIsRenaming(false)}
         onConfirm={handleRename}
         title="Zmień nazwę listy"
-        currentName={currentTaskList.name}
+        currentName={currentTaskList!.name}
         placeholder="Nowa nazwa listy"
       />
 
@@ -117,7 +113,7 @@ export default function TaskListActions({ tasks }: { tasks: TaskInterface[] }) {
         onConfirm={handleDelete}
         title="Usuń listę zadań"
         message="Czy na pewno chcesz usunąć listę"
-        itemName={currentTaskList.name}
+        itemName={currentTaskList!.name}
         additionalInfo={`Liczba zadań, która zostanie usunięta: ${total}`}
         confirmButtonText="Usuń listę"
       />
@@ -126,8 +122,8 @@ export default function TaskListActions({ tasks }: { tasks: TaskInterface[] }) {
       <ManageTaskListSharingModal
         isOpen={showSharingModal}
         onClose={() => setShowSharingModal(false)}
-        listId={currentTaskList.id}
-        listName={currentTaskList.name}
+        listId={currentTaskList!.id}
+        listName={currentTaskList!.name}
       />
     </>
   );

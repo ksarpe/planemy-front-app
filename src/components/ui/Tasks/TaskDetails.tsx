@@ -1,12 +1,15 @@
 import EditableText from "@/components/ui/Utils/EditableText";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
+import { useCompleteTask, useDeleteTask, useUpdateTask } from "@/hooks/tasks/useTasks";
 import { Calendar, CheckCircle2, Trash2, CalendarPlus, Edit3, PanelRightClose } from "lucide-react";
 import { useState } from "react";
 import { DeleteConfirmationModal } from "../Common";
 
 export default function TaskDetails() {
-  const { updateTask, toggleTaskComplete, removeTask, convertToEvent, clickedTask, setClickedTask, currentTaskList } =
-    useTaskContext();
+  const { convertToEvent, clickedTask, setClickedTask, currentTaskList } = useTaskContext();
+  const { mutate: updateTask } = useUpdateTask();
+  const { mutate: toggleTaskComplete } = useCompleteTask();
+  const { mutate: removeTask } = useDeleteTask();
   const [isEditingDate, setIsEditingDate] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // wether the delete confirmation modal is open
   const [tempDate, setTempDate] = useState("");
@@ -50,22 +53,22 @@ export default function TaskDetails() {
   };
 
   const handleUpdateTitle = async (newTitle: string) => {
-    await updateTask(clickedTask.id, { title: newTitle });
+    updateTask({ taskId: clickedTask.id, updates: { title: newTitle } });
   };
 
   const handleUpdateDescription = async (newDescription: string) => {
-    await updateTask(clickedTask.id, { description: newDescription });
+    updateTask({ taskId: clickedTask.id, updates: { description: newDescription } });
   };
 
   const handleUpdateDueDate = async (newDueDate: string) => {
-    await updateTask(clickedTask.id, { dueDate: newDueDate });
+    updateTask({ taskId: clickedTask.id, updates: { dueDate: newDueDate } });
     // Aktualizuj lokalny stan zadania
     setClickedTask({ ...clickedTask, dueDate: newDueDate });
     setIsEditingDate(false);
   };
 
   const handleRemoveDueDate = async () => {
-    await updateTask(clickedTask.id, { dueDate: "" });
+    updateTask({ taskId: clickedTask.id, updates: { dueDate: "" } });
     // Aktualizuj lokalny stan zadania
     setClickedTask({ ...clickedTask, dueDate: "" });
     setIsEditingDate(false);

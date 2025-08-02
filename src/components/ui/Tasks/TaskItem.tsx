@@ -1,11 +1,13 @@
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { useLabelContext } from "@/hooks/context/useLabelContext";
+import { useCompleteTask } from "@/hooks/tasks/useTasks";
 import { Calendar, AlertCircle, Clock, CheckCircle2, Tag, Trash } from "lucide-react";
 import type { TaskItemProps } from "@/data/Tasks/interfaces";
 import { ActionButton, BasicDropdown, BasicDropdownItem } from "../Common";
 
 export default function TaskItem({ task }: TaskItemProps) {
-  const { clickedTask, setClickedTask, toggleTaskComplete, currentTaskList } = useTaskContext();
+  const { mutate: completeTask } = useCompleteTask();
+  const { clickedTask, setClickedTask, currentTaskList } = useTaskContext();
   const { labels, createLabelConnection, removeLabelConnection } = useLabelContext();
 
   const getDaysUntilDue = () => {
@@ -40,7 +42,7 @@ export default function TaskItem({ task }: TaskItemProps) {
 
   const handleToggleComplete = async () => {
     if (!currentTaskList) return;
-    await toggleTaskComplete(task.id);
+    completeTask(task.id);
   };
   return (
     <li

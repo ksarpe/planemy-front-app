@@ -1,14 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
-import {
-  updateTaskInList,
-  removeTaskFromList,
-  toggleTaskCompletion,
-  clearCompletedTasks,
-  uncheckAllTasks,
-} from "@/api/tasks_lists";
-import { createTaskApi } from "@/api/tasks";
+import { clearCompletedTasks, uncheckAllTasks } from "@/api/tasks_lists";
+import { createTaskApi, updateTaskApi, removeTaskApi, completeTaskApi } from "@/api/tasks";
 import { fetchTasksForListApi } from "@/api/tasks";
 import type { TaskInterface } from "@/data/Tasks/interfaces";
 
@@ -31,7 +25,7 @@ export const useTasks = (listId: string | null) => {
 // export const useTasksInfinite = (listId: string | null) => {
 //   return useInfiniteQuery({
 //     queryKey: ["tasks", listId],
-    
+
 //     // Funkcja pobierająca dane, otrzymuje `pageParam`
 //     queryFn: ({ pageParam }) => fetchPaginatedTasksApi({ listId: listId!, pageParam }),
 
@@ -80,7 +74,7 @@ export const useUpdateTask = () => {
 
   return useMutation({
     mutationFn: ({ taskId, updates }: { taskId: string; updates: Partial<TaskInterface> }) =>
-      updateTaskInList(taskId, updates),
+      updateTaskApi(taskId, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Zadanie zostało zaktualizowane!");
@@ -97,7 +91,7 @@ export const useDeleteTask = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (taskId: string) => removeTaskFromList(taskId),
+    mutationFn: (taskId: string) => removeTaskApi(taskId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Zadanie zostało usunięte!");
@@ -109,12 +103,12 @@ export const useDeleteTask = () => {
   });
 };
 
-export const useToggleTaskCompletion = () => {
+export const useCompleteTask = () => {
   const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (taskId: string) => toggleTaskCompletion(taskId),
+    mutationFn: (taskId: string) => completeTaskApi(taskId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Status zadania został zmieniony!");
@@ -132,7 +126,7 @@ export const useMoveTask = () => {
 
   return useMutation({
     mutationFn: ({ taskId, toListId }: { taskId: string; toListId: string }) =>
-      updateTaskInList(taskId, { taskListId: toListId }),
+      updateTaskApi(taskId, { taskListId: toListId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Zadanie zostało przeniesione!");

@@ -3,7 +3,6 @@ import {
   acceptObjectInvitation,
   rejectObjectInvitation,
   deletePermission,
-  revokeObjectAccess,
   getObjectSharedUsers,
   listenToUserPendingNotifications,
 } from "@/api/permissions/permissions";
@@ -44,13 +43,6 @@ export const deleteShoppingListNotification = async (permissionId: string): Prom
 };
 
 /**
- * Revoke access to shopping list
- */
-export const revokeShoppingListAccess = async (listId: string, userId: string): Promise<void> => {
-  return revokeObjectAccess(listId, "shopping_list", userId);
-};
-
-/**
  * Get users with access to a shopping list
  */
 export const getShoppingListSharedUsers = async (
@@ -65,9 +57,9 @@ export const getShoppingListSharedUsers = async (
   }>
 > => {
   const users = await getObjectSharedUsers(listId, "shopping_list");
-  // Filter out revoked users for compatibility
+  // Filter out rejected users for compatibility
   return users
-    .filter((user) => user.status !== "revoked" && user.status !== "rejected")
+    .filter((user) => user.status !== "rejected")
     .map((user) => ({
       ...user,
       status: user.status as "pending" | "accepted",

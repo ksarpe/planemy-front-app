@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { X, UserPlus, Mail, Clock, CheckCircle, UserX } from "lucide-react";
-import { getTaskListSharedUsers, revokeTaskListAccess, shareTaskListWithUser } from "@/api/tasks_lists";
+import { X, UserPlus, Mail, Clock, CheckCircle } from "lucide-react";
+import { getTaskListSharedUsers, shareTaskListWithUser } from "@/api/tasks_lists";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 
@@ -58,21 +58,6 @@ export default function ManageTaskListSharingModal({
       showToast("error", errorMessage);
     } finally {
       setIsSharing(false);
-    }
-  };
-
-  const handleRevokeAccess = async (userId: string, userEmail: string) => {
-    if (!confirm(`Czy na pewno chcesz cofnąć dostęp dla ${userEmail}?`)) {
-      return;
-    }
-
-    try {
-      await revokeTaskListAccess(listId, userId);
-      await loadSharedUsers();
-      showToast("success", "Dostęp został cofnięty");
-    } catch (error) {
-      console.error("Error revoking access:", error);
-      showToast("error", "Błąd podczas cofania dostępu");
     }
   };
 
@@ -213,13 +198,6 @@ export default function ManageTaskListSharingModal({
                         </div>
                         <p className="text-sm text-gray-500">{getPermissionText(sharedUser.permission)}</p>
                       </div>
-
-                      <button
-                        onClick={() => handleRevokeAccess(sharedUser.id, sharedUser.email)}
-                        className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Cofnij dostęp">
-                        <UserX className="w-5 h-5" />
-                      </button>
                     </div>
                   </div>
                 ))}

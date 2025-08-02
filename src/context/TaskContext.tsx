@@ -11,12 +11,7 @@ import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 
 // Task hooks (React Query)
-import { useTaskLists, useDeleteTaskList, useUpdateTaskList } from "@/hooks/tasks/useTasksLists";
-import {
-  useMoveTask,
-  useClearCompletedTasks,
-  useUncheckAllTasks,
-} from "@/hooks/tasks/useTasks";
+import { useTaskLists } from "@/hooks/tasks/useTasksLists";
 
 // API functions
 import { useUserPendingShares, searchUsersByEmail } from "@/api/tasks_lists";
@@ -37,13 +32,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
   // React Query hooks for task lists
   const { data: taskLists } = useTaskLists();
-  const { mutate: deleteTaskListMutation } = useDeleteTaskList();
-  const { mutate: updateTaskListMutation } = useUpdateTaskList();
-
-
-  const { mutate: moveTaskMutation } = useMoveTask();
-  const { mutate: clearCompletedTasksMutation } = useClearCompletedTasks();
-  const { mutate: uncheckAllTasksMutation } = useUncheckAllTasks();
 
   // Sharing system
   const pendingSharesFromFirebase = useUserPendingShares();
@@ -81,57 +69,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     setPendingShares(pendingSharesFromFirebase);
   }, [pendingSharesFromFirebase]);
-
-  // ====== Task List Functions ======
-
-  const updateTaskList = (listId: string, updates: Partial<TaskListInterface>): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-      updateTaskListMutation(
-        { listId, updates },
-        {
-          onSuccess: () => resolve(),
-          onError: (error) => reject(error),
-        },
-      );
-    });
-  };
-
-  const deleteTaskList = (listId: string): Promise<void> => {
-    if (!user) {
-      showToast("error", "Musisz być zalogowany, aby usunąć listę zadań");
-      return Promise.reject(new Error("User not authenticated"));
-    }
-
-    return new Promise<void>((resolve, reject) => {
-      deleteTaskListMutation(listId, {
-        onSuccess: () => resolve(),
-        onError: (error) => reject(error),
-      });
-    });
-  };
-
-  const renameTaskList = (listId: string, newName: string): Promise<void> => {
-    return updateTaskList(listId, { name: newName });
-  };
-
-  const clearCompletedTasks = (listId: string): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-      clearCompletedTasksMutation(listId, {
-        onSuccess: () => resolve(),
-        onError: (error) => reject(error),
-      });
-    });
-  };
-
-  const uncheckAllTasks = (listId: string): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-      uncheckAllTasksMutation(listId, {
-        onSuccess: () => resolve(),
-        onError: (error) => reject(error),
-      });
-    });
-  };
-
+ 
   // ====== Sharing Functions ======
 
   const shareTaskList = async (listId: string, userEmail: string, permission: SharePermission): Promise<void> => {
@@ -188,12 +126,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     return pendingShares;
   };
 
-  // TODO: Implement these functions with new permission system
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const unshareTaskList = async (_listId: string, _userId: string): Promise<void> => {
-    showToast("error", "Funkcja cofania udostępniania wymaga refaktoryzacji");
-  };
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateSharePermission = async (
     _listId: string,
@@ -202,20 +134,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   ): Promise<void> => {
     console.log(_listId, _userId, _permission);
     showToast("error", "Funkcja aktualizacji uprawnień wymaga refaktoryzacji");
-  };
-
-  // ====== Task Functions ======
-
-  const moveTask = (taskId: string, _fromListId: string, toListId: string): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-      moveTaskMutation(
-        { taskId, toListId },
-        {
-          onSuccess: () => resolve(),
-          onError: (error) => reject(error),
-        },
-      );
-    });
   };
 
   // ====== Legacy Support ======
@@ -235,24 +153,15 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         currentTaskList,
         currentTaskListId,
         setCurrentTaskListId,
-        updateTaskList,
-        deleteTaskList,
-        renameTaskList,
-        clearCompletedTasks,
-        uncheckAllTasks,
 
         // ====== Sharing ======
         shareTaskList,
-        unshareTaskList,
         acceptSharedList,
         rejectSharedList,
         updateSharePermission,
         searchUsers,
         getSharedLists,
         getPendingShares,
-
-        // ====== Tasks ======
-        moveTask,
 
         // ====== Legacy Support ======
         clickedTask,

@@ -6,7 +6,6 @@ import {
   acceptObjectInvitation,
   rejectObjectInvitation,
   deletePermission,
-  revokeObjectAccess,
   getObjectSharedUsers,
   listenToUserPendingNotifications as listenToGenericNotifications,
 } from "@/api/permissions/permissions";
@@ -66,7 +65,7 @@ export const listenToUserPendingNotifications = (
         shared_with: notification.shared_with,
         permission: notification.permission,
         shared_at: notification.shared_at,
-        status: notification.status, // Convert revoked to rejected for compatibility
+        status: notification.status, // Convert to rejected for compatibility
       }));
 
     callback(taskPermissions);
@@ -78,13 +77,6 @@ export const listenToUserPendingNotifications = (
  */
 export const deleteNotification = async (notificationId: string): Promise<void> => {
   return deletePermission(notificationId);
-};
-
-/**
- * Revoke access to task list - UPDATED to use generic permissions system
- */
-export const revokeTaskListAccess = async (listId: string, userId: string): Promise<void> => {
-  return revokeObjectAccess(listId, "task_list", userId);
 };
 
 /**
@@ -102,9 +94,9 @@ export const getTaskListSharedUsers = async (
   }>
 > => {
   const users = await getObjectSharedUsers(listId, "task_list");
-  // Filter out revoked users for compatibility
+  // Filter out rejected users for compatibility
   return users
-    .filter((user) => user.status !== "revoked" && user.status !== "rejected")
+    .filter((user) => user.status !== "rejected")
     .map((user) => ({
       ...user,
       status: user.status as "pending" | "accepted",

@@ -24,11 +24,11 @@ export default function Sidebar() {
     <aside className="w-64 min-w-64 h-full flex transition-all duration-600 flex-col justify-between p-4 bg-bg-alt dark:bg-bg-dark text-text dark:text-text-dark border-r border-bg-hover dark:border-bg-hover-dark">
       {/* logo + links */}
       <div className="flex flex-col gap-1 justify-between">
-        <NavLink to="/">
+        <NavLink to="/" className={"flex justify-center"}>
           <img
             src="logo.png" // albo .png – ścieżkę dopasuj do siebie
             alt="Planora logo"
-            className="h-20 w-45 mb-4 text-center"
+            className="h-20 w-45 mb-4"
           />
         </NavLink>
         <SidebarLink to="/calendar" icon="📅" label="Kalendarz" />

@@ -303,40 +303,6 @@ export const deletePermission = async (permissionId: string): Promise<void> => {
 };
 
 /**
- * Revoke access to object - removes user permissions
- */
-export const revokeObjectAccess = async (
-  objectId: string,
-  objectType: ShareableObjectType,
-  userId: string,
-): Promise<void> => {
-  try {
-    console.log("Revoking access for user:", userId, "from", objectType, ":", objectId);
-
-    // Find all permissions for this user and object
-    const permissionsCollection = collection(db, PERMISSIONS_COLLECTION);
-    const permissionsQuery = query(
-      permissionsCollection,
-      where("object_id", "==", objectId),
-      where("object_type", "==", objectType),
-      where("user_id", "==", userId),
-      where("status", "in", ["pending", "accepted"]),
-    );
-
-    const permissionsSnapshot = await getDocs(permissionsQuery);
-
-    // Update all permissions to "revoked" status for audit trail
-    const updatePromises = permissionsSnapshot.docs.map((doc) => updateDoc(doc.ref, { status: "revoked" }));
-    await Promise.all(updatePromises);
-
-    console.log("Updated", permissionsSnapshot.docs.length, "permissions to revoked status");
-  } catch (error) {
-    console.error("Error revoking object access:", error);
-    throw error;
-  }
-};
-
-/**
  * Get users with access to an object
  */
 export const getObjectSharedUsers = async (
@@ -348,7 +314,7 @@ export const getObjectSharedUsers = async (
     email: string;
     displayName?: string;
     permission: SharePermission;
-    status: "pending" | "accepted" | "rejected" | "revoked";
+    status: "pending" | "accepted" | "rejected"
   }>
 > => {
   try {
@@ -399,7 +365,7 @@ export const getObjectSharedUsers = async (
           email: userData.email,
           displayName: userData.displayName,
           permission: permission?.data().role as SharePermission,
-          status: permission?.data().status as "pending" | "accepted" | "rejected" | "revoked",
+          status: permission?.data().status as "pending" | "accepted" | "rejected"
         };
         console.log("User result:", result);
         return result;
@@ -418,7 +384,7 @@ export const getObjectSharedUsers = async (
       email: string;
       displayName?: string;
       permission: SharePermission;
-      status: "pending" | "accepted" | "rejected" | "revoked";
+      status: "pending" | "accepted" | "rejected"
     }>;
   } catch (error) {
     console.error("Error getting object shared users:", error);

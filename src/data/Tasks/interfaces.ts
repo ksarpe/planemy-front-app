@@ -53,28 +53,15 @@ export interface TaskContextProps {
   currentTaskList: TaskListInterface | null;
   currentTaskListId: string | null;
   setCurrentTaskListId: (listId: string | null) => void;
-  updateTaskList: (listId: string, updates: Partial<TaskListInterface>) => Promise<void>;
-  deleteTaskList: (listId: string) => Promise<void>;
-  renameTaskList: (listId: string, newName: string) => Promise<void>;
-  clearCompletedTasks: (listId: string) => Promise<void>;
-  uncheckAllTasks: (listId: string) => Promise<void>;
 
   // Sharing functionality
   shareTaskList: (listId: string, userEmail: string, permission: SharePermission) => Promise<void>;
-  unshareTaskList: (listId: string, userId: string) => Promise<void>;
   acceptSharedList: (shareId: string) => Promise<void>;
   rejectSharedList: (shareId: string) => Promise<void>;
   updateSharePermission: (listId: string, userId: string, permission: SharePermission) => Promise<void>;
   searchUsers: (email: string) => Promise<UserProfile[]>;
   getSharedLists: () => TaskListInterface[];
   getPendingShares: () => SharedTaskList[];
-
-  // Tasks within lists
-  moveTask: (taskId: string, fromListId: string, toListId: string) => Promise<void>;
-
-  // UI State
-  // Note: loading state is now managed by individual React Query hooks
-  // Individual components can use the isLoading, isPending, etc. from specific query hooks
 
   // Legacy support (for backwards compatibility)
   clickedTask: TaskInterface | null;
