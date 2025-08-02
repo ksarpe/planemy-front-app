@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
-import { fetchUserTaskListsApi, createTaskListApi, deleteTaskListApi } from "@/api/tasks";
+import { fetchUserTaskListsApi, createTaskListApi, deleteTaskListApi, updateTaskList } from "@/api/tasks";
+import type { TaskListInterface } from "@/data/Tasks/interfaces";
 
 // --- QUERIES ----
 export const useTaskLists = () => {
@@ -46,6 +47,24 @@ export const useDeleteTaskList = () => {
     onError: (error) => {
       console.error("Error deleting task list:", error); //DEBUG
       showToast("error", "Błąd podczas usuwania listy zadań");
+    },
+  });
+};
+
+export const useUpdateTaskList = () => {
+  const { showToast } = useToastContext();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ listId, updates }: { listId: string; updates: Partial<TaskListInterface> }) =>
+      updateTaskList(listId, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["taskLists"] });
+      showToast("success", "Lista zadań została zaktualizowana!");
+    },
+    onError: (error) => {
+      console.error("Error updating task list:", error);
+      showToast("error", "Błąd podczas aktualizacji listy zadań");
     },
   });
 };

@@ -70,14 +70,7 @@ export interface TaskContextProps {
 
   // Tasks within lists
   tasksCache: Record<string, TaskInterface[]>;
-  setTasksCache: (cache: Record<string, TaskInterface[]>) => void;
-  addTask: (
-    listId: string,
-    title: string,
-    description?: string | null,
-    dueDate?: string | null,
-    labels?: LabelInterface[],
-  ) => Promise<void>;
+  addTask: (listId: string, title: string, description?: string | null, dueDate?: string | null) => Promise<void>;
   updateTask: (taskId: string, updates: Partial<TaskInterface>) => Promise<void>;
   removeTask: (taskId: string) => Promise<void>;
   toggleTaskComplete: (taskId: string) => Promise<void>;
@@ -87,10 +80,10 @@ export interface TaskContextProps {
   getTasksForList: (listId: string) => TaskInterface[];
   getTaskStats: (listId: string) => { total: number; completed: number; pending: number };
 
-
   // UI State
-  loading: boolean;
-  
+  // Note: loading state is now managed by individual React Query hooks
+  // Individual components can use the isLoading, isPending, etc. from specific query hooks
+
   // Legacy support (for backwards compatibility)
   clickedTask: TaskInterface | null;
   setClickedTask: (task: TaskInterface | null) => void;

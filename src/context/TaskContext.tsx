@@ -1,63 +1,84 @@
 import { createContext, useEffect, useState, ReactNode, useMemo } from "react";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 
+// Types
 import type { TaskInterface, TaskListInterface, SharedTaskList, TaskContextProps } from "@/data/Tasks/interfaces";
 import type { SharePermission } from "@/data/Utils/types";
 import type { UserProfile } from "@/data/User/interfaces";
 import type { LabelInterface } from "@/data/Utils/interfaces";
 
+// Context hooks
 import { useToastContext } from "@/hooks/context/useToastContext";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useLabelContext } from "@/hooks/context/useLabelContext";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 
-import { useTaskLists, useCreateTaskList, useDeleteTaskList } from "@/hooks/tasks/useTasksLists";
-
+// Task hooks (React Query)
+import { useTaskLists, useCreateTaskList, useDeleteTaskList, useUpdateTaskList } from "@/hooks/tasks/useTasksLists";
 import {
-  useUserPendingShares,
-  updateTaskList as updateTaskListFirebase,
-  addTaskToList as addTaskToListFirebase,
-  updateTaskInList as updateTaskInListFirebase,
-  removeTaskFromList as removeTaskFromListFirebase,
-  toggleTaskCompletion as toggleTaskCompletionFirebase,
-  searchUsersByEmail,
-  clearCompletedTasks as clearCompletedTasksFirebase,
-  uncheckAllTasks as uncheckAllTasksFirebase,
-} from "@/api/tasks";
+  useCreateTask,
+  useUpdateTask,
+  useDeleteTask,
+  useToggleTaskCompletion,
+  useMoveTask,
+  useClearCompletedTasks,
+  useUncheckAllTasks,
+} from "@/hooks/tasks/useTasks";
 
+// API functions
+import { useUserPendingShares, searchUsersByEmail } from "@/api/tasks";
 import {
   shareTaskListWithUser,
   acceptTaskListInvitation,
   rejectTaskListInvitation,
 } from "@/api/permissions/taskPermissions";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+
+// Firebase config
 import { db } from "@/api/config";
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 export { TaskContext };
 
 export const TaskProvider = ({ children }: { children: ReactNode }) => {
+  // Context hooks
   const { showToast } = useToastContext();
   const { mainListId } = usePreferencesContext();
   const { labelConnectionsByType } = useLabelContext();
   const { user } = useAuthContext();
-  // New task list system
-  const { data: taskLists } = useTaskLists();
-  const { mutate: createTaskListApi } = useCreateTaskList();
-  const { mutate: deleteTaskListApi } = useDeleteTaskList();
 
+  // React Query hooks for task lists
+  const { data: taskLists } = useTaskLists();
+  const { mutate: createTaskListMutation } = useCreateTaskList();
+  const { mutate: deleteTaskListMutation } = useDeleteTaskList();
+  const { mutate: updateTaskListMutation } = useUpdateTaskList();
+
+  // React Query hooks for task operations
+  const { mutate: createTaskMutation } = useCreateTask();
+  const { mutate: updateTaskMutation } = useUpdateTask();
+  const { mutate: deleteTaskMutation } = useDeleteTask();
+  const { mutate: toggleTaskCompletionMutation } = useToggleTaskCompletion();
+  const { mutate: moveTaskMutation } = useMoveTask();
+  const { mutate: clearCompletedTasksMutation } = useClearCompletedTasks();
+  const { mutate: uncheckAllTasksMutation } = useUncheckAllTasks();
+
+  // Sharing system
   const pendingSharesFromFirebase = useUserPendingShares();
-  // State
+
+  // Local state
   const [currentTaskListId, setCurrentTaskListId] = useState<string | null>(null);
+  const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
+  const [clickedTask, setClickedTask] = useState<TaskInterface | null>(null);
+  const [tasksCache, setTasksCache] = useState<Record<string, TaskInterface[]>>({});
+
+  // Computed state
   const currentTaskList = useMemo(
     () => taskLists?.find((list) => list.id === currentTaskListId) || null,
     [taskLists, currentTaskListId],
   );
-  const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [clickedTask, setClickedTask] = useState<TaskInterface | null>(null);
-  // Tasks cache - zadania pogrupowane według listId
-  const [tasksCache, setTasksCache] = useState<Record<string, TaskInterface[]>>({});
 
+  // Effects
+
+  // Effect: Update current task list selection
   useEffect(() => {
     if (!taskLists || taskLists.length === 0) {
       setCurrentTaskListId(null);
@@ -66,28 +87,27 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
     const idExists = currentTaskListId && taskLists.some((list) => list.id === currentTaskListId);
 
-    // Jeśli wybrane ID nie istnieje w nowej liście, wybierz nowe domyślne ID
+    // If selected ID doesn't exist in new list, select new default ID
     if (!idExists) {
       const defaultList = taskLists.find((list) => list.id === mainListId) || taskLists[0];
       setCurrentTaskListId(defaultList.id);
     }
   }, [taskLists, mainListId, currentTaskListId]);
+
+  // Effect: Sync pending shares
   useEffect(() => {
     setPendingShares(pendingSharesFromFirebase);
   }, [pendingSharesFromFirebase]);
 
-  // Listen to tasks for all user's task lists
-  // and asign labels to tasks also
-  // TASKS CACHE
+  // Effect: Real-time tasks cache with labels
   useEffect(() => {
     if (!user || !taskLists || taskLists.length === 0) {
       setTasksCache({});
       return;
     }
 
-    //Task label connections =
+    // Get task label connections
     const taskLabelConnections = labelConnectionsByType.get("task") || new Map<string, LabelInterface[]>();
-    console.log("Task label connections:", taskLabelConnections);
 
     const unsubscribes: (() => void)[] = [];
 
@@ -120,35 +140,71 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [user, taskLists, labelConnectionsByType]);
 
-  // Task List Functions
-  const createTaskList = (name: string) => {
+  // ====== Task List Functions ======
+
+  const createTaskList = (name: string): Promise<void> => {
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby utworzyć listę zadań");
-      return;
+      return Promise.reject(new Error("User not authenticated"));
     }
-    createTaskListApi(name);
+
+    return new Promise<void>((resolve, reject) => {
+      createTaskListMutation(name, {
+        onSuccess: () => resolve(),
+        onError: (error) => reject(error),
+      });
+    });
   };
 
-  const updateTaskList = async (listId: string, updates: Partial<TaskListInterface>): Promise<void> => {
-    try {
-      setLoading(true);
-      await updateTaskListFirebase(listId, updates);
-      showToast("success", "Lista zadań została zaktualizowana!");
-    } catch (error) {
-      console.error("Error updating task list:", error);
-      showToast("error", "Błąd podczas aktualizacji listy zadań");
-    } finally {
-      setLoading(false);
-    }
+  const updateTaskList = (listId: string, updates: Partial<TaskListInterface>): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      updateTaskListMutation(
+        { listId, updates },
+        {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        },
+      );
+    });
   };
 
-  const deleteTaskList = async (listId: string): Promise<void> => {
+  const deleteTaskList = (listId: string): Promise<void> => {
     if (!user) {
-      showToast("error", "Musisz być zalogowany, aby utworzyć listę zadań");
-      return;
+      showToast("error", "Musisz być zalogowany, aby usunąć listę zadań");
+      return Promise.reject(new Error("User not authenticated"));
     }
-    deleteTaskListApi(listId);
+
+    return new Promise<void>((resolve, reject) => {
+      deleteTaskListMutation(listId, {
+        onSuccess: () => resolve(),
+        onError: (error) => reject(error),
+      });
+    });
   };
+
+  const renameTaskList = (listId: string, newName: string): Promise<void> => {
+    return updateTaskList(listId, { name: newName });
+  };
+
+  const clearCompletedTasks = (listId: string): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      clearCompletedTasksMutation(listId, {
+        onSuccess: () => resolve(),
+        onError: (error) => reject(error),
+      });
+    });
+  };
+
+  const uncheckAllTasks = (listId: string): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      uncheckAllTasksMutation(listId, {
+        onSuccess: () => resolve(),
+        onError: (error) => reject(error),
+      });
+    });
+  };
+
+  // ====== Sharing Functions ======
 
   const shareTaskList = async (listId: string, userEmail: string, permission: SharePermission): Promise<void> => {
     if (!user) {
@@ -157,76 +213,31 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
 
     try {
-      setLoading(true);
       await shareTaskListWithUser(listId, userEmail, permission, user.uid);
       showToast("success", "Lista została udostępniona!");
     } catch (error) {
       console.error("Error sharing task list:", error);
       showToast("error", "Błąd podczas udostępniania listy");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const unshareTaskList = async (_listId: string, _userId: string): Promise<void> => {
-    try {
-      setLoading(true);
-      // We need to find the permission ID for this user and list
-      // This should be implemented to get the permission ID first
-      // For now, this function needs to be refactored to work with the new system
-      showToast("error", "Funkcja cofania udostępniania wymaga refaktoryzacji");
-    } catch (error) {
-      console.error("Error unsharing task list:", error);
-      showToast("error", "Błąd podczas cofania udostępniania");
-    } finally {
-      setLoading(false);
     }
   };
 
   const acceptSharedList = async (shareId: string): Promise<void> => {
     try {
-      setLoading(true);
       await acceptTaskListInvitation(shareId);
       showToast("success", "Lista została zaakceptowana!");
     } catch (error) {
       console.error("Error accepting shared list:", error);
       showToast("error", "Błąd podczas akceptowania listy");
-    } finally {
-      setLoading(false);
     }
   };
 
   const rejectSharedList = async (shareId: string): Promise<void> => {
     try {
-      setLoading(true);
       await rejectTaskListInvitation(shareId);
       showToast("success", "Lista została odrzucona!");
     } catch (error) {
       console.error("Error rejecting shared list:", error);
       showToast("error", "Błąd podczas odrzucania listy");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateSharePermission = async (
-    _listId: string,
-    _userId: string,
-    _permission: SharePermission,
-  ): Promise<void> => {
-    try {
-      setLoading(true);
-      console.log(_listId, _userId, _permission);
-      // We need to find the permission ID for this user and list first
-      // This should be implemented to get the permission ID first
-      // For now, this function needs to be refactored to work with the new system
-      showToast("error", "Funkcja aktualizacji uprawnień wymaga refaktoryzacji");
-    } catch (error) {
-      console.error("Error updating permissions:", error);
-      showToast("error", "Błąd podczas aktualizacji uprawnień");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -241,9 +252,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getSharedLists = (): TaskListInterface[] => {
-    // With the new permission system, we need to determine which lists are shared
-    // This should be implemented to check permissions or maybe we need to add
-    // a flag to indicate shared lists. For now, return empty array.
+    // TODO: Implement with new permission system
     return [];
   };
 
@@ -251,8 +260,25 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     return pendingShares;
   };
 
-  // Task Functions
-  const addTask = async (
+  // TODO: Implement these functions with new permission system
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const unshareTaskList = async (_listId: string, _userId: string): Promise<void> => {
+    showToast("error", "Funkcja cofania udostępniania wymaga refaktoryzacji");
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const updateSharePermission = async (
+    _listId: string,
+    _userId: string,
+    _permission: SharePermission,
+  ): Promise<void> => {
+    console.log(_listId, _userId, _permission);
+    showToast("error", "Funkcja aktualizacji uprawnień wymaga refaktoryzacji");
+  };
+
+  // ====== Task Functions ======
+
+  const addTask = (
     listId: string,
     title: string,
     description?: string | null,
@@ -260,118 +286,71 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   ): Promise<void> => {
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby dodać zadanie");
-      return;
+      return Promise.reject(new Error("User not authenticated"));
     }
 
-    try {
-      setLoading(true);
-      await addTaskToListFirebase(listId, title, user.uid, description, dueDate);
-      showToast("success", "Zadanie zostało dodane!");
-    } catch (error) {
-      console.error("Error adding task:", error);
-      showToast("error", "Błąd podczas dodawania zadania");
-    } finally {
-      setLoading(false);
-    }
+    return new Promise<void>((resolve, reject) => {
+      createTaskMutation(
+        { listId, title, description, dueDate },
+        {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        },
+      );
+    });
   };
 
-  const updateTask = async (taskId: string, updates: Partial<TaskInterface>): Promise<void> => {
-    try {
-      setLoading(true);
-      await updateTaskInListFirebase(taskId, updates);
-      showToast("success", "Zadanie zostało zaktualizowane!");
-    } catch (error) {
-      console.error("Error updating task:", error);
-      showToast("error", "Błąd podczas aktualizacji zadania");
-    } finally {
-      setLoading(false);
-    }
+  const updateTask = (taskId: string, updates: Partial<TaskInterface>): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      updateTaskMutation(
+        { taskId, updates },
+        {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        },
+      );
+    });
   };
 
-  const removeTask = async (taskId: string): Promise<void> => {
-    try {
-      setLoading(true);
-      await removeTaskFromListFirebase(taskId);
-      showToast("success", "Zadanie zostało usunięte!");
-    } catch (error) {
-      console.error("Error removing task:", error);
-      showToast("error", "Błąd podczas usuwania zadania");
-    } finally {
-      setLoading(false);
-    }
+  const removeTask = (taskId: string): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      deleteTaskMutation(taskId, {
+        onSuccess: () => resolve(),
+        onError: (error) => reject(error),
+      });
+    });
   };
 
-  const toggleTaskComplete = async (taskId: string): Promise<void> => {
-    try {
-      await toggleTaskCompletionFirebase(taskId);
-      showToast("success", "Status zadania został zmieniony!");
-    } catch (error) {
-      console.error("Error toggling task completion:", error);
-      showToast("error", "Błąd podczas zmiany statusu zadania");
-    }
+  const toggleTaskComplete = (taskId: string): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      toggleTaskCompletionMutation(taskId, {
+        onSuccess: () => resolve(),
+        onError: (error) => reject(error),
+      });
+    });
   };
 
-  const moveTask = async (taskId: string, _fromListId: string, toListId: string): Promise<void> => {
-    try {
-      setLoading(true);
-
-      // For now, we'll update the taskListId directly instead of recreating the task
-      // This is more efficient than remove + add
-      await updateTaskInListFirebase(taskId, { taskListId: toListId });
-
-      showToast("success", "Zadanie zostało przeniesione!");
-    } catch (error) {
-      console.error("Error moving task:", error);
-      showToast("error", "Błąd podczas przenoszenia zadania");
-    } finally {
-      setLoading(false);
-    }
+  const moveTask = (taskId: string, _fromListId: string, toListId: string): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      moveTaskMutation(
+        { taskId, toListId },
+        {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        },
+      );
+    });
   };
 
-  // List management functions
-  const renameTaskList = async (listId: string, newName: string): Promise<void> => {
-    try {
-      await updateTaskList(listId, { name: newName });
-      showToast("success", "Nazwa listy została zmieniona!");
-    } catch (error) {
-      console.error("Error renaming task list:", error);
-      showToast("error", "Błąd podczas zmiany nazwy listy");
-    }
-  };
+  // ====== Legacy Support ======
 
-  const clearCompletedTasks = async (listId: string): Promise<void> => {
-    try {
-      setLoading(true);
-      await clearCompletedTasksFirebase(listId);
-      showToast("success", "Usunięto wszystkie ukończone zadania!");
-    } catch (error) {
-      console.error("Error clearing completed tasks:", error);
-      showToast("error", "Błąd podczas usuwania ukończonych zadań");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const uncheckAllTasks = async (listId: string): Promise<void> => {
-    try {
-      setLoading(true);
-      await uncheckAllTasksFirebase(listId);
-      showToast("success", "Odznaczono wszystkie zadania!");
-    } catch (error) {
-      console.error("Error unchecking tasks:", error);
-      showToast("error", "Błąd podczas odznaczania zadań");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Legacy support
   const convertToEvent = () => {
     if (!clickedTask) return;
     showToast("success", "Funkcja konwersji do eventu zostanie dodana wkrótce.");
   };
 
-  // Task utilities
+  // ====== Utility Functions ======
+
   const getTasksForList = useMemo(
     () =>
       (listId: string): TaskInterface[] => {
@@ -395,12 +374,11 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   return (
     <TaskContext.Provider
       value={{
-        // Task Lists
+        // ====== Task Lists ======
         taskLists: taskLists || [],
         currentTaskList,
-        setCurrentTaskListId,
         currentTaskListId,
-
+        setCurrentTaskListId,
         createTaskList,
         updateTaskList,
         deleteTaskList,
@@ -408,7 +386,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         clearCompletedTasks,
         uncheckAllTasks,
 
-        // Sharing functionality
+        // ====== Sharing ======
         shareTaskList,
         unshareTaskList,
         acceptSharedList,
@@ -418,23 +396,19 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         getSharedLists,
         getPendingShares,
 
-        // Tasks
+        // ====== Tasks ======
         tasksCache,
-        setTasksCache,
         addTask,
         updateTask,
         removeTask,
         toggleTaskComplete,
         moveTask,
 
-        // UI State
-        loading,
-
-        // Task utilities
+        // ====== Utilities ======
         getTasksForList,
         getTaskStats,
 
-        // Legacy support
+        // ====== Legacy Support ======
         clickedTask,
         setClickedTask,
         convertToEvent,
