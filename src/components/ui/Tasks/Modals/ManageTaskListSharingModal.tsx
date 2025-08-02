@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { X, UserPlus, Mail, Clock, CheckCircle } from "lucide-react";
-import { getTaskListSharedUsers, shareTaskListWithUser } from "@/api/tasks_lists";
+import { shareObjectWithUser } from "@/api/permissions";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 
@@ -47,7 +47,7 @@ export default function ManageTaskListSharingModal({
 
     setIsSharing(true);
     try {
-      await shareTaskListWithUser(listId, sharingEmail.trim(), sharingPermission, user.uid);
+      await shareObjectWithUser(listId, "task_list", sharingEmail.trim(), sharingPermission, user.uid);
       setSharingEmail("");
       setSharingPermission("view");
       await loadSharedUsers();

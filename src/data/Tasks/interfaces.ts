@@ -1,7 +1,6 @@
 import type { TaskListFilter, SharedUserStatus, EmptyListType } from "./types";
 import type { SharePermission } from "@/data/Utils/types";
 import type { LabelInterface } from "@/data/Utils/interfaces";
-import type { UserProfile } from "@/data/User/interfaces";
 
 export interface TaskInterface {
   id: string;
@@ -53,15 +52,6 @@ export interface TaskContextProps {
   currentTaskList: TaskListInterface | null;
   currentTaskListId: string | null;
   setCurrentTaskListId: (listId: string | null) => void;
-
-  // Sharing functionality
-  shareTaskList: (listId: string, userEmail: string, permission: SharePermission) => Promise<void>;
-  acceptSharedList: (shareId: string) => Promise<void>;
-  rejectSharedList: (shareId: string) => Promise<void>;
-  updateSharePermission: (listId: string, userId: string, permission: SharePermission) => Promise<void>;
-  searchUsers: (email: string) => Promise<UserProfile[]>;
-  getSharedLists: () => TaskListInterface[];
-  getPendingShares: () => SharedTaskList[];
 
   // Legacy support (for backwards compatibility)
   clickedTask: TaskInterface | null;

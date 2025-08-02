@@ -11,33 +11,13 @@ import {
   orderBy,
   getDoc,
 } from "firebase/firestore";
-import { db } from "../config";
+import { db } from "@/api/config";
 import type { SharePermission, ShareableObjectType } from "@/data/Utils/types";
 import type { Permission, ShareNotification } from "@/data/Utils/interfaces";
 
 const PERMISSIONS_COLLECTION = "permissions";
 
-/**
- * Search users by email
- */
-const searchUsersByEmail = async (
-  email: string,
-): Promise<Array<{ id: string; email: string; displayName?: string }>> => {
-  try {
-    const usersCollection = collection(db, "users");
-    const q = query(usersCollection, where("email", "==", email));
-    const snapshot = await getDocs(q);
 
-    return snapshot.docs.map((doc) => ({
-      id: doc.data().id,
-      email: doc.data().email,
-      displayName: doc.data().displayName,
-    }));
-  } catch (error) {
-    console.error("Error searching users:", error);
-    return [];
-  }
-};
 
 /**
  * Get object name by type and ID
@@ -445,5 +425,27 @@ export const hasUserAccessToObject = async (
   } catch (error) {
     console.error("Error checking user access:", error);
     return { hasAccess: false };
+  }
+};
+
+/**
+ * Search users by email
+ */
+const searchUsersByEmail = async (
+  email: string,
+): Promise<Array<{ id: string; email: string; displayName?: string }>> => {
+  try {
+    const usersCollection = collection(db, "users");
+    const q = query(usersCollection, where("email", "==", email));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.data().id,
+      email: doc.data().email,
+      displayName: doc.data().displayName,
+    }));
+  } catch (error) {
+    console.error("Error searching users:", error);
+    return [];
   }
 };

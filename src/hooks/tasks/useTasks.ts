@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
-import { clearCompletedTasks, uncheckAllTasks } from "@/api/tasks_lists";
+import { clearCompletedTasks,
+     uncheckAllTasks } from "@/api/tasks_lists";
 import { createTaskApi, updateTaskApi, removeTaskApi, completeTaskApi } from "@/api/tasks";
 import { fetchTasksForListApi } from "@/api/tasks";
 import type { TaskInterface } from "@/data/Tasks/interfaces";

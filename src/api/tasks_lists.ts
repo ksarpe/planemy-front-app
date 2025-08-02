@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { db } from "./config";
 import {
   collection,
@@ -10,12 +9,8 @@ import {
   getDocs,
   getCountFromServer,
 } from "firebase/firestore";
-import { useAuthContext } from "../hooks/context/useAuthContext";
 
-import type { TaskListInterface, SharedTaskList } from "@/data/Tasks/interfaces";
-import type { ShareNotification } from "@/data/Utils/interfaces";
-import type { SharePermission } from "@/data/Utils/types";
-import type { UserProfile } from "@/data/User/interfaces";
+import type { TaskListInterface } from "@/data/Tasks/interfaces";
 
 /**
  * Pobiera wszystkie listy zadań dla danego użytkownika (jednorazowo).
@@ -171,132 +166,4 @@ export const uncheckAllTasks = async (listId: string): Promise<void> => {
     console.error("Error unchecking all tasks:", error);
     throw error;
   }
-};
-
-// SHARING SYSTEM FUNCTIONS
-
-// Function to create user profile (called when user registers)
-// export const createUserProfile = async (userId: string, email: string, displayName?: string): Promise<void> => {
-//     try {
-//         const userProfile: UserProfile = {
-//             id: userId,
-//             email,
-//             displayName,
-//             createdAt: new Date().toISOString(),
-//         };
-
-//         await setDoc(doc(db, "users", userId), userProfile);
-//     } catch (error) {
-//         console.error("Error creating user profile:", error);
-//         throw error;
-//     }
-// };
-
-// Search users by email
-export const searchUsersByEmail = async (email: string): Promise<UserProfile[]> => {
-  try {
-    const usersCollection = collection(db, "users");
-    const userQuery = query(usersCollection, where("email", "==", email));
-    const snapshot = await getDocs(userQuery);
-
-    return snapshot.docs.map((doc) => doc.data() as UserProfile);
-  } catch (error) {
-    console.error("Error searching users:", error);
-    throw error;
-  }
-};
-
-// Share task list with another user - now uses notifications collection
-export const shareTaskListWithUser = async (
-  listId: string,
-  targetUserEmail: string,
-  permission: SharePermission,
-  sharedByUserId: string,
-): Promise<void> => {
-  try {
-    const { shareTaskListWithUser: newShareFunction } = await import("./permissions/taskPermissions");
-    await newShareFunction(listId, targetUserEmail, permission, sharedByUserId);
-  } catch (error) {
-    console.error("Error sharing task list:", error);
-    throw error;
-  }
-};
-
-// Accept shared task list - now uses notifications collection
-export const acceptSharedTaskList = async (shareId: string): Promise<void> => {
-  try {
-    const { acceptTaskListInvitation } = await import("./permissions/taskPermissions");
-    await acceptTaskListInvitation(shareId);
-  } catch (error) {
-    console.error("Error accepting shared task list:", error);
-    throw error;
-  }
-};
-
-// Reject shared task list - now uses notifications collection
-export const rejectSharedTaskList = async (shareId: string): Promise<void> => {
-  try {
-    const { rejectTaskListInvitation } = await import("./permissions/taskPermissions");
-    await rejectTaskListInvitation(shareId);
-  } catch (error) {
-    console.error("Error rejecting shared task list:", error);
-    throw error;
-  }
-};
-
-// Get users with access to task list
-export const getTaskListSharedUsers = async (listId: string) => {
-  try {
-    const { getTaskListSharedUsers: getSharedUsers } = await import("./permissions/taskPermissions");
-    return await getSharedUsers(listId);
-  } catch (error) {
-    console.error("Error getting shared users:", error);
-    return [];
-  }
-};
-
-// Get pending share invitations for user - now uses notifications collection
-export const useUserPendingShares = (): SharedTaskList[] => {
-  const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
-  const { user } = useAuthContext();
-
-  useEffect(() => {
-    if (!user) {
-      setPendingShares([]);
-      return;
-    }
-
-    let unsubscribe: (() => void) | undefined;
-
-    const setupListener = async () => {
-      try {
-        const { listenToUserPendingNotifications } = await import("./permissions/taskPermissions");
-
-        unsubscribe = listenToUserPendingNotifications(user.uid, (notifications: ShareNotification[]) => {
-          // Convert TaskListNotification to SharedTaskList format for compatibility
-          const sharedTaskLists = notifications.map((notification: ShareNotification) => ({
-            id: notification.id,
-            listId: notification.object_id,
-            sharedBy: notification.shared_by,
-            permission: notification.permission,
-            sharedAt: notification.shared_at,
-            acceptedAt: "",
-          })) as SharedTaskList[];
-
-          setPendingShares(sharedTaskLists);
-        });
-      } catch (error) {
-        console.error("Error setting up pending notifications listener:", error);
-      }
-    };
-
-    setupListener();
-
-    return () => {
-      console.log("Cleaning up pending notifications listener");
-      unsubscribe?.();
-    };
-  }, [user]);
-
-  return pendingShares;
 };
