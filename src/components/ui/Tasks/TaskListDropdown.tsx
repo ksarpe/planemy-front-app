@@ -5,7 +5,7 @@ import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { TaskListInterface } from "@/data/Tasks/interfaces";
 
 export default function TaskListDropdown() {
-  const { taskLists, currentTaskList, setCurrentTaskList, getTaskStats } = useTaskContext();
+  const { taskLists, currentTaskList, setCurrentTaskListId, getTaskStats } = useTaskContext();
   const { mainListId } = usePreferencesContext();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -62,7 +62,7 @@ export default function TaskListDropdown() {
               <button
                 key={list.id}
                 onClick={() => {
-                  setCurrentTaskList(list);
+                  setCurrentTaskListId(list.id);
                   setIsOpen(false);
                 }}
                 className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 ${

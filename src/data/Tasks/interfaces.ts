@@ -49,7 +49,8 @@ export interface TaskContextProps {
   // Task Lists
   taskLists: TaskListInterface[];
   currentTaskList: TaskListInterface | null;
-  setCurrentTaskList: (taskList: TaskListInterface | null) => void;
+  currentTaskListId: string | null;
+  setCurrentTaskListId: (listId: string | null) => void;
   createTaskList: (name: string) => Promise<void>;
   updateTaskList: (listId: string, updates: Partial<TaskListInterface>) => Promise<void>;
   deleteTaskList: (listId: string) => Promise<void>;

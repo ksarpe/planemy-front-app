@@ -15,7 +15,7 @@ import type { UserProfile } from "@/data/User/interfaces";
  * @param userId - ID zalogowanego użytkownika.
  * @returns Promise<TaskListInterface[]>
  */
-export const fetchUserTaskLists = async (userId: string): Promise<TaskListInterface[]> => {
+export const fetchUserTaskListsApi = async (userId: string): Promise<TaskListInterface[]> => {
   if (!userId) {
     return [];
   }
@@ -38,7 +38,7 @@ export const fetchUserTaskLists = async (userId: string): Promise<TaskListInterf
 };
 
 // Create a new task list
-export const createTaskList = async (name: string, userId: string): Promise<void> => {
+export const createTaskListApi = async (name: string, userId: string): Promise<void> => {
   try {
     const taskListsCollection = collection(db, "taskLists");
     const newTaskList: TaskListInterface = {
@@ -77,7 +77,7 @@ export const updateTaskList = async (listId: string, updates: Partial<TaskListIn
 };
 
 // Delete task list
-export const deleteTaskList = async (listId: string): Promise<void> => {
+export const deleteTaskListApi = async (listId: string): Promise<void> => {
   try {
     const taskListsCollection = collection(db, "taskLists");
     const taskListQuery = query(taskListsCollection, where("id", "==", listId));

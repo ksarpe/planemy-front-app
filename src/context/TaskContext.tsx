@@ -10,13 +10,11 @@ import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useLabelContext } from "@/hooks/context/useLabelContext";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 
-import { useTaskLists } from "@/hooks/tasks/useTasksLists";
+import { useTaskLists, useCreateTaskList, useDeleteTaskList } from "@/hooks/tasks/useTasksLists";
 
 import {
   useUserPendingShares,
-  createTaskList as createTaskListFirebase,
   updateTaskList as updateTaskListFirebase,
-  deleteTaskList as deleteTaskListFirebase,
   addTaskToList as addTaskToListFirebase,
   updateTaskInList as updateTaskInListFirebase,
   removeTaskFromList as removeTaskFromListFirebase,
@@ -44,9 +42,16 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuthContext();
   // New task list system
   const { data: taskLists } = useTaskLists();
+  const { mutate: createTaskListApi } = useCreateTaskList();
+  const { mutate: deleteTaskListApi } = useDeleteTaskList();
+
   const pendingSharesFromFirebase = useUserPendingShares();
   // State
-  const [currentTaskList, setCurrentTaskList] = useState<TaskListInterface | null>(null);
+  const [currentTaskListId, setCurrentTaskListId] = useState<string | null>(null);
+  const currentTaskList = useMemo(
+    () => taskLists?.find((list) => list.id === currentTaskListId) || null,
+    [taskLists, currentTaskListId],
+  );
   const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
   const [loading, setLoading] = useState(false);
   const [clickedTask, setClickedTask] = useState<TaskInterface | null>(null);
@@ -54,27 +59,19 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [tasksCache, setTasksCache] = useState<Record<string, TaskInterface[]>>({});
 
   useEffect(() => {
-    // Jeśli dane jeszcze się ładują lub nie ma list, nie rób nic lub wyczyść stan.
     if (!taskLists || taskLists.length === 0) {
-      setCurrentTaskList(null);
+      setCurrentTaskListId(null);
       return;
     }
 
-    // Sprawdzamy, czy aktualnie wybrana lista wciąż istnieje w nowo pobranych danych.
-    const currentListExists = currentTaskList && taskLists.some((list) => list.id === currentTaskList.id);
+    const idExists = currentTaskListId && taskLists.some((list) => list.id === currentTaskListId);
 
-    // Jeśli nie istnieje (lub nigdy nie była ustawiona), ustaw nową domyślną.
-    if (!currentListExists) {
+    // Jeśli wybrane ID nie istnieje w nowej liście, wybierz nowe domyślne ID
+    if (!idExists) {
       const defaultList = taskLists.find((list) => list.id === mainListId) || taskLists[0];
-      setCurrentTaskList(defaultList);
+      setCurrentTaskListId(defaultList.id);
     }
-    // Jeśli istnieje, nie musimy nic robić, bo `currentTaskList` jest już poprawny.
-    // Można ewentualnie dodać logikę odświeżającą, jeśli np. zmieniła się nazwa.
-    else {
-      const updatedList = taskLists.find((list) => list.id === currentTaskList.id);
-      setCurrentTaskList(updatedList || null);
-    }
-  }, [taskLists, mainListId, currentTaskList]);
+  }, [taskLists, mainListId, currentTaskListId]);
   useEffect(() => {
     setPendingShares(pendingSharesFromFirebase);
   }, [pendingSharesFromFirebase]);
@@ -124,22 +121,12 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   }, [user, taskLists, labelConnectionsByType]);
 
   // Task List Functions
-  const createTaskList = async (name: string): Promise<void> => {
+  const createTaskList = (name: string) => {
     if (!user) {
       showToast("error", "Musisz być zalogowany, aby utworzyć listę zadań");
       return;
     }
-
-    try {
-      setLoading(true);
-      await createTaskListFirebase(name, user.uid);
-      showToast("success", "Lista zadań została utworzona!");
-    } catch (error) {
-      console.error("Error creating task list:", error);
-      showToast("error", "Błąd podczas tworzenia listy zadań");
-    } finally {
-      setLoading(false);
-    }
+    createTaskListApi(name);
   };
 
   const updateTaskList = async (listId: string, updates: Partial<TaskListInterface>): Promise<void> => {
@@ -156,16 +143,11 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteTaskList = async (listId: string): Promise<void> => {
-    try {
-      setLoading(true);
-      await deleteTaskListFirebase(listId);
-      showToast("success", "Lista zadań została usunięta!");
-    } catch (error) {
-      console.error("Error deleting task list:", error);
-      showToast("error", "Błąd podczas usuwania listy zadań");
-    } finally {
-      setLoading(false);
+    if (!user) {
+      showToast("error", "Musisz być zalogowany, aby utworzyć listę zadań");
+      return;
     }
+    deleteTaskListApi(listId);
   };
 
   const shareTaskList = async (listId: string, userEmail: string, permission: SharePermission): Promise<void> => {
@@ -416,7 +398,9 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         // Task Lists
         taskLists: taskLists || [],
         currentTaskList,
-        setCurrentTaskList,
+        setCurrentTaskListId,
+        currentTaskListId,
+
         createTaskList,
         updateTaskList,
         deleteTaskList,
