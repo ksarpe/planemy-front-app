@@ -69,16 +69,7 @@ export interface TaskContextProps {
   getPendingShares: () => SharedTaskList[];
 
   // Tasks within lists
-  tasksCache: Record<string, TaskInterface[]>;
-  addTask: (listId: string, title: string, description?: string | null, dueDate?: string | null) => Promise<void>;
-  updateTask: (taskId: string, updates: Partial<TaskInterface>) => Promise<void>;
-  removeTask: (taskId: string) => Promise<void>;
-  toggleTaskComplete: (taskId: string) => Promise<void>;
   moveTask: (taskId: string, fromListId: string, toListId: string) => Promise<void>;
-
-  // Task utilities
-  getTasksForList: (listId: string) => TaskInterface[];
-  getTaskStats: (listId: string) => { total: number; completed: number; pending: number };
 
   // UI State
   // Note: loading state is now managed by individual React Query hooks
@@ -161,5 +152,6 @@ export interface TaskStatisticsProps {
 
 export interface TaskViewHeaderProps {
   onNewListClick: () => void;
+  tasks: TaskInterface[];
   onShareListClick: (listId: string) => void;
 }

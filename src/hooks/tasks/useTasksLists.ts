@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
-import { fetchUserTaskListsApi, createTaskListApi, deleteTaskListApi, updateTaskList } from "@/api/tasks";
+import { fetchUserTaskListsApi, createTaskListApi, deleteTaskListApi, updateTaskList } from "@/api/tasks_lists";
 import type { TaskListInterface } from "@/data/Tasks/interfaces";
 
 // --- QUERIES ----

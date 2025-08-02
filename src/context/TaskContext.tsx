@@ -1,40 +1,30 @@
 import { createContext, useEffect, useState, ReactNode, useMemo } from "react";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 // Types
 import type { TaskInterface, TaskListInterface, SharedTaskList, TaskContextProps } from "@/data/Tasks/interfaces";
 import type { SharePermission } from "@/data/Utils/types";
 import type { UserProfile } from "@/data/User/interfaces";
-import type { LabelInterface } from "@/data/Utils/interfaces";
 
 // Context hooks
 import { useToastContext } from "@/hooks/context/useToastContext";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
-import { useLabelContext } from "@/hooks/context/useLabelContext";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 
 // Task hooks (React Query)
 import { useTaskLists, useCreateTaskList, useDeleteTaskList, useUpdateTaskList } from "@/hooks/tasks/useTasksLists";
 import {
-  useCreateTask,
-  useUpdateTask,
-  useDeleteTask,
-  useToggleTaskCompletion,
   useMoveTask,
   useClearCompletedTasks,
   useUncheckAllTasks,
 } from "@/hooks/tasks/useTasks";
 
 // API functions
-import { useUserPendingShares, searchUsersByEmail } from "@/api/tasks";
+import { useUserPendingShares, searchUsersByEmail } from "@/api/tasks_lists";
 import {
   shareTaskListWithUser,
   acceptTaskListInvitation,
   rejectTaskListInvitation,
 } from "@/api/permissions/taskPermissions";
-
-// Firebase config
-import { db } from "@/api/config";
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 export { TaskContext };
@@ -43,7 +33,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   // Context hooks
   const { showToast } = useToastContext();
   const { mainListId } = usePreferencesContext();
-  const { labelConnectionsByType } = useLabelContext();
   const { user } = useAuthContext();
 
   // React Query hooks for task lists
@@ -52,11 +41,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const { mutate: deleteTaskListMutation } = useDeleteTaskList();
   const { mutate: updateTaskListMutation } = useUpdateTaskList();
 
-  // React Query hooks for task operations
-  const { mutate: createTaskMutation } = useCreateTask();
-  const { mutate: updateTaskMutation } = useUpdateTask();
-  const { mutate: deleteTaskMutation } = useDeleteTask();
-  const { mutate: toggleTaskCompletionMutation } = useToggleTaskCompletion();
+
   const { mutate: moveTaskMutation } = useMoveTask();
   const { mutate: clearCompletedTasksMutation } = useClearCompletedTasks();
   const { mutate: uncheckAllTasksMutation } = useUncheckAllTasks();
@@ -68,7 +53,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [currentTaskListId, setCurrentTaskListId] = useState<string | null>(null);
   const [pendingShares, setPendingShares] = useState<SharedTaskList[]>([]);
   const [clickedTask, setClickedTask] = useState<TaskInterface | null>(null);
-  const [tasksCache, setTasksCache] = useState<Record<string, TaskInterface[]>>({});
 
   // Computed state
   const currentTaskList = useMemo(
@@ -98,47 +82,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     setPendingShares(pendingSharesFromFirebase);
   }, [pendingSharesFromFirebase]);
-
-  // Effect: Real-time tasks cache with labels
-  useEffect(() => {
-    if (!user || !taskLists || taskLists.length === 0) {
-      setTasksCache({});
-      return;
-    }
-
-    // Get task label connections
-    const taskLabelConnections = labelConnectionsByType.get("task") || new Map<string, LabelInterface[]>();
-
-    const unsubscribes: (() => void)[] = [];
-
-    taskLists.forEach((taskList) => {
-      const tasksCollection = collection(db, "tasks");
-      const tasksQuery = query(tasksCollection, where("taskListId", "==", taskList.id));
-
-      const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
-        const tasks = snapshot.docs.map((doc) => {
-          const data = doc.data() as Omit<TaskInterface, "id" | "labels">;
-          const taskId = doc.data().id || doc.id;
-          return {
-            ...data,
-            id: taskId,
-            labels: taskLabelConnections.get(taskId) || [],
-          };
-        });
-
-        setTasksCache((prev) => ({
-          ...prev,
-          [taskList.id]: tasks,
-        }));
-      });
-
-      unsubscribes.push(unsubscribe);
-    });
-
-    return () => {
-      unsubscribes.forEach((unsubscribe) => unsubscribe());
-    };
-  }, [user, taskLists, labelConnectionsByType]);
 
   // ====== Task List Functions ======
 
@@ -278,58 +221,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
   // ====== Task Functions ======
 
-  const addTask = (
-    listId: string,
-    title: string,
-    description?: string | null,
-    dueDate?: string | null,
-  ): Promise<void> => {
-    if (!user) {
-      showToast("error", "Musisz być zalogowany, aby dodać zadanie");
-      return Promise.reject(new Error("User not authenticated"));
-    }
-
-    return new Promise<void>((resolve, reject) => {
-      createTaskMutation(
-        { listId, title, description, dueDate },
-        {
-          onSuccess: () => resolve(),
-          onError: (error) => reject(error),
-        },
-      );
-    });
-  };
-
-  const updateTask = (taskId: string, updates: Partial<TaskInterface>): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-      updateTaskMutation(
-        { taskId, updates },
-        {
-          onSuccess: () => resolve(),
-          onError: (error) => reject(error),
-        },
-      );
-    });
-  };
-
-  const removeTask = (taskId: string): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-      deleteTaskMutation(taskId, {
-        onSuccess: () => resolve(),
-        onError: (error) => reject(error),
-      });
-    });
-  };
-
-  const toggleTaskComplete = (taskId: string): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-      toggleTaskCompletionMutation(taskId, {
-        onSuccess: () => resolve(),
-        onError: (error) => reject(error),
-      });
-    });
-  };
-
   const moveTask = (taskId: string, _fromListId: string, toListId: string): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
       moveTaskMutation(
@@ -350,26 +241,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // ====== Utility Functions ======
-
-  const getTasksForList = useMemo(
-    () =>
-      (listId: string): TaskInterface[] => {
-        return tasksCache[listId] || [];
-      },
-    [tasksCache],
-  );
-
-  const getTaskStats = useMemo(
-    () => (listId: string) => {
-      const tasks = getTasksForList(listId);
-      const total = tasks.length;
-      const completed = tasks.filter((task) => task.isCompleted).length;
-      const pending = total - completed;
-
-      return { total, completed, pending };
-    },
-    [getTasksForList],
-  );
 
   return (
     <TaskContext.Provider
@@ -397,16 +268,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         getPendingShares,
 
         // ====== Tasks ======
-        tasksCache,
-        addTask,
-        updateTask,
-        removeTask,
-        toggleTaskComplete,
         moveTask,
-
-        // ====== Utilities ======
-        getTasksForList,
-        getTaskStats,
 
         // ====== Legacy Support ======
         clickedTask,

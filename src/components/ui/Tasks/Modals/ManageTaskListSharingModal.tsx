@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { X, UserPlus, Mail, Clock, CheckCircle, UserX } from "lucide-react";
-import { getTaskListSharedUsers, revokeTaskListAccess, shareTaskListWithUser } from "@/api/tasks";
+import { getTaskListSharedUsers, revokeTaskListAccess, shareTaskListWithUser } from "@/api/tasks_lists";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 

@@ -2,13 +2,22 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown, List, Calendar, CheckCircle2, Users } from "lucide-react";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
-import { TaskListInterface } from "@/data/Tasks/interfaces";
+import { TaskInterface, TaskListInterface } from "@/data/Tasks/interfaces";
 
-export default function TaskListDropdown() {
-  const { taskLists, currentTaskList, setCurrentTaskListId, getTaskStats } = useTaskContext();
+export default function TaskListDropdown({ tasks }: { tasks: TaskInterface[] }) {
+  const { taskLists, currentTaskList, setCurrentTaskListId } = useTaskContext();
   const { mainListId } = usePreferencesContext();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const { total, completed } = tasks.reduce(
+    (acc, task) => {
+      acc.total += 1;
+      if (task.isCompleted) acc.completed += 1;
+      return acc;
+    },
+    { total: 0, completed: 0 }
+  );
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -40,7 +49,7 @@ export default function TaskListDropdown() {
                     <Users size={12} />
                   </span>
                 )}
-                <span className="text-gray-400">Ilość zadań: {getTaskStats(currentTaskList.id).total} </span>
+                <span className="text-gray-400">Ilość zadań: {total} </span>
               </div>
             </div>
           )}
@@ -55,7 +64,6 @@ export default function TaskListDropdown() {
       {isOpen && (
         <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
           {taskLists.map((list: TaskListInterface) => {
-            const stats = getTaskStats(list.id);
             const isSelected = currentTaskList?.id === list.id;
 
             return (
@@ -80,12 +88,12 @@ export default function TaskListDropdown() {
                       )}
                       <span className="flex items-center gap-1">
                         <Calendar size={12} />
-                        {stats.total} zadań
+                        {total} zadań
                       </span>
-                      {stats.completed > 0 && (
+                      {completed > 0 && (
                         <span className="flex items-center gap-1 text-green-600">
                           <CheckCircle2 size={12} />
-                          {stats.completed} ukończonych
+                          {completed} ukończonych
                         </span>
                       )}
                     </div>

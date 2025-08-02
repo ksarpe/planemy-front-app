@@ -7,7 +7,7 @@ import type { TaskViewHeaderProps } from "@/data/Tasks/interfaces";
 
 const placeholders = ["@Co należałoby zrobić najpilniej?", "@Pokaż mi zadania na ten tydzień"];
 
-export default function TaskViewHeader({ onNewListClick }: TaskViewHeaderProps) {
+export default function TaskViewHeader({ onNewListClick, tasks }: TaskViewHeaderProps) {
   const { currentTaskList } = useTaskContext();
 
   if (!currentTaskList) return null;
@@ -16,9 +16,9 @@ export default function TaskViewHeader({ onNewListClick }: TaskViewHeaderProps) 
     <div className="flex justify-between items-center gap-3">
       {/* Task List Dropdown and Actions */}
       <div className="flex items-center gap-3 flex-shrink-0">
-        <TaskListDropdown />
+        <TaskListDropdown tasks={tasks}/>
         <div className="h-[58px] w-[140px] flex flex-col gap-1">
-          <TaskListActions />
+          <TaskListActions tasks={tasks} />
           {/* New List Button */}
           <ActionButton
             onClick={onNewListClick}

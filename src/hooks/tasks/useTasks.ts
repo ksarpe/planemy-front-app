@@ -8,37 +8,41 @@ import {
   toggleTaskCompletion,
   clearCompletedTasks,
   uncheckAllTasks,
-} from "@/api/tasks";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@/api/config";
+} from "@/api/tasks_lists";
+import { fetchTasksForListApi } from "@/api/tasks";
 import type { TaskInterface } from "@/data/Tasks/interfaces";
 
 // --- QUERIES dla zadań ---
 
 // Hook do pobierania zadań z konkretnej listy (przydatny dla komponentów które potrzebują tylko zadania z jednej listy)
-export const useTasksForList = (listId: string) => {
-  const { user } = useAuthContext();
-
+export const useTasks = (listId: string | null) => {
   return useQuery({
     queryKey: ["tasks", listId],
-    queryFn: async (): Promise<TaskInterface[]> => {
-      if (!user || !listId) return [];
-
-      const tasksCollection = collection(db, "tasks");
-      const tasksQuery = query(tasksCollection, where("taskListId", "==", listId));
-      const snapshot = await getDocs(tasksQuery);
-
-      return snapshot.docs.map((doc) => {
-        const data = doc.data() as Omit<TaskInterface, "id">;
-        return {
-          ...data,
-          id: doc.data().id || doc.id,
-        };
-      });
-    },
-    enabled: !!user && !!listId,
+    queryFn: () => fetchTasksForListApi(listId!),
+    enabled: !!listId,
   });
 };
+// Plik: src/hooks/tasks/useTasks.js (ulepszona wersja)
+
+// import { useInfiniteQuery } from "@tanstack/react-query";
+// // Załóżmy, że funkcja API teraz wspiera paginację (limit, startAfter)
+// import { fetchPaginatedTasksApi } from "@/api/tasks";
+
+// export const useTasksInfinite = (listId: string | null) => {
+//   return useInfiniteQuery({
+//     queryKey: ["tasks", listId],
+    
+//     // Funkcja pobierająca dane, otrzymuje `pageParam`
+//     queryFn: ({ pageParam }) => fetchPaginatedTasksApi({ listId: listId!, pageParam }),
+
+//     // Funkcja, która określa, co będzie następnym `pageParam`
+//     // (np. ostatni dokument, z którego zaczynamy następne zapytanie)
+//     getNextPageParam: (lastPage) => lastPage.nextCursor, // `nextCursor` musisz zwrócić z API
+
+//     initialPageParam: null, // Zaczynamy od początku
+//     enabled: !!listId,
+//   });
+// };
 
 // --- MUTATIONS dla zadań ---
 

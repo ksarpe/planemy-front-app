@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTasks } from "@/hooks/tasks/useTasks";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import {
   TaskViewHeader,
@@ -13,9 +14,14 @@ import {
   EmptyStates,
 } from "@/components/ui/Tasks";
 import Spinner from "../ui/Utils/Spinner";
+import { useTaskLists } from "@/hooks/tasks/useTasksLists";
 
 export default function TasksView() {
-  const { taskLists, currentTaskList, clickedTask, loading, createTaskList, tasksCache } = useTaskContext();
+  const { currentTaskListId, currentTaskList, clickedTask, createTaskList } = useTaskContext();
+  const { data: taskLists, isLoading: areListsLoading } = useTaskLists();
+  const { data: tasksData, isLoading: loading } = useTasks(currentTaskListId);
+  const tasks = tasksData ? tasksData : [];
+
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareListId, setShareListId] = useState<string | null>(null);
@@ -32,18 +38,14 @@ export default function TasksView() {
     await createTaskList(name);
   };
 
-  if (!currentTaskList) {
+  if (areListsLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <Spinner />
-          <p className="mt-4 text-gray-600">Ładowanie...</p>
-        </div>
+      <div className="...">
+        <Spinner />
+        <p>Ładowanie list...</p>
       </div>
     );
   }
-
-  const tasks = tasksCache[currentTaskList!.id] || [];
 
   return (
     <div className="flex h-full p-4 gap-4">
@@ -56,16 +58,10 @@ export default function TasksView() {
           clickedTask ? "w-3/4" : "w-full"
         } relative rounded-lg shadow-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-600`}>
         {/* Header with Task Lists */}
-        <TaskViewHeader onNewListClick={() => setIsCreateListModalOpen(true)} onShareListClick={handleShareList} />
+        <TaskViewHeader tasks={tasks}onNewListClick={() => setIsCreateListModalOpen(true)} onShareListClick={handleShareList} />
 
-        {/* No task lists state */}
-        {taskLists.length === 0 && (
+        {!currentTaskList && (!taskLists || taskLists.length === 0) && (
           <EmptyStates type="no-lists" onCreateListClick={() => setIsCreateListModalOpen(true)} />
-        )}
-
-        {/* No current list selected */}
-        {taskLists.length > 0 && !currentTaskList && (
-          <EmptyStates type="no-list-selected" onCreateListClick={() => {}} />
         )}
 
         {/* Task list content */}
