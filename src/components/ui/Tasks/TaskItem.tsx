@@ -79,7 +79,7 @@ export default function TaskItem({ task }: TaskItemProps) {
             {task.isCompleted ? (
               <CheckCircle2 size={20} className="text-green-500" />
             ) : (
-              <div className="w-5 h-5 border-2 border-gray-300 rounded-full hover:border-blue-500 transition-colors" />
+              <div className="w-5 h-5 border-2 border-gray-300 hover:border-green-400 rounded-full hover:bg-green-500 transition-colors" />
             )}
           </button>
 

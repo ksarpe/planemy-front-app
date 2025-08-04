@@ -96,13 +96,13 @@ export default function TaskDetails() {
   };
 
   const handleToggleComplete = async () => {
-    await toggleTaskComplete(clickedTask.id);
+    toggleTaskComplete(clickedTask.id);
   };
 
   const handleDelete = async () => {
     setShowDeleteConfirm(false);
     setClickedTask(null);
-    await removeTask(clickedTask.id);
+    removeTask(clickedTask.id);
   };
 
   return (
@@ -120,7 +120,6 @@ export default function TaskDetails() {
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Edit3 size={16} className="inline mr-1" />
               Tytuł
             </label>
             <EditableText
@@ -134,7 +133,6 @@ export default function TaskDetails() {
           {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Edit3 size={16} className="inline mr-1" />
               Opis
             </label>
             <EditableText

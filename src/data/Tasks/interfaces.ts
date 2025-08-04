@@ -29,8 +29,7 @@ export interface TaskListInterface {
   shared?: boolean; // Indicates if the list is shared
   labels?: LabelInterface[]; // Optional array of labels for the list
   totalTasks?: number;
-  completedTasks?: number;
-}
+  }
 
 // export interface QuickTaskInterface {
 //   id: number;

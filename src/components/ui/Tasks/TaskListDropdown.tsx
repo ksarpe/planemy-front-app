@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, List, Calendar, CheckCircle2, Users } from "lucide-react";
+import { ChevronDown, List, Calendar, Users } from "lucide-react";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { TaskListInterface } from "@/data/Tasks/interfaces";
@@ -80,10 +80,6 @@ export default function TaskListDropdown() {
                       <span className="flex items-center gap-1">
                         <Calendar size={12} />
                         {list.totalTasks ?? 0} zadań
-                      </span>
-                      <span className="flex items-center gap-1 text-green-600">
-                        <CheckCircle2 size={12} />
-                        {list.completedTasks ?? 0} ukończonych
                       </span>
                     </div>
                   </div>

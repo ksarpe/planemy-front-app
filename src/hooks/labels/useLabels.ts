@@ -128,6 +128,7 @@ export const useRemoveLabelConnection = () => {
       removeLabelConnectionFirebase(user!.uid, objectId, objectType, labelId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["labelConnections"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Etykieta została usunięta z obiektu!");
     },
     onError: (error) => {

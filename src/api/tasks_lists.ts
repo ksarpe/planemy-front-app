@@ -40,25 +40,17 @@ export const fetchUserTaskListsApi = async (userId: string): Promise<TaskListInt
 
     // Zapytanie o wszystkie zadania w tej liście
     const totalTasksQuery = query(tasksCollection, where("taskListId", "==", list.id));
-    // Zapytanie o ukończone zadania w tej liście
-    const completedTasksQuery = query(
-      tasksCollection,
-      where("taskListId", "==", list.id),
-      where("isCompleted", "==", true),
-    );
 
     // Użyj `getCountFromServer` do efektywnego liczenia
     const totalPromise = getCountFromServer(totalTasksQuery);
-    const completedPromise = getCountFromServer(completedTasksQuery);
 
     // Wykonaj oba zapytania o zliczenie równolegle
-    const [totalSnapshot, completedSnapshot] = await Promise.all([totalPromise, completedPromise]);
+    const [totalSnapshot] = await Promise.all([totalPromise]);
 
     // Zwróć oryginalny obiekt listy wzbogacony o nowe dane
     return {
       ...list,
       totalTasks: totalSnapshot.data().count,
-      completedTasks: completedSnapshot.data().count,
     };
   });
 
