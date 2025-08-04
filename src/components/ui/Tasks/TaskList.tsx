@@ -85,7 +85,7 @@ export default function TaskList({ filter, tasks }: TaskListProps) {
           />
         )}
       </div>
-      <ul className="space-y-3 overflow-auto py-2">
+      <ul className="space-y-3">
         {sortedTasks.map((task) => (
           <TaskItem key={task.id} task={task} />
         ))}

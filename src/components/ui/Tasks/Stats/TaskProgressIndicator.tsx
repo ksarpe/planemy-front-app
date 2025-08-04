@@ -1,11 +1,10 @@
 import { TrendingUp } from "lucide-react";
 import type { TaskProgressIndicatorProps } from "@/data/Tasks/interfaces";
 
-export default function TaskProgressIndicator({ tasks }: TaskProgressIndicatorProps) {
-  const completedTasks = tasks.filter(task => task.isCompleted);
-  const progressPercentage = tasks.length > 0 ? (completedTasks.length / tasks.length) * 100 : 0;
+export default function TaskProgressIndicator({ completedTasksLength, pendingTasksLength }: TaskProgressIndicatorProps) {
+  const progressPercentage = completedTasksLength + pendingTasksLength > 0 ? (completedTasksLength / (completedTasksLength + pendingTasksLength)) * 100 : 0;
 
-  if (tasks.length === 0) return null;
+  if (completedTasksLength + pendingTasksLength === 0) return null;
 
   return (
     <div className="bg-white dark:bg-bg-hover-dark rounded-lg p-4 shadow-sm">
@@ -14,7 +13,7 @@ export default function TaskProgressIndicator({ tasks }: TaskProgressIndicatorPr
           Postęp zadań
         </span>
         <span className="text-sm text-gray-500">
-          {completedTasks.length} z {tasks.length}
+          {completedTasksLength} z {completedTasksLength + pendingTasksLength}
         </span>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2">

@@ -8,7 +8,6 @@ import {
   TaskList,
   TaskStatistics,
   TaskAlerts,
-  TaskProgressIndicator,
   PendingSharesNotification,
   TaskDetails,
   EmptyStates,
@@ -76,9 +75,6 @@ export default function TasksView() {
               <TaskStatistics tasks={tasks} filter={filter} onFilterChange={setFilter} />
               <TaskAlerts tasks={tasks} />
               <TaskList tasks={tasks} filter={filter} />
-            </div>
-            <div>
-              <TaskProgressIndicator tasks={tasks} />
             </div>
           </div>
         )}

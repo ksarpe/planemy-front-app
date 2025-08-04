@@ -1,94 +1,24 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDocs } from "firebase/firestore";
 import { db } from "./config";
-import { LabelConnection, LabelInterface } from "@/data/Utils/interfaces";
-import { useEffect, useState } from "react";
-import { useAuthContext } from "@/hooks/context/useAuthContext";
+import { LabelInterface } from "@/data/Utils/interfaces";
 import { v4 as uuidv4 } from "uuid";
 
 const LABELS_COLLECTION = "labels";
 const LABEL_CONNECTIONS_COLLECTION = "labelConnections";
 
-
-
-// Hook to get user's labels
-export const useUserLabels = (): LabelInterface[] => {
-  const [labels, setLabels] = useState<LabelInterface[]>([]);
-  const { user } = useAuthContext();
-
-  useEffect(() => {
-    if (!user) {
-      setLabels([]);
-      return;
-    }
-
-    const labelsCollection = collection(db, LABELS_COLLECTION);
-    const userLabelsQuery = query(labelsCollection, where("userId", "==", user.uid));
-
-    const unsubscribe = onSnapshot(userLabelsQuery, (snapshot) => {
-      const labelList: LabelInterface[] = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as LabelInterface[];
-
-      setLabels(labelList);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [user]);
-
-  return labels;
-};
-
-export function useLabelConnections() {
-  const { user } = useAuthContext();
-  const labels = useUserLabels();
-  const [connections, setConnections] = useState<Map<string, Map<string, LabelInterface[]>>>(new Map());
-
-  useEffect(() => {
-    if (!user || labels.length === 0) {
-      setConnections(new Map());
-      return;
-    }
-
-    const q = query(collection(db, LABEL_CONNECTIONS_COLLECTION), where("userId", "==", user.uid));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const labelMap = new Map(labels.map((l) => [l.id, l]));
-      const newMap = new Map<string, Map<string, LabelInterface[]>>();
-
-      snapshot.docs.forEach((doc) => {
-        const data = doc.data() as LabelConnection;
-        const label = labelMap.get(data.labelId);
-        if (!label) return;
-
-        const typeMap = newMap.get(data.objectType) || new Map();
-        const existing = typeMap.get(data.objectId) || [];
-        typeMap.set(data.objectId, [...existing, label]);
-        newMap.set(data.objectType, typeMap);
-      });
-
-      setConnections(newMap);
-    });
-
-    return () => unsubscribe();
-  }, [user, labels]);
-
-  return connections;
-}
-
 // Create a new label
 export const createLabel = async (name: string, color: string, userId: string, description?: string): Promise<void> => {
   try {
-    const labelsCollection = collection(db, "labels");
+    const labelsCollection = collection(db, LABELS_COLLECTION);
     const newLabel = {
+      id: uuidv4(),
       name,
       color,
       description: description || "",
       userId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    };
+    } as LabelInterface;
 
     await addDoc(labelsCollection, newLabel);
   } catch (error) {
@@ -100,7 +30,7 @@ export const createLabel = async (name: string, color: string, userId: string, d
 // Update label
 export const updateLabel = async (labelId: string, updates: Partial<LabelInterface>): Promise<void> => {
   try {
-    const labelDocRef = doc(db, "labels", labelId);
+    const labelDocRef = doc(db, LABELS_COLLECTION, labelId);
     const updateData = {
       ...updates,
       updatedAt: new Date().toISOString(),
@@ -116,7 +46,7 @@ export const updateLabel = async (labelId: string, updates: Partial<LabelInterfa
 // Delete label
 export const deleteLabel = async (labelId: string): Promise<void> => {
   try {
-    const labelDocRef = doc(db, "labels", labelId);
+    const labelDocRef = doc(db, LABELS_COLLECTION, labelId);
     await deleteDoc(labelDocRef);
   } catch (error) {
     console.error("Error deleting label:", error);
@@ -132,7 +62,7 @@ export const createLabelConnectionFirebase = async (
   labelId: string,
 ): Promise<void> => {
   try {
-    const connectionsCollection = collection(db, "labelConnections");
+    const connectionsCollection = collection(db, LABEL_CONNECTIONS_COLLECTION);
     const newConnection = {
       id: uuidv4(),
       userId,
@@ -157,7 +87,7 @@ export const removeLabelConnectionFirebase = async (
   labelId: string,
 ): Promise<void> => {
   try {
-    const connectionsCollection = collection(db, "labelConnections");
+    const connectionsCollection = collection(db, LABEL_CONNECTIONS_COLLECTION);
     const q = query(
       connectionsCollection,
       where("userId", "==", userId),
@@ -182,7 +112,7 @@ export const removeAllLabelConnectionsForObject = async (
   objectType: string,
 ): Promise<void> => {
   try {
-    const connectionsCollection = collection(db, "labelConnections");
+    const connectionsCollection = collection(db, LABEL_CONNECTIONS_COLLECTION);
     const q = query(
       connectionsCollection,
       where("userId", "==", userId),
@@ -202,7 +132,7 @@ export const removeAllLabelConnectionsForObject = async (
 // Get user's labels (one-time fetch)
 export const getUserLabels = async (userId: string): Promise<LabelInterface[]> => {
   try {
-    const labelsCollection = collection(db, "labels");
+    const labelsCollection = collection(db, LABELS_COLLECTION);
     const userLabelsQuery = query(labelsCollection, where("userId", "==", userId));
     const snapshot = await getDocs(userLabelsQuery);
 
@@ -219,7 +149,7 @@ export const getUserLabels = async (userId: string): Promise<LabelInterface[]> =
 // Subscribe to user's labels (real-time)
 export const subscribeToUserLabels = (userId: string, callback: (labels: LabelInterface[]) => void): (() => void) => {
   try {
-    const labelsCollection = collection(db, "labels");
+    const labelsCollection = collection(db, LABELS_COLLECTION);
     const userLabelsQuery = query(labelsCollection, where("userId", "==", userId));
 
     const unsubscribe = onSnapshot(
@@ -247,7 +177,7 @@ export const subscribeToUserLabels = (userId: string, callback: (labels: LabelIn
 // Get label by ID
 export const getLabelById = async (labelId: string): Promise<LabelInterface | null> => {
   try {
-    const labelsCollection = collection(db, "labels");
+    const labelsCollection = collection(db, LABELS_COLLECTION);
     const labelQuery = query(labelsCollection, where("__name__", "==", labelId));
     const snapshot = await getDocs(labelQuery);
 

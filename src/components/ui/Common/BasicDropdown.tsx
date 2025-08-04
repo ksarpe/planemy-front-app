@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { BasicDropdownProps, BasicDropdownItemProps } from "@/data/Common/interfaces";
 
 export const BasicDropdown: React.FC<BasicDropdownProps> = ({
@@ -8,11 +9,31 @@ export const BasicDropdown: React.FC<BasicDropdownProps> = ({
   width = "w-64",
   closeOnItemClick = true,
   className = "",
+  usePortal = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const calculatePosition = () => {
+      if (!triggerRef.current || !usePortal) return;
+
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+      const top = triggerRect.bottom + scrollTop + 8; // 8px gap
+      let left = triggerRect.left + scrollLeft;
+
+      if (align === "right") {
+        left = triggerRect.right + scrollLeft - 256; // assuming w-64 = 256px
+      }
+
+      setPosition({ top, left });
+    };
+
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
@@ -25,16 +46,31 @@ export const BasicDropdown: React.FC<BasicDropdownProps> = ({
       }
     };
 
+    const handleScroll = () => {
+      if (isOpen && usePortal) {
+        calculatePosition();
+      }
+    };
+
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("keydown", handleEscape);
+      if (usePortal) {
+        window.addEventListener("scroll", handleScroll, true);
+        window.addEventListener("resize", handleScroll);
+        calculatePosition();
+      }
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
+      if (usePortal) {
+        window.removeEventListener("scroll", handleScroll, true);
+        window.removeEventListener("resize", handleScroll);
+      }
     };
-  }, [isOpen]);
+  }, [isOpen, usePortal, align]);
 
   const handleItemClick = () => {
     if (closeOnItemClick) {
@@ -56,25 +92,39 @@ export const BasicDropdown: React.FC<BasicDropdownProps> = ({
     return child;
   });
 
+  const renderDropdown = () => {
+    if (!isOpen) return null;
+
+    const dropdownContent = (
+      <>
+        <div
+          ref={dropdownRef}
+          className={`${
+            usePortal ? "fixed" : "absolute top-full mt-2"
+          } ${width} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 ${
+            !usePortal && align === "left" ? "left-0" : !usePortal && align === "right" ? "right-0" : ""
+          }`}
+          style={usePortal ? { top: position.top, left: position.left } : {}}>
+          <div className="p-2">{childrenWithProps}</div>
+        </div>
+
+        {/* Background overlay */}
+        <div className={`${usePortal ? "fixed" : "fixed"} inset-0 z-40`} onClick={() => setIsOpen(false)}></div>
+      </>
+    );
+
+    return usePortal ? createPortal(dropdownContent, document.body) : dropdownContent;
+  };
+
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div className={`relative ${className}`}>
       {/* Trigger */}
-      <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
+      <div ref={triggerRef} onClick={() => setIsOpen(!isOpen)}>
+        {trigger}
+      </div>
 
       {/* Dropdown Menu */}
-      {isOpen && (
-        <>
-          <div
-            className={`absolute top-full mt-2 ${width} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 ${
-              align === "left" ? "left-0" : "right-0"
-            }`}>
-            <div className="p-2">{childrenWithProps}</div>
-          </div>
-
-          {/* Background overlay */}
-          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
-        </>
-      )}
+      {renderDropdown()}
     </div>
   );
 };

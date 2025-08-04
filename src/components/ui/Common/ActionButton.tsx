@@ -1,19 +1,53 @@
+// ActionButton.tsx
+import { clsx } from "clsx";
 import { ActionButtonProps } from "@/data/Common/interfaces";
 
-const colorClasses: Record<ActionButtonProps["color"], string> = {
-  green: "bg-green-600 hover:bg-green-700 text-white",
-  orange: "bg-orange-600 text-white hover:bg-orange-700",
-  blue: "bg-blue-600 hover:bg-blue-700",
-  red: "bg-red-600 hover:bg-red-700",
-  gray: "bg-gray-600 hover:bg-gray-700",
-  white: "bg-white hover:bg-gray-100",
+// ZMIANA: Bardziej zaawansowana struktura stylów dla pełnej kontroli
+const colorStyles = {
+  green: {
+    base: "bg-green-600 border-green-700 text-white",
+    hover: "hover:bg-green-500 hover:border-green-600",
+    focusRing: "focus-visible:ring-green-400",
+  },
+  orange: {
+    base: "bg-orange-500 border-orange-600 text-white",
+    hover: "hover:bg-orange-400 hover:border-orange-500",
+    focusRing: "focus-visible:ring-orange-400",
+  },
+  blue: {
+    base: "bg-blue-600 border-blue-700 text-white",
+    hover: "hover:bg-blue-500 hover:border-blue-600",
+    focusRing: "focus-visible:ring-blue-400",
+  },
+  red: {
+    base: "bg-red-600 border-red-700 text-white",
+    hover: "hover:bg-red-500 hover:border-red-600",
+    focusRing: "focus-visible:ring-red-400",
+  },
+  gray: {
+    base: "bg-gray-600 border-gray-700 text-white",
+    hover: "hover:bg-gray-500 hover:border-gray-600",
+    focusRing: "focus-visible:ring-gray-400",
+  },
+  white: {
+    base: "bg-white border-gray-300 text-gray-800",
+    hover: "hover:bg-gray-50 hover:border-gray-400",
+    focusRing: "focus-visible:ring-blue-500",
+  },
 };
 
-const sizeClasses: Record<ActionButtonProps["size"], string> = {
-  xs: "px-2 py-1 min-h-[29px]",
-  sm: "px-3 py-2 min-h-[40px]",
-  md: "px-4 py-2 min-h-[48px]",
-  lg: "px-4 py-3 min-h-[62px]",
+const sizeClasses: Record<NonNullable<ActionButtonProps["size"]>, string> = {
+  xs: "px-2 py-1 text-xs",
+  sm: "px-3 py-1.5 text-sm",
+  md: "px-4 py-2 text-sm",
+  lg: "px-5 py-2.5 text-base",
+};
+
+const iconSizeClasses: Record<NonNullable<ActionButtonProps["size"]>, string> = {
+  xs: "w-8 h-8",
+  sm: "w-10 h-10",
+  md: "w-12 h-12",
+  lg: "w-14 h-14",
 };
 
 export default function ActionButton({
@@ -27,24 +61,49 @@ export default function ActionButton({
   className = "",
   justIcon = false,
 }: ActionButtonProps) {
+  const styles = colorStyles[color];
+
+  if (justIcon) {
+    return (
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        className={clsx(
+          "flex items-center justify-center rounded-full border shadow-sm transition-all duration-200",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+          "hover:-translate-y-0.5 active:scale-95",
+          styles.base,
+          styles.hover,
+          styles.focusRing,
+          iconSizeClasses[size],
+          disabled && "opacity-50 cursor-not-allowed",
+          className,
+        )}
+      >
+        <span className="sr-only">{text}</span>
+        <Icon size={iconSize} />
+      </button>
+    );
+  }
+
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={
-        justIcon
-          ? `cursor-pointer hover:text-blue-500`
-          : `
-        flex items-center gap-2 rounded-lg transition-all duration-200 
-        shadow-sm hover:shadow-md cursor-pointer
-        ${colorClasses[color]} 
-        ${sizeClasses[size]}
-        ${disabled ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"}
-        ${className}
-      `
-      }>
+      className={clsx(
+        "flex items-center justify-center gap-2 rounded-lg border font-semibold shadow-sm transition-all duration-200",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+        "hover:-translate-y-0.5 active:scale-95",
+        styles.base,
+        styles.hover,
+        styles.focusRing,
+        sizeClasses[size],
+        disabled && "opacity-50 cursor-not-allowed",
+        className,
+      )}
+    >
       <Icon size={iconSize} />
-      <span className="text-sm font-medium">{text}</span>
+      <span>{text}</span>
     </button>
   );
 }

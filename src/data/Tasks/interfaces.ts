@@ -112,7 +112,8 @@ export interface TaskListProps {
 }
 
 export interface TaskProgressIndicatorProps {
-  tasks: TaskInterface[];
+  completedTasksLength: number;
+  pendingTasksLength: number;
 }
 
 export interface TaskStatisticsProps {

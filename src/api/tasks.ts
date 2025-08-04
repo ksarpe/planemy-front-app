@@ -38,16 +38,19 @@ export const fetchTasksForListApi = async (listId: string): Promise<TaskInterfac
   const labelsCollection = collection(db, "labels");
   const labelsQuery = query(labelsCollection, where("id", "in", labelIds));
   const labelsSnapshot = await getDocs(labelsQuery);
+  console.log("Labels Snapshot:", labelsSnapshot);
   
 
   // Stwórz mapę dla łatwego i szybkiego dostępu (klucz: id etykiety, wartość: obiekt etykiety)
   const labelsMap = new Map<string, LabelInterface>(
-    labelsSnapshot.docs.map((doc) => [doc.id, doc.data() as LabelInterface]),
+    labelsSnapshot.docs.map((doc) => [doc.data().id, doc.data() as LabelInterface]),
   );
+  console.log("Labels Map:", labelsMap);
   // --- Krok 6: Połącz wszystko w całość (Join po stronie klienta) ---
   return tasks.map((task) => {
     // Znajdź powiązania dla bieżącego zadania
     const taskConnections = connections.filter((conn) => conn.objectId === task.id);
+    console.log("Task Connections:", taskConnections);
     // Na podstawie powiązańskich ID, znajdź pełne obiekty etykiet w mapie
     const taskLabels = taskConnections.map((conn) => labelsMap.get(conn.labelId)).filter(Boolean) as LabelInterface[]; // .filter(Boolean) usuwa ewentualne puste wyniki
     return {

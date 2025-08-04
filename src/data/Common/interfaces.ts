@@ -10,6 +10,7 @@ export interface BasicDropdownProps {
   width?: string;
   closeOnItemClick?: boolean;
   className?: string;
+  usePortal?: boolean;
 }
 
 export interface BasicDropdownItemProps {

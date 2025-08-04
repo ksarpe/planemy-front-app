@@ -49,7 +49,7 @@ export default function TaskItem({ task }: TaskItemProps) {
       style={{
         borderColor: task.labels?.length === 1 ? task.labels[0].color : "#d1d5db", // gray-300
       }}
-      className={`border-l-4 rounded-lg p-4 transform 
+      className={`border-l-4 rounded-lg p-4 transform
       ${task.isCompleted ? "bg-gray-100 opacity-75" : "bg-white hover:shadow-md"}
       ${task.labels?.length === 1 ? "border-l-1" : "border-l-gray-300"}
       ${
@@ -153,7 +153,8 @@ export default function TaskItem({ task }: TaskItemProps) {
                 }
                 align="right"
                 width="w-64"
-                closeOnItemClick={true}>
+                closeOnItemClick={true}
+                usePortal={true}>
                 {labels.length > 0 ? (
                   labels.map((label) => (
                     <BasicDropdownItem
@@ -177,31 +178,34 @@ export default function TaskItem({ task }: TaskItemProps) {
               </BasicDropdown>
             </div>
           ) : (
-            // If task has some labels, show them (for now we can only have one label per task)
-            <div>
-              {/* even though there is a map, we cannot add more labels so just one (frontend purposes) */}
-              {task.labels?.map((label) => (
-                <div onClick={(e) => e.stopPropagation()} key={label.id}>
-                  <BasicDropdown
-                    trigger={
-                      <div
-                        key={label.id}
-                        className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full cursor-pointer"
-                        style={{ backgroundColor: label.color + "20", color: label.color }}>
-                        <Tag size={12} />
-                        {label.name}
-                      </div>
-                    }>
-                    <BasicDropdownItem
-                      icon={Trash}
-                      variant="red"
-                      onClick={() => removeLabelConnection(task.id, "task", label.id)}>
-                      Usuń etykietę
-                    </BasicDropdownItem>
-                  </BasicDropdown>
-                </div>
-              ))}
-            </div>
+            !task.isCompleted && (
+              // If task has some labels, show them (for now we can only have one label per task)
+              <div>
+                {/* even though there is a map, we cannot add more labels  (frontend purposes) */}
+                {task.labels?.map((label) => (
+                  <div onClick={(e) => e.stopPropagation()} key={label.id}>
+                    <BasicDropdown
+                      trigger={
+                        <div
+                          key={label.id}
+                          className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full cursor-pointer"
+                          style={{ backgroundColor: label.color + "20", color: label.color }}>
+                          <Tag size={12} />
+                          {label.name}
+                        </div>
+                      }
+                      usePortal={true}>
+                      <BasicDropdownItem
+                        icon={Trash}
+                        variant="red"
+                        onClick={() => removeLabelConnection(task.id, "task", label.id)}>
+                        Usuń etykietę
+                      </BasicDropdownItem>
+                    </BasicDropdown>
+                  </div>
+                ))}
+              </div>
+            )
           )}
         </div>
       </div>
