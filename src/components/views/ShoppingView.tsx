@@ -70,7 +70,7 @@ export default function ShoppingView() {
   const totalValue = currentList?.items.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0) || 0;
 
   const getTabButtonClass = (tab: typeof activeTab) => {
-    return `px-4 py-2 rounded-lg font-medium transition-colors ${
+    return `px-4 py-2 rounded-md font-medium transition-colors ${
       activeTab === tab ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
     }`;
   };
@@ -89,7 +89,7 @@ export default function ShoppingView() {
   return (
     <div className="flex h-full p-4 gap-4">
       {/* Left Sidebar - Lists and Favorites */}
-      <div className="w-80 bg-bg-alt dark:bg-bg-dark rounded-lg shadow-md overflow-hidden">
+      <div className="w-80 bg-bg-alt dark:bg-bg-dark rounded-md shadow-md overflow-hidden">
         {/* Tab Headers */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-600">
           <div className="flex gap-2">
@@ -120,7 +120,7 @@ export default function ShoppingView() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-bg-alt dark:bg-bg-dark rounded-lg shadow-md overflow-auto">
+      <div className="flex-1 bg-bg-alt dark:bg-bg-dark rounded-md shadow-md overflow-auto">
         {currentList ? (
           <div className="p-6 space-y-6">
             {/* Header with Statistics */}
@@ -133,7 +133,7 @@ export default function ShoppingView() {
 
                 {/* Statistics Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  <div className="bg-white dark:bg-bg-hover-dark rounded-lg p-4 shadow-sm">
+                  <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
                     <div className="flex items-center gap-2 text-blue-600 mb-1">
                       <Package size={18} />
                       <span className="text-sm font-medium">Wszystkie</span>
@@ -141,7 +141,7 @@ export default function ShoppingView() {
                     <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">{totalItems}</div>
                   </div>
 
-                  <div className="bg-white dark:bg-bg-hover-dark rounded-lg p-4 shadow-sm">
+                  <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
                     <div className="flex items-center gap-2 text-yellow-600 mb-1">
                       <Clock size={18} />
                       <span className="text-sm font-medium">Do kupienia</span>
@@ -149,7 +149,7 @@ export default function ShoppingView() {
                     <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">{pendingItems}</div>
                   </div>
 
-                  <div className="bg-white dark:bg-bg-hover-dark rounded-lg p-4 shadow-sm">
+                  <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
                     <div className="flex items-center gap-2 text-green-600 mb-1">
                       <CheckCircle2 size={18} />
                       <span className="text-sm font-medium">Kupione</span>
@@ -157,7 +157,7 @@ export default function ShoppingView() {
                     <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">{completedItems}</div>
                   </div>
 
-                  <div className="bg-white dark:bg-bg-hover-dark rounded-lg p-4 shadow-sm">
+                  <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
                     <div className="flex items-center gap-2 text-purple-600 mb-1">
                       <TrendingUp size={18} />
                       <span className="text-sm font-medium">Wartość</span>
@@ -171,7 +171,7 @@ export default function ShoppingView() {
 
               <button
                 onClick={() => setIsAddItemModalOpen(true)}
-                className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
                 <Plus size={18} />
                 Dodaj produkt
               </button>
@@ -186,7 +186,7 @@ export default function ShoppingView() {
                   placeholder="Szukaj produktów..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -194,7 +194,7 @@ export default function ShoppingView() {
                 <select
                   value={selectedCategory || ""}
                   onChange={(e) => setSelectedCategory(e.target.value || null)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="">Wszystkie kategorie</option>
                   {categories.map((category) => (
                     <option key={category.id} value={category.name}>
@@ -205,7 +205,7 @@ export default function ShoppingView() {
 
                 <button
                   onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
-                  className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                  className="p-2 border border-gray-300 rounded-md hover:bg-gray-50">
                   {viewMode === "grid" ? <List size={20} /> : <Grid3X3 size={20} />}
                 </button>
               </div>
@@ -234,7 +234,7 @@ export default function ShoppingView() {
                   {!searchQuery && !selectedCategory && (
                     <button
                       onClick={() => setIsAddItemModalOpen(true)}
-                      className="bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                      className="bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
                       Dodaj produkt
                     </button>
                   )}
@@ -253,7 +253,7 @@ export default function ShoppingView() {
 
             {/* Progress Bar */}
             {totalItems > 0 && (
-              <div className="bg-white dark:bg-bg-hover-dark rounded-lg p-4 shadow-sm">
+              <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium text-gray-700 dark:text-text-dark">Postęp zakupów</span>
                   <span className="text-sm text-gray-500">
@@ -283,7 +283,7 @@ export default function ShoppingView() {
               <p className="text-gray-400 mb-4">Wybierz listę z panelu bocznego lub utwórz nową</p>
               <button
                 onClick={() => setIsAddListModalOpen(true)}
-                className="bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                className="bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
                 Utwórz nową listę
               </button>
             </div>

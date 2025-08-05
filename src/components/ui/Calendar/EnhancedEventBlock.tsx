@@ -156,7 +156,7 @@ export default function EnhancedEventBlock({
       <div
         className={`${getCategoryColor(
           event.category,
-        )} text-white rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer border-l-4 ${className}`}
+        )} text-white rounded-md shadow-sm hover:shadow-md transition-all cursor-pointer border-l-4 ${className}`}
         style={style}
         onClick={handleEventClick}>
         <div className="p-2">
@@ -175,7 +175,7 @@ export default function EnhancedEventBlock({
 
       {/* Details/Edit popup */}
       {(showDetails || isEditing) && (
-        <div className="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg min-w-80 z-50 max-w-96">
+        <div className="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg min-w-80 z-50 max-w-96">
           {isEditing ? (
             /* Edit mode */
             <div className="p-4 space-y-4">

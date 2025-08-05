@@ -87,7 +87,7 @@ export default function PaymentItem({ payment }: { payment: PaymentInterface }) 
   };
 
   return (
-    <li className={`rounded-lg shadow-sm border-2 transition-all duration-200 ${getStatusColor()}`}>
+    <li className={`rounded-md shadow-sm border-2 transition-all duration-200 ${getStatusColor()}`}>
       <div onClick={toggleExpand} className="flex justify-between items-center p-4 cursor-pointer hover:bg-opacity-80">
         <div className="flex items-center gap-3 flex-1">
           <div className="text-2xl">{getCategoryIcon(payment.category)}</div>

@@ -77,7 +77,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
         <h3 className="text-lg font-semibold">Moje listy</h3>
         <button
           onClick={onAddList}
-          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+          className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
           <Plus size={16} />
         </button>
       </div>
@@ -90,7 +90,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
             <p className="text-sm text-gray-500 mb-3">Brak list zakupów</p>
             <button
               onClick={onAddList}
-              className="text-sm bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+              className="text-sm bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition-colors">
               Utwórz pierwszą listę
             </button>
           </div>
@@ -103,7 +103,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
             return (
               <div
                 key={list.id}
-                className={`p-3 rounded-lg border transition-all cursor-pointer ${
+                className={`p-3 rounded-md border transition-all cursor-pointer ${
                   isSelected
                     ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                     : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-bg-hover-dark"
@@ -160,7 +160,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                       </button>
 
                       {showOptionsId === list.id && (
-                        <div className="absolute right-0 top-8 bg-white dark:bg-bg-dark border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-10 min-w-[150px]">
+                        <div className="absolute right-0 top-8 bg-white dark:bg-bg-dark border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-10 min-w-[150px]">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();

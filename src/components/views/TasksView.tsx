@@ -55,8 +55,8 @@ export default function TasksView() {
       {/* Main panel */}
       <div
         className={`${
-          clickedTask ? "w-3/4" : "w-full"
-        } relative rounded-lg shadow-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6 transition-all duration-600`}>
+          clickedTask ? "w-4/5" : "w-full"
+        } relative rounded-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg dark:bg-bg-dark p-6 transition-all duration-600`}>
         {/* Header with Task Lists */}
         <TaskViewHeader
           tasks={tasks}

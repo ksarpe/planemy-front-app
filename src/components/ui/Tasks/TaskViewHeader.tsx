@@ -17,7 +17,7 @@ export default function TaskViewHeader({ onNewListClick, tasks }: TaskViewHeader
       {/* Task List Dropdown and Actions */}
       <div className="flex items-center gap-3 flex-shrink-0">
         <TaskListDropdown />
-        <div className="h-[58px] w-[140px] flex flex-col gap-1">
+        <div className="h-[64px] w-[140px] flex flex-col gap-1">
           <TaskListActions tasks={tasks} />
           {/* New List Button */}
           <ActionButton
@@ -26,7 +26,7 @@ export default function TaskViewHeader({ onNewListClick, tasks }: TaskViewHeader
             iconSize={16}
             text="Nowa lista"
             color="green"
-            size="xs"
+            size="md"
             className="w-full"
           />
         </div>
@@ -42,7 +42,7 @@ export default function TaskViewHeader({ onNewListClick, tasks }: TaskViewHeader
           icon={ArrowBigRightDash}
           iconSize={24}
           text="Tryb Pomodoro"
-          color="orange"
+          color="primary"
           size="lg"
         />
       </div>

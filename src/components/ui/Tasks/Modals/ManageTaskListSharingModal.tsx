@@ -52,27 +52,29 @@ export default function ManageTaskListSharingModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between p-6 border-b">
+      <div className="bg-white dark:bg-gray-900 rounded-md shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">Zarządzaj udostępnieniem</h2>
-            <p className="text-sm text-gray-600 mt-1">Lista: {listName}</p>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Zarządzaj udostępnieniem</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Lista: {listName}</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+          <button
+            onClick={onClose}
+            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
             <X className="w-6 h-6" />
           </button>
         </div>
 
         <div className="p-6 max-h-[calc(90vh-140px)] overflow-y-auto">
           {/* Add new sharing section */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
+          <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-md">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
               <UserPlus className="w-5 h-5 mr-2" />
               Dodaj nowe udostępnienie
             </h3>
             <form onSubmit={handleShareWithUser} className="space-y-4">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Email użytkownika
                 </label>
                 <input
@@ -81,12 +83,12 @@ export default function ManageTaskListSharingModal({
                   value={sharingEmail}
                   onChange={(e) => setSharingEmail(e.target.value)}
                   placeholder="przykład@email.com"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                   required
                 />
               </div>
               <div>
-                <label htmlFor="permission" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="permission" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Uprawnienia
                 </label>
                 <select
@@ -109,11 +111,11 @@ export default function ManageTaskListSharingModal({
 
           {/* Current sharing list */}
           {/* <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Aktualne udostępnienia ({sharedUsers.length})</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Aktualne udostępnienia ({sharedUsers.length})</h3>
 
             { sharedUsers.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <Mail className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <Mail className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
                 <p>Brak udostępnień</p>
                 <p className="text-sm">Dodaj pierwsze udostępnienie powyżej</p>
               </div>
@@ -122,17 +124,17 @@ export default function ManageTaskListSharingModal({
                 {sharedUsers.map((sharedUser) => (
                   <div
                     key={sharedUser.id}
-                    className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
+                    className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <span className="text-blue-600 font-medium">
+                        <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
+                          <span className="text-blue-600 dark:text-blue-400 font-medium">
                             {sharedUser.displayName?.[0] || sharedUser.email[0].toUpperCase()}
                           </span>
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">{sharedUser.displayName || sharedUser.email}</p>
-                          {sharedUser.displayName && <p className="text-sm text-gray-500">{sharedUser.email}</p>}
+                          <p className="font-medium text-gray-900 dark:text-gray-100">{sharedUser.displayName || sharedUser.email}</p>
+                          {sharedUser.displayName && <p className="text-sm text-gray-500 dark:text-gray-400">{sharedUser.email}</p>}
                         </div>
                       </div>
                     </div>

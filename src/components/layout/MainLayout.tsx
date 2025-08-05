@@ -7,7 +7,7 @@ export default function MainLayout() {
     <div className="flex h-screen w-screen">
       {/* Task provider has to be her because Sidebar uses it to hide */}
       <Sidebar />
-      <main className="flex-1 bg-bg dark:bg-bg-alt-dark">
+      <main className="flex-1 bg-bg dark:bg-bg-dark">
         <Outlet />
       </main>
     </div>

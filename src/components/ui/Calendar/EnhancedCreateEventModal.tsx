@@ -238,13 +238,13 @@ export default function EnhancedCreateEventModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div
         ref={modalRef}
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        className="bg-white dark:bg-gray-800 rounded-md shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Create Event</h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+            className="p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -282,7 +282,7 @@ export default function EnhancedCreateEventModal({
               value={eventData.title}
               onChange={(e) => setEventData({ ...eventData, title: e.target.value })}
               placeholder="Enter event title..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               required
             />
           </div>
@@ -294,7 +294,7 @@ export default function EnhancedCreateEventModal({
               value={eventData.description}
               onChange={(e) => setEventData({ ...eventData, description: e.target.value })}
               placeholder="Optional description..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               rows={2}
             />
           </div>
@@ -324,7 +324,7 @@ export default function EnhancedCreateEventModal({
                 type={eventData.allDay ? "date" : "datetime-local"}
                 value={eventData.start}
                 onChange={(e) => setEventData({ ...eventData, start: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 required
               />
             </div>
@@ -337,7 +337,7 @@ export default function EnhancedCreateEventModal({
                 type={eventData.allDay ? "date" : "datetime-local"}
                 value={eventData.end}
                 onChange={(e) => setEventData({ ...eventData, end: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 required
               />
             </div>
@@ -353,7 +353,7 @@ export default function EnhancedCreateEventModal({
               <select
                 value={eventData.category}
                 onChange={(e) => setEventData({ ...eventData, category: e.target.value as EventInterface["category"] })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                 <option value="Important">Important</option>
                 <option value="Meeting">Meeting</option>
                 <option value="Holiday">Holiday</option>
@@ -406,14 +406,14 @@ export default function EnhancedCreateEventModal({
                       onChange={(e) =>
                         setEventData({ ...eventData, recurrenceInterval: parseInt(e.target.value) || 1 })
                       }
-                      className="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     />
                     <select
                       value={eventData.recurrencePattern}
                       onChange={(e) =>
                         setEventData({ ...eventData, recurrencePattern: e.target.value as RecurrencePattern })
                       }
-                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                       <option value="daily">Day(s)</option>
                       <option value="weekly">Week(s)</option>
                       <option value="monthly">Month(s)</option>
@@ -429,7 +429,7 @@ export default function EnhancedCreateEventModal({
                     type="date"
                     value={eventData.recurrenceEndDate}
                     onChange={(e) => setEventData({ ...eventData, recurrenceEndDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -438,7 +438,7 @@ export default function EnhancedCreateEventModal({
 
           {/* Health Data (only for Health category) */}
           {eventData.category === "Health" && (
-            <div className="space-y-4 p-4 bg-pink-50 dark:bg-pink-900/20 rounded-lg">
+            <div className="space-y-4 p-4 bg-pink-50 dark:bg-pink-900/20 rounded-md">
               <h4 className="font-medium text-gray-900 dark:text-white">Health Tracking</h4>
 
               <div className="grid grid-cols-1 gap-4">
@@ -449,7 +449,7 @@ export default function EnhancedCreateEventModal({
                     onChange={(e) =>
                       setEventData({ ...eventData, healthType: e.target.value as typeof eventData.healthType })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                     <option value="period">Period</option>
                     <option value="ovulation">Ovulation</option>
                     <option value="medication">Medication</option>
@@ -467,7 +467,7 @@ export default function EnhancedCreateEventModal({
                   value={eventData.healthNotes}
                   onChange={(e) => setEventData({ ...eventData, healthNotes: e.target.value })}
                   placeholder="Optional health notes..."
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   rows={2}
                 />
               </div>
@@ -505,12 +505,12 @@ export default function EnhancedCreateEventModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
               Cancel
             </button>
             <button
               type="submit"
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors font-medium">
               <Check className="h-4 w-4" />
               <span>Create Event</span>
             </button>

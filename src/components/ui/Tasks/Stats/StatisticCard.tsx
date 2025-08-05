@@ -1,14 +1,5 @@
-import { LucideIcon } from "lucide-react";
-import { clsx } from "clsx"; // Proponuję użyć `clsx` do łatwiejszego łączenia klas
-
-interface StatisticCardProps {
-  title: string;
-  count: number;
-  icon: LucideIcon;
-  iconColor: string; // np. "text-blue-500"
-  isSelected: boolean;
-  onClick: () => void;
-}
+import { clsx } from "clsx";
+import type { StatisticCardProps } from "@/data/Tasks/interfaces";
 
 export default function StatisticCard({
   title,
@@ -21,30 +12,21 @@ export default function StatisticCard({
   return (
     <button
       onClick={onClick}
-      className={clsx(
-        // Style podstawowe
-        "w-full text-left p-3 rounded-lg border transition-all duration-200",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
-
-        // Style w zależności od stanu zaznaczenia
-        {
-          // Zaznaczony
-          "bg-blue-50 dark:bg-blue-950/50 border-blue-500 shadow-md": isSelected,
-          // Niezaznaczony
-          "bg-white dark:bg-gray-800 border-transparent shadow-sm hover:shadow-lg hover:-translate-y-0.5": !isSelected,
-        }
-      )}
-    >
+      className={clsx("w-full text-left px-2 rounded-md", {
+        // Zaznaczony
+        "bg-white dark:bg-bg-item-hover-dark border-primary dark:bg-hover-dark shadow-md border-2": isSelected,
+        // Niezaznaczony
+        "bg-white dark:bg-bg-item-dark shadow-sm hover:shadow-lg hover:-translate-y-0.5":
+          !isSelected,
+      })}>
       {/* Górna część: Ikona i Tytuł */}
-      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-300">
         <Icon size={16} className={clsx("flex-shrink-0", iconColor)} />
         <span className="text-sm font-medium truncate">{title}</span>
       </div>
 
       {/* Dolna część: Licznik */}
-      <div className="block mt-1 text-2xl font-bold text-gray-800 dark:text-white">
-        {count}
-      </div>
+      <div className="block text-xl font-bold text-gray-800 dark:text-text-dark">{count}</div>
     </button>
   );
 }

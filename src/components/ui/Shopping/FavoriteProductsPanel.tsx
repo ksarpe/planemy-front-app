@@ -54,7 +54,7 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
             placeholder="Szukaj produktów..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           />
         </div>
       </div>
@@ -80,7 +80,7 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
           filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-bg-hover-dark transition-colors">
+              className="p-3 border border-gray-200 rounded-md hover:bg-gray-50 dark:hover:bg-bg-hover-dark transition-colors">
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">

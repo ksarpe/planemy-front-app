@@ -45,12 +45,12 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-bg-dark rounded-lg shadow-xl w-full max-w-md mx-4">
+      <div className="bg-white dark:bg-bg-dark rounded-md shadow-xl w-full max-w-md mx-4">
         <div className="flex justify-between items-center p-6 border-b">
           <h2 className="text-xl font-semibold">Utwórz nową listę</h2>
           <button
             onClick={handleClose}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-bg-hover-dark rounded-lg transition-colors">
+            className="p-1 hover:bg-gray-100 dark:hover:bg-bg-hover-dark rounded-md transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -63,7 +63,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
               value={formData.name}
               onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
               placeholder="np. Zakupy na tydzień"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
@@ -77,7 +77,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
               onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
               placeholder="Dodaj opis listy..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
           </div>
 
@@ -89,7 +89,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
                   key={emoji}
                   type="button"
                   onClick={() => setFormData((prev) => ({ ...prev, emoji }))}
-                  className={`p-3 text-xl rounded-lg border-2 transition-colors ${
+                  className={`p-3 text-xl rounded-md border-2 transition-colors ${
                     formData.emoji === emoji ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-gray-300"
                   }`}>
                   {emoji}
@@ -106,7 +106,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
                   key={color}
                   type="button"
                   onClick={() => setFormData((prev) => ({ ...prev, color }))}
-                  className={`w-full h-10 rounded-lg border-2 transition-all ${
+                  className={`w-full h-10 rounded-md border-2 transition-all ${
                     formData.color === color ? "border-gray-800 scale-110" : "border-gray-200 hover:border-gray-300"
                   }`}
                   style={{ backgroundColor: color }}>
@@ -120,13 +120,13 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
               Anuluj
             </button>
             <button
               type="submit"
               disabled={!formData.name.trim() || isSubmitting}
-              className="flex-1 flex items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              className="flex-1 flex items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
               {isSubmitting ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
               ) : (

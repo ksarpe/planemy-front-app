@@ -71,7 +71,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
   const SubmitIcon = mode === "create" ? Plus : Edit3;
 
   return (
-    <div className="bg-white dark:bg-bg-hover-dark rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+    <div className="bg-white dark:bg-bg-hover-dark rounded-md p-6 shadow-sm border border-gray-200 dark:border-gray-700">
       <h3 className="text-lg font-semibold mb-4 text-text dark:text-text-dark">{title}</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -82,7 +82,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder={mode === "create" ? "Wprowadź nazwę etykiety..." : undefined}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-bg-dark text-text dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-bg-dark text-text dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
 
@@ -95,7 +95,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             placeholder={mode === "create" ? "Krótki opis etykiety..." : undefined}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-bg-dark text-text dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-bg-dark text-text dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
       </div>
@@ -126,13 +126,13 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
         <button
           onClick={handleSubmit}
           disabled={!formData.name.trim() || loading}
-          className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors duration-200 disabled:opacity-50">
+          className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-md transition-colors duration-200 disabled:opacity-50">
           <SubmitIcon size={16} />
           {submitText}
         </button>
         <button
           onClick={handleCancel}
-          className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+          className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors duration-200">
           Anuluj
         </button>
       </div>

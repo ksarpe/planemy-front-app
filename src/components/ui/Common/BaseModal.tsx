@@ -15,7 +15,7 @@ export default function BaseModal({
 
   return (
     <div className={`fixed ${centered ? "inset-0" : ""} flex items-center justify-center z-50`}>
-      <div className={`bg-white rounded-lg p-6 ${maxWidth} shadow-xl max-h-[90vh] overflow-y-auto`}>
+      <div className={`bg-white rounded-md p-6 ${maxWidth} shadow-xl max-h-[90vh] overflow-y-auto`}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">{title}</h3>
           {showCloseButton && (

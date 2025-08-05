@@ -22,43 +22,72 @@ export const fetchUserTaskListsApi = async (userId: string): Promise<TaskListInt
   if (!userId) {
     return [];
   }
-
-  // Krok 1: Pobierz podstawowe dane o listach (tak jak wcześniej)
-  // TODO: Dodać logikę pobierania list udostępnionych
   const taskListsCollection = collection(db, "taskLists");
-  const ownListsQuery = query(taskListsCollection, where("userId", "==", userId));
-  const snapshot = await getDocs(ownListsQuery);
+  const permissionsCollection = collection(db, "permissions");
 
-  const listsWithoutCounts = snapshot.docs.map((doc) => ({
+  // Make two quereies for own lists and shared lists
+  const ownListsQuery = query(taskListsCollection, where("userId", "==", userId));
+  const sharedListsQuery = query(
+    permissionsCollection,
+    where("user_id", "==", userId),
+    where("object_type", "==", "task_list"),
+    where("status", "==", "accepted"),
+  );
+  // Make two synchronous queries
+  const [ownListsSnapshot, sharedPermissionsSnapshot] = await Promise.all([
+    getDocs(ownListsQuery),
+    getDocs(sharedListsQuery),
+  ]);
+
+  // Get both lists
+  const ownLists = ownListsSnapshot.docs.map((doc) => ({
     id: doc.data().id || doc.id,
     ...doc.data(),
   })) as TaskListInterface[];
+  const sharedListIds = sharedPermissionsSnapshot.docs.map((doc) => doc.data().object_id);
+  let sharedLists: TaskListInterface[] = [];
 
-  // Krok 2: Dla każdej listy, stwórz obietnicę (Promise), która pobierze jej statystyki
-  const enrichedListsPromises = listsWithoutCounts.map(async (list) => {
+  if (sharedListIds.length > 0) {
+    // Uwaga: Zapytanie 'in' w Firestore jest ograniczone do 30 elementów.
+    // Dla większej liczby udostępnień należałoby podzielić zapytania na mniejsze paczki.
+    const sharedListsQuery = query(taskListsCollection, where("id", "in", sharedListIds));
+    const sharedListsSnapshot = await getDocs(sharedListsQuery);
+    sharedLists = sharedListsSnapshot.docs.map((doc) => ({
+      id: doc.data().id || doc.id,
+      ...doc.data(),
+    })) as TaskListInterface[];
+  }
+
+  const allListsMap = new Map<string, TaskListInterface>();
+  ownLists.forEach((list) => {
+    allListsMap.set(list.id, list);
+  });
+  sharedLists.forEach((list) => {
+    allListsMap.set(list.id, list);
+  });
+
+  const combinedLists = Array.from(allListsMap.values());
+
+  if (combinedLists.length === 0) {
+    return []; // Zwróć pustą tablicę, jeśli nie ma żadnych list do przetworzenia
+  }
+
+  const enrichedListsPromises = combinedLists.map(async (list) => {
     const tasksCollection = collection(db, "tasks");
-
-    // Zapytanie o wszystkie zadania w tej liście
     const totalTasksQuery = query(tasksCollection, where("taskListId", "==", list.id));
-
-    // Użyj `getCountFromServer` do efektywnego liczenia
     const totalPromise = getCountFromServer(totalTasksQuery);
 
-    // Wykonaj oba zapytania o zliczenie równolegle
     const [totalSnapshot] = await Promise.all([totalPromise]);
 
-    // Zwróć oryginalny obiekt listy wzbogacony o nowe dane
     return {
       ...list,
       totalTasks: totalSnapshot.data().count,
     };
   });
 
-  // Krok 3: Poczekaj, aż wszystkie obietnice pobrania statystyk się zakończą
-  const enrichedLists = await Promise.all(enrichedListsPromises);
-
-  // Krok 4: Zwróć w pełni wzbogacone listy
-  return enrichedLists;
+  // Poczekaj na zakończenie wszystkich operacji zliczania i zwróć wynik
+  console.log("Fetched task lists:", combinedLists);
+  return await Promise.all(enrichedListsPromises);
 };
 
 // Create a new task list

@@ -15,7 +15,7 @@ export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-bg-hover-dark rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full border border-gray-300" style={{ backgroundColor: label.color }} />

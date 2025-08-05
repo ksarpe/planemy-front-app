@@ -41,7 +41,7 @@ export default function CalendarHeader() {
           {/* Today button */}
           <button
             onClick={goToday}
-            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             Today
           </button>
 
@@ -49,13 +49,13 @@ export default function CalendarHeader() {
           <div className="flex items-center space-x-1">
             <button
               onClick={loadPrev}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
               title="Previous">
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={loadNext}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
               title="Next">
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -71,13 +71,13 @@ export default function CalendarHeader() {
           <button
             ref={createButtonRef}
             onClick={() => setShowCreateEvent(!showCreateEvent)}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors font-medium">
             <Plus className="h-4 w-4" />
             <span>Create</span>
           </button>
 
           {/* View toggle */}
-          <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-md p-1">
             <button
               onClick={() => setView("month")}
               className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors text-sm font-medium ${

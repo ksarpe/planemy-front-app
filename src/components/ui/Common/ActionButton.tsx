@@ -5,18 +5,17 @@ import { ActionButtonProps } from "@/data/Common/interfaces";
 // ZMIANA: Bardziej zaawansowana struktura stylów dla pełnej kontroli
 const colorStyles = {
   green: {
-    base: "bg-green-600 border-green-700 text-white",
+    base: "bg-green-600 border-green-700 text-white dark:accent-success-dark",
     hover: "hover:bg-green-500 hover:border-green-600",
     focusRing: "focus-visible:ring-green-400",
   },
-  orange: {
-    base: "bg-orange-500 border-orange-600 text-white",
+  accent_secondary: {
+    base: "bg-orange-500 border-accent-secondary-dark text-white dark:bg-accent-secondary-dark",
     hover: "hover:bg-orange-400 hover:border-orange-500",
     focusRing: "focus-visible:ring-orange-400",
   },
-  blue: {
-    base: "bg-blue-600 border-blue-700 text-white",
-    hover: "hover:bg-blue-500 hover:border-blue-600",
+  primary: {
+    base: "bg-primary border-primary text-white",
     focusRing: "focus-visible:ring-blue-400",
   },
   red: {
@@ -40,7 +39,7 @@ const sizeClasses: Record<NonNullable<ActionButtonProps["size"]>, string> = {
   xs: "px-2 py-1 text-xs",
   sm: "px-3 py-1.5 text-sm",
   md: "px-4 py-2 text-sm",
-  lg: "px-5 py-2.5 text-base",
+  lg: "px-5 py-4.5 text-lg",
 };
 
 const iconSizeClasses: Record<NonNullable<ActionButtonProps["size"]>, string> = {
@@ -69,17 +68,14 @@ export default function ActionButton({
         onClick={onClick}
         disabled={disabled}
         className={clsx(
-          "flex items-center justify-center rounded-full border shadow-sm transition-all duration-200",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-          "hover:-translate-y-0.5 active:scale-95",
+          "flex items-center justify-center rounded-full border shadow-sm",
+          "hover:-translate-y-0.5 active:scale-95 hover:shadow-lg",
           styles.base,
-          styles.hover,
           styles.focusRing,
           iconSizeClasses[size],
           disabled && "opacity-50 cursor-not-allowed",
           className,
-        )}
-      >
+        )}>
         <span className="sr-only">{text}</span>
         <Icon size={iconSize} />
       </button>
@@ -91,17 +87,14 @@ export default function ActionButton({
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        "flex items-center justify-center gap-2 rounded-lg border font-semibold shadow-sm transition-all duration-200",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-        "hover:-translate-y-0.5 active:scale-95",
+        "flex items-center justify-center gap-2 rounded-md font-semibold shadow-sm",
+        "hover:-translate-y-0.5 hover:shadow-lg",
         styles.base,
-        styles.hover,
         styles.focusRing,
         sizeClasses[size],
         disabled && "opacity-50 cursor-not-allowed",
         className,
-      )}
-    >
+      )}>
       <Icon size={iconSize} />
       <span>{text}</span>
     </button>

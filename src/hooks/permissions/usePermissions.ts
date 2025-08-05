@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { shareObjectWithUserApi, getPendingSharesApi } from "@/api/permissions";
+import { shareObjectWithUserApi, getPendingSharesApi, acceptObjectInvitationApi } from "@/api/permissions";
 import { useAuthContext } from "../context/useAuthContext";
 import { useToastContext } from "../context/useToastContext";
 import type { ShareableObjectType, SharePermission } from "@/data/Utils/types";
@@ -39,4 +39,38 @@ export const useShareObject = () => {
   });
 };
 
+export const useAcceptShare = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToastContext();
 
+  return useMutation({
+    mutationFn: (shareId: string) => acceptObjectInvitationApi(shareId),
+    onSuccess: () => {
+      // Invalidate pending shares to remove the accepted one from the list
+      queryClient.invalidateQueries({ queryKey: ["pendingShares"] });
+      showToast("success", "Udostępnienie zaakceptowane.");
+    },
+    onError: (error) => {
+      console.error("Error accepting share:", error);
+      showToast("error", "Błąd podczas akceptowania zaproszenia. Spróbuj ponownie.");
+    },
+  });
+};
+
+// export const useRejectShare = () => {
+//   const queryClient = useQueryClient();
+//   const { showToast } = useToastContext();
+
+//   return useMutation({
+//     mutationFn: (shareId: string) => rejectObjectInvitationApi(shareId),
+//     onSuccess: () => {
+//       // Invalidate pending shares to remove the rejected one from the list
+//       queryClient.invalidateQueries({ queryKey: ["pendingShares"] });
+//       showToast("success", "Udostępnienie odrzucone.");
+//     },
+//     onError: (error) => {
+//       console.error("Error rejecting share:", error);
+//       showToast("error", "Błąd podczas odrzucania zaproszenia. Spróbuj ponownie.");
+//     },
+//   });
+// };

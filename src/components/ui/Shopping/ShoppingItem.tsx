@@ -100,7 +100,7 @@ function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
   if (viewMode === "grid") {
     return (
       <div
-        className={`p-4 rounded-lg border-2 transition-all ${
+        className={`p-4 rounded-md border-2 transition-all ${
           item.isCompleted ? "border-green-200 bg-green-50" : "border-gray-200 bg-white hover:border-gray-300"
         }`}>
         <div className="flex items-start justify-between mb-3">
@@ -192,7 +192,7 @@ function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
   // List view
   return (
     <div
-      className={`p-3 rounded-lg border transition-all ${
+      className={`p-3 rounded-md border transition-all ${
         item.isCompleted ? "border-green-200 bg-green-50" : "border-gray-200 bg-white hover:border-gray-300"
       }`}>
       {isEditing ? (

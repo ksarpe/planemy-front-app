@@ -19,13 +19,13 @@ export default function DeleteConfirmationModal({
       <button
         onClick={onClose}
         disabled={isLoading}
-        className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50">
+        className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors disabled:opacity-50">
         {cancelButtonText}
       </button>
       <button
         onClick={onConfirm}
         disabled={isLoading}
-        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50">
+        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors disabled:opacity-50">
         {isLoading ? "Usuwanie..." : confirmButtonText}
       </button>
     </>

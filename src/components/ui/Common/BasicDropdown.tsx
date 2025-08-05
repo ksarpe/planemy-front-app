@@ -101,7 +101,7 @@ export const BasicDropdown: React.FC<BasicDropdownProps> = ({
           ref={dropdownRef}
           className={`${
             usePortal ? "fixed" : "absolute top-full mt-2"
-          } ${width} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 ${
+          } ${width} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 ${
             !usePortal && align === "left" ? "left-0" : !usePortal && align === "right" ? "right-0" : ""
           }`}
           style={usePortal ? { top: position.top, left: position.left } : {}}>
@@ -148,7 +148,7 @@ export const BasicDropdownItem: React.FC<BasicDropdownItemProps> = ({
     green: "text-green-700 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/30",
   };
 
-  const baseClasses = `w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors text-sm ${
+  const baseClasses = `w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors text-sm ${
     disabled ? "opacity-50 cursor-not-allowed" : `cursor-pointer ${variantStyles[variant]}`
   } ${separator ? "mt-2 border-t border-gray-100 dark:border-gray-600 pt-3" : ""} ${className}`;
 

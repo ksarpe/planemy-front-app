@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Bot, Send } from "lucide-react";
 import { AITextboxProps } from "@/data/Common/interfaces";
 
-
 export default function AITextbox({
   placeholder = ["Zapytaj mnie o coś..."],
   disabled = false,
@@ -64,7 +63,7 @@ export default function AITextbox({
       <div className="ai-textbox-animated">
         <div
           className={`
-            ai-textbox-content flex items-center gap-3 bg-white border rounded-lg px-4 py-2 
+            ai-textbox-content flex items-center gap-3 bg-white border rounded-md px-4 py-2 
             shadow-sm transition-all duration-300 min-h-[60px] w-full
             ${isFocused ? "border-transparent shadow-lg" : "border-gray-200 hover:border-gray-300"}
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}

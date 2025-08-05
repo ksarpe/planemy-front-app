@@ -14,19 +14,25 @@
 }
 
 @theme {
+  /* Colors: Light blue (#E9F1FA), bright blue (#00ABE4), white (#FFFFFF) */
   /* 🎨 Light mode */
-  --color-primary: #f3d76d; /* Żółty z logo – ale tylko jako lekki akcent */
-  --color-text: #1e2b4d; /* Ten sam granat – kontrast bez jaskrawości */
-  --color-bg: #f7f9fb; /* Bardzo jasny, niemal biały z nutą błękitu */
-  --color-bg-alt: #e7edf2; /* Blade szaro-błękitne, np. dla boxów */
-  --color-bg-hover: #c2e1e5; /* Pastelowa odmiana turkusu */
+  --color-text: #101820;
+  --color-bg: #fdf2e4; /* jasny kremowy */
+  --color-bg-alt: #f0e4d3; /*  ciemniejszy kremowy */
+  --color-bg-hover: #dcc5b2; /* Coffee */
+  --color-primary: #db7b6c; /* Peach accent */
 
   /* 🌙 Dark mode */
-  --color-primary-dark: #f3d76d; /* Orange 400 */
-  --color-text-dark: white; /* Slate 200 */
-  --color-bg-dark: rgb(24, 24, 24); /* Navy dark */
-  --color-bg-hover-dark: #2e3b5d; /* blue 700 */
-  --color-bg-alt-dark: rgb(33, 33, 33); /* Slate 800 */
+  --color-text-dark: white;
+  --color-text-alt-dark: #b0b0b0; /* Jasnoszary dla mniej ważnych tekstów */
+  --color-bg-dark: rgb(33, 33, 33); /* Slate 800 */
+  --color-bg-alt-dark: #101820; /* Rich Dark */
+  --color-bg-hover-dark: #fee715; /* Vivid yellow */
+  --color-bg-item-dark: rgb(43, 43, 43); /* Slate 700 */
+  --color-bg-item-hover-dark: rgb(50, 50, 50); /* Slate 600 */
+  --color-accent-primary-dark: #064bbb; /* Blue 500 */
+  --color-accent-success-dark: #22c55e; /* Green 500 */
+  --color-accent-secondary-dark: #8b5cf6; /* Violet 500 */
 }
 
 /* AI Textbox Space Fade Animation */
@@ -67,4 +73,3 @@
     display: none; /* Safari and Chrome */
   }
 }
-

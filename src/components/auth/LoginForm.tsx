@@ -29,7 +29,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-auto">
+    <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-md mx-auto">
       <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Zaloguj się</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">

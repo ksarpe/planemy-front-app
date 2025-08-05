@@ -6,11 +6,10 @@ import { useState } from "react";
 import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
 import { useLabelContext } from "@/hooks/context/useLabelContext";
 
-
 export default function TaskDetails() {
   const { clickedTask, setClickedTask, currentTaskList } = useTaskContext();
-    const { removeLabelConnection } = useLabelContext();
-  
+  const { removeLabelConnection } = useLabelContext();
+
   const { mutate: updateTask } = useUpdateTask();
   const { mutate: toggleTaskComplete } = useCompleteTask();
   const { mutate: removeTask } = useDeleteTask();
@@ -110,50 +109,47 @@ export default function TaskDetails() {
   };
 
   return (
-    <div className="w-1/4 bg-bg-alt dark:bg-bg-dark rounded-lg p-6 shadow-md transition-all duration-300">
+    <div className="w-1/5 bg-gradient-to-r from-bg-alt to-bg-bg dark:from-gray-800 dark:to-gray-700 rounded-md p-4 shadow-[-8px_0_10px_rgba(0,0,0,0.1)]">
       <div className="h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center pb-4 justify-between">
-          <button onClick={() => setClickedTask(null)} className="text-gray-400 hover:text-gray-600 transition-colors">
+          <button
+            onClick={() => setClickedTask(null)}
+            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
             <PanelRightClose size={20} />
           </button>
           <div>
-                {/* even though there is a map, we cannot add more labels  (frontend purposes) */}
-                {clickedTask.labels?.map((label) => (
-                  <div onClick={(e) => e.stopPropagation()} key={label.id}>
-                    <BasicDropdown
-                      trigger={
-                        <div
-                          key={label.id}
-                          className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full cursor-pointer"
-                          style={{ backgroundColor: label.color + "20", color: label.color }}>
-                          <Tag size={12} />
-                          {label.name}
-                        </div>
-                      }
-                      usePortal={true}>
-                      <BasicDropdownItem
-                        icon={Trash}
-                        variant="red"
-                        onClick={() => removeLabelConnection(clickedTask.id, "task", label.id)}>
-                        Usuń etykietę
-                      </BasicDropdownItem>
-                    </BasicDropdown>
-                  </div>
-                ))}
+            {/* even though there is a map, we cannot add more labels  (frontend purposes) */}
+            {clickedTask.labels?.map((label) => (
+              <div onClick={(e) => e.stopPropagation()} key={label.id}>
+                <BasicDropdown
+                  trigger={
+                    <div
+                      key={label.id}
+                      className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full cursor-pointer"
+                      style={{ backgroundColor: label.color + "20", color: label.color }}>
+                      <Tag size={12} />
+                      {label.name}
+                    </div>
+                  }
+                  usePortal={true}>
+                  <BasicDropdownItem
+                    icon={Trash}
+                    variant="red"
+                    onClick={() => removeLabelConnection(clickedTask.id, "task", label.id)}>
+                    Usuń etykietę
+                  </BasicDropdownItem>
+                </BasicDropdown>
               </div>
+            ))}
+          </div>
         </div>
 
         {/* Task Content */}
         <div className="flex-1 space-y-6">
           {/* Title */}
           <div>
-            <EditableText
-              value={clickedTask.title}
-              onSave={handleUpdateTitle}
-              className="text-lg font-medium"
-              placeholder="Tytuł zadania..."
-            />
+            <EditableText value={clickedTask.title} onSave={handleUpdateTitle} placeholder="Tytuł zadania..." />
           </div>
 
           {/* Description */}
@@ -170,18 +166,23 @@ export default function TaskDetails() {
             {!isEditingDate ? (
               <button
                 onClick={startEditingDate}
-                className="w-full flex items-center justify-between bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition-colors cursor-pointer">
-                <p className={`text-sm ${isOverdue() && !clickedTask.isCompleted ? "text-red-700" : "text-gray-700"}`}>
+                className="w-full flex items-center justify-between bg-gray-50 dark:bg-gray-800/50 rounded-md p-3 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors cursor-pointer">
+                <p
+                  className={`text-sm ${
+                    isOverdue() && !clickedTask.isCompleted
+                      ? "text-red-700 dark:text-red-400"
+                      : "text-gray-700 dark:text-gray-300"
+                  }`}>
                   {formatDueDate()}
                 </p>
-                <Calendar size={16} className="text-blue-600" />
+                <Calendar size={16} className="text-primary dark:text-primary-dark" />
               </button>
             ) : (
-              <div className="space-y-3 bg-white border border-gray-200 rounded-lg p-4">
+              <div className="space-y-3 bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-md p-4">
                 {/* Data i godzina w jednym wierszu */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
-                    <label className="block text-xs font-medium text-gray-600">Data</label>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400">Data</label>
                     <input
                       type="date"
                       value={tempDate}
@@ -192,12 +193,12 @@ export default function TaskDetails() {
                           updateDateFromTemp();
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-xs font-medium text-gray-600">Godzina</label>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400">Godzina</label>
                     <input
                       type="time"
                       value={tempTime}
@@ -208,7 +209,7 @@ export default function TaskDetails() {
                           updateDateFromTemp();
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                     />
                   </div>
                 </div>
@@ -217,15 +218,17 @@ export default function TaskDetails() {
                 <div className="flex gap-2 pt-2">
                   <button
                     onClick={() => setIsEditingDate(false)}
-                    className="flex-1 px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                     Anuluj
                   </button>
-                  <button onClick={updateDateFromTemp} className="flex-1 px-3 py-2 text-sm bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors">
+                  <button
+                    onClick={updateDateFromTemp}
+                    className="flex-1 px-3 py-2 text-sm bg-green-100 dark:bg-green-800/50 text-green-700 dark:text-green-300 rounded-md hover:bg-green-200 dark:hover:bg-green-700/60 transition-colors">
                     Zapisz
                   </button>
                   <button
                     onClick={handleRemoveDueDate}
-                    className="flex-1 px-3 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-red-100 dark:bg-red-800/50 text-red-700 dark:text-red-300 rounded-md hover:bg-red-200 dark:hover:bg-red-700/60 transition-colors">
                     Usuń termin
                   </button>
                 </div>
@@ -235,15 +238,11 @@ export default function TaskDetails() {
         </div>
 
         {/* Actions */}
-        <div className="space-y-3 pt-6 border-t">
+        <div className="space-y-3 pt-6 border-t border-gray-200 dark:border-gray-700">
           {/* Toggle Complete */}
           <button
             onClick={handleToggleComplete}
-            className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-colors ${
-              clickedTask.isCompleted
-                ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
-                : "bg-green-50 text-green-700 hover:bg-green-100"
-            }`}>
+            className={`w-full flex items-center justify-center gap-2 py-3 rounded-md font-medium ${"bg-bg-hover text-green-600 dark:bg-blue-900/30 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/40"}`}>
             <CheckCircle2 size={18} />
             {clickedTask.isCompleted ? "Oznacz jako nieukończone" : "Oznacz jako ukończone"}
           </button>
@@ -251,7 +250,7 @@ export default function TaskDetails() {
           {/* Delete */}
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-700 rounded-lg font-medium hover:bg-red-100 transition-colors">
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-md font-medium hover:bg-red-100 dark:hover:bg-red-800/40 transition-colors">
             <Trash2 size={18} />
             Usuń zadanie
           </button>

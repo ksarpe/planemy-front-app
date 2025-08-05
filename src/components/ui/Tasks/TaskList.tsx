@@ -50,15 +50,15 @@ export default function TaskList({ filter, tasks }: TaskListProps) {
   if (filteredTasks.length === 0) {
     return (
       <div className="text-center py-8 flex flex-col items-center">
-        <CheckCircle2 size={48} className="mx-auto text-gray-400 mb-4" />
-        <h3 className="text-lg font-medium text-gray-600 mb-2">Brak zadań</h3>
+        <CheckCircle2 size={48} className="mx-auto text-gray-400 dark:text-gray-500 mb-4" />
+        <h3 className="text-lg font-medium text-gray-600 dark:text-gray-300 mb-2">Brak zadań</h3>
         <div className="mb-2 w-full max-w-md mt-4">
           {showQuickAdd ? (
             <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
           ) : (
             <button
               onClick={() => setShowQuickAdd(true)}
-              className="w-full flex items-center justify-center gap-2 border-l-4 border-green-700 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors duration-200 cursor-pointer">
+              className="w-full flex items-center justify-center gap-2 border-l-4 border-green-700 dark:border-green-600 bg-green-600 dark:bg-green-700 text-white px-4 py-3 rounded-md hover:bg-green-700 dark:hover:bg-green-800 transition-colors duration-200 cursor-pointer">
               <Plus size={18} />
               <span className="text-sm">Nowe zadanie</span>
             </button>

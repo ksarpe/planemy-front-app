@@ -169,7 +169,7 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 ${className}`}>
+      className={`bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 p-4 ${className}`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
           <Plus className="h-5 w-5 mr-2" />
@@ -200,7 +200,7 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
             onClick={() => createQuickEvent(event.template)}
             disabled={isCreating || !selectedDate}
             className={`
-              ${event.color} text-white p-3 rounded-lg text-left transition-all
+              ${event.color} text-white p-3 rounded-md text-left transition-all
               hover:shadow-md hover:scale-105 active:scale-95
               disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
               flex flex-col items-start space-y-1

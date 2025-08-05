@@ -1,6 +1,7 @@
 import type { TaskListFilter, SharedUserStatus, EmptyListType } from "./types";
 import type { SharePermission } from "@/data/Utils/types";
 import type { LabelInterface } from "@/data/Utils/interfaces";
+import { LucideIcon } from "lucide-react";
 
 export interface TaskInterface {
   id: string;
@@ -123,4 +124,13 @@ export interface TaskViewHeaderProps {
   onNewListClick: () => void;
   tasks: TaskInterface[];
   onShareListClick: (listId: string) => void;
+}
+
+export interface StatisticCardProps {
+  title: string;
+  count: number;
+  icon: LucideIcon;
+  iconColor: string;
+  isSelected: boolean;
+  onClick: () => void;
 }

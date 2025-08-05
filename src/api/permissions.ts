@@ -113,7 +113,7 @@ export const getPendingSharesApi = async (objectType: ShareableObjectType, userI
 /**
  * Accept object invitation
  */
-export const acceptObjectInvitation = async (permissionId: string): Promise<void> => {
+export const acceptObjectInvitationApi = async (permissionId: string): Promise<void> => {
   console.log("acceptObjectInvitation called with:", permissionId);
 
   try {
