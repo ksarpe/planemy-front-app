@@ -52,10 +52,8 @@ export interface TaskContextProps {
   currentTaskListId: string | null;
   setCurrentTaskListId: (listId: string | null) => void;
 
-  // Legacy support (for backwards compatibility)
   clickedTask: TaskInterface | null;
   setClickedTask: (task: TaskInterface | null) => void;
-  convertToEvent: () => void;
 }
 
 //Create

@@ -49,9 +49,9 @@ export default function TaskItem({ task }: TaskItemProps) {
       style={{
         borderColor: task.labels?.length === 1 ? task.labels[0].color : "#d1d5db", // gray-300
       }}
-      className={`border-l-4 rounded-lg p-4 transform
+      className={`border-l-6 rounded-lg p-4 transform
       ${task.isCompleted ? "bg-gray-100 opacity-75" : "bg-white hover:shadow-md"}
-      ${task.labels?.length === 1 ? "border-l-1" : "border-l-gray-300"}
+      ${task.labels?.length === 1 ? "" : "border-l-gray-300"}
       ${
         clickedTask?.id === task.id
           ? "bg-gradient-to-r from-blue-50 to-indigo-50 border-b-blue-500 border-b"
@@ -64,7 +64,6 @@ export default function TaskItem({ task }: TaskItemProps) {
           setClickedTask(null);
         } else {
           setClickedTask(task);
-          console.log("Selected task:", task);
         }
       }}>
       <div className="flex items-center justify-between">

@@ -28,7 +28,7 @@ export default function TaskAlerts({ tasks }: TaskAlertsProps) {
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <h3 className="text-red-800 font-medium mb-2 flex items-center gap-2">
             <AlertTriangle size={18} className="animate-pulse" />
-            Masz {overdueTasks.length} przeterminowane zadania
+            Na liście znajdują się zadania, które są przeterminowane!
           </h3>
         </div>
       )}
@@ -36,18 +36,10 @@ export default function TaskAlerts({ tasks }: TaskAlertsProps) {
       {/* Due soon tasks alert */}
       {dueSoonTasks.length > 0 && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <h3 className="text-yellow-800 font-medium mb-2 flex items-center gap-2">
+          <h3 className="text-yellow-800 font-medium flex items-center gap-2">
             <Calendar size={18} />
-            Zadania do wykonania w najbliższych dniach
+            Na liście znajdują się zadania, które wkrótce się kończą!
           </h3>
-          <div className="space-y-1">
-            {dueSoonTasks.map((task) => (
-              <div key={task.id} className="text-yellow-700 text-sm flex justify-between">
-                <span>{task.title}</span>
-                <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString("pl-PL") : "Brak terminu"}</span>
-              </div>
-            ))}
-          </div>
         </div>
       )}
     </>

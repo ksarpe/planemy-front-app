@@ -1,7 +1,7 @@
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
-import { Moon, Sun, LogOut, User, Tag } from "lucide-react";
+import { Moon, Sun, LogOut, Tag } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import SidebarLink from "../ui/Sidebar/SidebarLink";
 
@@ -55,17 +55,29 @@ export default function Sidebar() {
           </button>
         </div>
         {/* User info */}
-        <div className="flex items-center gap-2 p-2 bg-bg-hover dark:bg-bg-hover-dark rounded-md">
-          <User size={20} className="text-black" />
+        {/* Panel użytkownika */}
+        <div className="border-t border-slate-300 dark:border-slate-800 pt-4 flex items-center gap-3">
+          {/* Avatar */}
+          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white">
+             {user?.displayName?.charAt(0) || "U"}
+          </div>
+          
+          {/* Informacje o użytkowniku */}
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-text dark:text-text-dark truncate">
-              {user?.displayName || user?.email || "Użytkownik"}
+            <p className="text-sm font-semibold truncate">
+              {user?.displayName || "Użytkownik"}
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+              {user?.email}
             </p>
           </div>
+
+          {/* Przycisk wylogowania */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 text-text dark:text-text-dark hover:text-red-500 hover:cursor-pointer"
-            title="Wyloguj się">
+            title="Wyloguj się"
+            className="p-2 rounded-md cursor-pointer text-slate-600 dark:text-slate-300 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/50 dark:hover:text-red-400 transition-colors duration-200"
+          >
             <LogOut size={20} />
           </button>
         </div>
