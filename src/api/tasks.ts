@@ -38,7 +38,6 @@ export const fetchTasksForListApi = async (listId: string): Promise<TaskInterfac
   const labelsCollection = collection(db, "labels");
   const labelsQuery = query(labelsCollection, where("id", "in", labelIds));
   const labelsSnapshot = await getDocs(labelsQuery);
-  
 
   // Stwórz mapę dla łatwego i szybkiego dostępu (klucz: id etykiety, wartość: obiekt etykiety)
   const labelsMap = new Map<string, LabelInterface>(
@@ -139,6 +138,23 @@ export const completeTaskApi = async (taskId: string): Promise<void> => {
     }
   } catch (error) {
     console.error("Error toggling task completion:", error);
+    throw error;
+  }
+};
+
+// Delete all tasks from a specific task list
+export const deleteAllTasksFromListApi = async (taskListId: string): Promise<void> => {
+  try {
+    const tasksCollection = collection(db, "tasks");
+    const tasksQuery = query(tasksCollection, where("taskListId", "==", taskListId));
+    const snapshot = await getDocs(tasksQuery);
+
+    const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
+    await Promise.all(deletePromises);
+
+    console.log(`Deleted ${snapshot.docs.length} tasks from task list: ${taskListId}`);
+  } catch (error) {
+    console.error("Error deleting all tasks from list:", error);
     throw error;
   }
 };

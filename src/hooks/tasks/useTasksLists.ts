@@ -43,14 +43,18 @@ export const useCreateTaskList = () => {
 };
 
 export const useDeleteTaskList = () => {
+  const { user } = useAuthContext();
   const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (listId: string) => deleteTaskListApi(listId),
+    mutationFn: (listId: string) => deleteTaskListApi(listId, user!.uid),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["taskLists"] });
-      showToast("success", "Lista zadań została usunięta!");
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["pendingShares"] });
+      queryClient.invalidateQueries({ queryKey: ["labelConnections"] });
+      showToast("success", "Lista zadań została usunięta wraz ze wszystkimi zadaniami i udostępnieniami!");
     },
     onError: (error) => {
       console.error("Error deleting task list:", error); //DEBUG

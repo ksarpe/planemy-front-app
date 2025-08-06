@@ -12,6 +12,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "./config";
+import { deleteAllPermissionsForObject } from "./permissions";
+import { removeAllLabelConnectionsForObject } from "./labels";
 import {
   ShoppingListInterface,
   ShoppingItemInterface,
@@ -63,9 +65,18 @@ export const updateShoppingList = async (listId: string, updates: Partial<Shoppi
   }
 };
 
-export const deleteShoppingList = async (listId: string) => {
+export const deleteShoppingList = async (listId: string, userId: string) => {
   try {
+    // Step 1: Delete all permissions/shares for this shopping list
+    await deleteAllPermissionsForObject(listId, "shopping_list");
+
+    // Step 2: Remove all label connections for the shopping list itself (if labels are supported in future)
+    await removeAllLabelConnectionsForObject(userId, listId, "shopping_list");
+
+    // Step 3: Delete the shopping list (this will also remove its items automatically due to Firestore structure)
     await deleteDoc(doc(db, "shoppingLists", listId));
+
+    console.log(`Successfully deleted shopping list ${listId} with all its permissions`);
   } catch (error) {
     console.error("Error deleting shopping list:", error);
     throw error;

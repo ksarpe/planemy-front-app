@@ -257,6 +257,28 @@ export const deletePermission = async (permissionId: string): Promise<void> => {
 };
 
 /**
+ * Delete all permissions for a specific object
+ */
+export const deleteAllPermissionsForObject = async (
+  objectId: string,
+  objectType: ShareableObjectType,
+): Promise<void> => {
+  try {
+    const permissionsCollection = collection(db, PERMISSIONS_COLLECTION);
+    const q = query(permissionsCollection, where("object_id", "==", objectId), where("object_type", "==", objectType));
+
+    const snapshot = await getDocs(q);
+    const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
+    await Promise.all(deletePromises);
+
+    console.log(`Deleted ${snapshot.docs.length} permissions for ${objectType}:${objectId}`);
+  } catch (error) {
+    console.error("Error deleting permissions for object:", error);
+    throw error;
+  }
+};
+
+/**
  * Get users with access to an object
  */
 export const getObjectSharedUsers = async (

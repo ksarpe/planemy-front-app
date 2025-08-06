@@ -126,11 +126,11 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
 
   const deleteList = async (listId: string) => {
     try {
-      await deleteShoppingList(listId);
+      await deleteShoppingList(listId, user!.uid);
       if (currentList?.id === listId) {
         setCurrentList(shoppingLists.find((list) => list.id !== listId) || null);
       }
-      showToast("success", "Lista została usunięta");
+      showToast("success", "Lista została usunięta wraz ze wszystkimi udostępnieniami");
     } catch (error) {
       console.error("Error deleting list:", error);
       showToast("error", "Błąd podczas usuwania listy");

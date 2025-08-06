@@ -223,3 +223,50 @@ export const bulkDeleteLabels = async (labelIds: string[]): Promise<void> => {
     throw error;
   }
 };
+
+// Remove all label connections for all tasks in a task list
+export const removeAllLabelConnectionsForTasksInList = async (userId: string, taskListId: string): Promise<void> => {
+  try {
+    const connectionsCollection = collection(db, LABEL_CONNECTIONS_COLLECTION);
+
+    // First, get all tasks from the task list
+    const tasksCollection = collection(db, "tasks");
+    const tasksQuery = query(tasksCollection, where("taskListId", "==", taskListId));
+    const tasksSnapshot = await getDocs(tasksQuery);
+
+    if (tasksSnapshot.empty) {
+      console.log(`No tasks found in task list ${taskListId}, no label connections to remove`);
+      return;
+    }
+
+    // Extract task IDs
+    const taskIds = tasksSnapshot.docs.map((doc) => doc.data().id || doc.id);
+
+    // Remove label connections for all tasks in batches (Firestore 'in' query limit is 30)
+    const batchSize = 30;
+    const deletePromises = [];
+
+    for (let i = 0; i < taskIds.length; i += batchSize) {
+      const batch = taskIds.slice(i, i + batchSize);
+
+      const connectionsQuery = query(
+        connectionsCollection,
+        where("userId", "==", userId),
+        where("objectId", "in", batch),
+        where("objectType", "==", "task"),
+      );
+
+      const connectionsSnapshot = await getDocs(connectionsQuery);
+      const batchDeletePromises = connectionsSnapshot.docs.map((doc) => deleteDoc(doc.ref));
+      deletePromises.push(...batchDeletePromises);
+    }
+
+    await Promise.all(deletePromises);
+    console.log(
+      `Removed ${deletePromises.length} label connections for ${taskIds.length} tasks in task list ${taskListId}`,
+    );
+  } catch (error) {
+    console.error("Error removing label connections for tasks in list:", error);
+    throw error;
+  }
+};

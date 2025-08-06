@@ -9,6 +9,9 @@ import {
   getDocs,
   getCountFromServer,
 } from "firebase/firestore";
+import { deleteAllTasksFromListApi } from "./tasks";
+import { deleteAllPermissionsForObject } from "./permissions";
+import { removeAllLabelConnectionsForTasksInList } from "./labels";
 
 import type { TaskListInterface } from "@/data/Tasks/interfaces";
 
@@ -130,8 +133,18 @@ export const updateTaskListApi = async (listId: string, updates: Partial<TaskLis
 };
 
 // Delete task list
-export const deleteTaskListApi = async (listId: string): Promise<void> => {
+export const deleteTaskListApi = async (listId: string, userId: string): Promise<void> => {
   try {
+    // Step 1: Remove all label connections for tasks in this list (before deleting tasks)
+    await removeAllLabelConnectionsForTasksInList(userId, listId);
+
+    // Step 2: Delete all tasks from the list
+    await deleteAllTasksFromListApi(listId);
+
+    // Step 3: Delete all permissions/shares for this task list
+    await deleteAllPermissionsForObject(listId, "task_list");
+
+    // Step 4: Delete the task list itself
     const taskListsCollection = collection(db, "taskLists");
     const taskListQuery = query(taskListsCollection, where("id", "==", listId));
     const snapshot = await getDocs(taskListQuery);
@@ -140,13 +153,13 @@ export const deleteTaskListApi = async (listId: string): Promise<void> => {
       const taskListDoc = snapshot.docs[0];
       await deleteDoc(taskListDoc.ref);
     }
+
+    console.log(`Successfully deleted task list ${listId} with all its tasks, permissions and task labels`);
   } catch (error) {
     console.error("Error deleting task list:", error);
     throw error;
   }
-};
-
-// Clear completed tasks from a list
+}; // Clear completed tasks from a list
 export const clearCompletedTasks = async (listId: string): Promise<void> => {
   try {
     const tasksCollection = collection(db, "tasks");
