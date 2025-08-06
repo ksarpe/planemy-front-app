@@ -61,11 +61,11 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
   return (
     <div
       ref={containerRef}
-      className="border-l-4 border-green-500 dark:border-bg-hover-dark rounded-md p-4 bg-green-50 dark:bg-green-900/30 hover:shadow-md mb-3">
+      className="border-l-4 border-success dark:border-bg-hover-dark rounded-md p-4 bg-green-50 dark:bg-green-900/30 hover:shadow-md mb-3">
       <div className="flex items-center gap-3">
         {/* Plus Icon */}
         <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-          <Plus size={16} className="text-green-600 dark:text-green-400" />
+          <Plus size={16} className="text-success-hover dark:text-green-400" />
         </div>
 
         {/* Input Field */}
@@ -84,7 +84,7 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
           {/* Confirm Button */}
           <button
             onClick={handleSubmit}
-            className="p-1 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/30 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1 text-success dark:text-success-dark cursor-pointer"
             title="Dodaj zadanie (Enter)">
             <Check size={16} />
           </button>
@@ -92,7 +92,7 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
           {/* Cancel Button */}
           <button
             onClick={onCancel}
-            className="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/60 rounded transition-colors"
+            className="p-1 text-red-400 dark:text-red-500 cursor-pointer"
             title="Anuluj (Escape)">
             <X size={16} />
           </button>

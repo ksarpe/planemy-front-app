@@ -1,6 +1,7 @@
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
+import { usePendingShares } from "@/hooks/permissions/usePermissions";
 import { Moon, Sun, LogOut, Tag, Bell } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import SidebarLink from "../ui/Sidebar/SidebarLink";
@@ -9,6 +10,12 @@ export default function Sidebar() {
   const { isDark, toggleTheme } = usePreferencesContext();
   const { user, logout } = useAuthContext();
   const { showToast } = useToastContext();
+
+  // Get notification counts
+  // TODO: only for counting purpuse. Change for more efficient solutioin
+  const { data: taskListShares = [] } = usePendingShares("task_list");
+  const { data: shoppingListShares = [] } = usePendingShares("shopping_list");
+  const totalNotifications = taskListShares.length + shoppingListShares.length;
 
   const handleLogout = async () => {
     try {
@@ -55,12 +62,17 @@ export default function Sidebar() {
             </span>
           </button>
           <NavLink
-            to="/test"
-            className="flex items-center gap-2 text-text dark:text-text-dark hover:dark:text-bg-hover-dark">
+            to="/notifications"
+            className="flex items-center gap-2 text-text dark:text-text-dark hover:dark:text-bg-hover-dark relative">
             <Bell size={20} />
             <span className="text-sm hover:text-primary hover:dark:text-primary-dark hover:cursor-pointer">
               Powiadomienia
             </span>
+            {totalNotifications > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {totalNotifications > 9 ? "9+" : totalNotifications}
+              </span>
+            )}
           </NavLink>
         </div>
         {/* User info */}

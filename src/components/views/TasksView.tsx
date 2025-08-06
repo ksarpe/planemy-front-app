@@ -8,12 +8,12 @@ import {
   TaskList,
   TaskStatistics,
   TaskAlerts,
-  PendingSharesNotification,
   TaskDetails,
   EmptyStates,
 } from "@/components/ui/Tasks";
 import Spinner from "../ui/Utils/Spinner";
 import { useTaskLists, useCreateTaskList } from "@/hooks/tasks/useTasksLists";
+import type { TaskListFilter } from "@/data/Tasks/types";
 
 export default function TasksView() {
   const { currentTaskListId, currentTaskList, clickedTask } = useTaskContext();
@@ -25,7 +25,7 @@ export default function TasksView() {
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareListId, setShareListId] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"pending" | "completed" | "overdue">("pending");
+  const [filter, setFilter] = useState<TaskListFilter>("pending");
 
   // Get tasks from current list using new hook
 
@@ -49,9 +49,6 @@ export default function TasksView() {
 
   return (
     <div className="flex h-full p-4 gap-4">
-      {/* Pending Shares Notification */}
-      <PendingSharesNotification object_type="task_list" />
-
       {/* Main panel */}
       <div
         className={`${

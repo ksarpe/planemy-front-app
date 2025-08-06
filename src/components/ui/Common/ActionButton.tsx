@@ -5,33 +5,28 @@ import { ActionButtonProps } from "@/data/Common/interfaces";
 // ZMIANA: Bardziej zaawansowana struktura stylów dla pełnej kontroli
 const colorStyles = {
   green: {
-    base: "bg-green-600 border-green-700 text-white dark:accent-success-dark",
-    hover: "hover:bg-green-500 hover:border-green-600",
-    focusRing: "focus-visible:ring-green-400",
+    base: "bg-success border-success-hover text-white dark:accent-success-dark",
+    hover: "hover:bg-success-hover",
   },
   accent_secondary: {
     base: "bg-orange-500 border-accent-secondary-dark text-white dark:bg-accent-secondary-dark",
     hover: "hover:bg-orange-400 hover:border-orange-500",
-    focusRing: "focus-visible:ring-orange-400",
   },
   primary: {
     base: "bg-primary border-primary text-white",
-    focusRing: "focus-visible:ring-blue-400",
+    hover: "hover:bg-primary-hover hover:border-primary-hover",
   },
   red: {
     base: "bg-red-600 border-red-700 text-white",
     hover: "hover:bg-red-500 hover:border-red-600",
-    focusRing: "focus-visible:ring-red-400",
   },
   gray: {
     base: "bg-gray-600 border-gray-700 text-white",
     hover: "hover:bg-gray-500 hover:border-gray-600",
-    focusRing: "focus-visible:ring-gray-400",
   },
   white: {
     base: "bg-white border-gray-300 text-gray-800",
     hover: "hover:bg-gray-50 hover:border-gray-400",
-    focusRing: "focus-visible:ring-blue-500",
   },
 };
 
@@ -68,10 +63,10 @@ export default function ActionButton({
         onClick={onClick}
         disabled={disabled}
         className={clsx(
-          "flex items-center justify-center rounded-full border shadow-sm",
+          "flex items-center justify-center rounded-full border shadow-md",
           "hover:-translate-y-0.5 active:scale-95 hover:shadow-lg",
           styles.base,
-          styles.focusRing,
+          styles.hover,
           iconSizeClasses[size],
           disabled && "opacity-50 cursor-not-allowed",
           className,
@@ -87,10 +82,10 @@ export default function ActionButton({
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        "flex items-center justify-center gap-2 rounded-md font-semibold shadow-sm",
+        "flex items-center justify-center gap-2 rounded-md font-semibold shadow-md",
         "hover:-translate-y-0.5 hover:shadow-lg",
         styles.base,
-        styles.focusRing,
+        styles.hover,
         sizeClasses[size],
         disabled && "opacity-50 cursor-not-allowed",
         className,

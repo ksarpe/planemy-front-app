@@ -100,6 +100,7 @@ export default function TaskDetails() {
 
   const handleToggleComplete = async () => {
     toggleTaskComplete(clickedTask.id);
+    setClickedTask(null);
   };
 
   const handleDelete = async () => {
@@ -242,7 +243,12 @@ export default function TaskDetails() {
           {/* Toggle Complete */}
           <button
             onClick={handleToggleComplete}
-            className={`w-full flex items-center justify-center gap-2 py-3 rounded-md font-medium ${"bg-bg-hover text-green-600 dark:bg-blue-900/30 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/40"}`}>
+            className={`w-full flex items-center justify-center gap-2 py-3 rounded-lg font-medium shadow-md
+      ${
+        clickedTask.isCompleted
+          ? "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600" // Stan: Zrobione (akcja cofająca)
+          : "bg-success text-white hover:bg-success-hover" // Stan: Do zrobienia (akcja główna)
+      }`}>
             <CheckCircle2 size={18} />
             {clickedTask.isCompleted ? "Oznacz jako nieukończone" : "Oznacz jako ukończone"}
           </button>
@@ -250,8 +256,10 @@ export default function TaskDetails() {
           {/* Delete */}
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-md font-medium hover:bg-red-100 dark:hover:bg-red-800/40 transition-colors">
-            <Trash2 size={18} />
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium shadow-md
+               bg-red-50 text-red-600 hover:bg-red-100
+               dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/40">
+            <Trash2 size={16} />
             Usuń zadanie
           </button>
         </div>

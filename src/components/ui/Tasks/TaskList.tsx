@@ -58,7 +58,7 @@ export default function TaskList({ filter, tasks }: TaskListProps) {
           ) : (
             <button
               onClick={() => setShowQuickAdd(true)}
-              className="w-full flex items-center justify-center gap-2 border-l-4 border-green-700 dark:border-green-600 bg-green-600 dark:bg-green-700 text-white px-4 py-3 rounded-md hover:bg-green-700 dark:hover:bg-green-800 transition-colors duration-200 cursor-pointer">
+              className="w-full flex items-center justify-center gap-2 border-l-4 border-success dark:border-success-hover bg-success dark:bg-success-hover text-white px-4 py-3 rounded-md hover:bg-success-hover dark:hover:bg-success cursor-pointer">
               <Plus size={18} />
               <span className="text-sm">Nowe zadanie</span>
             </button>

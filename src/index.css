@@ -21,6 +21,8 @@
   --color-bg-alt: #f0e4d3; /*  ciemniejszy kremowy */
   --color-bg-hover: #dcc5b2; /* Coffee */
   --color-primary: #db7b6c; /* Peach accent */
+  --color-success: oklch(59.6% 0.145 163.225); /* emerald-600 */
+  --color-success-hover: oklch(50.8% 0.118 165.612); /* emerald-700 */
 
   /* 🌙 Dark mode */
   --color-text-dark: white;
