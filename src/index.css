@@ -20,8 +20,9 @@
   --color-bg: #fdf2e4; /* jasny kremowy */
   --color-bg-alt: #f0e4d3; /*  ciemniejszy kremowy */
   --color-bg-hover: #dcc5b2; /* Coffee */
-  --color-primary: #754668; /* Peach accent */
-  --color-success: #157A6E; /* brunswick  green #588157(maybe) */
+  
+  --color-primary: #776472; /* Peach accent */
+  --color-success: #588157; /* brunswick  green #588157(maybe) */
   --color-success-hover: #0f5850; /* emerald-700 */ 
 
   /* 🌙 Dark mode */

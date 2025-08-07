@@ -24,6 +24,31 @@ export interface Permission {
   status: ShareStatus; // Invitation status
 }
 
+// Interfaces for Announcements System
+export interface Announcement {
+  id?: string; // Firestore document ID
+  title: string; // Title of the announcement
+  content: string; // Full content/message
+  type: "info" | "warning" | "urgent" | "maintenance"; // Type of announcement
+  priority: number; // Priority level (1 = highest, 5 = lowest)
+  isActive: boolean; // Whether announcement is currently active
+  startDate: string; // ISO string - when announcement becomes visible
+  endDate?: string; // ISO string - when announcement expires (optional)
+  createdBy: string; // Admin user ID who created it
+  createdAt: string; // ISO string timestamp
+  updatedAt: string; // ISO string timestamp
+  targetAudience?: string[]; // Optional: specific user IDs (empty = all users)
+}
+
+export interface UserNotificationStatus {
+  id?: string; // Firestore document ID
+  announcementId: string; // Reference to announcement
+  userId: string; // User who viewed/interacted
+  isRead: boolean; // Whether user has read the full announcement
+  readAt?: string; // ISO string - when user opened/read announcement
+  createdAt: string; // ISO string - when first seen by user
+}
+
 export interface LabelInterface {
   id: string;
   name: string;
