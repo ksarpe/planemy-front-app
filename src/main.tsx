@@ -9,6 +9,7 @@ import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 // views
 import MainLayout from "@/components/layout/MainLayout";
 import CalendarView from "@/components/views/CalendarView";
+import DashboardView from "@/components/views/DashboardView";
 import NotFoundView from "@/components/views/NotFoundView";
 import ProfileView from "@/components/views/ProfileView";
 import ShoppingView from "@/components/views/ShoppingView";
@@ -29,7 +30,8 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <CalendarView /> },
+      { index: true, element: <DashboardView /> },
+      { path: "/dashboard", element: <DashboardView /> },
       { path: "/calendar", element: <CalendarView /> },
       { path: "/tasks", element: <TasksView /> },
       { path: "/profile", element: <ProfileView /> },

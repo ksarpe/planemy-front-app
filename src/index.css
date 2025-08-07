@@ -16,13 +16,13 @@
 @theme {
   /* Colors: Light blue (#E9F1FA), bright blue (#00ABE4), white (#FFFFFF) */
   /* 🎨 Light mode */
-  --color-text: #101820;
+  --color-text: #121619; /* nigth */
   --color-bg: #fdf2e4; /* jasny kremowy */
   --color-bg-alt: #f0e4d3; /*  ciemniejszy kremowy */
   --color-bg-hover: #dcc5b2; /* Coffee */
-  --color-primary: #db7b6c; /* Peach accent */
-  --color-success: oklch(59.6% 0.145 163.225); /* emerald-600 */
-  --color-success-hover: oklch(50.8% 0.118 165.612); /* emerald-700 */
+  --color-primary: #754668; /* Peach accent */
+  --color-success: #157A6E; /* brunswick  green #588157(maybe) */
+  --color-success-hover: #0f5850; /* emerald-700 */ 
 
   /* 🌙 Dark mode */
   --color-text-dark: white;
@@ -56,13 +56,13 @@
   padding: 2px; /* Grubość ramki */
   background: linear-gradient(
     45deg,
-    #ff6b9d,
-    /* Różowy */ #c44569,
-    /* Ciemny różowy */ #6c5ce7,
-    /* Fioletowy */ #a29bfe,
-    /* Jasny fioletowy */ #fd79a8,
-    /* Różowy */ #e84393,
-    /* Magenta */ #ff6b9d /* Powrót do różowego */
+    #157A6E,
+    /* Różowy */ #754668,
+    /* Ciemny różowy */ #DCC5B2,
+    /* Fioletowy */ #C94277,
+    /* Jasny fioletowy */ #DCC5B2,
+    /* Różowy */ #754668,
+    /* Magenta */ #157A6E /* Powrót do różowego */
   );
   background-size: 300% 300%;
   animation: space-fade 4s ease-in-out infinite;

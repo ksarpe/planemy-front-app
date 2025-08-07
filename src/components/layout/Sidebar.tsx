@@ -38,6 +38,7 @@ export default function Sidebar() {
             className="h-20 w-45 mb-4"
           />
         </NavLink>
+        <SidebarLink to="/dashboard" icon="📊" label="Panel" />
         <SidebarLink to="/calendar" icon="📅" label="Kalendarz" />
         <SidebarLink to="/tasks" icon="📋" label="Zadania" />
         <SidebarLink to="/shopping" icon="🛒" label="Zakupy" />

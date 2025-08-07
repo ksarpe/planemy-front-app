@@ -46,8 +46,17 @@ export const updateLabel = async (labelId: string, updates: Partial<LabelInterfa
 // Delete label
 export const deleteLabel = async (labelId: string): Promise<void> => {
   try {
-    const labelDocRef = doc(db, LABELS_COLLECTION, labelId);
-    await deleteDoc(labelDocRef);
+    const labelsCollection = collection(db, LABELS_COLLECTION);
+    const q = query(labelsCollection, where("id", "==", labelId));
+    const snapshot = await getDocs(q);
+    
+    if (snapshot.empty) {
+      console.log(`No label found with id: ${labelId}`);
+      return;
+    }
+    
+    const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
+    await Promise.all(deletePromises);
   } catch (error) {
     console.error("Error deleting label:", error);
     throw error;

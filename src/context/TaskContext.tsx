@@ -8,7 +8,6 @@ export { TaskContext };
 
 export const TaskProvider = ({ children }: { children: ReactNode }) => {
   // Context hooks
-  console.log("TaskProvider initialized");
   const { mainListId } = usePreferencesContext();
   const { data: taskLists } = useTaskLists();
   const [currentTaskListId, setCurrentTaskListId] = useState<string | null>(null);
