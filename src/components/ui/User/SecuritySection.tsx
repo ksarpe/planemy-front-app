@@ -2,12 +2,12 @@ import { Lock } from "lucide-react";
 
 export default function SecuritySection() {
   return (
-    <div className="bg-white  rounded-lg p-6 border border-gray-200 ">
+    <div className="bg-white rounded-lg p-6 border border-gray-200 ">
       <h3 className="text-lg font-semibold text-gray-900  mb-6 flex items-center gap-2">
         <Lock size={20} className="text-primary" />
         Bezpieczeństwo
       </h3>
-      <div className="space-y-4">
+      <div className="flex gap-4 items-center">
         <button className="w-full md:w-auto px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors">
           Zmień hasło
         </button>

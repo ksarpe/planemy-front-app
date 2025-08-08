@@ -1,4 +1,4 @@
-import { Palette, Moon, Sun } from "lucide-react";
+import { Palette } from "lucide-react";
 import type { ColorTheme, AppearanceThemeSectionProps } from "@/data/User";
 
 const colorThemes: ColorTheme[] = [
@@ -25,8 +25,6 @@ const colorThemes: ColorTheme[] = [
 ];
 
 export default function AppearanceThemeSection({
-  isDark,
-  toggleTheme,
   selectedTheme,
   setSelectedTheme,
 }: AppearanceThemeSectionProps) {
@@ -36,31 +34,6 @@ export default function AppearanceThemeSection({
         <Palette size={20} className="text-primary" />
         Wygląd i motywy
       </h3>
-
-      {/* Dark Mode Toggle */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {isDark ? <Moon size={20} /> : <Sun size={20} />}
-            <div>
-              <p className="font-medium text-gray-900 ">Tryb ciemny</p>
-              <p className="text-sm text-gray-500 ">Przełącz między jasnym i ciemnym motywem</p>
-            </div>
-          </div>
-          <button
-            onClick={toggleTheme}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              isDark ? "bg-primary" : "bg-gray-200"
-            }`}>
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                isDark ? "translate-x-6" : "translate-x-1"
-              }`}
-            />
-          </button>
-        </div>
-      </div>
-
       {/* Color Themes */}
       <div>
         <p className="font-medium text-gray-900  mb-4">Wybierz schemat kolorów</p>

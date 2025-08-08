@@ -50,17 +50,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     setColorTheme(index);
   };
 
-  /**
-   * toggleTheme
-   * Toggles between Dark Mode (index 3) and the last selected non-dark theme.
-   */
-  const toggleTheme = () => {
-    if (isDark) {
-      setColorThemePreview(lastNonDarkTheme);
-    } else {
-      setColorThemePreview(3); // Dark Mode
-    }
-  };
 
   /**
    * persistThemeDebounced
@@ -170,7 +159,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         showWeekends,
         setShowWeekends,
         isDark,
-        toggleTheme,
         colorTheme,
         setColorTheme,
         setColorThemePreview,

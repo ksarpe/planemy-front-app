@@ -16,8 +16,6 @@ export interface ToastContextProps {
 export interface PreferencesContextProps {
   showWeekends: boolean;
   setShowWeekends: (show: boolean) => void;
-  isDark: boolean; //theme
-  toggleTheme: () => void;
   colorTheme: number; // active color theme index
   setColorTheme: (themeIndex: number) => void;
   // Preview/persistence controls for color theme

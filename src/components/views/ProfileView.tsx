@@ -1,14 +1,12 @@
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { useEffect, useRef, useState } from "react";
 import {
-  ProfileHeader,
   PersonalInformationSection,
   AppearanceThemeSection,
   NotificationSettingsSection,
   LanguageRegionSection,
   SecuritySection,
   SaveBar,
-  ProfileSummary,
 } from "@/components/ui/User";
 import BaseModal from "@/components/ui/Common/BaseModal";
 import { useBlocker } from "react-router-dom";
@@ -21,7 +19,7 @@ import Spinner from "@/components/ui/Utils/Spinner";
 export default function ProfileView() {
   const { user } = useAuthContext();
   const { showToast } = useToastContext();
-  const { isDark, toggleTheme, colorTheme, setColorTheme, setColorThemePreview, language, timezone, updateSettings } =
+  const { colorTheme, setColorTheme, setColorThemePreview, language, timezone, updateSettings } =
     usePreferencesContext();
 
   // Track hydration/loading states
@@ -211,34 +209,35 @@ export default function ProfileView() {
             </div>
           ) : (
             <>
-              {/* Podsumowanie na górze */}
-              <ProfileSummary
-                userInfo={userInfo}
-                language={pendingLanguage}
-                timezone={pendingTimezone}
-                themeName={["Cozy Room", "Sweet Factory", "Productive Business", "Dark Mode"][pendingTheme]}
-                notifications={notifications}
-              />
+              {/* Nowoczesny układ kafelków */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-6">
+                {/* Row 1: Duże dane osobowe + kompaktowy motyw */}
+                <div className="md:col-span-8 flex flex-col gap-2">
+                  <PersonalInformationSection userInfo={userInfo} handleUserInfoChange={handleUserInfoChange} />
+                  <LanguageRegionSection
+                    language={pendingLanguage}
+                    setLanguage={setPendingLanguage}
+                    timezone={pendingTimezone}
+                    setTimezone={setPendingTimezone}
+                  />
+                  <NotificationSettingsSection
+                    notifications={notifications}
+                    handleNotificationChange={handleNotificationChange}
+                  />
+                </div>
+                <div className="md:col-span-4">
+                  <AppearanceThemeSection
+                    selectedTheme={pendingTheme}
+                    setSelectedTheme={handleThemeSelect}
+                  />
+                </div>
 
-              <div className="space-y-8 mt-6">
-                <PersonalInformationSection userInfo={userInfo} handleUserInfoChange={handleUserInfoChange} />
-                <AppearanceThemeSection
-                  isDark={isDark}
-                  toggleTheme={toggleTheme}
-                  selectedTheme={pendingTheme}
-                  setSelectedTheme={handleThemeSelect}
-                />
-                <NotificationSettingsSection
-                  notifications={notifications}
-                  handleNotificationChange={handleNotificationChange}
-                />
-                <LanguageRegionSection
-                  language={pendingLanguage}
-                  setLanguage={setPendingLanguage}
-                  timezone={pendingTimezone}
-                  setTimezone={setPendingTimezone}
-                />
-                <SecuritySection />
+                {/* Row 2: Język/strefa w węższej kolumnie + szerokie powiadomienia */}
+
+                {/* Row 3: Bezpieczeństwo pełna szerokość */}
+                <div className="md:col-span-12">
+                  <SecuritySection />
+                </div>
               </div>
             </>
           )}

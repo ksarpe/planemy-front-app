@@ -27,8 +27,6 @@ Settings for appearance preferences including dark mode and color themes.
 
 **Props:**
 
-- `isDark`: Boolean indicating current theme state
-- `toggleTheme`: Function to toggle dark/light theme
 - `selectedTheme`: Index of currently selected color theme
 - `setSelectedTheme`: Function to change color theme
 - `colorThemes`: Array of available color theme options

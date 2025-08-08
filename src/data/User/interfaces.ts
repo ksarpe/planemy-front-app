@@ -60,8 +60,6 @@ export interface LanguageRegionSectionProps {
 }
 
 export interface AppearanceThemeSectionProps {
-  isDark: boolean;
-  toggleTheme: () => void;
   selectedTheme: number;
   setSelectedTheme: (index: number) => void;
 }

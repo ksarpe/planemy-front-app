@@ -1,13 +1,11 @@
-import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 import { usePendingShares } from "@/hooks/permissions/usePermissions";
-import { Moon, Sun, LogOut, Tag, Bell } from "lucide-react";
+import { LogOut, Tag, Bell } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import SidebarLink from "../ui/Sidebar/SidebarLink";
 
 export default function Sidebar() {
-  const { isDark, toggleTheme } = usePreferencesContext();
   const { user, logout } = useAuthContext();
   const { showToast } = useToastContext();
 
@@ -54,12 +52,6 @@ export default function Sidebar() {
             <span className="text-sm hover:text-primary hover: hover:cursor-pointer">Etykiety</span>
           </NavLink>
 
-          <button onClick={toggleTheme} className="flex items-center gap-2 text-text  ">
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            <span className="text-sm hover:text-primary hover: hover:cursor-pointer">
-              {isDark ? "Light Mode" : "Dark Mode"}
-            </span>
-          </button>
           <NavLink to="/notifications" className="flex items-center gap-2 text-text  hover: relative">
             <Bell size={20} />
             <span className="text-sm hover:text-primary hover: hover:cursor-pointer">Powiadomienia</span>
