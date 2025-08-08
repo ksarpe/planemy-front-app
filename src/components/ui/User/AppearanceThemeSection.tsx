@@ -1,25 +1,34 @@
 import { Palette, Moon, Sun } from "lucide-react";
+import type { ColorTheme, AppearanceThemeSectionProps } from "@/data/User/interfaces";
 
-interface ColorTheme {
-  name: string;
-  description: string;
-  colors: string[];
-}
-
-interface AppearanceThemeSectionProps {
-  isDark: boolean;
-  toggleTheme: () => void;
-  selectedTheme: number;
-  setSelectedTheme: (index: number) => void;
-  colorThemes: ColorTheme[];
-}
+const colorThemes: ColorTheme[] = [
+  {
+    name: "Cozy Room",
+    description: "Ciepłe, przytulne odcienie",
+    colors: ["bg-[#fdf2e4]", "bg-[#f0e4d3]", "bg-[#dcc5b2]", "bg-[#776472]"],
+  },
+  {
+    name: "Sweet Factory",
+    description: "Słodkie, pastelowe barwy",
+    colors: ["bg-[#fdf4ff]", "bg-[#f3e8ff]", "bg-[#c084fc]", "bg-[#ec4899]"],
+  },
+  {
+    name: "Productive Business",
+    description: "Profesjonalne, skupione kolory",
+    colors: ["bg-slate-700", "bg-blue-600", "bg-indigo-500", "bg-gray-500"],
+  },
+  {
+    name: "Dark Mode",
+    description: "Głębokie, kontrastowe tony",
+    colors: ["bg-gray-900", "bg-slate-800", "bg-zinc-700", "bg-gray-600"],
+  },
+];
 
 export default function AppearanceThemeSection({
   isDark,
   toggleTheme,
   selectedTheme,
   setSelectedTheme,
-  colorThemes,
 }: AppearanceThemeSectionProps) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
@@ -62,13 +71,13 @@ export default function AppearanceThemeSection({
               onClick={() => setSelectedTheme(index)}
               className={`w-full p-4 rounded-lg border-2 transition-all hover:scale-[1.02] ${
                 selectedTheme === index
-                  ? "border-primary bg-primary/5"
+                  ? "border-primary bg-primary/20"
                   : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
               }`}>
               <div className="flex items-center gap-4">
                 <div className="flex gap-1 min-w-0">
                   {theme.colors.map((color, colorIndex) => (
-                    <div key={colorIndex} className={`w-8 h-8 rounded ${color} shadow-sm`}></div>
+                    <div key={colorIndex} className={`w-12 h-9 rounded ${color} shadow-sm`}></div>
                   ))}
                 </div>
                 <div className="text-left">

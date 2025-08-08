@@ -1,15 +1,5 @@
 import { Bell } from "lucide-react";
-
-interface NotificationSettingsSectionProps {
-  notifications: {
-    email: boolean;
-    push: boolean;
-    tasks: boolean;
-    events: boolean;
-    sharing: boolean;
-  };
-  handleNotificationChange: (field: string, value: boolean) => void;
-}
+import type { NotificationSettingsSectionProps } from "@/data/User/interfaces";
 
 export default function NotificationSettingsSection({
   notifications,

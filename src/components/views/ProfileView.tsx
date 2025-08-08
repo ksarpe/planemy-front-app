@@ -10,34 +10,6 @@ import {
   SecuritySection,
 } from "@/components/ui/User";
 
-interface ColorTheme {
-  name: string;
-  description: string;
-  colors: string[];
-}
-
-const colorThemes: ColorTheme[] = [
-  {
-    name: "Cozy Room",
-    description: "Ciepłe, przytulne odcienie",
-    colors: ["bg-amber-700", "bg-orange-600", "bg-red-500", "bg-pink-400", "bg-rose-300", "bg-orange-200"],
-  },
-  {
-    name: "Sweet Factory",
-    description: "Słodkie, pastelowe barwy",
-    colors: ["bg-pink-500", "bg-purple-400", "bg-indigo-300", "bg-blue-300", "bg-cyan-200", "bg-pink-200"],
-  },
-  {
-    name: "Productive Business",
-    description: "Profesjonalne, skupione kolory",
-    colors: ["bg-slate-700", "bg-blue-600", "bg-indigo-500", "bg-gray-500", "bg-slate-400", "bg-blue-300"],
-  },
-  {
-    name: "Dark Mode",
-    description: "Głębokie, kontrastowe tony",
-    colors: ["bg-gray-900", "bg-slate-800", "bg-zinc-700", "bg-gray-600", "bg-slate-500", "bg-gray-400"],
-  },
-];
 
 export default function ProfileView() {
   const { isDark, toggleTheme, colorTheme, setColorTheme } = usePreferencesContext();
@@ -101,7 +73,6 @@ export default function ProfileView() {
               toggleTheme={toggleTheme}
               selectedTheme={colorTheme}
               setSelectedTheme={setColorTheme}
-              colorThemes={colorThemes}
             />
 
             {/* Notifications */}

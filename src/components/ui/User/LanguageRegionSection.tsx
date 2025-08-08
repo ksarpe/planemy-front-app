@@ -1,11 +1,5 @@
 import { Globe } from "lucide-react";
-
-interface LanguageRegionSectionProps {
-  language: string;
-  setLanguage: (language: string) => void;
-  timezone: string;
-  setTimezone: (timezone: string) => void;
-}
+import type { LanguageRegionSectionProps } from "@/data/User/interfaces";
 
 export default function LanguageRegionSection({
   language,

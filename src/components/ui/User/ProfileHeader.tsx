@@ -1,13 +1,5 @@
 import { Camera, Edit3 } from "lucide-react";
-
-interface ProfileHeaderProps {
-  userInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    bio: string;
-  };
-}
+import type { ProfileHeaderProps } from "@/data/User/interfaces";
 
 export default function ProfileHeader({ userInfo }: ProfileHeaderProps) {
   return (

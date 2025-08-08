@@ -1,17 +1,5 @@
 import { User, Mail, Phone, MapPin, Calendar } from "lucide-react";
-
-interface PersonalInformationSectionProps {
-  userInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    location: string;
-    dateOfBirth: string;
-    bio: string;
-  };
-  handleUserInfoChange: (field: string, value: string) => void;
-}
+import type { PersonalInformationSectionProps } from "@/data/User/interfaces";
 
 export default function PersonalInformationSection({
   userInfo,

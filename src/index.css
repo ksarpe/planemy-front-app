@@ -15,15 +15,14 @@
 
 @theme {
   /* 🎨 Default theme (Cozy Room) */
-  --color-text: #121619;
-  --color-bg: #fef7ed; /* warm orange-50 */
-  --color-bg-alt: #fed7aa; /* orange-200 */
-  --color-bg-hover: #fb923c; /* orange-400 */
-  --color-primary: #ea580c; /* orange-600 */
-  --color-success: #dc2626; /* red-600 */
-  --color-success-hover: #b91c1c; /* red-700 */
+  --color-text: #121619; /* nigth */
+  --color-bg: #fdf2e4; /* jasny kremowy */
+  --color-bg-alt: #f0e4d3; /*  ciemniejszy kremowy */
+  --color-bg-hover: #dcc5b2; /* Coffee */
+  --color-primary: #776472; /* Peach accent */
+  --color-success: #588157; /* brunswick  green #588157(maybe) */
+  --color-success-hover: #0f5850; /* emerald-700 */
 }
-
 /* 🍭 Sweet Factory Theme */
 .theme-sweet-factory {
   --color-text: #1f2937;
