@@ -20,13 +20,12 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [colorTheme, _setColorTheme] = useState(0);
   const [lastNonDarkTheme, setLastNonDarkTheme] = useState(0);
 
-  // Locale settings
+  // Locale settings (read-only in context; update via dedicated hooks)
   const [language, setLanguage] = useState("pl");
   const [timezone, setTimezone] = useState("Europe/Warsaw");
 
   // Debounce timer refs
   const themeDebounceRef = useRef<number | null>(null);
-  const localeDebounceRef = useRef<number | null>(null);
 
   // Derived dark mode from selected theme
   const isDark = colorTheme === 3;
@@ -69,25 +68,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       if (themeDebounceRef.current) window.clearTimeout(themeDebounceRef.current);
     };
   }, [colorTheme, user]);
-
-  /**
-   * persistLocaleDebounced
-   * Debounced persistence of language and timezone to Firestore.
-   */
-  useEffect(() => {
-    if (!user) return;
-    if (localeDebounceRef.current) window.clearTimeout(localeDebounceRef.current);
-    localeDebounceRef.current = window.setTimeout(() => {
-      const payload: Partial<UserSettings> = { language };
-      if (timezone) payload.timezone = timezone;
-      updateUserSettings(user.uid, payload).catch(() => {
-        // ignore persistence errors
-      });
-    }, 500);
-    return () => {
-      if (localeDebounceRef.current) window.clearTimeout(localeDebounceRef.current);
-    };
-  }, [language, timezone, user]);
 
   // Load persisted settings on mount (Firestore)
   useEffect(() => {
@@ -155,6 +135,8 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         setMainListId(settings.defaultTaskListId);
         showToast("success", "Domyślna lista zadań została zaktualizowana!");
       }
+      if (settings.language) setLanguage(settings.language);
+      if (settings.timezone) setTimezone(settings.timezone);
     } catch (error) {
       console.error("Error updating user settings:", error);
     }
@@ -170,9 +152,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         colorTheme,
         setColorTheme,
         language,
-        setLanguage,
         timezone,
-        setTimezone,
         mainListId,
         setMainListId,
         updateSettings,

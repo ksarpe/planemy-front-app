@@ -21,9 +21,7 @@ export interface PreferencesContextProps {
   colorTheme: number; // active color theme index
   setColorTheme: (themeIndex: number) => void;
   language: string;
-  setLanguage: (lang: string) => void;
   timezone: string;
-  setTimezone: (tz: string) => void;
   mainListId: string | null; // currently selected main list
   setMainListId: (listId: string | null) => void;
   updateSettings: (settings: Partial<UserSettings>) => Promise<void>;

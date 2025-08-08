@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/User";
 
 export default function ProfileView() {
-  const { isDark, toggleTheme, colorTheme, setColorTheme, language, setLanguage, timezone, setTimezone } =
+  const { isDark, toggleTheme, colorTheme, setColorTheme, language, timezone, updateSettings } =
     usePreferencesContext();
 
   // User information
@@ -79,7 +79,12 @@ export default function ProfileView() {
             />
 
             {/* Language & Region */}
-            <LanguageRegionSection language={language} setLanguage={setLanguage} timezone={timezone} setTimezone={setTimezone} />
+            <LanguageRegionSection
+              language={language}
+              setLanguage={(lang) => updateSettings({ language: lang })}
+              timezone={timezone}
+              setTimezone={(tz) => updateSettings({ timezone: tz })}
+            />
 
             {/* Security */}
             <SecuritySection />
