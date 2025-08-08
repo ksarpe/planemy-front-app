@@ -79,16 +79,23 @@ export default function Sidebar() {
         {/* User info */}
         {/* Panel użytkownika */}
         <div className="border-t border-slate-300 dark:border-slate-800 pt-4 flex items-center gap-3">
-          {/* Avatar */}
-          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white">
-            {user?.displayName?.charAt(0) || "U"}
-          </div>
+          {/* User Profile Link */}
+          <NavLink
+            to="/profile"
+            className="flex items-center gap-3 flex-1 p-2 rounded-md hover:bg-bg-hover dark:hover:bg-bg-hover-dark transition-colors group">
+            {/* Avatar */}
+            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white">
+              {user?.displayName?.charAt(0) || "U"}
+            </div>
 
-          {/* Informacje o użytkowniku */}
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold truncate">{user?.displayName || "Użytkownik"}</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
-          </div>
+            {/* Informacje o użytkowniku */}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold truncate group-hover:text-primary transition-colors">
+                {user?.displayName || "Użytkownik"}
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
+            </div>
+          </NavLink>
 
           {/* Przycisk wylogowania */}
           <button

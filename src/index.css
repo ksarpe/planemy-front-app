@@ -14,28 +14,47 @@
 }
 
 @theme {
-  /* Colors: Light blue (#E9F1FA), bright blue (#00ABE4), white (#FFFFFF) */
-  /* 🎨 Light mode */
-  --color-text: #121619; /* nigth */
-  --color-bg: #fdf2e4; /* jasny kremowy */
-  --color-bg-alt: #f0e4d3; /*  ciemniejszy kremowy */
-  --color-bg-hover: #dcc5b2; /* Coffee */
-  
-  --color-primary: #776472; /* Peach accent */
-  --color-success: #588157; /* brunswick  green #588157(maybe) */
-  --color-success-hover: #0f5850; /* emerald-700 */ 
+  /* 🎨 Default theme (Cozy Room) */
+  --color-text: #121619;
+  --color-bg: #fef7ed; /* warm orange-50 */
+  --color-bg-alt: #fed7aa; /* orange-200 */
+  --color-bg-hover: #fb923c; /* orange-400 */
+  --color-primary: #ea580c; /* orange-600 */
+  --color-success: #dc2626; /* red-600 */
+  --color-success-hover: #b91c1c; /* red-700 */
+}
 
-  /* 🌙 Dark mode */
-  --color-text-dark: white;
-  --color-text-alt-dark: #b0b0b0; /* Jasnoszary dla mniej ważnych tekstów */
-  --color-bg-dark: rgb(33, 33, 33); /* Slate 800 */
-  --color-bg-alt-dark: #101820; /* Rich Dark */
-  --color-bg-hover-dark: #fee715; /* Vivid yellow */
-  --color-bg-item-dark: rgb(43, 43, 43); /* Slate 700 */
-  --color-bg-item-hover-dark: rgb(50, 50, 50); /* Slate 600 */
-  --color-accent-primary-dark: #064bbb; /* Blue 500 */
-  --color-accent-success-dark: #22c55e; /* Green 500 */
-  --color-accent-secondary-dark: #8b5cf6; /* Violet 500 */
+/* 🍭 Sweet Factory Theme */
+.theme-sweet-factory {
+  --color-text: #1f2937;
+  --color-bg: #fdf4ff; /* fuchsia-50 */
+  --color-bg-alt: #f3e8ff; /* violet-50 */
+  --color-bg-hover: #c084fc; /* purple-400 */
+  --color-primary: #ec4899; /* pink-500 */
+  --color-success: #8b5cf6; /* violet-500 */
+  --color-success-hover: #7c3aed; /* violet-600 */
+}
+
+/* 💼 Productive Business Theme */
+.theme-productive-business {
+  --color-text: #0f172a;
+  --color-bg: #f8fafc; /* slate-50 */
+  --color-bg-alt: #e2e8f0; /* slate-200 */
+  --color-bg-hover: #64748b; /* slate-500 */
+  --color-primary: #1e40af; /* blue-700 */
+  --color-success: #475569; /* slate-600 */
+  --color-success-hover: #334155; /* slate-700 */
+}
+
+/* 🌚 Dark Mode Theme */
+.theme-dark-mode {
+  --color-text: #f8fafc;
+  --color-bg: #0f172a; /* slate-900 */
+  --color-bg-alt: #1e293b; /* slate-800 */
+  --color-bg-hover: #374151; /* gray-700 */
+  --color-primary: #6b7280; /* gray-500 */
+  --color-success: #4b5563; /* gray-600 */
+  --color-success-hover: #374151; /* gray-700 */
 }
 
 /* AI Textbox Space Fade Animation */
@@ -57,13 +76,13 @@
   padding: 2px; /* Grubość ramki */
   background: linear-gradient(
     45deg,
-    #157A6E,
+    #157a6e,
     /* Różowy */ #754668,
-    /* Ciemny różowy */ #DCC5B2,
-    /* Fioletowy */ #C94277,
-    /* Jasny fioletowy */ #DCC5B2,
+    /* Ciemny różowy */ #dcc5b2,
+    /* Fioletowy */ #c94277,
+    /* Jasny fioletowy */ #dcc5b2,
     /* Różowy */ #754668,
-    /* Magenta */ #157A6E /* Powrót do różowego */
+    /* Magenta */ #157a6e /* Powrót do różowego */
   );
   background-size: 300% 300%;
   animation: space-fade 4s ease-in-out infinite;
