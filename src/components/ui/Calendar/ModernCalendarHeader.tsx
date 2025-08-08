@@ -28,20 +28,20 @@ export default function CalendarHeader() {
   };
 
   return (
-    <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+    <div className="border-b border-gray-200  bg-white ">
       <div className="flex items-center justify-between px-6 py-4">
         {/* Left side - Logo and navigation */}
         <div className="flex items-center space-x-6">
           {/* Calendar logo/title */}
           <div className="flex items-center space-x-3">
             <CalendarIcon className="h-6 w-6 text-blue-600" />
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Calendar</h1>
+            <h1 className="text-xl font-semibold text-gray-900 ">Calendar</h1>
           </div>
 
           {/* Today button */}
           <button
             onClick={goToday}
-            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            className="px-4 py-2 text-sm font-medium text-gray-700  bg-white  border border-gray-300  rounded-md hover:bg-gray-50  transition-colors">
             Today
           </button>
 
@@ -49,20 +49,20 @@ export default function CalendarHeader() {
           <div className="flex items-center space-x-1">
             <button
               onClick={loadPrev}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+              className="p-2 text-gray-600  hover:bg-gray-100  rounded-md transition-colors"
               title="Previous">
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={loadNext}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+              className="p-2 text-gray-600  hover:bg-gray-100  rounded-md transition-colors"
               title="Next">
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
 
           {/* Current date display */}
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">{getDateDisplay()}</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 ">{getDateDisplay()}</h2>
         </div>
 
         {/* Right side - Actions and view controls */}
@@ -77,13 +77,11 @@ export default function CalendarHeader() {
           </button>
 
           {/* View toggle */}
-          <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-md p-1">
+          <div className="flex items-center bg-gray-100  rounded-md p-1">
             <button
               onClick={() => setView("month")}
               className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors text-sm font-medium ${
-                view === "month"
-                  ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
-                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                view === "month" ? "bg-white  text-gray-900  shadow-sm" : "text-gray-600  hover:text-gray-900 "
               }`}>
               <Grid3X3 className="h-4 w-4" />
               <span>Month</span>
@@ -91,9 +89,7 @@ export default function CalendarHeader() {
             <button
               onClick={() => setView("week")}
               className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors text-sm font-medium ${
-                view === "week"
-                  ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
-                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                view === "week" ? "bg-white  text-gray-900  shadow-sm" : "text-gray-600  hover:text-gray-900 "
               }`}>
               <AlignJustify className="h-4 w-4" />
               <span>Week</span>
@@ -101,7 +97,7 @@ export default function CalendarHeader() {
           </div>
 
           {/* Today's date indicator */}
-          <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+          <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500 ">
             <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
             <span>{formatToday()}</span>
           </div>

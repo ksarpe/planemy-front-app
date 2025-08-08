@@ -110,13 +110,13 @@ export default function TaskDetails() {
   };
 
   return (
-    <div className="w-1/5 bg-gradient-to-r from-bg-alt to-bg-bg dark:from-gray-800 dark:to-gray-700 rounded-md p-4 shadow-[-8px_0_10px_rgba(0,0,0,0.1)]">
+    <div className="w-1/5 bg-gradient-to-r from-bg-alt to-bg-bg   rounded-md p-4 shadow-[-8px_0_10px_rgba(0,0,0,0.1)]">
       <div className="h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center pb-4 justify-between">
           <button
             onClick={() => setClickedTask(null)}
-            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+            className="text-gray-400  hover:text-gray-600  transition-colors">
             <PanelRightClose size={20} />
           </button>
           <div>
@@ -167,23 +167,19 @@ export default function TaskDetails() {
             {!isEditingDate ? (
               <button
                 onClick={startEditingDate}
-                className="w-full flex items-center justify-between bg-gray-50 dark:bg-gray-800/50 rounded-md p-3 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors cursor-pointer">
+                className="w-full flex items-center justify-between bg-gray-50  rounded-md p-3 hover:bg-gray-100  transition-colors cursor-pointer">
                 <p
-                  className={`text-sm ${
-                    isOverdue() && !clickedTask.isCompleted
-                      ? "text-red-700 dark:text-red-400"
-                      : "text-gray-700 dark:text-gray-300"
-                  }`}>
+                  className={`text-sm ${isOverdue() && !clickedTask.isCompleted ? "text-red-700 " : "text-gray-700 "}`}>
                   {formatDueDate()}
                 </p>
-                <Calendar size={16} className="text-primary dark:text-primary-dark" />
+                <Calendar size={16} className="text-primary " />
               </button>
             ) : (
-              <div className="space-y-3 bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-md p-4">
+              <div className="space-y-3 bg-white  border border-gray-200  rounded-md p-4">
                 {/* Data i godzina w jednym wierszu */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
-                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400">Data</label>
+                    <label className="block text-xs font-medium text-gray-600 ">Data</label>
                     <input
                       type="date"
                       value={tempDate}
@@ -194,12 +190,12 @@ export default function TaskDetails() {
                           updateDateFromTemp();
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-300    rounded-md"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400">Godzina</label>
+                    <label className="block text-xs font-medium text-gray-600 ">Godzina</label>
                     <input
                       type="time"
                       value={tempTime}
@@ -210,7 +206,7 @@ export default function TaskDetails() {
                           updateDateFromTemp();
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-300    rounded-md"
                     />
                   </div>
                 </div>
@@ -219,17 +215,17 @@ export default function TaskDetails() {
                 <div className="flex gap-2 pt-2">
                   <button
                     onClick={() => setIsEditingDate(false)}
-                    className="flex-1 px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-gray-100  text-gray-700  rounded-md hover:bg-gray-200  transition-colors">
                     Anuluj
                   </button>
                   <button
                     onClick={updateDateFromTemp}
-                    className="flex-1 px-3 py-2 text-sm bg-green-100 dark:bg-green-800/50 text-green-700 dark:text-green-300 rounded-md hover:bg-green-200 dark:hover:bg-green-700/60 transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-green-100  text-green-700  rounded-md hover:bg-green-200  transition-colors">
                     Zapisz
                   </button>
                   <button
                     onClick={handleRemoveDueDate}
-                    className="flex-1 px-3 py-2 text-sm bg-red-100 dark:bg-red-800/50 text-red-700 dark:text-red-300 rounded-md hover:bg-red-200 dark:hover:bg-red-700/60 transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-red-100  text-red-700  rounded-md hover:bg-red-200  transition-colors">
                     Usuń termin
                   </button>
                 </div>
@@ -239,14 +235,14 @@ export default function TaskDetails() {
         </div>
 
         {/* Actions */}
-        <div className="space-y-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="space-y-3 pt-6 border-t border-gray-200 ">
           {/* Toggle Complete */}
           <button
             onClick={handleToggleComplete}
             className={`w-full flex items-center justify-center gap-2 py-3 rounded-lg font-medium shadow-md
       ${
         clickedTask.isCompleted
-          ? "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600" // Stan: Zrobione (akcja cofająca)
+          ? "bg-gray-100 text-gray-700 hover:bg-gray-200   " // Stan: Zrobione (akcja cofająca)
           : "bg-success text-white hover:bg-success-hover" // Stan: Do zrobienia (akcja główna)
       }`}>
             <CheckCircle2 size={18} />
@@ -258,7 +254,7 @@ export default function TaskDetails() {
             onClick={() => setShowDeleteConfirm(true)}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium shadow-md
                bg-red-50 text-red-600 hover:bg-red-100
-               dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/40">
+                 ">
             <Trash2 size={16} />
             Usuń zadanie
           </button>

@@ -45,15 +45,13 @@ export default function ConfirmationModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
-      <div
-        ref={modalRef}
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-sm p-6 animate-fade-in">
-        <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">{title}</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">{message}</p>
+      <div ref={modalRef} className="bg-white  rounded-2xl shadow-xl w-full max-w-sm p-6 animate-fade-in">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900 ">{title}</h3>
+        <p className="text-sm text-gray-600  mb-6">{message}</p>
         <div className="flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm rounded-md cursor-pointer bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200">
+            className="px-4 py-2 text-sm rounded-md cursor-pointer bg-gray-100  hover:bg-gray-200  text-gray-700 ">
             {cancelLabel}
           </button>
           <button

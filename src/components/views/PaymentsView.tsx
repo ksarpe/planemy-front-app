@@ -25,39 +25,37 @@ export default function Payments() {
 
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full rounded-md shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6">
+      <div className="w-full rounded-md shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt  p-6">
         {/* Header with Stats */}
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-2xl font-semibold mb-2">Płatności i Subskrypcje</h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               {/* Total Monthly */}
-              <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
+              <div className="bg-white  rounded-md p-4 shadow-sm">
                 <div className="flex items-center gap-2 text-green-600 mb-1">
                   <TrendingUp size={18} />
                   <span className="text-sm font-medium">Miesięczne wydatki</span>
                 </div>
-                <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">
-                  {totalMonthlyAmount.toFixed(2)} PLN
-                </div>
+                <div className="text-2xl font-bold text-gray-800 ">{totalMonthlyAmount.toFixed(2)} PLN</div>
               </div>
 
               {/* Upcoming Payments */}
-              <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
+              <div className="bg-white  rounded-md p-4 shadow-sm">
                 <div className="flex items-center gap-2 text-blue-600 mb-1">
                   <Calendar size={18} />
                   <span className="text-sm font-medium">Nadchodzące (7 dni)</span>
                 </div>
-                <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">{upcomingPayments.length}</div>
+                <div className="text-2xl font-bold text-gray-800 ">{upcomingPayments.length}</div>
               </div>
 
               {/* Overdue Payments */}
-              <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
+              <div className="bg-white  rounded-md p-4 shadow-sm">
                 <div className="flex items-center gap-2 text-red-600 mb-1">
                   <TrendingDown size={18} />
                   <span className="text-sm font-medium">Przeterminowane</span>
                 </div>
-                <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">{overduePayments.length}</div>
+                <div className="text-2xl font-bold text-gray-800 ">{overduePayments.length}</div>
               </div>
             </div>
           </div>

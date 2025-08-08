@@ -45,19 +45,17 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-bg-dark rounded-md shadow-xl w-full max-w-md mx-4">
+      <div className="bg-white  rounded-md shadow-xl w-full max-w-md mx-4">
         <div className="flex justify-between items-center p-6 border-b">
           <h2 className="text-xl font-semibold">Utwórz nową listę</h2>
-          <button
-            onClick={handleClose}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-bg-hover-dark rounded-md transition-colors">
+          <button onClick={handleClose} className="p-1 hover:bg-gray-100  rounded-md transition-colors">
             <X size={20} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-text-dark mb-2">Nazwa listy *</label>
+            <label className="block text-sm font-medium text-gray-700  mb-2">Nazwa listy *</label>
             <input
               type="text"
               value={formData.name}
@@ -69,9 +67,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-text-dark mb-2">
-              Opis (opcjonalny)
-            </label>
+            <label className="block text-sm font-medium text-gray-700  mb-2">Opis (opcjonalny)</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
@@ -82,7 +78,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-text-dark mb-2">Ikona</label>
+            <label className="block text-sm font-medium text-gray-700  mb-2">Ikona</label>
             <div className="grid grid-cols-5 gap-2">
               {emojis.map((emoji) => (
                 <button
@@ -99,7 +95,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-text-dark mb-2">Kolor</label>
+            <label className="block text-sm font-medium text-gray-700  mb-2">Kolor</label>
             <div className="grid grid-cols-4 gap-2">
               {colors.map((color) => (
                 <button

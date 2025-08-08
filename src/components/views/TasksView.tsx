@@ -53,7 +53,7 @@ export default function TasksView() {
       <div
         className={`${
           clickedTask ? "w-4/5" : "w-full"
-        } relative rounded-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg dark:bg-bg-dark p-6 transition-all duration-600`}>
+        } relative rounded-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg  p-6 transition-all duration-600`}>
         {/* Header with Task Lists */}
         <TaskViewHeader
           tasks={tasks}

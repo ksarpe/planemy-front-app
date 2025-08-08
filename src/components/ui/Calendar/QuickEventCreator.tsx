@@ -168,22 +168,21 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
   };
 
   return (
-    <div
-      className={`bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 p-4 ${className}`}>
+    <div className={`bg-white  rounded-md shadow-lg border border-gray-200  p-4 ${className}`}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+        <h3 className="text-lg font-semibold text-gray-900  flex items-center">
           <Plus className="h-5 w-5 mr-2" />
           Quick Add
         </h3>
         {onClose && (
-          <button onClick={onClose} className="p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+          <button onClick={onClose} className="p-1 text-gray-400 hover:bg-gray-100  rounded">
             <X className="h-4 w-4" />
           </button>
         )}
       </div>
 
       {selectedDate && (
-        <div className="mb-4 text-sm text-gray-600 dark:text-gray-400 flex items-center">
+        <div className="mb-4 text-sm text-gray-600  flex items-center">
           <Calendar className="h-4 w-4 mr-1" />
           {selectedDate.toLocaleDateString("en", {
             weekday: "short",
@@ -215,7 +214,7 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
       </div>
 
       {isCreating && (
-        <div className="mt-4 flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+        <div className="mt-4 flex items-center justify-center space-x-2 text-sm text-gray-500 ">
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
           <span>Creating event...</span>
         </div>

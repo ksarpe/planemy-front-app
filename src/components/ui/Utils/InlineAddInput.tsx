@@ -19,10 +19,7 @@ export default function InlineAddInput({
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
-      ) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         onCancel();
       }
     }
@@ -47,10 +44,7 @@ export default function InlineAddInput({
   }
 
   return (
-    <div
-      ref={wrapperRef}
-      className={`flex w-full justify-between items-center dark:bg-gray-800 ${classNames}`}
-    >
+    <div ref={wrapperRef} className={`flex w-full justify-between items-center  ${classNames}`}>
       <input
         ref={inputRef}
         autoFocus
@@ -70,15 +64,13 @@ export default function InlineAddInput({
           }
         }}
         className="text-xl font-bold text-green-500 hover:text-green-400 cursor-pointer mr-1"
-        title="Submit"
-      >
+        title="Submit">
         ✓
       </button>
       <button
         onClick={onCancel}
         className="text-base font-bold text-gray-400 hover:text-red-500 cursor-pointer"
-        title="Cancel"
-      >
+        title="Cancel">
         ❌
       </button>
     </div>

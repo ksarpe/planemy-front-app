@@ -14,8 +14,8 @@ export default function NotificationSettingsSection({
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
+    <div className="bg-white  rounded-lg p-6 border border-gray-200 ">
+      <h3 className="text-lg font-semibold text-gray-900  mb-6 flex items-center gap-2">
         <Bell size={20} className="text-primary" />
         Powiadomienia
       </h3>
@@ -23,8 +23,8 @@ export default function NotificationSettingsSection({
         {notificationSettings.map((setting) => (
           <div key={setting.key} className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-gray-900 dark:text-gray-100">{setting.label}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{setting.description}</p>
+              <p className="font-medium text-gray-900 ">{setting.label}</p>
+              <p className="text-sm text-gray-500 ">{setting.description}</p>
             </div>
             <button
               onClick={() =>

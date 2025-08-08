@@ -20,6 +20,10 @@ export interface PreferencesContextProps {
   toggleTheme: () => void;
   colorTheme: number; // active color theme index
   setColorTheme: (themeIndex: number) => void;
+  // Preview/persistence controls for color theme
+  setColorThemePreview?: (themeIndex: number) => void;
+  suspendThemePersistence?: () => void;
+  resumeThemePersistence?: () => void;
   language: string;
   timezone: string;
   mainListId: string | null; // currently selected main list

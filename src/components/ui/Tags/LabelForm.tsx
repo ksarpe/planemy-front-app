@@ -71,23 +71,23 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
   const SubmitIcon = mode === "create" ? Plus : Edit3;
 
   return (
-    <div className="bg-white dark:bg-bg-hover-dark rounded-md p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-      <h3 className="text-lg font-semibold mb-4 text-text dark:text-text-dark">{title}</h3>
+    <div className="bg-white  rounded-md p-6 shadow-sm border border-gray-200 ">
+      <h3 className="text-lg font-semibold mb-4 text-text ">{title}</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nazwa etykiety</label>
+          <label className="block text-sm font-medium text-gray-700  mb-2">Nazwa etykiety</label>
           <input
             type="text"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder={mode === "create" ? "Wprowadź nazwę etykiety..." : undefined}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-bg-dark text-text dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-text  focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-sm font-medium text-gray-700  mb-2">
             Opis {mode === "create" ? "(opcjonalny)" : ""}
           </label>
           <input
@@ -95,13 +95,13 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             placeholder={mode === "create" ? "Krótki opis etykiety..." : undefined}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-bg-dark text-text dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-text  focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
       </div>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Kolor etykiety</label>
+        <label className="block text-sm font-medium text-gray-700  mb-2">Kolor etykiety</label>
         <div className="flex flex-wrap gap-2 mb-3">
           {predefinedColors.map((color) => (
             <button
@@ -118,7 +118,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
           type="color"
           value={formData.color}
           onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-          className="w-16 h-8 rounded border border-gray-300 dark:border-gray-600"
+          className="w-16 h-8 rounded border border-gray-300 "
         />
       </div>
 

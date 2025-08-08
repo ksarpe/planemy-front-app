@@ -5,11 +5,11 @@ import { ActionButtonProps } from "@/data/Common/interfaces";
 // ZMIANA: Bardziej zaawansowana struktura stylów dla pełnej kontroli
 const colorStyles = {
   green: {
-    base: "bg-success border-success-hover text-white dark:accent-success-dark",
+    base: "bg-success border-success-hover text-white ",
     hover: "hover:bg-success-hover",
   },
   accent_secondary: {
-    base: "bg-orange-500 border-accent-secondary-dark text-white dark:bg-accent-secondary-dark",
+    base: "bg-orange-500 border-accent-secondary-dark text-white ",
     hover: "hover:bg-orange-400 hover:border-orange-500",
   },
   primary: {

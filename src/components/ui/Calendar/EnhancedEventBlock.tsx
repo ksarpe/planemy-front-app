@@ -175,79 +175,73 @@ export default function EnhancedEventBlock({
 
       {/* Details/Edit popup */}
       {(showDetails || isEditing) && (
-        <div className="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg min-w-80 z-50 max-w-96">
+        <div className="absolute top-full left-0 mt-2 bg-white  border border-gray-200  rounded-md shadow-lg min-w-80 z-50 max-w-96">
           {isEditing ? (
             /* Edit mode */
             <div className="p-4 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-gray-900 dark:text-white">Edit Event</h3>
+                <h3 className="font-semibold text-gray-900 ">Edit Event</h3>
                 <div className="flex items-center space-x-2">
-                  <button
-                    onClick={handleSave}
-                    className="p-1 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded"
-                    title="Save">
+                  <button onClick={handleSave} className="p-1 text-green-600 hover:bg-green-50  rounded" title="Save">
                     <Check className="h-4 w-4" />
                   </button>
-                  <button
-                    onClick={handleCancel}
-                    className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
-                    title="Cancel">
+                  <button onClick={handleCancel} className="p-1 text-gray-400 hover:bg-gray-50  rounded" title="Cancel">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
+                <label className="block text-sm font-medium text-gray-700  mb-1">Title</label>
                 <input
                   ref={titleInputRef}
                   type="text"
                   value={editData.title}
                   onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 "
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                <label className="block text-sm font-medium text-gray-700  mb-1">Description</label>
                 <textarea
                   value={editData.description}
                   onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 "
                   rows={2}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start</label>
+                  <label className="block text-sm font-medium text-gray-700  mb-1">Start</label>
                   <input
                     type="datetime-local"
                     value={editData.start}
                     onChange={(e) => setEditData({ ...editData, start: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 "
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End</label>
+                  <label className="block text-sm font-medium text-gray-700  mb-1">End</label>
                   <input
                     type="datetime-local"
                     value={editData.end}
                     onChange={(e) => setEditData({ ...editData, end: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 "
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
+                  <label className="block text-sm font-medium text-gray-700  mb-1">Category</label>
                   <select
                     value={editData.category}
                     onChange={(e) =>
                       setEditData({ ...editData, category: e.target.value as EventInterface["category"] })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 ">
                     <option value="Important">Important</option>
                     <option value="Meeting">Meeting</option>
                     <option value="Holiday">Holiday</option>
@@ -262,7 +256,7 @@ export default function EnhancedEventBlock({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Display</label>
+                  <label className="block text-sm font-medium text-gray-700  mb-1">Display</label>
                 </div>
               </div>
             </div>
@@ -271,7 +265,7 @@ export default function EnhancedEventBlock({
             <div className="p-4">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white text-lg flex items-center space-x-2">
+                  <h3 className="font-semibold text-gray-900  text-lg flex items-center space-x-2">
                     {getIcon()}
                     <span>{event.title}</span>
                   </h3>
@@ -281,9 +275,7 @@ export default function EnhancedEventBlock({
                     )}`}>
                     {event.category}
                   </div>
-                  {event.isRecurring && (
-                    <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">🔄 Recurring event</div>
-                  )}
+                  {event.isRecurring && <div className="text-xs text-blue-600  mt-1">🔄 Recurring event</div>}
                 </div>
                 <div className="flex items-center space-x-2">
                   <button
@@ -292,7 +284,7 @@ export default function EnhancedEventBlock({
                       setIsEditing(true);
                       setShowDetails(false);
                     }}
-                    className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
+                    className="p-1 text-gray-400 hover:bg-gray-50  rounded"
                     title="Edit">
                     <Edit2 className="h-4 w-4" />
                   </button>
@@ -301,7 +293,7 @@ export default function EnhancedEventBlock({
                       e.stopPropagation();
                       setShowDetails(false);
                     }}
-                    className="p-1 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
+                    className="p-1 text-gray-400 hover:bg-gray-50  rounded"
                     title="Close">
                     <X className="h-4 w-4" />
                   </button>
@@ -310,11 +302,11 @@ export default function EnhancedEventBlock({
 
               {event.description && (
                 <div className="mb-3">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{event.description}</p>
+                  <p className="text-sm text-gray-600 ">{event.description}</p>
                 </div>
               )}
 
-              <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="space-y-2 text-sm text-gray-600 ">
                 <div className="flex items-center">
                   <Clock className="h-4 w-4 mr-2" />
                   <span>{getTimeString()}</span>

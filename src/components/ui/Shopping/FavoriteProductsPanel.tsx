@@ -78,9 +78,7 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
           </div>
         ) : (
           filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="p-3 border border-gray-200 rounded-md hover:bg-gray-50 dark:hover:bg-bg-hover-dark transition-colors">
+            <div key={product.id} className="p-3 border border-gray-200 rounded-md hover:bg-gray-50  transition-colors">
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">

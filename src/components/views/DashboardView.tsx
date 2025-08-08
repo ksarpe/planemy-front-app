@@ -38,7 +38,7 @@ export default function DashboardView() {
 
   return (
     <div className="h-full overflow-auto scrollbar-hide">
-      <div className="p-6 space-y-6 bg-bg dark:bg-bg-dark min-h-full">
+      <div className="p-6 space-y-6 bg-bg  min-h-full">
         {/* Quick Stats Grid */}
         <StatsGrid stats={mockStats} />
 

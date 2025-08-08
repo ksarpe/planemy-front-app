@@ -7,10 +7,10 @@ interface ModernCalendarProps {
 
 export default function ModernCalendar({ className = "" }: ModernCalendarProps) {
   return (
-    <div className={`h-full flex flex-col bg-white dark:bg-gray-900 ${className}`}>
+    <div className={`h-full flex flex-col bg-white  ${className}`}>
       {/* Calendar Header */}
       <ModernCalendarHeader />
-      
+
       {/* Calendar Body */}
       <ModernCalendarBody />
     </div>

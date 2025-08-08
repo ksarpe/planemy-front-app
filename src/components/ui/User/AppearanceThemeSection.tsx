@@ -31,8 +31,8 @@ export default function AppearanceThemeSection({
   setSelectedTheme,
 }: AppearanceThemeSectionProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
+    <div className="bg-white  rounded-lg p-6 border border-gray-200 ">
+      <h3 className="text-lg font-semibold text-gray-900  mb-6 flex items-center gap-2">
         <Palette size={20} className="text-primary" />
         Wygląd i motywy
       </h3>
@@ -43,8 +43,8 @@ export default function AppearanceThemeSection({
           <div className="flex items-center gap-3">
             {isDark ? <Moon size={20} /> : <Sun size={20} />}
             <div>
-              <p className="font-medium text-gray-900 dark:text-gray-100">Tryb ciemny</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Przełącz między jasnym i ciemnym motywem</p>
+              <p className="font-medium text-gray-900 ">Tryb ciemny</p>
+              <p className="text-sm text-gray-500 ">Przełącz między jasnym i ciemnym motywem</p>
             </div>
           </div>
           <button
@@ -63,16 +63,14 @@ export default function AppearanceThemeSection({
 
       {/* Color Themes */}
       <div>
-        <p className="font-medium text-gray-900 dark:text-gray-100 mb-4">Wybierz schemat kolorów</p>
+        <p className="font-medium text-gray-900  mb-4">Wybierz schemat kolorów</p>
         <div className="space-y-4">
           {colorThemes.map((theme, index) => (
             <button
               key={theme.name}
               onClick={() => setSelectedTheme(index)}
               className={`w-full p-4 rounded-lg border-2 transition-all hover:scale-[1.02] ${
-                selectedTheme === index
-                  ? "border-primary bg-primary/20"
-                  : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                selectedTheme === index ? "border-primary bg-primary/20" : "border-gray-200  hover:border-gray-300"
               }`}>
               <div className="flex items-center gap-4">
                 <div className="flex gap-1 min-w-0">
@@ -81,8 +79,8 @@ export default function AppearanceThemeSection({
                   ))}
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{theme.name}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{theme.description}</p>
+                  <p className="text-sm font-semibold text-gray-900 ">{theme.name}</p>
+                  <p className="text-xs text-gray-500 ">{theme.description}</p>
                 </div>
               </div>
             </button>

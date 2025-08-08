@@ -42,13 +42,13 @@ export default function AnnouncementCard({ announcement }: AnnouncementCardProps
   const getAnnouncementColor = (type: string) => {
     switch (type) {
       case "urgent":
-        return "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/10";
+        return "border-red-200 bg-red-50  ";
       case "warning":
-        return "border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-900/10";
+        return "border-yellow-200 bg-yellow-50  ";
       case "maintenance":
-        return "border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/10";
+        return "border-blue-200 bg-blue-50  ";
       default:
-        return "border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900/10";
+        return "border-gray-200 bg-gray-50  ";
     }
   };
 
@@ -91,9 +91,7 @@ export default function AnnouncementCard({ announcement }: AnnouncementCardProps
             <div className="flex-1">
               {/* Type and New Badge */}
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase">
-                  {getTypeLabel(announcement.type)}
-                </span>
+                <span className="text-xs font-medium text-gray-600  uppercase">{getTypeLabel(announcement.type)}</span>
                 {announcement.isNew && (
                   <span className="px-2 py-0.5 text-xs font-medium bg-blue-600 text-white rounded-full">Nowe</span>
                 )}
@@ -103,10 +101,10 @@ export default function AnnouncementCard({ announcement }: AnnouncementCardProps
               </div>
 
               {/* Title */}
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{announcement.title}</h3>
+              <h3 className="text-lg font-semibold text-gray-900  mb-2">{announcement.title}</h3>
 
               {/* Metadata */}
-              <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+              <div className="flex items-center gap-4 text-sm text-gray-500 ">
                 <div className="flex items-center gap-1">
                   <Clock className="h-4 w-4" />
                   <span>{formatDate(announcement.startDate)}</span>
@@ -136,10 +134,10 @@ export default function AnnouncementCard({ announcement }: AnnouncementCardProps
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
-          <div className="prose prose-sm max-w-none dark:prose-invert">
+        <div className="mt-4 pt-4 border-t border-gray-200 ">
+          <div className="prose prose-sm max-w-none ">
             {announcement.content.split("\n").map((paragraph, index) => (
-              <p key={index} className="text-gray-700 dark:text-gray-300 mb-2 last:mb-0">
+              <p key={index} className="text-gray-700  mb-2 last:mb-0">
                 {paragraph}
               </p>
             ))}
@@ -147,8 +145,8 @@ export default function AnnouncementCard({ announcement }: AnnouncementCardProps
 
           {/* End Date if exists */}
           {announcement.endDate && (
-            <div className="mt-4 pt-2 border-t border-gray-200 dark:border-gray-600">
-              <p className="text-xs text-gray-500 dark:text-gray-400">Ważne do: {formatDate(announcement.endDate)}</p>
+            <div className="mt-4 pt-2 border-t border-gray-200 ">
+              <p className="text-xs text-gray-500 ">Ważne do: {formatDate(announcement.endDate)}</p>
             </div>
           )}
         </div>

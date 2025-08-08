@@ -27,13 +27,13 @@ export default function AnnouncementsList() {
     return (
       <div className="space-y-4">
         {[...Array(3)].map((_, index) => (
-          <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 animate-pulse">
+          <div key={index} className="border border-gray-200  rounded-lg p-4 animate-pulse">
             <div className="flex items-start gap-3">
-              <div className="w-5 h-5 bg-gray-300 dark:bg-gray-600 rounded"></div>
+              <div className="w-5 h-5 bg-gray-300  rounded"></div>
               <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/4"></div>
-                <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
-                <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-1/2"></div>
+                <div className="h-4 bg-gray-300  rounded w-1/4"></div>
+                <div className="h-6 bg-gray-300  rounded w-3/4"></div>
+                <div className="h-3 bg-gray-300  rounded w-1/2"></div>
               </div>
             </div>
           </div>
@@ -49,12 +49,10 @@ export default function AnnouncementsList() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Megaphone className="h-5 w-5 text-blue-600" />
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-              Ogłoszenia ({announcements.length})
-            </span>
+            <span className="text-sm font-medium text-gray-600 ">Ogłoszenia ({announcements.length})</span>
           </div>
           {unreadCount > 0 && (
-            <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 rounded-full">
+            <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800   rounded-full">
               {unreadCount} nieprzeczytane
             </span>
           )}
@@ -64,11 +62,11 @@ export default function AnnouncementsList() {
       {/* Announcements List */}
       {announcements.length === 0 ? (
         <div className="text-center py-8">
-          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-gray-100  rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 size={32} className="text-gray-400" />
           </div>
-          <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400 mb-2">Brak aktywnych ogłoszeń</h3>
-          <p className="text-sm text-gray-400 dark:text-gray-500">Wszystkie ogłoszenia są aktualne</p>
+          <h3 className="text-lg font-medium text-gray-500  mb-2">Brak aktywnych ogłoszeń</h3>
+          <p className="text-sm text-gray-400 ">Wszystkie ogłoszenia są aktualne</p>
         </div>
       ) : (
         announcements.map((announcement) => <AnnouncementCard key={announcement.id} announcement={announcement} />)

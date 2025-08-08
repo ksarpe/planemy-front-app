@@ -18,23 +18,21 @@ export default function PendingSharesNotification({ object_type }: { object_type
         return (
           <div
             key={share.id}
-            className="bg-white dark:bg-gray-900 border border-bg-hover dark:border-blue-700 rounded-md shadow-lg p-4 max-w-sm animate-in slide-in-from-right duration-300">
+            className="bg-white  border border-bg-hover  rounded-md shadow-lg p-4 max-w-sm animate-in slide-in-from-right duration-300">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-bg-alt dark:bg-blue-900/50 rounded-full flex items-center justify-center flex-shrink-0">
-                <Share2 size={16} className="text-primary dark:text-blue-400" />
+              <div className="w-8 h-8 bg-bg-alt  rounded-full flex items-center justify-center flex-shrink-0">
+                <Share2 size={16} className="text-primary " />
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <UserCheck size={14} className="text-gray-500 dark:text-gray-400" />
-                  <span className="text-sm text-gray-600 dark:text-gray-300">Nowe udostępnienie</span>
+                  <UserCheck size={14} className="text-gray-500 " />
+                  <span className="text-sm text-gray-600 ">Nowe udostępnienie</span>
                 </div>
 
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                  Lista zadań została udostępniona
-                </p>
+                <p className="text-sm font-medium text-gray-900  mb-1">Lista zadań została udostępniona</p>
 
-                <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 mb-3">
+                <div className="flex items-center gap-1 text-xs text-gray-500  mb-3">
                   <Clock size={12} />
                   <span>{new Date(share.granted_at).toLocaleDateString("pl-PL")}</span>
                 </div>

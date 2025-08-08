@@ -1,6 +1,5 @@
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
-import { useState } from "react";
-import { User, Save } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import {
   ProfileHeader,
   PersonalInformationSection,
@@ -8,31 +7,93 @@ import {
   NotificationSettingsSection,
   LanguageRegionSection,
   SecuritySection,
+  SaveBar,
+  ProfileSummary,
 } from "@/components/ui/User";
+import BaseModal from "@/components/ui/Common/BaseModal";
+import { useBlocker } from "react-router-dom";
+import type { NotificationSettings, UserBasicInfo, UserSettings } from "@/data/User";
+import { upsertUserProfile, getUserProfile } from "@/api/user_profile";
+import { useAuthContext } from "@/hooks/context/useAuthContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
+import Spinner from "@/components/ui/Utils/Spinner";
 
 export default function ProfileView() {
-  const { isDark, toggleTheme, colorTheme, setColorTheme, language, timezone, updateSettings } =
+  const { user } = useAuthContext();
+  const { showToast } = useToastContext();
+  const { isDark, toggleTheme, colorTheme, setColorTheme, setColorThemePreview, language, timezone, updateSettings } =
     usePreferencesContext();
 
-  // User information
-  const [userInfo, setUserInfo] = useState({
-    firstName: "Kasper",
-    lastName: "Janowski",
-    email: "2299kasper@gmail.com",
-    phone: "+48 123 456 789",
-    location: "Kraków, Polska",
-    dateOfBirth: "1995-03-15",
-    bio: "Miłośnik organizacji i produktywności. Zawsze szukam lepszych sposobów na zarządzanie czasem.",
+  // Track hydration/loading states
+  const [profileLoaded, setProfileLoaded] = useState(false);
+
+  // User information (simplified)
+  const [userInfo, setUserInfo] = useState<UserBasicInfo>({
+    nickname: "",
+    email: "",
   });
+  const initialUserInfo = useRef<UserBasicInfo>(userInfo);
+
+  // Hydrate user profile from Firestore on enter
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      if (!user) return;
+      try {
+        const profile = await getUserProfile(user.uid);
+        const fallbackNickname = (user.displayName ?? "").toString();
+        const fallbackEmail = (user.email ?? "").toString();
+        const hydrated: UserBasicInfo = {
+          nickname: profile?.nickname ?? fallbackNickname,
+          email: profile?.email ?? fallbackEmail,
+        };
+        if (!mounted) return;
+        setUserInfo(hydrated);
+        initialUserInfo.current = hydrated; // avoid dirty on load
+      } catch (e) {
+        console.error("Failed to load user profile", e);
+      } finally {
+        if (mounted) setProfileLoaded(true);
+      }
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [user]);
 
   // Preferences
-  const [notifications, setNotifications] = useState({
+  const [notifications, setNotifications] = useState<NotificationSettings>({
     email: true,
     push: true,
     tasks: true,
     events: false,
     sharing: true,
   });
+  const initialNotifications = useRef<NotificationSettings>(notifications);
+
+  // Stage locale changes locally; persist only when user presses Save.
+  const [pendingLanguage, setPendingLanguage] = useState(language);
+  const [pendingTimezone, setPendingTimezone] = useState(timezone);
+
+  // Stage theme changes locally but preview immediately
+  const initialThemeRef = useRef(colorTheme);
+  const [pendingTheme, setPendingTheme] = useState(colorTheme);
+  const handleThemeSelect = (index: number) => {
+    setPendingTheme(index);
+    // live preview but do not persist until save
+    (setColorThemePreview ?? setColorTheme)(index);
+  };
+
+  const isLoading = !profileLoaded;
+
+  // Sync from context if it changes externally
+  useEffect(() => {
+    setPendingLanguage(language);
+  }, [language]);
+  useEffect(() => {
+    setPendingTimezone(timezone);
+  }, [timezone]);
 
   const handleUserInfoChange = (field: string, value: string) => {
     setUserInfo((prev) => ({ ...prev, [field]: value }));
@@ -42,63 +103,181 @@ export default function ProfileView() {
     setNotifications((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Local tick to force re-render after saving/discarding when only refs change
+  const [dirtyTick, setDirtyTick] = useState(0);
+  void dirtyTick; // avoid unused variable lint
+
+  // Detect unsaved changes (recomputed every render)
+  const isDirty = (() => {
+    const userChanged =
+      userInfo.nickname !== initialUserInfo.current.nickname || userInfo.email !== initialUserInfo.current.email;
+    const keys = Object.keys(notifications) as (keyof NotificationSettings)[];
+    const notifChanged = keys.some((k) => notifications[k] !== initialNotifications.current[k]);
+    const localeChanged = pendingLanguage !== language || pendingTimezone !== timezone;
+    const themeChanged = pendingTheme !== initialThemeRef.current;
+    return userChanged || notifChanged || localeChanged || themeChanged;
+  })();
+
+  // Warn on browser/tab close when there are unsaved changes
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (!isDirty) return;
+      e.preventDefault();
+      e.returnValue = "";
+      return "";
+    };
+    if (isDirty) window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty]);
+
+  // Block in-app navigation when dirty and show confirm modal or flash save bar
+  const blocker = useBlocker(isDirty);
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [saveBarPing, setSaveBarPing] = useState(0);
+  useEffect(() => {
+    if (blocker?.state === "blocked") {
+      setSaveBarPing((n) => n + 1);
+      if (showLeaveConfirm) return;
+    }
+  }, [blocker?.state, showLeaveConfirm]);
+
+  // Save staged changes
+  const handleSave = async () => {
+    try {
+      const payload: Partial<UserSettings> = {};
+      if (pendingLanguage !== language) payload.language = pendingLanguage;
+      if (pendingTimezone !== timezone) payload.timezone = pendingTimezone;
+      if (pendingTheme !== initialThemeRef.current) payload.colorThemeIndex = pendingTheme;
+
+      // Save settings
+      if (Object.keys(payload).length) {
+        await updateSettings(payload);
+      }
+      // Save profile (nickname/email)
+      if (
+        user &&
+        (userInfo.nickname !== initialUserInfo.current.nickname || userInfo.email !== initialUserInfo.current.email)
+      ) {
+        await upsertUserProfile(user.uid, { nickname: userInfo.nickname, email: userInfo.email });
+      }
+
+      // Mark current values as initial
+      initialUserInfo.current = userInfo;
+      initialNotifications.current = notifications;
+      initialThemeRef.current = pendingTheme;
+      setDirtyTick((v) => v + 1); // force re-render to recompute isDirty
+      showToast("success", "Zapisano zmiany profilu");
+    } catch (e) {
+      console.error("Failed to save profile changes", e);
+      showToast("error", "Nie udało się zapisać zmian");
+      throw e;
+    }
+  };
+
+  // Discard staged changes
+  const handleDiscard = () => {
+    setUserInfo(initialUserInfo.current);
+    setNotifications(initialNotifications.current);
+    setPendingLanguage(language);
+    setPendingTimezone(timezone);
+    setPendingTheme(initialThemeRef.current);
+    setColorTheme(initialThemeRef.current); // revert preview
+    setDirtyTick((v) => v + 1); // force re-render to recompute isDirty
+    showToast("warning", "Zmiany odrzucone");
+  };
+
+  const handleSaveAndLeave = async () => {
+    try {
+      await handleSave();
+      setShowLeaveConfirm(false);
+      blocker?.proceed?.();
+    } catch {
+      // Keep modal open on error
+    }
+  };
+  const handleDiscardAndLeave = () => {
+    handleDiscard();
+    setShowLeaveConfirm(false);
+    blocker?.proceed?.();
+  };
+
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full bg-bg-alt dark:bg-bg-dark rounded-md shadow-md overflow-auto">
-        <div className="p-6">
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-              <User size={20} className="text-primary" />
+      <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto">
+        <div className="p-6 pb-24">
+          {isLoading ? (
+            <div className="w-full min-h-[300px] flex items-center justify-center">
+              <Spinner text="Ładuję profil..." />
             </div>
-            <div>
-              <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Profil użytkownika</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Zarządzaj swoimi danymi i preferencjami</p>
-            </div>
-          </div>
+          ) : (
+            <>
+              {/* Podsumowanie na górze */}
+              <ProfileSummary
+                userInfo={userInfo}
+                language={pendingLanguage}
+                timezone={pendingTimezone}
+                themeName={["Cozy Room", "Sweet Factory", "Productive Business", "Dark Mode"][pendingTheme]}
+                notifications={notifications}
+              />
 
-          <div className="space-y-8">
-            {/* Profile Picture & Basic Info */}
-            <ProfileHeader userInfo={userInfo} />
-
-            {/* Personal Information */}
-            <PersonalInformationSection userInfo={userInfo} handleUserInfoChange={handleUserInfoChange} />
-
-            {/* Appearance & Theme */}
-            <AppearanceThemeSection
-              isDark={isDark}
-              toggleTheme={toggleTheme}
-              selectedTheme={colorTheme}
-              setSelectedTheme={setColorTheme}
-            />
-
-            {/* Notifications */}
-            <NotificationSettingsSection
-              notifications={notifications}
-              handleNotificationChange={handleNotificationChange}
-            />
-
-            {/* Language & Region */}
-            <LanguageRegionSection
-              language={language}
-              setLanguage={(lang) => updateSettings({ language: lang })}
-              timezone={timezone}
-              setTimezone={(tz) => updateSettings({ timezone: tz })}
-            />
-
-            {/* Security */}
-            <SecuritySection />
-
-            {/* Save Button */}
-            <div className="flex justify-end">
-              <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors">
-                <Save size={18} />
-                Zapisz zmiany
-              </button>
-            </div>
-          </div>
+              <div className="space-y-8 mt-6">
+                <PersonalInformationSection userInfo={userInfo} handleUserInfoChange={handleUserInfoChange} />
+                <AppearanceThemeSection
+                  isDark={isDark}
+                  toggleTheme={toggleTheme}
+                  selectedTheme={pendingTheme}
+                  setSelectedTheme={handleThemeSelect}
+                />
+                <NotificationSettingsSection
+                  notifications={notifications}
+                  handleNotificationChange={handleNotificationChange}
+                />
+                <LanguageRegionSection
+                  language={pendingLanguage}
+                  setLanguage={setPendingLanguage}
+                  timezone={pendingTimezone}
+                  setTimezone={setPendingTimezone}
+                />
+                <SecuritySection />
+              </div>
+            </>
+          )}
         </div>
       </div>
+
+      {/* Save Bar component */}
+      <SaveBar visible={isDirty} onSave={handleSave} onDiscard={handleDiscard} ping={saveBarPing} />
+
+      {/* Leave confirmation modal */}
+      <BaseModal
+        isOpen={showLeaveConfirm}
+        onClose={() => {
+          setShowLeaveConfirm(false);
+          blocker?.reset?.();
+        }}
+        title="Niezapisane zmiany"
+        actions={
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setShowLeaveConfirm(false);
+                blocker?.reset?.();
+              }}
+              className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+              Anuluj
+            </button>
+            <button
+              onClick={handleDiscardAndLeave}
+              className="px-4 py-2 rounded-md border border-red-300 text-red-600 hover:bg-red-50">
+              Odrzuć i wyjdź
+            </button>
+            <button onClick={handleSaveAndLeave} className="px-4 py-2 rounded-md bg-primary text-white">
+              Zapisz i wyjdź
+            </button>
+          </div>
+        }>
+        <p>Masz niezapisane zmiany. Czy chcesz je zapisać przed opuszczeniem strony?</p>
+      </BaseModal>
     </div>
   );
 }

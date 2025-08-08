@@ -26,10 +26,10 @@ export default function LabelsView() {
 
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full rounded-md shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt dark:bg-bg-dark p-6">
+      <div className="w-full rounded-md shadow-md overflow-auto flex flex-col gap-6 bg-bg-alt  p-6">
         {/* Header */}
         <div className="flex justify-between items-start">
-          <h2 className="text-2xl font-semibold text-text dark:text-text-dark">Menedżer etykiet</h2>
+          <h2 className="text-2xl font-semibold text-text ">Menedżer etykiet</h2>
         </div>
 
         {/* Create New Label Form */}
@@ -55,7 +55,7 @@ export default function LabelsView() {
 
         {/* Labels Grid */}
         <div className="flex-1">
-          <h2 className="text-lg font-semibold mb-4 text-text dark:text-text-dark">Twoje etykiety</h2>
+          <h2 className="text-lg font-semibold mb-4 text-text ">Twoje etykiety</h2>
 
           <LabelsGrid
             labels={labels}

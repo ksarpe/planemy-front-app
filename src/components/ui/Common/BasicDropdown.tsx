@@ -101,7 +101,7 @@ export const BasicDropdown: React.FC<BasicDropdownProps> = ({
           ref={dropdownRef}
           className={`${
             usePortal ? "fixed" : "absolute top-full mt-2"
-          } ${width} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 ${
+          } ${width} bg-white  border border-gray-200  rounded-md shadow-lg z-50 ${
             !usePortal && align === "left" ? "left-0" : !usePortal && align === "right" ? "right-0" : ""
           }`}
           style={usePortal ? { top: position.top, left: position.left } : {}}>
@@ -141,16 +141,16 @@ export const BasicDropdownItem: React.FC<BasicDropdownItemProps> = ({
   separator = false,
 }) => {
   const variantStyles = {
-    default: "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700",
-    blue: "text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30",
-    orange: "text-orange-700 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/30",
-    red: "text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30",
-    green: "text-green-700 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/30",
+    default: "text-gray-700  hover:bg-gray-50 ",
+    blue: "text-blue-700  hover:bg-blue-50 ",
+    orange: "text-orange-700  hover:bg-orange-50 ",
+    red: "text-red-700  hover:bg-red-50 ",
+    green: "text-green-700  hover:bg-green-50 ",
   };
 
   const baseClasses = `w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors text-sm ${
     disabled ? "opacity-50 cursor-not-allowed" : `cursor-pointer ${variantStyles[variant]}`
-  } ${separator ? "mt-2 border-t border-gray-100 dark:border-gray-600 pt-3" : ""} ${className}`;
+  } ${separator ? "mt-2 border-t border-gray-100  pt-3" : ""} ${className}`;
 
   return (
     <button onClick={disabled ? undefined : onClick} disabled={disabled} className={baseClasses}>

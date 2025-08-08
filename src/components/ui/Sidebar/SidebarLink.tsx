@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 
 type Props = {
   to: string;
@@ -12,13 +12,8 @@ export default function SidebarLink({ to, icon, label }: Props) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `px-3 py-1 rounded-md ${
-          isActive
-            ? 'bg-bg-hover dark:bg-bg-hover-dark font-bold'
-            : 'hover:bg-bg-hover dark:hover:bg-bg-hover-dark'
-        }`
-      }
-    >
+        `px-3 py-1 rounded-md ${isActive ? "bg-bg-hover  font-bold" : "hover:bg-bg-hover "}`
+      }>
       <span className="inline-flex gap-2">
         <span>{icon}</span>
         <span>{label}</span>

@@ -236,22 +236,18 @@ export default function EnhancedCreateEventModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div
-        ref={modalRef}
-        className="bg-white dark:bg-gray-800 rounded-md shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div ref={modalRef} className="bg-white  rounded-md shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Create Event</h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 ">
+          <h2 className="text-xl font-semibold text-gray-900 ">Create Event</h2>
+          <button onClick={onClose} className="p-2 text-gray-400 hover:bg-gray-100  rounded-md transition-colors">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Quick Templates */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quick Templates</div>
+        <div className="p-4 border-b border-gray-200 ">
+          <div className="text-sm font-medium text-gray-700  mb-2">Quick Templates</div>
           <div className="flex space-x-2">
             <button
               onClick={() => applyTemplate(getQuickEventTemplate("period"))}
@@ -275,26 +271,26 @@ export default function EnhancedCreateEventModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Event Title *</label>
+            <label className="block text-sm font-medium text-gray-700  mb-2">Event Title *</label>
             <input
               ref={titleInputRef}
               type="text"
               value={eventData.title}
               onChange={(e) => setEventData({ ...eventData, title: e.target.value })}
               placeholder="Enter event title..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900  placeholder-gray-500 "
               required
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
+            <label className="block text-sm font-medium text-gray-700  mb-2">Description</label>
             <textarea
               value={eventData.description}
               onChange={(e) => setEventData({ ...eventData, description: e.target.value })}
               placeholder="Optional description..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900  placeholder-gray-500 "
               rows={2}
             />
           </div>
@@ -308,7 +304,7 @@ export default function EnhancedCreateEventModal({
               onChange={(e) => handleAllDayToggle(e.target.checked)}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
-            <label htmlFor="allDay" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="allDay" className="text-sm font-medium text-gray-700 ">
               All day
             </label>
           </div>
@@ -316,7 +312,7 @@ export default function EnhancedCreateEventModal({
           {/* Date/Time inputs */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700  mb-2">
                 <Calendar className="inline h-4 w-4 mr-1" />
                 Start {eventData.allDay ? "Date" : "Time"}
               </label>
@@ -324,12 +320,12 @@ export default function EnhancedCreateEventModal({
                 type={eventData.allDay ? "date" : "datetime-local"}
                 value={eventData.start}
                 onChange={(e) => setEventData({ ...eventData, start: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 "
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700  mb-2">
                 <Clock className="inline h-4 w-4 mr-1" />
                 End {eventData.allDay ? "Date" : "Time"}
               </label>
@@ -337,7 +333,7 @@ export default function EnhancedCreateEventModal({
                 type={eventData.allDay ? "date" : "datetime-local"}
                 value={eventData.end}
                 onChange={(e) => setEventData({ ...eventData, end: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 "
                 required
               />
             </div>
@@ -346,14 +342,14 @@ export default function EnhancedCreateEventModal({
           {/* Category and Display Type */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700  mb-2">
                 <Tag className="inline h-4 w-4 mr-1" />
                 Category
               </label>
               <select
                 value={eventData.category}
                 onChange={(e) => setEventData({ ...eventData, category: e.target.value as EventInterface["category"] })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 ">
                 <option value="Important">Important</option>
                 <option value="Meeting">Meeting</option>
                 <option value="Holiday">Holiday</option>
@@ -368,7 +364,7 @@ export default function EnhancedCreateEventModal({
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Display Type</label>
+              <label className="block text-sm font-medium text-gray-700  mb-2">Display Type</label>
             </div>
           </div>
 
@@ -384,9 +380,7 @@ export default function EnhancedCreateEventModal({
                 onChange={(e) => setEventData({ ...eventData, isRecurring: e.target.checked })}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <label
-                htmlFor="isRecurring"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+              <label htmlFor="isRecurring" className="text-sm font-medium text-gray-700  flex items-center">
                 <Repeat className="h-4 w-4 mr-1" />
                 Recurring event
               </label>
@@ -395,9 +389,7 @@ export default function EnhancedCreateEventModal({
             {eventData.isRecurring && (
               <div className="grid grid-cols-2 gap-4 pl-7">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Repeat every
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700  mb-2">Repeat every</label>
                   <div className="flex space-x-2">
                     <input
                       type="number"
@@ -406,14 +398,14 @@ export default function EnhancedCreateEventModal({
                       onChange={(e) =>
                         setEventData({ ...eventData, recurrenceInterval: parseInt(e.target.value) || 1 })
                       }
-                      className="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-20 px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 "
                     />
                     <select
                       value={eventData.recurrencePattern}
                       onChange={(e) =>
                         setEventData({ ...eventData, recurrencePattern: e.target.value as RecurrencePattern })
                       }
-                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                      className="flex-1 px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 ">
                       <option value="daily">Day(s)</option>
                       <option value="weekly">Week(s)</option>
                       <option value="monthly">Month(s)</option>
@@ -422,14 +414,12 @@ export default function EnhancedCreateEventModal({
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    End date (optional)
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700  mb-2">End date (optional)</label>
                   <input
                     type="date"
                     value={eventData.recurrenceEndDate}
                     onChange={(e) => setEventData({ ...eventData, recurrenceEndDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 "
                   />
                 </div>
               </div>
@@ -438,18 +428,18 @@ export default function EnhancedCreateEventModal({
 
           {/* Health Data (only for Health category) */}
           {eventData.category === "Health" && (
-            <div className="space-y-4 p-4 bg-pink-50 dark:bg-pink-900/20 rounded-md">
-              <h4 className="font-medium text-gray-900 dark:text-white">Health Tracking</h4>
+            <div className="space-y-4 p-4 bg-pink-50  rounded-md">
+              <h4 className="font-medium text-gray-900 ">Health Tracking</h4>
 
               <div className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type</label>
+                  <label className="block text-sm font-medium text-gray-700  mb-2">Type</label>
                   <select
                     value={eventData.healthType}
                     onChange={(e) =>
                       setEventData({ ...eventData, healthType: e.target.value as typeof eventData.healthType })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900 ">
                     <option value="period">Period</option>
                     <option value="ovulation">Ovulation</option>
                     <option value="medication">Medication</option>
@@ -462,12 +452,12 @@ export default function EnhancedCreateEventModal({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes</label>
+                <label className="block text-sm font-medium text-gray-700  mb-2">Notes</label>
                 <textarea
                   value={eventData.healthNotes}
                   onChange={(e) => setEventData({ ...eventData, healthNotes: e.target.value })}
                   placeholder="Optional health notes..."
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300  rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  text-gray-900  placeholder-gray-500 "
                   rows={2}
                 />
               </div>
@@ -483,14 +473,14 @@ export default function EnhancedCreateEventModal({
               onChange={(e) => setEventData({ ...eventData, isPrivate: e.target.checked })}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
-            <label htmlFor="isPrivate" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="isPrivate" className="text-sm font-medium text-gray-700 ">
               Private event (only visible to you)
             </label>
           </div>
 
           {/* Event Preview */}
           <div className="space-y-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Preview:</span>
+            <span className="text-sm text-gray-600 ">Preview:</span>
             <div
               className={`${getCategoryColor(
                 eventData.category,
@@ -505,7 +495,7 @@ export default function EnhancedCreateEventModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+              className="px-4 py-2 text-sm font-medium text-gray-700  bg-white  border border-gray-300  rounded-md hover:bg-gray-50  transition-colors">
               Cancel
             </button>
             <button

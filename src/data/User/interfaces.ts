@@ -24,19 +24,14 @@ export interface ColorTheme {
   colors: string[];
 }
 
-// Shared user info model for profile sections
+// Simplified user info
 export interface UserBasicInfo {
-  firstName: string;
-  lastName: string;
+  nickname: string;
   email: string;
-  phone: string;
-  location: string;
-  dateOfBirth: string;
-  bio: string;
 }
 
 export interface ProfileHeaderProps {
-  userInfo: Pick<UserBasicInfo, "firstName" | "lastName" | "email" | "bio">;
+  userInfo: Pick<UserBasicInfo, "nickname" | "email">;
 }
 
 export interface PersonalInformationSectionProps {

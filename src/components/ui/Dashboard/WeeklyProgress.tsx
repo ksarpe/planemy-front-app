@@ -6,9 +6,9 @@ interface WeeklyProgressProps {
 
 export default function WeeklyProgress({ progress }: WeeklyProgressProps) {
   return (
-    <div className="bg-bg-alt dark:bg-bg-item-dark rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+    <div className="bg-bg-alt  rounded-lg p-6 border border-gray-200 ">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-text dark:text-text-dark flex items-center">
+        <h2 className="text-xl font-semibold text-text  flex items-center">
           <TrendingUp className="h-5 w-5 mr-2 text-indigo-600" />
           Postęp tygodnia
         </h2>
@@ -25,7 +25,7 @@ export default function WeeklyProgress({ progress }: WeeklyProgressProps) {
               fill="none"
               stroke="currentColor"
               strokeWidth="8"
-              className="text-gray-200 dark:text-gray-700"
+              className="text-gray-200 "
             />
             <circle
               cx="60"
@@ -41,13 +41,13 @@ export default function WeeklyProgress({ progress }: WeeklyProgressProps) {
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-bold text-text dark:text-text-dark">{progress}%</span>
+            <span className="text-2xl font-bold text-text ">{progress}%</span>
           </div>
         </div>
       </div>
 
       <div className="text-center">
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Ukończono zadania w tym tygodniu</p>
+        <p className="text-sm text-gray-600  mb-1">Ukończono zadania w tym tygodniu</p>
         <p className="text-xs text-success font-medium">Świetny postęp! Zostało tylko 3 zadania</p>
       </div>
     </div>

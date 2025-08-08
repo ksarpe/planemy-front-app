@@ -89,9 +89,9 @@ export default function ShoppingView() {
   return (
     <div className="flex h-full p-4 gap-4">
       {/* Left Sidebar - Lists and Favorites */}
-      <div className="w-80 bg-bg-alt dark:bg-bg-dark rounded-md shadow-md overflow-hidden">
+      <div className="w-80 bg-bg-alt  rounded-md shadow-md overflow-hidden">
         {/* Tab Headers */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-600">
+        <div className="p-4 border-b border-gray-200 ">
           <div className="flex gap-2">
             <button onClick={() => setActiveTab("shopping")} className={getTabButtonClass("shopping")}>
               <ShoppingCart size={16} className="inline mr-2" />
@@ -120,7 +120,7 @@ export default function ShoppingView() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-bg-alt dark:bg-bg-dark rounded-md shadow-md overflow-auto">
+      <div className="flex-1 bg-bg-alt  rounded-md shadow-md overflow-auto">
         {currentList ? (
           <div className="p-6 space-y-6">
             {/* Header with Statistics */}
@@ -133,38 +133,36 @@ export default function ShoppingView() {
 
                 {/* Statistics Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
+                  <div className="bg-white  rounded-md p-4 shadow-sm">
                     <div className="flex items-center gap-2 text-blue-600 mb-1">
                       <Package size={18} />
                       <span className="text-sm font-medium">Wszystkie</span>
                     </div>
-                    <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">{totalItems}</div>
+                    <div className="text-2xl font-bold text-gray-800 ">{totalItems}</div>
                   </div>
 
-                  <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
+                  <div className="bg-white  rounded-md p-4 shadow-sm">
                     <div className="flex items-center gap-2 text-yellow-600 mb-1">
                       <Clock size={18} />
                       <span className="text-sm font-medium">Do kupienia</span>
                     </div>
-                    <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">{pendingItems}</div>
+                    <div className="text-2xl font-bold text-gray-800 ">{pendingItems}</div>
                   </div>
 
-                  <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
+                  <div className="bg-white  rounded-md p-4 shadow-sm">
                     <div className="flex items-center gap-2 text-green-600 mb-1">
                       <CheckCircle2 size={18} />
                       <span className="text-sm font-medium">Kupione</span>
                     </div>
-                    <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">{completedItems}</div>
+                    <div className="text-2xl font-bold text-gray-800 ">{completedItems}</div>
                   </div>
 
-                  <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
+                  <div className="bg-white  rounded-md p-4 shadow-sm">
                     <div className="flex items-center gap-2 text-purple-600 mb-1">
                       <TrendingUp size={18} />
                       <span className="text-sm font-medium">Wartość</span>
                     </div>
-                    <div className="text-2xl font-bold text-gray-800 dark:text-text-dark">
-                      {totalValue.toFixed(2)} zł
-                    </div>
+                    <div className="text-2xl font-bold text-gray-800 ">{totalValue.toFixed(2)} zł</div>
                   </div>
                 </div>
               </div>
@@ -253,9 +251,9 @@ export default function ShoppingView() {
 
             {/* Progress Bar */}
             {totalItems > 0 && (
-              <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm">
+              <div className="bg-white  rounded-md p-4 shadow-sm">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-text-dark">Postęp zakupów</span>
+                  <span className="text-sm font-medium text-gray-700 ">Postęp zakupów</span>
                   <span className="text-sm text-gray-500">
                     {completedItems} z {totalItems}
                   </span>

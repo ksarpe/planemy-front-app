@@ -28,7 +28,7 @@ export default function Sidebar() {
 
   return (
     // whole sidebar with logo,links and bottom content
-    <aside className="w-64 min-w-64 h-full flex transition-all duration-600 flex-col justify-between p-4 bg-bg-alt dark:bg-bg-alt-dark text-text dark:text-text-dark border-r border-bg-hover dark:border-bg-hover-dark">
+    <aside className="w-64 min-w-64 h-full flex transition-all duration-600 flex-col justify-between p-4 bg-bg-alt  text-text  border-r border-bg-hover ">
       {/* logo + links */}
       <div className="flex flex-col gap-1 justify-between">
         <NavLink to="/" className={"flex justify-center"}>
@@ -49,26 +49,20 @@ export default function Sidebar() {
       <div className="flex flex-col gap-2">
         {/* Theme toggle and logout */}
         <div className="flex flex-col justify-between px-2 gap-2">
-          <NavLink to="/labels" className="flex items-center gap-2 text-text dark:text-text-dark">
+          <NavLink to="/labels" className="flex items-center gap-2 text-text ">
             <Tag size={20} />
-            <span className="text-sm hover:text-primary hover:dark:text-primary-dark hover:cursor-pointer">
-              Etykiety
-            </span>
+            <span className="text-sm hover:text-primary hover: hover:cursor-pointer">Etykiety</span>
           </NavLink>
 
-          <button onClick={toggleTheme} className="flex items-center gap-2 text-text dark:text-text-dark ">
+          <button onClick={toggleTheme} className="flex items-center gap-2 text-text  ">
             {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            <span className="text-sm hover:text-primary hover:dark:text-primary-dark hover:cursor-pointer">
+            <span className="text-sm hover:text-primary hover: hover:cursor-pointer">
               {isDark ? "Light Mode" : "Dark Mode"}
             </span>
           </button>
-          <NavLink
-            to="/notifications"
-            className="flex items-center gap-2 text-text dark:text-text-dark hover:dark:text-bg-hover-dark relative">
+          <NavLink to="/notifications" className="flex items-center gap-2 text-text  hover: relative">
             <Bell size={20} />
-            <span className="text-sm hover:text-primary hover:dark:text-primary-dark hover:cursor-pointer">
-              Powiadomienia
-            </span>
+            <span className="text-sm hover:text-primary hover: hover:cursor-pointer">Powiadomienia</span>
             {totalNotifications > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 {totalNotifications > 9 ? "9+" : totalNotifications}
@@ -78,22 +72,22 @@ export default function Sidebar() {
         </div>
         {/* User info */}
         {/* Panel użytkownika */}
-        <div className="border-t border-slate-300 dark:border-slate-800 pt-4 flex items-center gap-3">
+        <div className="border-t border-slate-300  pt-4 flex items-center gap-3">
           {/* User Profile Link */}
           <NavLink
             to="/profile"
-            className="flex items-center gap-3 flex-1 p-2 rounded-md hover:bg-bg-hover dark:hover:bg-bg-hover-dark transition-colors group">
+            className="flex items-center gap-3 flex-1 p-2 rounded-md hover:bg-bg-hover  transition-colors group">
             {/* Avatar */}
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white">
-              {user?.displayName?.charAt(0) || "U"}
+              {(user?.displayName || user?.email || "U").charAt(0).toUpperCase()}
             </div>
 
-            {/* Informacje o użytkowniku */}
+            {/* Stable-width username to avoid flicker on theme change */}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold truncate group-hover:text-primary transition-colors">
-                {user?.displayName || "Użytkownik"}
+              <p className="text-sm font-semibold truncate group-hover:text-primary transition-colors duration-0">
+                {user?.displayName || user?.email || "Użytkownik"}
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
+              <p className="text-xs text-slate-500  truncate">{user?.email}</p>
             </div>
           </NavLink>
 
@@ -101,7 +95,7 @@ export default function Sidebar() {
           <button
             onClick={handleLogout}
             title="Wyloguj się"
-            className="p-2 rounded-md cursor-pointer text-slate-600 dark:text-slate-300 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/50 dark:hover:text-red-400 transition-colors duration-200">
+            className="p-2 rounded-md cursor-pointer text-slate-600  hover:bg-red-100 hover:text-red-600   transition-colors duration-200">
             <LogOut size={20} />
           </button>
         </div>

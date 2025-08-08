@@ -13,25 +13,23 @@ interface UpcomingPaymentsProps {
 
 export default function UpcomingPayments({ payments }: UpcomingPaymentsProps) {
   return (
-    <div className="bg-bg-alt dark:bg-bg-item-dark rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+    <div className="bg-bg-alt  rounded-lg p-6 border border-gray-200 ">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-text dark:text-text-dark flex items-center">
+        <h2 className="text-xl font-semibold text-text  flex items-center">
           <Package className="h-5 w-5 mr-2 text-purple-600" />
           Nadchodzące płatności
         </h2>
-        <button className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-          Zarządzaj
-        </button>
+        <button className="text-sm text-blue-600 hover:text-blue-800  ">Zarządzaj</button>
       </div>
       <div className="space-y-3">
         {payments.map((payment) => (
-          <div key={payment.id} className="flex items-center justify-between p-3 bg-bg dark:bg-bg-dark rounded-lg">
+          <div key={payment.id} className="flex items-center justify-between p-3 bg-bg  rounded-lg">
             <div>
-              <p className="text-sm font-medium text-text dark:text-text-dark">{payment.name}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Za {payment.daysLeft} dni</p>
+              <p className="text-sm font-medium text-text ">{payment.name}</p>
+              <p className="text-xs text-gray-500 ">Za {payment.daysLeft} dni</p>
             </div>
             <div className="text-right">
-              <p className="text-sm font-bold text-text dark:text-text-dark">{payment.amount.toFixed(2)} zł</p>
+              <p className="text-sm font-bold text-text ">{payment.amount.toFixed(2)} zł</p>
               <p
                 className={`text-xs ${
                   payment.daysLeft <= 3 ? "text-red-500" : payment.daysLeft <= 7 ? "text-yellow-500" : "text-green-500"

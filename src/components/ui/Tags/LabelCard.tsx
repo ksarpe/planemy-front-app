@@ -15,11 +15,11 @@ export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-bg-hover-dark rounded-md p-4 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white  rounded-md p-4 shadow-sm border border-gray-200  hover:shadow-md transition-shadow duration-200">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full border border-gray-300" style={{ backgroundColor: label.color }} />
-          <h3 className="font-medium text-text dark:text-text-dark truncate">{label.name}</h3>
+          <h3 className="font-medium text-text  truncate">{label.name}</h3>
         </div>
         <div className="flex gap-1">
           <button
@@ -37,7 +37,7 @@ export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
         </div>
       </div>
 
-      {label.description && <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{label.description}</p>}
+      {label.description && <p className="text-sm text-gray-600  mb-3">{label.description}</p>}
 
       <div
         className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full"

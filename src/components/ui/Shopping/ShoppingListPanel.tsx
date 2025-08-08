@@ -104,9 +104,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
               <div
                 key={list.id}
                 className={`p-3 rounded-md border transition-all cursor-pointer ${
-                  isSelected
-                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                    : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-bg-hover-dark"
+                  isSelected ? "border-blue-500 bg-blue-50 " : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 "
                 }`}
                 onClick={() => !isEditing && onSelectList(list)}>
                 <div className="flex items-start justify-between">
@@ -155,19 +153,19 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                           e.stopPropagation();
                           setShowOptionsId(showOptionsId === list.id ? null : list.id);
                         }}
-                        className="p-1 hover:bg-gray-100 dark:hover:bg-bg-hover-dark rounded transition-colors">
+                        className="p-1 hover:bg-gray-100  rounded transition-colors">
                         <MoreVertical size={14} />
                       </button>
 
                       {showOptionsId === list.id && (
-                        <div className="absolute right-0 top-8 bg-white dark:bg-bg-dark border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-10 min-w-[150px]">
+                        <div className="absolute right-0 top-8 bg-white  border border-gray-200  rounded-md shadow-lg z-10 min-w-[150px]">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               handleStartEdit(list);
                               setShowOptionsId(null);
                             }}
-                            className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-bg-hover-dark rounded-t-lg flex items-center gap-2 text-sm">
+                            className="w-full px-3 py-2 text-left hover:bg-gray-100  rounded-t-lg flex items-center gap-2 text-sm">
                             <Edit2 size={14} />
                             Edytuj nazwę
                           </button>
@@ -178,7 +176,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                               setShowOptionsId(null);
                             }}
                             disabled={stats.completed === 0}
-                            className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-bg-hover-dark disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm">
+                            className="w-full px-3 py-2 text-left hover:bg-gray-100  disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm">
                             <RefreshCw size={14} />
                             Wyczyść kupione
                           </button>
@@ -188,7 +186,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                               console.log("Share list", list.id);
                               setShowOptionsId(null);
                             }}
-                            className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-bg-hover-dark flex items-center gap-2 text-sm">
+                            className="w-full px-3 py-2 text-left hover:bg-gray-100  flex items-center gap-2 text-sm">
                             <Share2 size={14} />
                             Udostępnij
                           </button>

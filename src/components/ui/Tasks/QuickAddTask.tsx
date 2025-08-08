@@ -59,13 +59,11 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
   };
 
   return (
-    <div
-      ref={containerRef}
-      className="border-l-4 border-success dark:border-bg-hover-dark rounded-md p-4 bg-green-50 dark:bg-green-900/30 hover:shadow-md mb-3">
+    <div ref={containerRef} className="border-l-4 border-success  rounded-md p-4 bg-green-50  hover:shadow-md mb-3">
       <div className="flex items-center gap-3">
         {/* Plus Icon */}
         <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-          <Plus size={16} className="text-success-hover dark:text-green-400" />
+          <Plus size={16} className="text-success-hover " />
         </div>
 
         {/* Input Field */}
@@ -76,24 +74,18 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
           onKeyDown={handleKeyDown}
           placeholder="Wpisz nazwę zadania..."
           autoFocus
-          className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+          className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-gray-900  placeholder-gray-500 "
         />
 
         {/* Action Buttons */}
         <div className="flex items-center gap-1 flex-shrink-0">
           {/* Confirm Button */}
-          <button
-            onClick={handleSubmit}
-            className="p-1 text-success dark:text-success-dark cursor-pointer"
-            title="Dodaj zadanie (Enter)">
+          <button onClick={handleSubmit} className="p-1 text-success  cursor-pointer" title="Dodaj zadanie (Enter)">
             <Check size={16} />
           </button>
 
           {/* Cancel Button */}
-          <button
-            onClick={onCancel}
-            className="p-1 text-red-400 dark:text-red-500 cursor-pointer"
-            title="Anuluj (Escape)">
+          <button onClick={onCancel} className="p-1 text-red-400  cursor-pointer" title="Anuluj (Escape)">
             <X size={16} />
           </button>
         </div>

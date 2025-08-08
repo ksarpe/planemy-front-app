@@ -10,8 +10,6 @@ export default function ModernCalendarBody({ className = "" }: ModernCalendarBod
   const { view } = useCalendarContext();
 
   return (
-    <div className={`flex-1 min-h-0 bg-white dark:bg-gray-900 ${className}`}>
-      {view === "month" ? <MonthView /> : <WeekView />}
-    </div>
+    <div className={`flex-1 min-h-0 bg-white  ${className}`}>{view === "month" ? <MonthView /> : <WeekView />}</div>
   );
 }

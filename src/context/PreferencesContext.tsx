@@ -24,8 +24,9 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState("pl");
   const [timezone, setTimezone] = useState("Europe/Warsaw");
 
-  // Debounce timer refs
+  // Debounce/suppress refs
   const themeDebounceRef = useRef<number | null>(null);
+  const suppressNextThemePersistRef = useRef(false);
 
   // Derived dark mode from selected theme
   const isDark = colorTheme === 3;
@@ -41,14 +42,23 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   };
 
   /**
+   * setColorThemePreview
+   * Updates theme for live preview but prevents the next debounced persistence.
+   */
+  const setColorThemePreview = (index: number) => {
+    suppressNextThemePersistRef.current = true;
+    setColorTheme(index);
+  };
+
+  /**
    * toggleTheme
    * Toggles between Dark Mode (index 3) and the last selected non-dark theme.
    */
   const toggleTheme = () => {
     if (isDark) {
-      setColorTheme(lastNonDarkTheme);
+      setColorThemePreview(lastNonDarkTheme);
     } else {
-      setColorTheme(3); // Dark Mode
+      setColorThemePreview(3); // Dark Mode
     }
   };
 
@@ -58,6 +68,11 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
    */
   useEffect(() => {
     if (!user) return;
+    if (suppressNextThemePersistRef.current) {
+      // Skip this run and clear the flag
+      suppressNextThemePersistRef.current = false;
+      return;
+    }
     if (themeDebounceRef.current) window.clearTimeout(themeDebounceRef.current);
     themeDebounceRef.current = window.setTimeout(() => {
       updateUserSettings(user.uid, { colorThemeIndex: colorTheme }).catch(() => {
@@ -142,6 +157,13 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const suspendThemePersistence = () => {
+    suppressNextThemePersistRef.current = true;
+  };
+  const resumeThemePersistence = () => {
+    // no-op for now; persistence resumes automatically after one skip
+  };
+
   return (
     <PreferencesContext.Provider
       value={{
@@ -151,6 +173,9 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         toggleTheme,
         colorTheme,
         setColorTheme,
+        setColorThemePreview,
+        suspendThemePersistence,
+        resumeThemePersistence,
         language,
         timezone,
         mainListId,

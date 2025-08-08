@@ -35,16 +35,16 @@ export default function CreateTaskListModal({ isOpen, onClose, onSubmit, loading
 
   return (
     <div className="absolute inset-0 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-900 rounded-md p-6 w-full max-w-md shadow-2xl">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Utwórz nową listę zadań</h2>
+      <div className="bg-white  rounded-md p-6 w-full max-w-md shadow-2xl">
+        <h2 className="text-xl font-semibold mb-4 text-gray-900 ">Utwórz nową listę zadań</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nazwa listy</label>
+            <label className="block text-sm font-medium text-gray-700  mb-2">Nazwa listy</label>
             <input
               type="text"
               value={listName}
               onChange={(e) => setListName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-md"
+              className="w-full px-3 py-2 border border-gray-300  bg-white  text-gray-900  rounded-md"
               placeholder="np. Zadania domowe, Praca..."
               autoFocus
             />
@@ -53,13 +53,13 @@ export default function CreateTaskListModal({ isOpen, onClose, onSubmit, loading
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors">
+              className="px-4 py-2 text-gray-600  hover:bg-gray-100  rounded-md transition-colors">
               Anuluj
             </button>
             <button
               type="submit"
               disabled={!listName.trim() || loading}
-              className="px-4 py-2 bg-primary dark:bg-primary-dark text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50">
+              className="px-4 py-2 bg-primary  text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50">
               Utwórz
             </button>
           </div>

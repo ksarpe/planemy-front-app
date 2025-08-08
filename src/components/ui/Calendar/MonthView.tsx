@@ -59,11 +59,9 @@ export default function MonthView() {
   return (
     <div className="h-full flex flex-col">
       {/* Week header */}
-      <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+      <div className="grid grid-cols-7 border-b border-gray-200  bg-gray-50 ">
         {weekDays.map((day) => (
-          <div
-            key={day}
-            className="p-3 text-center text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+          <div key={day} className="p-3 text-center text-sm font-medium text-gray-600  uppercase tracking-wide">
             {day}
           </div>
         ))}
@@ -72,9 +70,7 @@ export default function MonthView() {
       {/* Calendar grid */}
       <div className="flex-1 grid grid-rows-6">
         {weeks.map((week, weekIndex) => (
-          <div
-            key={weekIndex}
-            className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+          <div key={weekIndex} className="grid grid-cols-7 border-b border-gray-200  last:border-b-0">
             {week.map((day, dayIndex) => {
               const dayEvents = getEventsForDay(day);
               const isCurrentMonth = isSameMonth(day, currentDate);
@@ -83,9 +79,9 @@ export default function MonthView() {
               return (
                 <div
                   key={dayIndex}
-                  className={`relative border-r border-gray-200 dark:border-gray-700 last:border-r-0 min-h-[120px] ${
-                    !isCurrentMonth ? "bg-gray-50 dark:bg-gray-800/50" : "bg-white dark:bg-gray-900"
-                  } hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors`}>
+                  className={`relative border-r border-gray-200  last:border-r-0 min-h-[120px] ${
+                    !isCurrentMonth ? "bg-gray-50 " : "bg-white "
+                  } hover:bg-gray-50  transition-colors`}>
                   {/* Day number */}
                   <div className="p-2">
                     <div
@@ -93,8 +89,8 @@ export default function MonthView() {
                         isDayToday
                           ? "bg-blue-600 text-white"
                           : isCurrentMonth
-                          ? "text-gray-900 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                          : "text-gray-400 dark:text-gray-600"
+                          ? "text-gray-900  hover:bg-blue-50 "
+                          : "text-gray-400 "
                       }`}>
                       {format(day, "d")}
                     </div>
@@ -113,9 +109,7 @@ export default function MonthView() {
                     ))}
 
                     {dayEvents.length > 3 && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 pl-2 py-1">
-                        +{dayEvents.length - 3} more
-                      </div>
+                      <div className="text-xs text-gray-500  pl-2 py-1">+{dayEvents.length - 3} more</div>
                     )}
                   </div>
 

@@ -62,7 +62,7 @@ export default function NotificationsView() {
   if (isLoading) {
     return (
       <div className="flex h-full p-4 gap-4">
-        <div className="w-full bg-bg-alt dark:bg-bg-dark rounded-md shadow-md overflow-auto">
+        <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto">
           <div className="flex items-center justify-center min-h-[400px]">
             <Spinner text="Ładowanie powiadomień i ogłoszeń..." />
           </div>
@@ -73,7 +73,7 @@ export default function NotificationsView() {
 
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full bg-bg-alt dark:bg-bg-dark rounded-md shadow-md overflow-auto">
+      <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto">
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
@@ -81,12 +81,12 @@ export default function NotificationsView() {
               <Bell size={20} className="text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Powiadomienia</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Zarządzaj zaproszeniami i oglądaj ogłoszenia</p>
+              <h1 className="text-2xl font-semibold text-gray-900 ">Powiadomienia</h1>
+              <p className="text-sm text-gray-600 ">Zarządzaj zaproszeniami i oglądaj ogłoszenia</p>
             </div>
             {totalNotifications > 0 && (
               <div className="ml-auto">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800  ">
                   {totalNotifications} nowe
                 </span>
               </div>
@@ -103,8 +103,8 @@ export default function NotificationsView() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Share2 className="h-5 w-5 text-purple-600" />
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Zaproszenia do list</h2>
-                <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 rounded-full">
+                <h2 className="text-lg font-semibold text-gray-900 ">Zaproszenia do list</h2>
+                <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800   rounded-full">
                   {allShares.length}
                 </span>
               </div>
@@ -114,12 +114,12 @@ export default function NotificationsView() {
                 {allShares.map((share: Permission) => (
                   <div
                     key={share.id}
-                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    className="bg-white  border border-gray-200  rounded-lg shadow-sm hover:shadow-md transition-shadow">
                     <div className="p-6">
                       <div className="flex items-start gap-4">
                         {/* Icon */}
-                        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center flex-shrink-0">
-                          <Share2 size={20} className="text-blue-600 dark:text-blue-400" />
+                        <div className="w-12 h-12 bg-blue-100  rounded-full flex items-center justify-center flex-shrink-0">
+                          <Share2 size={20} className="text-blue-600 " />
                         </div>
 
                         {/* Content */}
@@ -129,18 +129,16 @@ export default function NotificationsView() {
                               {/* Header */}
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="text-lg">{getObjectTypeIcon(share.object_type)}</span>
-                                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                                  Nowe udostępnienie
-                                </span>
+                                <span className="text-sm font-medium text-blue-600 ">Nowe udostępnienie</span>
                               </div>
 
                               {/* Title */}
-                              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                              <h3 className="text-lg font-semibold text-gray-900  mb-1">
                                 {getObjectTypeText(share.object_type)} została udostępniona
                               </h3>
 
                               {/* Details */}
-                              <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
+                              <div className="flex items-center gap-4 text-sm text-gray-600  mb-4">
                                 <div className="flex items-center gap-1">
                                   <Clock size={14} />
                                   <span>
@@ -189,11 +187,11 @@ export default function NotificationsView() {
           {/* Empty State - when no notifications at all */}
           {allShares.length === 0 && unreadAnnouncementsCount === 0 && (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gray-100  rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 size={32} className="text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400 mb-2">Wszystko jest aktualne!</h3>
-              <p className="text-sm text-gray-400 dark:text-gray-500">Brak nowych powiadomień lub zaproszeń</p>
+              <h3 className="text-lg font-medium text-gray-500  mb-2">Wszystko jest aktualne!</h3>
+              <p className="text-sm text-gray-400 ">Brak nowych powiadomień lub zaproszeń</p>
             </div>
           )}
         </div>

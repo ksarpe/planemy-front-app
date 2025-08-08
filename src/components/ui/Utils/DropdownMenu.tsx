@@ -8,12 +8,7 @@ interface DropdownMenuProps {
   className?: string;
 }
 
-export default function DropdownMenu({
-  isOpen,
-  onClose,
-  children,
-  className = "",
-}: DropdownMenuProps) {
+export default function DropdownMenu({ isOpen, onClose, children, className = "" }: DropdownMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,8 +32,7 @@ export default function DropdownMenu({
   return (
     <div
       ref={ref}
-      className={`absolute right-0 z-50 w-34 rounded-xl border border-bg-hover bg-white dark:bg-gray-800 shadow-lg px-1 text-center ${className}`}
-    >
+      className={`absolute right-0 z-50 w-34 rounded-xl border border-bg-hover bg-white  shadow-lg px-1 text-center ${className}`}>
       {children}
     </div>
   );
