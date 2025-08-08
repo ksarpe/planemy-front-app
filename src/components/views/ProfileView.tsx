@@ -8,7 +8,6 @@ import {
   SecuritySection,
   SaveBar,
 } from "@/components/ui/User";
-import BaseModal from "@/components/ui/Common/BaseModal";
 import { useBlocker } from "react-router-dom";
 import type { NotificationSettings, UserBasicInfo, UserSettings } from "@/data/User";
 import { upsertUserProfile, getUserProfile } from "@/api/user_profile";
@@ -130,14 +129,12 @@ export default function ProfileView() {
 
   // Block in-app navigation when dirty and show confirm modal or flash save bar
   const blocker = useBlocker(isDirty);
-  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [saveBarPing, setSaveBarPing] = useState(0);
   useEffect(() => {
     if (blocker?.state === "blocked") {
       setSaveBarPing((n) => n + 1);
-      if (showLeaveConfirm) return;
     }
-  }, [blocker?.state, showLeaveConfirm]);
+  }, [blocker?.state]);
 
   // Save staged changes
   const handleSave = async () => {
@@ -182,21 +179,6 @@ export default function ProfileView() {
     setColorTheme(initialThemeRef.current); // revert preview
     setDirtyTick((v) => v + 1); // force re-render to recompute isDirty
     showToast("warning", "Zmiany odrzucone");
-  };
-
-  const handleSaveAndLeave = async () => {
-    try {
-      await handleSave();
-      setShowLeaveConfirm(false);
-      blocker?.proceed?.();
-    } catch {
-      // Keep modal open on error
-    }
-  };
-  const handleDiscardAndLeave = () => {
-    handleDiscard();
-    setShowLeaveConfirm(false);
-    blocker?.proceed?.();
   };
 
   return (
@@ -246,37 +228,6 @@ export default function ProfileView() {
 
       {/* Save Bar component */}
       <SaveBar visible={isDirty} onSave={handleSave} onDiscard={handleDiscard} ping={saveBarPing} />
-
-      {/* Leave confirmation modal */}
-      <BaseModal
-        isOpen={showLeaveConfirm}
-        onClose={() => {
-          setShowLeaveConfirm(false);
-          blocker?.reset?.();
-        }}
-        title="Niezapisane zmiany"
-        actions={
-          <div className="flex gap-2">
-            <button
-              onClick={() => {
-                setShowLeaveConfirm(false);
-                blocker?.reset?.();
-              }}
-              className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-              Anuluj
-            </button>
-            <button
-              onClick={handleDiscardAndLeave}
-              className="px-4 py-2 rounded-md border border-red-300 text-red-600 hover:bg-red-50">
-              Odrzuć i wyjdź
-            </button>
-            <button onClick={handleSaveAndLeave} className="px-4 py-2 rounded-md bg-primary text-white">
-              Zapisz i wyjdź
-            </button>
-          </div>
-        }>
-        <p>Masz niezapisane zmiany. Czy chcesz je zapisać przed opuszczeniem strony?</p>
-      </BaseModal>
     </div>
   );
 }

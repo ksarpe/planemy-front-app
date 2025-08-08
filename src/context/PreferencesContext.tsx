@@ -18,7 +18,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 
   // Color theme: 0 Cozy, 1 Sweet, 2 Business, 3 Dark Mode
   const [colorTheme, _setColorTheme] = useState(0);
-  const [lastNonDarkTheme, setLastNonDarkTheme] = useState(0);
 
   // Locale settings (read-only in context; update via dedicated hooks)
   const [language, setLanguage] = useState("pl");
@@ -38,7 +37,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
    */
   const setColorTheme = (index: number) => {
     _setColorTheme(index);
-    if (index !== 3) setLastNonDarkTheme(index);
   };
 
   /**
@@ -82,7 +80,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         if (settings.colorThemeIndex !== undefined) {
           const idx = settings.colorThemeIndex;
           _setColorTheme(idx);
-          if (idx !== 3) setLastNonDarkTheme(idx);
         }
         if (settings.language) setLanguage(settings.language);
         if (settings.timezone) setTimezone(settings.timezone);
@@ -158,7 +155,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       value={{
         showWeekends,
         setShowWeekends,
-        isDark,
         colorTheme,
         setColorTheme,
         setColorThemePreview,

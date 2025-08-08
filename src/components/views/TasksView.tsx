@@ -71,7 +71,7 @@ export default function TasksView() {
             <div className="space-y-4">
               <TaskStatistics tasks={tasks} filter={filter} onFilterChange={setFilter} />
               <TaskAlerts tasks={tasks} />
-              <TaskList tasks={tasks} filter={filter} />
+              <TaskList tasks={tasks} filter={filter} isLoading={loading} />
             </div>
           </div>
         )}

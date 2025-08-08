@@ -3,10 +3,22 @@ import TaskItem from "./TaskItem";
 import QuickAddTask from "./QuickAddTask";
 import { useState } from "react";
 import { ActionButton } from "../Common";
+import Spinner from "../Utils/Spinner";
 import type { TaskListProps } from "@/data/Tasks/interfaces";
 
-export default function TaskList({ filter, tasks }: TaskListProps) {
+export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
   const [showQuickAdd, setShowQuickAdd] = useState(false);
+
+  // Loading placeholder to prevent layout jump
+  if (isLoading) {
+    return (
+      <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-8">
+        <Spinner />
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Ładowanie zadań...</p>
+      </div>
+    );
+  }
+
   // Calculate filtered tasks
   const completedTasks = tasks.filter((task) => task.isCompleted);
   const pendingTasks = tasks.filter((task) => !task.isCompleted);
@@ -71,7 +83,7 @@ export default function TaskList({ filter, tasks }: TaskListProps) {
   return (
     <div className="flex-1 min-h-0">
       {/* Add Task Button */}
-      <div className={`mb-3 ${showQuickAdd ? "w-full" : "w-fit"} mt-1`}>
+      <div className={`${showQuickAdd ? "w-full" : "w-fit"} mb-3 mt-1`}>
         {showQuickAdd ? (
           <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
         ) : (

@@ -10,17 +10,17 @@ const colorThemes: ColorTheme[] = [
   {
     name: "Sweet Factory",
     description: "Słodkie, pastelowe barwy",
-    colors: ["bg-[#fdf4ff]", "bg-[#f3e8ff]", "bg-[#c084fc]", "bg-[#ec4899]"],
+    colors: ["bg-[#F5BECD]", "bg-[#D486A1]", "bg-[#6B2D5C]", "bg-[#ec4899]"],
   },
   {
     name: "Productive Business",
     description: "Profesjonalne, skupione kolory",
-    colors: ["bg-slate-700", "bg-blue-600", "bg-indigo-500", "bg-gray-500"],
+    colors: ["bg-[#e2e8f0]", "bg-[#cad8eb]", "bg-[#64748b]", "bg-[#1e40af]"],
   },
   {
     name: "Dark Mode",
     description: "Głębokie, kontrastowe tony",
-    colors: ["bg-gray-900", "bg-slate-800", "bg-zinc-700", "bg-gray-600"],
+    colors: ["bg-[#0f172a]", "bg-[#1e293b]", "bg-[#374151]", "bg-[#4b5563]"],
   },
 ];
 

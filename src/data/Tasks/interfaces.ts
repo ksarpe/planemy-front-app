@@ -30,7 +30,7 @@ export interface TaskListInterface {
   shared?: boolean; // Indicates if the list is shared
   labels?: LabelInterface[]; // Optional array of labels for the list
   totalTasks?: number;
-  }
+}
 
 // export interface QuickTaskInterface {
 //   id: number;
@@ -107,6 +107,7 @@ export interface TaskItemProps {
 export interface TaskListProps {
   filter: TaskListFilter;
   tasks: TaskInterface[]; // Optional tasks prop for filtering
+  isLoading?: boolean; // Loading state for fetching tasks
 }
 
 export interface TaskProgressIndicatorProps {

@@ -25,20 +25,20 @@
 }
 /* 🍭 Sweet Factory Theme */
 .theme-sweet-factory {
-  --color-text: #1f2937;
-  --color-bg: #fdf4ff; /* fuchsia-50 */
-  --color-bg-alt: #f3e8ff; /* violet-50 */
-  --color-bg-hover: #c084fc; /* purple-400 */
+  --color-text: #FFFFFF;
+  --color-bg: #F5BECD; /* fuchsia-50 */
+  --color-bg-alt: #D486A1; /* violet-50 */
+  --color-bg-hover: #6B2D5C; /* purple-400 */
   --color-primary: #ec4899; /* pink-500 */
-  --color-success: #8b5cf6; /* violet-500 */
-  --color-success-hover: #7c3aed; /* violet-600 */
+  --color-success: #46ACC2; /* violet-500 */
+  --color-success-hover: #378fa3; /* violet-600 */
 }
 
 /* 💼 Productive Business Theme */
 .theme-productive-business {
   --color-text: #0f172a;
-  --color-bg: #f8fafc; /* slate-50 */
-  --color-bg-alt: #e2e8f0; /* slate-200 */
+  --color-bg: #e2e8f0; /* slate-50 */
+  --color-bg-alt: #cad8eb; /* slate-200 */
   --color-bg-hover: #64748b; /* slate-500 */
   --color-primary: #1e40af; /* blue-700 */
   --color-success: #475569; /* slate-600 */
