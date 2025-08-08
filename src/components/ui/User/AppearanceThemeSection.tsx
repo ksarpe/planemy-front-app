@@ -1,5 +1,5 @@
 import { Palette, Moon, Sun } from "lucide-react";
-import type { ColorTheme, AppearanceThemeSectionProps } from "@/data/User/interfaces";
+import type { ColorTheme, AppearanceThemeSectionProps } from "@/data/User";
 
 const colorThemes: ColorTheme[] = [
   {

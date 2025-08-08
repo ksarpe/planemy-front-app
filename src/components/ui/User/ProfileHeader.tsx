@@ -1,5 +1,5 @@
 import { Camera, Edit3 } from "lucide-react";
-import type { ProfileHeaderProps } from "@/data/User/interfaces";
+import type { ProfileHeaderProps } from "@/data/User";
 
 export default function ProfileHeader({ userInfo }: ProfileHeaderProps) {
   return (

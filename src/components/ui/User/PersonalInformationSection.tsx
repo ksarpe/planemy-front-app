@@ -1,5 +1,5 @@
 import { User, Mail, Phone, MapPin, Calendar } from "lucide-react";
-import type { PersonalInformationSectionProps } from "@/data/User/interfaces";
+import type { PersonalInformationSectionProps } from "@/data/User";
 
 export default function PersonalInformationSection({
   userInfo,

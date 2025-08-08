@@ -1,23 +1,9 @@
-import { useEffect, useState } from 'react';
+import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 
 export function useTheme() {
-  const [isDark, setIsDark] = useState(() => {
-    return localStorage.theme === 'dark' || 
-      (window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.theme);
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add('dark');
-      localStorage.theme = 'dark';
-    } else {
-      root.classList.remove('dark');
-      localStorage.theme = 'light';
-    }
-  }, [isDark]);
-
-  const toggleTheme = () => setIsDark((prev) => !prev);
-
+  const ctx = usePreferencesContext();
+  // Fallbacks if context not ready
+  const isDark = ctx?.isDark ?? false;
+  const toggleTheme = ctx?.toggleTheme ?? (() => {});
   return { isDark, toggleTheme };
 }

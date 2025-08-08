@@ -10,9 +10,9 @@ import {
   SecuritySection,
 } from "@/components/ui/User";
 
-
 export default function ProfileView() {
-  const { isDark, toggleTheme, colorTheme, setColorTheme } = usePreferencesContext();
+  const { isDark, toggleTheme, colorTheme, setColorTheme, language, setLanguage, timezone, setTimezone } =
+    usePreferencesContext();
 
   // User information
   const [userInfo, setUserInfo] = useState({
@@ -33,9 +33,6 @@ export default function ProfileView() {
     events: false,
     sharing: true,
   });
-
-  const [language, setLanguage] = useState("pl");
-  const [timezone, setTimezone] = useState("Europe/Warsaw");
 
   const handleUserInfoChange = (field: string, value: string) => {
     setUserInfo((prev) => ({ ...prev, [field]: value }));
@@ -82,12 +79,7 @@ export default function ProfileView() {
             />
 
             {/* Language & Region */}
-            <LanguageRegionSection
-              language={language}
-              setLanguage={setLanguage}
-              timezone={timezone}
-              setTimezone={setTimezone}
-            />
+            <LanguageRegionSection language={language} setLanguage={setLanguage} timezone={timezone} setTimezone={setTimezone} />
 
             {/* Security */}
             <SecuritySection />

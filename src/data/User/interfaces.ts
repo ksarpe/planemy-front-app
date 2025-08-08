@@ -11,8 +11,10 @@ export interface UserSettings {
   userId: string;
   theme: "light" | "dark";
   language: string;
+  timezone?: string;
   shareNotificationEnabled: boolean;
   defaultTaskListId?: string;
+  colorThemeIndex?: number; // 0 Cozy, 1 Sweet, 2 Business, 3 Dark Mode
 }
 
 // UI: Profile / Appearance
