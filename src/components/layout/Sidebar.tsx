@@ -47,14 +47,16 @@ export default function Sidebar() {
       <div className="flex flex-col gap-2">
         {/* Theme toggle and logout */}
         <div className="flex flex-col justify-between px-2 gap-2">
-          <NavLink to="/labels" className="flex items-center gap-2 text-text ">
+          <NavLink to="/labels" className="flex items-center gap-2 text-text hover:text-primary hover:cursor-pointer">
             <Tag size={20} />
-            <span className="text-sm hover:text-primary hover: hover:cursor-pointer">Etykiety</span>
+            <span className="text-sm">Etykiety</span>
           </NavLink>
 
-          <NavLink to="/notifications" className="flex items-center gap-2 text-text  hover: relative">
+          <NavLink
+            to="/notifications"
+            className="relative flex items-center gap-2 text-text hover:text-primary hover:cursor-pointer">
             <Bell size={20} />
-            <span className="text-sm hover:text-primary hover: hover:cursor-pointer">Powiadomienia</span>
+            <span className="text-sm">Powiadomienia</span>
             {totalNotifications > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 {totalNotifications > 9 ? "9+" : totalNotifications}
@@ -64,11 +66,11 @@ export default function Sidebar() {
         </div>
         {/* User info */}
         {/* Panel użytkownika */}
-        <div className="border-t border-slate-300  pt-4 flex items-center gap-3">
+        <div className="border-t border-slate-300 pt-4 flex items-center gap-3 justify-between">
           {/* User Profile Link */}
           <NavLink
             to="/profile"
-            className="flex items-center gap-3 flex-1 p-2 rounded-md hover:bg-bg-hover  transition-colors group">
+            className="flex items-center gap-3 flex-1 min-w-0 overflow-hidden p-2 rounded-md hover:bg-bg-hover transition-colors group">
             {/* Avatar */}
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white">
               {(user?.displayName || user?.email || "U").charAt(0).toUpperCase()}
@@ -87,7 +89,7 @@ export default function Sidebar() {
           <button
             onClick={handleLogout}
             title="Wyloguj się"
-            className="p-2 rounded-md cursor-pointer text-slate-600  hover:bg-red-100 hover:text-red-600   transition-colors duration-200">
+            className="shrink-0 p-2 rounded-md cursor-pointer text-slate-600 hover:bg-red-100 hover:text-red-600 transition-colors duration-200">
             <LogOut size={20} />
           </button>
         </div>
