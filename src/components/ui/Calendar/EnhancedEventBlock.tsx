@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { EventInterface } from "../../../data/types";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
-import { Edit2, Clock, User, X, Check, Circle, Heart, Pill, Dumbbell, Car, Calendar } from "lucide-react";
+import { Edit2, Clock, User, X, Check} from "lucide-react";
 
 interface EnhancedEventBlockProps {
   event: EventInterface;
@@ -27,7 +27,6 @@ export default function EnhancedEventBlock({
     start: new Date(event.start).toISOString().slice(0, 16),
     end: new Date(event.end).toISOString().slice(0, 16),
     category: event.category,
-    icon: event.icon || "",
     color: event.color,
   });
 
@@ -63,7 +62,6 @@ export default function EnhancedEventBlock({
       start: editData.start,
       end: editData.end,
       category: editData.category as EventInterface["category"],
-      icon: editData.icon,
       color: editData.color,
       updatedAt: new Date().toISOString(),
     };
@@ -79,7 +77,6 @@ export default function EnhancedEventBlock({
       start: new Date(event.start).toISOString().slice(0, 16),
       end: new Date(event.end).toISOString().slice(0, 16),
       category: event.category,
-      icon: event.icon || "",
       color: event.color,
     });
     setIsEditing(false);
@@ -127,28 +124,6 @@ export default function EnhancedEventBlock({
     })}`;
   };
 
-  const getIcon = () => {
-    if (event.icon) {
-      switch (event.icon) {
-        case "Circle":
-          return <Circle className="h-3 w-3" />;
-        case "Heart":
-          return <Heart className="h-3 w-3" />;
-        case "Pill":
-          return <Pill className="h-3 w-3" />;
-        case "Dumbbell":
-          return <Dumbbell className="h-3 w-3" />;
-        case "Car":
-          return <Car className="h-3 w-3" />;
-        case "Calendar":
-          return <Calendar className="h-3 w-3" />;
-        default:
-          return <span className="text-xs">{event.icon}</span>;
-      }
-    }
-    return null;
-  };
-
   // Standard display type (default)
   return (
     <div className="relative" ref={editRef}>
@@ -161,7 +136,6 @@ export default function EnhancedEventBlock({
         onClick={handleEventClick}>
         <div className="p-2">
           <div className="font-medium text-sm truncate flex items-center space-x-1">
-            {getIcon()}
             <span>{event.title}</span>
           </div>
           {showTime && !event.allDay && (
@@ -266,7 +240,6 @@ export default function EnhancedEventBlock({
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h3 className="font-semibold text-gray-900  text-lg flex items-center space-x-2">
-                    {getIcon()}
                     <span>{event.title}</span>
                   </h3>
                   <div

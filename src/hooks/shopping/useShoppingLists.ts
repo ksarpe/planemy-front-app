@@ -33,7 +33,6 @@ export const useCreateShoppingList = () => {
       const payload: Omit<ShoppingListInterface, "id" | "createdAt" | "updatedAt"> = {
         name,
         description,
-        items: [],
         isShared: false,
         userId: user!.uid,
         type: "personal",
@@ -51,7 +50,6 @@ export const useCreateShoppingList = () => {
         id: `optimistic-${Date.now()}`,
         name: vars.name,
         description: vars.description,
-        items: [],
         isShared: false,
         createdAt: new Date(),
         updatedAt: new Date(),

@@ -118,7 +118,6 @@ export default function EnhancedCreateEventModal({
       category: eventData.category,
       allDay: eventData.allDay,
       color: getCategoryColor(eventData.category),
-      iconColor: eventData.iconColor,
       isRecurring: eventData.isRecurring,
       isPrivate: eventData.isPrivate,
       visibility: eventData.isPrivate ? "private" : "public",

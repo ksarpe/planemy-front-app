@@ -240,8 +240,6 @@ export const createPeriodEvent = async (
     end: end.toISOString(),
     allDay: true,
     color: "bg-pink-500",
-    icon: "Circle",
-    iconColor: "#ec4899",
     isRecurring: true,
     recurrence: {
       pattern: "monthly",
