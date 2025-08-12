@@ -1,13 +1,7 @@
 import { NavLink } from "react-router-dom";
+import type { SidebarLinkProps } from "@/data/Main/interfaces";
 
-type Props = {
-  to: string;
-  icon: string;
-  label: string;
-  onNavigate?: () => void;
-};
-
-export default function SidebarLink({ to, icon, label, onNavigate }: Props) {
+export default function SidebarLink({ to, icon: Icon, label, onNavigate }: SidebarLinkProps) {
   // each navlink configuration, including default values + active/inactive styles
   return (
     <NavLink
@@ -16,9 +10,9 @@ export default function SidebarLink({ to, icon, label, onNavigate }: Props) {
       className={({ isActive }) =>
         `px-3 py-1 rounded-md ${isActive ? "bg-bg-hover  font-bold" : "hover:bg-bg-hover "}`
       }>
-      <span className="inline-flex gap-2">
-        <span>{icon}</span>
-        <span>{label}</span>
+      <span className="inline-flex items-center gap-2">
+        {Icon && <Icon size={18} />}
+        <span className="text-sm">{label}</span>
       </span>
     </NavLink>
   );

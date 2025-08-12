@@ -1,7 +1,7 @@
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 import { usePendingShares } from "@/hooks/permissions/usePermissions";
-import { LogOut, Tag, Bell } from "lucide-react";
+import { LogOut, Tag, Bell, LayoutDashboard, Calendar, ListTodo, ShoppingCart, Coins } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import SidebarLink from "../ui/Sidebar/SidebarLink";
 import { useRef } from "react";
@@ -56,9 +56,9 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
       {/* whole sidebar with logo,links and bottom content */}
       <aside
         className={
-          `fixed inset-y-0 left-0 z-50 w-64 min-w-64 h-full transform transition-transform duration-300 
+          `fixed inset-y-0 left-0 z-50 w-58 min-w-58 h-full transform transition-transform duration-300 
            bg-bg-alt text-text border-r border-bg-hover md:static md:translate-x-0 md:flex
-           flex flex-col justify-between p-4 ` + (isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0")
+           flex flex-col justify-between p-2 ` + (isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0")
         }
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}>
@@ -68,14 +68,14 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
             <img
               src="logo.png" // albo .png – ścieżkę dopasuj do siebie
               alt="Planora logo"
-              className="h-20 w-45 mb-4"
+              className="h-20 w-45 mb-2"
             />
           </NavLink>
-          <SidebarLink to="/dashboard" icon="📊" label="Panel" onNavigate={handleNavigate} />
-          <SidebarLink to="/calendar" icon="📅" label="Kalendarz" onNavigate={handleNavigate} />
-          <SidebarLink to="/tasks" icon="📋" label="Zadania" onNavigate={handleNavigate} />
-          <SidebarLink to="/shopping" icon="🛒" label="Zakupy" onNavigate={handleNavigate} />
-          <SidebarLink to="/payments" icon="🪙" label="Płatności" onNavigate={handleNavigate} />
+          <SidebarLink to="/dashboard" icon={LayoutDashboard} label="Panel" onNavigate={handleNavigate} />
+          <SidebarLink to="/calendar" icon={Calendar} label="Kalendarz" onNavigate={handleNavigate} />
+          <SidebarLink to="/tasks" icon={ListTodo} label="Zadania" onNavigate={handleNavigate} />
+          <SidebarLink to="/shopping" icon={ShoppingCart} label="Zakupy" onNavigate={handleNavigate} />
+          <SidebarLink to="/payments" icon={Coins} label="Płatności" onNavigate={handleNavigate} />
         </div>
         {/* logo + links END*/}
         {/* botton content */}

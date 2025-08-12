@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { QueryKey } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
-import { clearCompletedTasks,
-     uncheckAllTasks } from "@/api/tasks_lists";
+import { clearCompletedTasks, uncheckAllTasks } from "@/api/tasks_lists";
 import { createTaskApi, updateTaskApi, removeTaskApi, completeTaskApi } from "@/api/tasks";
 import { fetchTasksForListApi } from "@/api/tasks";
 import type { TaskInterface } from "@/data/Tasks/interfaces";
-
+import { v4 as uuidv4 } from "uuid";
 
 export const useTasks = (listId: string | null) => {
   return useQuery({
@@ -58,13 +58,45 @@ export const useCreateTask = () => {
       description?: string | null;
       dueDate?: string | null;
     }) => createTaskApi(listId, title, user!.uid, description, dueDate),
+
+    // Optimistic update
+    onMutate: async (vars) => {
+      const { listId, title, description, dueDate } = vars;
+
+      await queryClient.cancelQueries({ queryKey: ["tasks", listId] });
+
+      const previousTasks = queryClient.getQueryData<TaskInterface[]>(["tasks", listId]) || [];
+
+      const optimisticTask: TaskInterface = {
+        id: `optimistic-${uuidv4()}`,
+        title,
+        description: description || "",
+        dueDate: dueDate || "",
+        isCompleted: false,
+        userId: user!.uid,
+        taskListId: listId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        labels: [],
+      };
+
+      queryClient.setQueryData<TaskInterface[]>(["tasks", listId], (old = []) => [optimisticTask, ...old]);
+
+      return { previousTasks, listId };
+    },
+
+    onError: (_error, _vars, context) => {
+      if (context?.listId) {
+        queryClient.setQueryData(["tasks", context.listId], context.previousTasks);
+      }
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Zadanie zostało dodane!");
     },
-    onError: (error) => {
-      console.error("Error creating task:", error);
-      showToast("error", "Błąd podczas dodawania zadania");
+
+    onSettled: (_data, _error, vars) => {
+      queryClient.invalidateQueries({ queryKey: ["tasks", vars.listId] });
     },
   });
 };
@@ -76,13 +108,35 @@ export const useUpdateTask = () => {
   return useMutation({
     mutationFn: ({ taskId, updates }: { taskId: string; updates: Partial<TaskInterface> }) =>
       updateTaskApi(taskId, updates),
+
+    onMutate: async ({ taskId, updates }) => {
+      await queryClient.cancelQueries({ queryKey: ["tasks"] });
+      const touched: Array<{ key: QueryKey; prev?: TaskInterface[] }> = [];
+      const queries = queryClient.getQueriesData<TaskInterface[]>({ queryKey: ["tasks"] });
+
+      queries.forEach(([key, data]) => {
+        if (!data) return;
+        if (data.some((t) => t.id === taskId)) {
+          touched.push({ key: key as QueryKey, prev: data });
+          const next = data.map((t) =>
+            t.id === taskId ? { ...t, ...updates, updatedAt: new Date().toISOString() } : t,
+          );
+          queryClient.setQueryData<TaskInterface[]>(key, next);
+        }
+      });
+      return { touched };
+    },
+
+    onError: (_err, _vars, ctx) => {
+      ctx?.touched?.forEach(({ key, prev }) => queryClient.setQueryData(key, prev));
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Zadanie zostało zaktualizowane!");
     },
-    onError: (error) => {
-      console.error("Error updating task:", error);
-      showToast("error", "Błąd podczas aktualizacji zadania");
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 };
@@ -93,13 +147,32 @@ export const useDeleteTask = () => {
 
   return useMutation({
     mutationFn: (taskId: string) => removeTaskApi(taskId),
+
+    onMutate: async (taskId) => {
+      await queryClient.cancelQueries({ queryKey: ["tasks"] });
+      const touched: Array<{ key: QueryKey; prev?: TaskInterface[] }> = [];
+      const queries = queryClient.getQueriesData<TaskInterface[]>({ queryKey: ["tasks"] });
+      queries.forEach(([key, data]) => {
+        if (!data) return;
+        if (data.some((t) => t.id === taskId)) {
+          touched.push({ key: key as QueryKey, prev: data });
+          const next = data.filter((t) => t.id !== taskId);
+          queryClient.setQueryData<TaskInterface[]>(key, next);
+        }
+      });
+      return { touched };
+    },
+
+    onError: (_err, _vars, ctx) => {
+      ctx?.touched?.forEach(({ key, prev }) => queryClient.setQueryData(key, prev));
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Zadanie zostało usunięte!");
     },
-    onError: (error) => {
-      console.error("Error deleting task:", error);
-      showToast("error", "Błąd podczas usuwania zadania");
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 };
@@ -110,31 +183,35 @@ export const useCompleteTask = () => {
 
   return useMutation({
     mutationFn: (taskId: string) => completeTaskApi(taskId),
+
+    onMutate: async (taskId) => {
+      await queryClient.cancelQueries({ queryKey: ["tasks"] });
+      const touched: Array<{ key: QueryKey; prev?: TaskInterface[] }> = [];
+      const queries = queryClient.getQueriesData<TaskInterface[]>({ queryKey: ["tasks"] });
+      queries.forEach(([key, data]) => {
+        if (!data) return;
+        const idx = data.findIndex((t) => t.id === taskId);
+        if (idx !== -1) {
+          touched.push({ key: key as QueryKey, prev: data });
+          const next = data.map((t) =>
+            t.id === taskId ? { ...t, isCompleted: !t.isCompleted, updatedAt: new Date().toISOString() } : t,
+          );
+          queryClient.setQueryData<TaskInterface[]>(key, next);
+        }
+      });
+      return { touched };
+    },
+
+    onError: (_err, _vars, ctx) => {
+      ctx?.touched?.forEach(({ key, prev }) => queryClient.setQueryData(key, prev));
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Status zadania został zmieniony!");
     },
-    onError: (error) => {
-      console.error("Error toggling task completion:", error);
-      showToast("error", "Błąd podczas zmiany statusu zadania");
-    },
-  });
-};
 
-export const useMoveTask = () => {
-  const { showToast } = useToastContext();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ taskId, toListId }: { taskId: string; toListId: string }) =>
-      updateTaskApi(taskId, { taskListId: toListId }),
-    onSuccess: () => {
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      showToast("success", "Zadanie zostało przeniesione!");
-    },
-    onError: (error) => {
-      console.error("Error moving task:", error);
-      showToast("error", "Błąd podczas przenoszenia zadania");
     },
   });
 };
@@ -145,13 +222,25 @@ export const useClearCompletedTasks = () => {
 
   return useMutation({
     mutationFn: (listId: string) => clearCompletedTasks(listId),
+
+    onMutate: async (listId: string) => {
+      await queryClient.cancelQueries({ queryKey: ["tasks", listId] });
+      const previous = queryClient.getQueryData<TaskInterface[]>(["tasks", listId]) || [];
+      const next = previous.filter((t) => !t.isCompleted);
+      queryClient.setQueryData<TaskInterface[]>(["tasks", listId], next);
+      return { previous, listId };
+    },
+
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.listId) queryClient.setQueryData(["tasks", ctx.listId], ctx.previous);
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Usunięto wszystkie ukończone zadania!");
     },
-    onError: (error) => {
-      console.error("Error clearing completed tasks:", error);
-      showToast("error", "Błąd podczas usuwania ukończonych zadań");
+
+    onSettled: (_d, _e, listId) => {
+      queryClient.invalidateQueries({ queryKey: ["tasks", listId] });
     },
   });
 };
@@ -162,13 +251,25 @@ export const useUncheckAllTasks = () => {
 
   return useMutation({
     mutationFn: (listId: string) => uncheckAllTasks(listId),
+
+    onMutate: async (listId: string) => {
+      await queryClient.cancelQueries({ queryKey: ["tasks", listId] });
+      const previous = queryClient.getQueryData<TaskInterface[]>(["tasks", listId]) || [];
+      const next = previous.map((t) => ({ ...t, isCompleted: false }));
+      queryClient.setQueryData<TaskInterface[]>(["tasks", listId], next);
+      return { previous, listId };
+    },
+
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.listId) queryClient.setQueryData(["tasks", ctx.listId], ctx.previous);
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       showToast("success", "Odznaczono wszystkie zadania!");
     },
-    onError: (error) => {
-      console.error("Error unchecking tasks:", error);
-      showToast("error", "Błąd podczas odznaczania zadań");
+
+    onSettled: (_d, _e, listId) => {
+      queryClient.invalidateQueries({ queryKey: ["tasks", listId] });
     },
   });
 };

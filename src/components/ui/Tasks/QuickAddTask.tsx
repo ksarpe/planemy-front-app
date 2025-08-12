@@ -31,19 +31,13 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
     if (!taskTitle.trim() || !currentTaskList) return;
 
     try {
-      createTask(
-        {
-          listId: currentTaskList.id,
-          title: taskTitle.trim(),
-        },
-        {
-          onSuccess: () => {
-            // To wykona się dopiero po pomyślnym dodaniu zadania do bazy
-            setTaskTitle(""); // Czyścimy input
-            onCancel(); // Zamykamy komponent
-          },
-        },
-      );
+      createTask({
+        listId: currentTaskList.id,
+        title: taskTitle.trim(),
+      });
+      // Zamknij i wyczyść od razu — optymistyczna mutacja zadba o widoczność
+      setTaskTitle("");
+      onCancel();
     } catch (error) {
       console.error("Error adding task:", error);
     }
