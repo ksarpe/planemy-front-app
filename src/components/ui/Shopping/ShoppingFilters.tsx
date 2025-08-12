@@ -1,22 +1,7 @@
 import { Search, List, Grid3X3 } from "lucide-react";
-import type { ShoppingCategoryInterface } from "@/data/types";
+import type { ShoppingFiltersProps } from "@/data/Shopping/interfaces";
 
-type Props = {
-  searchQuery: string;
-  onSearchChange: (v: string) => void;
-  selectedCategory: string | null;
-  onCategoryChange: (v: string | null) => void;
-  categories: ShoppingCategoryInterface[];
-  viewMode: "grid" | "list";
-  onToggleView: () => void;
-};
-
-export function ShoppingFilters({
-  searchQuery,
-  onSearchChange,
-  viewMode,
-  onToggleView,
-}: Props) {
+export function ShoppingFilters({ searchQuery, onSearchChange, viewMode, onToggleView }: ShoppingFiltersProps) {
   return (
     <div className="flex flex-col md:flex-row gap-3 md:gap-4">
       <div className="relative flex gap-1">

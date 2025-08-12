@@ -1,21 +1,14 @@
 import { useState } from "react";
-import { useShoppingContext } from "../../../hooks/context/useShoppingContext";
+import { useCreateShoppingList } from "@/hooks/shopping/useShoppingLists";
 import { X, Plus, Palette } from "lucide-react";
-
-interface AddListModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const emojis = ["📝", "🛒", "🥕", "🍎", "🥛", "🍞", "🏠", "💼", "🎉", "❤️"];
-const colors = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899", "#6B7280", "#84CC16"];
+import type { AddListModalProps } from "@/data/Shopping/interfaces";
+import { SHOPPING_LIST_COLORS } from "@/data/Shopping/types";
 
 function AddListModal({ isOpen, onClose }: AddListModalProps) {
-  const { createList } = useShoppingContext();
+  const createList = useCreateShoppingList();
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    emoji: "📝",
     color: "#3B82F6",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,8 +19,12 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
 
     setIsSubmitting(true);
     try {
-      await createList(formData.name.trim(), formData.description.trim() || "", formData.emoji, formData.color);
-      setFormData({ name: "", description: "", emoji: "📝", color: "#3B82F6" });
+      await createList.mutateAsync({
+        name: formData.name.trim(),
+        description: formData.description.trim() || "",
+        color: formData.color,
+      });
+      setFormData({ name: "", description: "", color: "#3B82F6" });
       onClose();
     } catch (error) {
       console.error("Error creating list:", error);
@@ -37,7 +34,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
   };
 
   const handleClose = () => {
-    setFormData({ name: "", description: "", emoji: "📝", color: "#3B82F6" });
+    setFormData({ name: "", description: "", color: "#3B82F6" });
     onClose();
   };
 
@@ -78,26 +75,9 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700  mb-2">Ikona</label>
-            <div className="grid grid-cols-5 gap-2">
-              {emojis.map((emoji) => (
-                <button
-                  key={emoji}
-                  type="button"
-                  onClick={() => setFormData((prev) => ({ ...prev, emoji }))}
-                  className={`p-3 text-xl rounded-md border-2 transition-colors ${
-                    formData.emoji === emoji ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-gray-300"
-                  }`}>
-                  {emoji}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
             <label className="block text-sm font-medium text-gray-700  mb-2">Kolor</label>
             <div className="grid grid-cols-4 gap-2">
-              {colors.map((color) => (
+              {SHOPPING_LIST_COLORS.map((color) => (
                 <button
                   key={color}
                   type="button"

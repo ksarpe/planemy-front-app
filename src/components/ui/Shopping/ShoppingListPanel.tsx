@@ -1,29 +1,16 @@
-import { useState, useEffect } from "react";
-import { ShoppingListInterface } from "../../../data/types";
-import { useShoppingContext } from "../../../hooks/context/useShoppingContext";
+import { useState } from "react";
+import { useDeleteShoppingList, useUpdateShoppingList } from "@/hooks/shopping/useShoppingLists";
+import { useShoppingListStats } from "@/hooks/shopping/useShoppingListStats";
 import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Calendar } from "lucide-react";
-
-interface ShoppingListPanelProps {
-  lists: ShoppingListInterface[];
-  currentList: ShoppingListInterface | null;
-  onSelectList: (list: ShoppingListInterface) => void;
-  onAddList: () => void;
-}
+import type { ShoppingListPanelProps, ShoppingListInterface } from "@/data/Shopping/interfaces";
+import { BasicDropdown, BasicDropdownItem } from "../Common";
 
 function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: ShoppingListPanelProps) {
-  const { deleteList, updateList } = useShoppingContext();
+  const deleteList = useDeleteShoppingList();
+  const updateList = useUpdateShoppingList();
   const [editingListId, setEditingListId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
-  const [showOptionsId, setShowOptionsId] = useState<string | null>(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = () => setShowOptionsId(null);
-    if (showOptionsId) {
-      document.addEventListener("click", handleClickOutside);
-      return () => document.removeEventListener("click", handleClickOutside);
-    }
-  }, [showOptionsId]);
+  // Using BasicDropdown with portal, so no local dropdown state needed
 
   const handleStartEdit = (list: ShoppingListInterface) => {
     setEditingListId(list.id);
@@ -32,7 +19,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
 
   const handleSaveEdit = async (listId: string) => {
     if (editName.trim()) {
-      await updateList(listId, { name: editName.trim() });
+      await updateList.mutateAsync({ listId, updates: { name: editName.trim() } });
     }
     setEditingListId(null);
     setEditName("");
@@ -45,19 +32,16 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
 
   const handleDeleteList = async (listId: string) => {
     if (window.confirm("Czy na pewno chcesz usunąć tę listę?")) {
-      await deleteList(listId);
+      await deleteList.mutateAsync(listId);
     }
   };
 
-  const clearCompletedItems = async (list: ShoppingListInterface) => {
-    const clearedItems = list.items.filter((item) => !item.isCompleted);
-    await updateList(list.id, { items: clearedItems });
-  };
+  // Derive stats and actions from the hook (keeps Query Client inside hooks)
+  const { statsByList, clearCompletedForList } = useShoppingListStats(lists);
 
   const getListStats = (list: ShoppingListInterface) => {
-    const total = list.items.length;
-    const completed = list.items.filter((item) => item.isCompleted).length;
-    return { total, completed, pending: total - completed };
+    const stats = statsByList[list.id] || { total: 0, completed: 0, pending: 0 };
+    return stats;
   };
 
   const formatDate = (date: Date) => {
@@ -147,61 +131,34 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                   </div>
 
                   {!isEditing && (
-                    <div className="relative">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setShowOptionsId(showOptionsId === list.id ? null : list.id);
-                        }}
-                        className="p-1 hover:bg-gray-100  rounded transition-colors">
-                        <MoreVertical size={14} />
-                      </button>
-
-                      {showOptionsId === list.id && (
-                        <div className="absolute right-0 top-8 bg-white  border border-gray-200  rounded-md shadow-lg z-10 min-w-[150px]">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleStartEdit(list);
-                              setShowOptionsId(null);
-                            }}
-                            className="w-full px-3 py-2 text-left hover:bg-gray-100  rounded-t-lg flex items-center gap-2 text-sm">
-                            <Edit2 size={14} />
-                            Edytuj nazwę
+                    <div className="relative" onClick={(e) => e.stopPropagation()}>
+                      <BasicDropdown
+                        trigger={
+                          <button className="p-1 hover:bg-gray-100  rounded transition-colors">
+                            <MoreVertical size={14} />
                           </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              clearCompletedItems(list);
-                              setShowOptionsId(null);
-                            }}
-                            disabled={stats.completed === 0}
-                            className="w-full px-3 py-2 text-left hover:bg-gray-100  disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm">
-                            <RefreshCw size={14} />
-                            Wyczyść kupione
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              console.log("Share list", list.id);
-                              setShowOptionsId(null);
-                            }}
-                            className="w-full px-3 py-2 text-left hover:bg-gray-100  flex items-center gap-2 text-sm">
-                            <Share2 size={14} />
-                            Udostępnij
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteList(list.id);
-                              setShowOptionsId(null);
-                            }}
-                            className="w-full px-3 py-2 text-left hover:bg-red-50 text-red-600 rounded-b-lg flex items-center gap-2 text-sm">
-                            <Trash2 size={14} />
-                            Usuń
-                          </button>
-                        </div>
-                      )}
+                        }
+                        align="right"
+                        usePortal={true}
+                        closeOnItemClick={true}
+                        width="w-56">
+                        <BasicDropdownItem icon={Edit2} onClick={() => handleStartEdit(list)}>
+                          Edytuj nazwę
+                        </BasicDropdownItem>
+                        <BasicDropdownItem
+                          icon={RefreshCw}
+                          onClick={() => {
+                            if (stats.completed > 0) clearCompletedForList(list.id);
+                          }}>
+                          Wyczyść kupione
+                        </BasicDropdownItem>
+                        <BasicDropdownItem icon={Share2} onClick={() => console.log("Share list", list.id)}>
+                          Udostępnij
+                        </BasicDropdownItem>
+                        <BasicDropdownItem icon={Trash2} variant="red" onClick={() => handleDeleteList(list.id)}>
+                          Usuń
+                        </BasicDropdownItem>
+                      </BasicDropdown>
                     </div>
                   )}
                 </div>

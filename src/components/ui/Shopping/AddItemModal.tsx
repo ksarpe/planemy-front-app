@@ -1,24 +1,19 @@
 import React, { useState } from "react";
 import { useShoppingContext } from "../../../hooks/context/useShoppingContext";
+import { useAddShoppingItem } from "@/hooks/shopping/useShoppingItems";
 import { X, Plus, Star } from "lucide-react";
-import { FavoriteProductInterface } from "../../../data/types";
-
-interface AddItemModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  listId: string;
-}
-
-const units = ["szt", "kg", "g", "l", "ml", "opak.", "puszka", "butelka"];
+import type { FavoriteProductInterface } from "@/data/Shopping/interfaces";
+import type { AddItemModalProps } from "@/data/Shopping/interfaces";
+import { SHOPPING_UNITS } from "@/data/Shopping/types";
 
 function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
-  const { addItem, categories, favoriteProducts } = useShoppingContext();
+  const { categories, favoriteProducts } = useShoppingContext();
+  const addItem = useAddShoppingItem();
   const [formData, setFormData] = useState({
     name: "",
     quantity: 1,
     unit: "szt",
     category: "Inne",
-    priority: "medium" as "low" | "medium" | "high",
     estimatedPrice: 0,
     notes: "",
   });
@@ -41,7 +36,7 @@ function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
         notes: formData.notes,
       };
 
-      await addItem(listId, newItem);
+      await addItem.mutateAsync({ listId, item: newItem });
 
       // Do not automatically add to favorites - only when explicitly requested
       // Reset form and close modal
@@ -50,7 +45,6 @@ function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
         quantity: 1,
         unit: "szt",
         category: "Inne",
-        priority: "medium",
         estimatedPrice: 0,
         notes: "",
       });
@@ -69,7 +63,6 @@ function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
       quantity: 1,
       unit: "szt",
       category: "Inne",
-      priority: "medium",
       estimatedPrice: 0,
       notes: "",
     });
@@ -84,12 +77,6 @@ function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
       unit: favorite.unit,
       estimatedPrice: favorite.price || 0,
     });
-  };
-
-  const priorityColors = {
-    low: "bg-green-100 text-green-700 border-green-200",
-    medium: "bg-yellow-100 text-yellow-700 border-yellow-200",
-    high: "bg-red-100 text-red-700 border-red-200",
   };
 
   if (!isOpen) return null;
@@ -153,7 +140,7 @@ function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                 value={formData.unit}
                 onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                {units.map((unit) => (
+                {SHOPPING_UNITS.map((unit) => (
                   <option key={unit} value={unit}>
                     {unit}
                   </option>
@@ -175,26 +162,6 @@ function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
               ))}
             </select>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Priorytet</label>
-            <div className="flex gap-2">
-              {(["low", "medium", "high"] as const).map((priority) => (
-                <button
-                  key={priority}
-                  type="button"
-                  onClick={() => setFormData({ ...formData, priority })}
-                  className={`px-3 py-1 text-xs rounded-full border ${
-                    formData.priority === priority
-                      ? priorityColors[priority]
-                      : "bg-gray-100 text-gray-700 border-gray-200"
-                  }`}>
-                  {priority === "low" ? "Niski" : priority === "medium" ? "Średni" : "Wysoki"}
-                </button>
-              ))}
-            </div>
-          </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Szacowana cena (zł)</label>
             <input

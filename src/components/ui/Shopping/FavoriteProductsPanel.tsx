@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { FavoriteProductInterface } from "@/data/types";
-import { useShoppingContext } from "../../../hooks/context/useShoppingContext";
+import type { FavoriteProductInterface } from "@/data/Shopping/interfaces";
+import { useAddFavoriteToList, useDeleteFavoriteProduct } from "@/hooks/shopping/useShoppingItems";
 import { Plus, Star, Trash2, Search, Package } from "lucide-react";
-
-interface FavoriteProductsPanelProps {
-  products: FavoriteProductInterface[];
-  currentListId?: string;
-}
+import type { FavoriteProductsPanelProps } from "@/data/Shopping/interfaces";
 
 function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPanelProps) {
-  const { removeFromFavorites, addFavoriteToList } = useShoppingContext();
+  const removeFromFavorites = useDeleteFavoriteProduct();
+  const addFavoriteToList = useAddFavoriteToList();
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredProducts = products.filter(
@@ -20,12 +17,12 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
 
   const handleAddToList = async (product: FavoriteProductInterface) => {
     if (!currentListId) return;
-    await addFavoriteToList(currentListId, product);
+    await addFavoriteToList.mutateAsync({ listId: currentListId, product });
   };
 
   const handleRemoveFromFavorites = async (productId: string) => {
     if (window.confirm("Czy na pewno chcesz usunąć ten produkt z ulubionych?")) {
-      await removeFromFavorites(productId);
+      await removeFromFavorites.mutateAsync(productId);
     }
   };
 

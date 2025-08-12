@@ -1,16 +1,23 @@
-import { useState } from "react";
-import { ShoppingItemInterface } from "../../../data/types";
-import { useShoppingContext } from "../../../hooks/context/useShoppingContext";
+import { useEffect, useState } from "react";
+import type { ShoppingItemInterface } from "@/data/Shopping/interfaces";
+import {
+  useUpdateShoppingItem,
+  useRemoveShoppingItem,
+  useToggleShoppingItemComplete,
+  useAddFavoriteProduct,
+  useFavoriteProductsQuery,
+  useDeleteFavoriteProduct,
+} from "@/hooks/shopping/useShoppingItems";
 import { Check, Edit2, Trash2, Star, Plus, Minus, Heart } from "lucide-react";
-
-interface ShoppingItemProps {
-  item: ShoppingItemInterface;
-  listId: string;
-  viewMode: "grid" | "list";
-}
+import type { ShoppingItemProps } from "@/data/Shopping/interfaces";
 
 function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
-  const { updateItem, removeItem, toggleItemComplete, addToFavorites } = useShoppingContext();
+  const addFavoriteProduct = useAddFavoriteProduct();
+  const { data: favorites } = useFavoriteProductsQuery();
+  const deleteFavorite = useDeleteFavoriteProduct();
+  const updateItem = useUpdateShoppingItem();
+  const removeItem = useRemoveShoppingItem();
+  const toggleItemComplete = useToggleShoppingItemComplete();
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
     name: item.name,
@@ -19,14 +26,25 @@ function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
     notes: item.notes || "",
   });
 
+  // If server favorites no longer include this item, clear local isFavorite flag for consistency
+  useEffect(() => {
+    if (!favorites) return;
+    const stillFavorite = favorites.some(
+      (p) => p.name === item.name && p.unit === item.unit && p.category === item.category,
+    );
+    if (!stillFavorite && item.isFavorite) {
+      updateItem.mutate({ listId, itemId: item.id, updates: { isFavorite: false, favoriteProductId: "" } });
+    }
+  }, [favorites, item.name, item.unit, item.category, item.isFavorite, listId, item.id, updateItem]);
+
   const handleToggleComplete = () => {
     console.log(listId, item.id);
-    toggleItemComplete(listId, item.id);
+    toggleItemComplete.mutate({ listId, itemId: item.id, isCompleted: !item.isCompleted });
   };
 
   const handleUpdateQuantity = (newQuantity: number) => {
     if (newQuantity < 1) return;
-    updateItem(listId, item.id, { quantity: newQuantity });
+    updateItem.mutate({ listId, itemId: item.id, updates: { quantity: newQuantity } });
   };
 
   const handleSaveEdit = async () => {
@@ -43,7 +61,7 @@ function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
       updateData.notes = editData.notes.trim();
     }
 
-    await updateItem(listId, item.id, updateData);
+    await updateItem.mutateAsync({ listId, itemId: item.id, updates: updateData });
     setIsEditing(false);
   };
 
@@ -59,20 +77,54 @@ function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
 
   const handleDelete = () => {
     if (window.confirm("Czy na pewno chcesz usunąć ten produkt?")) {
-      removeItem(listId, item.id);
+      removeItem.mutate({ listId, itemId: item.id });
     }
   };
 
-  const handleAddToFavorites = async () => {
-    await addToFavorites({
-      name: item.name,
-      category: item.category,
-      unit: item.unit,
-      price: item.price,
-      notes: item.notes,
-      usageCount: 1,
-      lastUsed: new Date(),
-    });
+  const handleAddToFavorites = () => {
+    // Guard against duplicate add if already favorited (derived) or mutation in-flight
+    if (isFavorited || addFavoriteProduct.isPending) return;
+    addFavoriteProduct.mutate(
+      {
+        name: item.name,
+        category: item.category,
+        unit: item.unit,
+        price: item.price,
+        notes: item.notes,
+        usageCount: 1,
+        lastUsed: new Date(),
+      },
+      {
+        onSuccess: (newId) => {
+          // Persist mapping for future reliable removal
+          updateItem.mutate({ listId, itemId: item.id, updates: { isFavorite: true, favoriteProductId: newId } });
+        },
+      },
+    );
+    // Optimistic local feedback while mutation runs
+    updateItem.mutate({ listId, itemId: item.id, updates: { isFavorite: true } });
+  };
+
+  const matchedFavorite = favorites?.find(
+    (p) => p.name === item.name && p.unit === item.unit && p.category === item.category,
+  );
+  // Derive from server truth to ensure un-favorite clears immediately, while keeping add UX instant
+  const isFavorited = Boolean(matchedFavorite || addFavoriteProduct.isPending);
+
+  const handleRemoveFromFavorites = async () => {
+    // Prefer exact ID if we have it, otherwise fall back to matching by fields
+    if (item.favoriteProductId) {
+      await deleteFavorite.mutateAsync(item.favoriteProductId);
+    } else {
+      const matches = (favorites || []).filter(
+        (p) => p.name === item.name && p.unit === item.unit && p.category === item.category,
+      );
+      for (const p of matches) {
+        await deleteFavorite.mutateAsync(p.id);
+      }
+    }
+    // Optimistically mark this item as not favorite and clear mapping
+    updateItem.mutate({ listId, itemId: item.id, updates: { isFavorite: false, favoriteProductId: "" } });
   };
 
   const getCategoryEmoji = (category: string) => {
@@ -116,12 +168,21 @@ function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
           </div>
 
           <div className="flex gap-1">
-            {!item.isFavorite && (
+            {!isFavorited ? (
               <button
                 onClick={handleAddToFavorites}
-                className="p-1 text-gray-400 hover:text-yellow-500 transition-colors"
+                disabled={addFavoriteProduct.isPending}
+                className="p-1 text-gray-400 hover:text-yellow-500 transition-colors disabled:opacity-50"
                 title="Dodaj do ulubionych">
                 <Star size={14} />
+              </button>
+            ) : (
+              <button
+                onClick={handleRemoveFromFavorites}
+                disabled={deleteFavorite.isPending}
+                className="p-1 text-yellow-500 hover:text-gray-400 transition-colors disabled:opacity-50"
+                title="Usuń z ulubionych">
+                <Star size={14} fill="currentColor" />
               </button>
             )}
             <button
@@ -179,7 +240,7 @@ function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
           {item.notes && <div className="mt-2 text-xs text-gray-500 italic">{item.notes}</div>}
         </div>
 
-        {item.isFavorite && (
+        {isFavorited && (
           <div className="mt-2 flex items-center gap-1 text-xs text-yellow-600">
             <Heart size={12} />
             <span>Ulubiony</span>
@@ -257,10 +318,10 @@ function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
               <h4 className={`font-medium text-sm ${item.isCompleted ? "line-through opacity-60" : ""}`}>
                 {item.name}
               </h4>
-              {item.isFavorite && <Heart size={12} className="text-yellow-500" />}
+              {isFavorited && <Heart size={12} className="text-yellow-500" />}
             </div>
 
-            <div className="flex items-center gap-4 text-xs text-gray-500">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-gray-500">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleUpdateQuantity(item.quantity - 1)}
@@ -278,21 +339,32 @@ function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
                 </button>
               </div>
 
-              {item.price && <span className="font-medium">{formatPrice()}</span>}
+              {item.price && <span className="font-medium whitespace-nowrap">{formatPrice()}</span>}
 
-              <span className="bg-gray-100 px-2 py-0.5 rounded">{item.category}</span>
+              <span className="bg-gray-100 px-2 py-0.5 rounded whitespace-nowrap text-[11px] sm:text-xs">
+                {item.category}
+              </span>
             </div>
 
             {item.notes && <div className="text-xs text-gray-400 mt-1 italic">{item.notes}</div>}
           </div>
 
-          <div className="flex gap-1 flex-shrink-0">
-            {!item.isFavorite && (
+          <div className="flex gap-1 flex-shrink-0 ml-2 sm:ml-3">
+            {!isFavorited ? (
               <button
                 onClick={handleAddToFavorites}
-                className="p-1.5 text-gray-400 hover:text-yellow-500 transition-colors"
+                disabled={addFavoriteProduct.isPending}
+                className="p-1.5 text-gray-400 hover:text-yellow-500 transition-colors disabled:opacity-50"
                 title="Dodaj do ulubionych">
                 <Star size={14} />
+              </button>
+            ) : (
+              <button
+                onClick={handleRemoveFromFavorites}
+                disabled={deleteFavorite.isPending}
+                className="p-1.5 text-yellow-500 hover:text-gray-400 transition-colors disabled:opacity-50"
+                title="Usuń z ulubionych">
+                <Star size={14} fill="currentColor" />
               </button>
             )}
             <button

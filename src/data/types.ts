@@ -61,8 +61,6 @@ export interface EventInterface {
 
   // Styling and display
   color: string;
-  icon?: string; // lucide icon name or emoji
-  iconColor?: string;
 
   // Recurrence
   isRecurring: boolean;
@@ -85,54 +83,4 @@ export interface EventInterface {
 export interface CalendarClickContent {
   type: "event" | "date" | "date-range";
   data: EventInterface | Date | null;
-}
-
-export interface ShoppingItemInterface {
-  id: string;
-  name: string;
-  quantity: number;
-  unit: string;
-  category: string;
-  price?: number;
-  isFavorite: boolean;
-  isCompleted: boolean;
-  addedAt: Date;
-  completedAt?: Date | null;
-  notes?: string;
-}
-
-export interface ShoppingListInterface {
-  id: string;
-  name: string;
-  description?: string;
-  emoji?: string;
-  items: ShoppingItemInterface[];
-  isShared: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  userId: string;
-  type: "personal" | "shared" | "template";
-  color?: string;
-}
-
-export interface FavoriteProductInterface {
-  id: string;
-  name: string;
-  category: string;
-  unit: string;
-  price?: number;
-  brand?: string;
-  barcode?: string;
-  notes?: string;
-  usageCount: number;
-  lastUsed: Date;
-  userId: string;
-}
-
-export interface ShoppingCategoryInterface {
-  id: string;
-  name: string;
-  emoji: string;
-  color: string;
-  order: number;
 }

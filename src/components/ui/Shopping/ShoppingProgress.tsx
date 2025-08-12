@@ -1,11 +1,7 @@
 import { Star } from "lucide-react";
+import type { ShoppingProgressProps } from "@/data/Shopping/interfaces";
 
-type Props = {
-  total: number;
-  completed: number;
-};
-
-export function ShoppingProgress({ total, completed }: Props) {
+export function ShoppingProgress({ total, completed }: ShoppingProgressProps) {
   if (total <= 0) return null;
   const percent = Math.round((completed / total) * 100);
 

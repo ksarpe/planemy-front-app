@@ -1,13 +1,7 @@
 import { Plus } from "lucide-react";
+import type { ShoppingHeaderProps } from "@/data/Shopping/interfaces";
 
-type Props = {
-  emoji?: string;
-  name: string;
-  stats: { pending: number; completed: number; totalValue: number };
-  onAddItem: () => void;
-};
-
-export function ShoppingHeader({ name, stats, onAddItem }: Props) {
+export function ShoppingHeader({ name, stats, onAddItem }: ShoppingHeaderProps) {
   const { pending, completed, totalValue } = stats;
 
   return (

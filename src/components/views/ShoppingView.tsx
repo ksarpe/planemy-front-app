@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useShoppingContext } from "@/hooks/context/useShoppingContext";
+import { useShoppingItemsQuery } from "@/hooks/shopping/useShoppingItems";
 import { ShoppingCart, Heart, Menu } from "lucide-react";
 import { AddListModal } from "../ui/Shopping/AddListModal";
 import { AddItemModal } from "../ui/Shopping/AddItemModal";
@@ -30,6 +31,10 @@ export default function ShoppingView() {
   const [activeTab, setActiveTab] = useState<"shopping" | "favorites">("shopping");
   const [showLeftPanel, setShowLeftPanel] = useState(false);
 
+  const { data: listItems = [], isLoading: itemsLoading } = useShoppingItemsQuery(
+    currentList ? currentList.id : "",
+  );
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -41,36 +46,24 @@ export default function ShoppingView() {
     );
   }
 
+  // Items come from a separate collection now
+  // moved up to satisfy Hooks rules
+
   // Filter and search logic for current list items
-  const getFilteredItems = () => {
-    if (!currentList) return [];
-
-    let items = currentList.items;
-
-    // Apply search filter
-    if (searchQuery) {
-      items = items.filter(
-        (item) =>
-          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.category.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
-    }
-
-    // Apply category filter
-    if (selectedCategory) {
-      items = items.filter((item) => item.category === selectedCategory);
-    }
-
-    return items;
-  };
-
-  const filteredItems = getFilteredItems();
+  const filteredItems = (listItems || [])
+    .filter((item) =>
+      searchQuery
+        ? item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.category.toLowerCase().includes(searchQuery.toLowerCase())
+        : true,
+    )
+    .filter((item) => (selectedCategory ? item.category === selectedCategory : true));
 
   // Calculate statistics
-  const totalItems = currentList?.items.length || 0;
-  const completedItems = currentList?.items.filter((item) => item.isCompleted).length || 0;
+  const totalItems = listItems.length;
+  const completedItems = listItems.filter((item) => item.isCompleted).length;
   const pendingItems = totalItems - completedItems;
-  const totalValue = currentList?.items.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0) || 0;
+  const totalValue = listItems.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
 
   const getTabButtonClass = (tab: typeof activeTab) => {
     return `px-4 py-2 rounded-md font-medium transition-colors ${
@@ -174,13 +167,17 @@ export default function ShoppingView() {
                 onToggleView={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
               />
 
-              <ShoppingItemsSection
-                items={filteredItems}
-                listId={currentList.id}
-                viewMode={viewMode}
-                onAddItem={() => setIsAddItemModalOpen(true)}
-                isFiltered={Boolean(searchQuery || selectedCategory)}
-              />
+              {itemsLoading ? (
+                <div className="text-gray-500">Ładowanie produktów...</div>
+              ) : (
+                <ShoppingItemsSection
+                  items={filteredItems}
+                  listId={currentList.id}
+                  viewMode={viewMode}
+                  onAddItem={() => setIsAddItemModalOpen(true)}
+                  isFiltered={Boolean(searchQuery || selectedCategory)}
+                />
+              )}
 
               <ShoppingProgress total={totalItems} completed={completedItems} />
             </>

@@ -19,7 +19,7 @@ import {
   ShoppingItemInterface,
   FavoriteProductInterface,
   ShoppingCategoryInterface,
-} from "../data/types";
+} from "@/data/Shopping/interfaces";
 import { useAuthContext } from "../hooks/context/useAuthContext";
 import { useState, useEffect } from "react";
 
@@ -83,72 +83,63 @@ export const deleteShoppingList = async (listId: string, userId: string) => {
   }
 };
 
-// Shopping Items Operations
-export const addItemToList = async (
-  listId: string,
-  item: Omit<ShoppingItemInterface, "id" | "addedAt">,
-  userId: string,
-) => {
+// Shopping Items Operations (separate collection)
+export const addShoppingItem = async (item: Omit<ShoppingItemInterface, "id">) => {
   try {
-    // Generate new item with ID
-    const newItem: ShoppingItemInterface = {
+    const docRef = await addDoc(collection(db, "shoppingItems"), {
       ...item,
-      id: Date.now().toString(),
-      addedAt: new Date(),
-    };
-
-    // Get current list
-    const lists = await getUserShoppingLists(userId);
-    const currentList = lists.find((list) => list.id === listId);
-
-    if (currentList) {
-      const updatedItems = [...currentList.items, newItem];
-      await updateShoppingList(listId, { items: updatedItems });
-    }
-
-    return newItem.id;
+      addedAt: serverTimestamp(),
+    });
+    return docRef.id;
   } catch (error) {
-    console.error("Error adding item to list:", error);
+    console.error("Error adding shopping item:", error);
     throw error;
   }
 };
 
-export const updateItemInList = async (
-  listId: string,
-  itemId: string,
-  updates: Partial<ShoppingItemInterface>,
-  userId: string,
-) => {
+export const updateShoppingItem = async (itemId: string, updates: Partial<ShoppingItemInterface>) => {
   try {
-    const lists = await getUserShoppingLists(userId);
-    const currentList = lists.find((list) => list.id === listId);
-
-    if (currentList) {
-      const updatedItems = currentList.items.map((item) =>
-        item.id === itemId
-          ? { ...item, ...updates, ...(updates.isCompleted ? { completedAt: new Date() } : {}) }
-          : item,
-      );
-      await updateShoppingList(listId, { items: updatedItems });
-    }
+    const itemRef = doc(db, "shoppingItems", itemId);
+    await updateDoc(itemRef, {
+      ...updates,
+      ...(updates.isCompleted !== undefined ? { completedAt: updates.isCompleted ? serverTimestamp() : null } : {}),
+    });
   } catch (error) {
-    console.error("Error updating item in list:", error);
+    console.error("Error updating shopping item:", error);
     throw error;
   }
 };
 
-export const removeItemFromList = async (listId: string, itemId: string, userId: string) => {
+export const deleteShoppingItem = async (itemId: string) => {
   try {
-    const lists = await getUserShoppingLists(userId);
-    const currentList = lists.find((list) => list.id === listId);
-
-    if (currentList) {
-      const updatedItems = currentList.items.filter((item) => item.id !== itemId);
-      await updateShoppingList(listId, { items: updatedItems });
-    }
+    await deleteDoc(doc(db, "shoppingItems", itemId));
   } catch (error) {
-    console.error("Error removing item from list:", error);
+    console.error("Error deleting shopping item:", error);
     throw error;
+  }
+};
+
+export const getShoppingItemsForList = async (userId: string, listId: string): Promise<ShoppingItemInterface[]> => {
+  try {
+    const q = query(
+      collection(db, "shoppingItems"),
+      where("userId", "==", userId),
+      where("listId", "==", listId),
+      orderBy("addedAt", "desc"),
+    );
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+          addedAt: doc.data().addedAt?.toDate() || new Date(),
+          completedAt: doc.data().completedAt?.toDate?.() || null,
+        } as ShoppingItemInterface),
+    );
+  } catch (error) {
+    console.error("Error getting shopping items:", error);
+    return [];
   }
 };
 
@@ -244,23 +235,6 @@ export const useShoppingLists = () => {
             ...doc.data(),
             createdAt: doc.data().createdAt?.toDate() || new Date(),
             updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-            items:
-              doc.data().items?.map((item: ShoppingItemInterface) => ({
-                ...item,
-                // addedAt:
-                //   item.addedAt instanceof Date
-                //     ? item.addedAt
-                //     : item.addedAt?.toDate
-                //     ? item.addedAt.toDate()
-                //     : new Date(item.addedAt),
-                // completedAt: item.completedAt
-                //   ? item.completedAt instanceof Date
-                //     ? item.completedAt
-                //     : item.completedAt?.toDate
-                //     ? item.completedAt.toDate()
-                //     : new Date(item.completedAt)
-                //   : "",
-              })) || [],
           } as ShoppingListInterface;
         });
 

@@ -1,16 +1,8 @@
 import { Package, Plus } from "lucide-react";
-import type { ShoppingItemInterface } from "@/data/types";
 import { ShoppingItem } from "./ShoppingItem";
+import type { ShoppingItemsSectionProps } from "@/data/Shopping/interfaces";
 
-type Props = {
-  items: ShoppingItemInterface[];
-  listId: string;
-  viewMode: "grid" | "list";
-  onAddItem: () => void;
-  isFiltered: boolean;
-};
-
-export function ShoppingItemsSection({ items, listId, viewMode, onAddItem, isFiltered }: Props) {
+export function ShoppingItemsSection({ items, listId, viewMode, onAddItem, isFiltered }: ShoppingItemsSectionProps) {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0 mb-3">

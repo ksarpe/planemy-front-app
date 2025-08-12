@@ -1,12 +1,5 @@
-import type {
-  EventInterface,
-  CalendarClickContent,
-  PaymentInterface,
-  ShoppingListInterface,
-  FavoriteProductInterface,
-  ShoppingCategoryInterface,
-  ShoppingItemInterface,
-} from "./types";
+import type { EventInterface, CalendarClickContent, PaymentInterface } from "./types";
+// Shopping types and ShoppingContextProps moved to '@/data/Shopping/interfaces'
 import { UserSettings } from "./User/interfaces";
 
 export interface ToastContextProps {
@@ -52,37 +45,7 @@ export interface CalendarContextProps {
   loadPrev: () => void;
 }
 
-export interface ShoppingContextProps {
-  // Shopping Lists
-  shoppingLists: ShoppingListInterface[];
-  currentList: ShoppingListInterface | null;
-  setCurrentList: (list: ShoppingListInterface | null) => void;
-  createList: (name: string, description?: string, emoji?: string, color?: string) => Promise<void>;
-  updateList: (listId: string, updates: Partial<ShoppingListInterface>) => Promise<void>;
-  deleteList: (listId: string) => Promise<void>;
-
-  // Shopping Items
-  addItem: (listId: string, item: Omit<ShoppingItemInterface, "id" | "addedAt">) => Promise<void>;
-  updateItem: (listId: string, itemId: string, updates: Partial<ShoppingItemInterface>) => Promise<void>;
-  removeItem: (listId: string, itemId: string) => Promise<void>;
-  toggleItemComplete: (listId: string, itemId: string) => Promise<void>;
-
-  // Favorite Products
-  favoriteProducts: FavoriteProductInterface[];
-  addToFavorites: (product: Omit<FavoriteProductInterface, "id">) => Promise<void>;
-  removeFromFavorites: (productId: string) => Promise<void>;
-  addFavoriteToList: (listId: string, product: FavoriteProductInterface, quantity?: number) => Promise<void>;
-
-  // Categories
-  categories: ShoppingCategoryInterface[];
-
-  // UI State
-  loading: boolean;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  selectedCategory: string | null;
-  setSelectedCategory: (category: string | null) => void;
-}
+// ShoppingContextProps moved to '@/data/Shopping/interfaces'
 
 export interface PaymentsContextProps {
   payments: PaymentInterface[];

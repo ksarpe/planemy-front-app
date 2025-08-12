@@ -81,7 +81,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
             type="text"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder={mode === "create" ? "Wprowadź nazwę etykiety..." : undefined}
+            placeholder={mode === "create" ? "Wprowadź nazwę etykiety..." : ""}
             className="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-text  focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
@@ -94,7 +94,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
             type="text"
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            placeholder={mode === "create" ? "Krótki opis etykiety..." : undefined}
+            placeholder={mode === "create" ? "Krótki opis etykiety..." : ""}
             className="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-text  focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
