@@ -11,8 +11,8 @@ export default function SidebarLink({ to, icon: Icon, label, onNavigate }: Sideb
         `px-3 py-1 rounded-md ${isActive ? "bg-bg-hover  font-bold" : "hover:bg-bg-hover "}`
       }>
       <span className="inline-flex items-center gap-2">
-        {Icon && <Icon size={18} />}
-        <span className="text-sm">{label}</span>
+        {Icon && <Icon size={20} />}
+        <span className="text-lg">{label}</span>
       </span>
     </NavLink>
   );
