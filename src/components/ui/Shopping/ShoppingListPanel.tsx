@@ -61,7 +61,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
         <h3 className="text-lg font-semibold">Moje listy</h3>
         <button
           onClick={onAddList}
-          className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+          className="p-2 bg-primary text-white rounded-md hover:bg-primary-hover transition-colors">
           <Plus size={16} />
         </button>
       </div>
@@ -74,7 +74,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
             <p className="text-sm text-gray-500 mb-3">Brak list zakupów</p>
             <button
               onClick={onAddList}
-              className="text-sm bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition-colors">
+              className="text-sm bg-primary text-white px-3 py-2 rounded-md hover:bg-primary-hover transition-colors">
               Utwórz pierwszą listę
             </button>
           </div>
@@ -88,15 +88,11 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
               <div
                 key={list.id}
                 className={`p-3 rounded-md border transition-all cursor-pointer ${
-                  isSelected ? "border-blue-500 bg-blue-50 " : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 "
+                  isSelected ? "border-primary bg-bg-hover " : "border-primary hover:bg-bg-hover "
                 }`}
                 onClick={() => !isEditing && onSelectList(list)}>
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <span className="text-xl flex-shrink-0" style={{ color: list.color }}>
-                      {list.emoji}
-                    </span>
-
                     <div className="flex-1 min-w-0">
                       {isEditing ? (
                         <input
@@ -115,7 +111,6 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                       ) : (
                         <div>
                           <h4 className="font-medium text-sm truncate">{list.name}</h4>
-                          {list.description && <p className="text-xs text-gray-500 truncate">{list.description}</p>}
                         </div>
                       )}
 

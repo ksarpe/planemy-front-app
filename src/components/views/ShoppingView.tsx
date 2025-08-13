@@ -21,19 +21,14 @@ export default function ShoppingView() {
     searchQuery,
     setSearchQuery,
     loading,
-    selectedCategory,
-    setSelectedCategory,
   } = useShoppingContext();
 
   const [isAddListModalOpen, setIsAddListModalOpen] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [activeTab, setActiveTab] = useState<"shopping" | "favorites">("shopping");
   const [showLeftPanel, setShowLeftPanel] = useState(false);
 
-  const { data: listItems = [], isLoading: itemsLoading } = useShoppingItemsQuery(
-    currentList ? currentList.id : "",
-  );
+  const { data: listItems = [], isLoading: itemsLoading } = useShoppingItemsQuery(currentList ? currentList.id : "");
 
   if (loading) {
     return (
@@ -50,14 +45,12 @@ export default function ShoppingView() {
   // moved up to satisfy Hooks rules
 
   // Filter and search logic for current list items
-  const filteredItems = (listItems || [])
-    .filter((item) =>
-      searchQuery
-        ? item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.category.toLowerCase().includes(searchQuery.toLowerCase())
-        : true,
-    )
-    .filter((item) => (selectedCategory ? item.category === selectedCategory : true));
+  const filteredItems = (listItems || []).filter((item) =>
+    searchQuery
+      ? item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.category.toLowerCase().includes(searchQuery.toLowerCase())
+      : true,
+  );
 
   // Calculate statistics
   const totalItems = listItems.length;
@@ -67,7 +60,7 @@ export default function ShoppingView() {
 
   const getTabButtonClass = (tab: typeof activeTab) => {
     return `px-4 py-2 rounded-md font-medium transition-colors ${
-      activeTab === tab ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      activeTab === tab ? "bg-primary text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
     }`;
   };
 
@@ -154,18 +147,9 @@ export default function ShoppingView() {
               <ShoppingHeader
                 name={currentList.name}
                 stats={{ pending: pendingItems, completed: completedItems, totalValue }}
-                onAddItem={() => setIsAddItemModalOpen(true)}
               />
 
-              <ShoppingFilters
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                selectedCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-                categories={categories}
-                viewMode={viewMode}
-                onToggleView={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
-              />
+              <ShoppingFilters searchQuery={searchQuery} onSearchChange={setSearchQuery} categories={categories} />
 
               {itemsLoading ? (
                 <div className="text-gray-500">Ładowanie produktów...</div>
@@ -173,9 +157,8 @@ export default function ShoppingView() {
                 <ShoppingItemsSection
                   items={filteredItems}
                   listId={currentList.id}
-                  viewMode={viewMode}
                   onAddItem={() => setIsAddItemModalOpen(true)}
-                  isFiltered={Boolean(searchQuery || selectedCategory)}
+                  isFiltered={Boolean(searchQuery)}
                 />
               )}
 

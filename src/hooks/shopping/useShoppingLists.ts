@@ -23,20 +23,14 @@ export const useCreateShoppingList = () => {
   return useMutation({
     mutationFn: async ({
       name,
-      description,
-      color,
     }: {
       name: string;
-      description?: string;
-      color?: string;
     }) => {
       const payload: Omit<ShoppingListInterface, "id" | "createdAt" | "updatedAt"> = {
         name,
-        description,
         isShared: false,
         userId: user!.uid,
         type: "personal",
-        color: color || "#3B82F6",
       };
       const id = await addShoppingList(payload);
       return id;
@@ -49,13 +43,11 @@ export const useCreateShoppingList = () => {
       const optimistic: ShoppingListInterface = {
         id: `optimistic-${Date.now()}`,
         name: vars.name,
-        description: vars.description,
         isShared: false,
         createdAt: new Date(),
         updatedAt: new Date(),
         userId: user!.uid,
         type: "personal",
-        color: vars.color || "#3B82F6",
       };
       queryClient.setQueryData<ShoppingListInterface[]>(key, [optimistic, ...previous]);
       return { previous, key } as const;

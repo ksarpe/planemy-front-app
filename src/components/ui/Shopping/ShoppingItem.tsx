@@ -11,7 +11,7 @@ import {
 import { Check, Edit2, Trash2, Star, Plus, Minus, Heart } from "lucide-react";
 import type { ShoppingItemProps } from "@/data/Shopping/interfaces";
 
-function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
+function ShoppingItem({ item, listId }: ShoppingItemProps) {
   const addFavoriteProduct = useAddFavoriteProduct();
   const { data: favorites } = useFavoriteProductsQuery();
   const deleteFavorite = useDeleteFavoriteProduct();
@@ -148,107 +148,6 @@ function ShoppingItem({ item, listId, viewMode }: ShoppingItemProps) {
     const total = item.price * item.quantity;
     return `${total.toFixed(2)} zł`;
   };
-
-  if (viewMode === "grid") {
-    return (
-      <div
-        className={`p-4 rounded-md border-2 transition-all ${
-          item.isCompleted ? "border-green-200 bg-green-50" : "border-gray-200 bg-white hover:border-gray-300"
-        }`}>
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleToggleComplete}
-              className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                item.isCompleted ? "border-green-500 bg-green-500 text-white" : "border-gray-300 hover:border-green-500"
-              }`}>
-              {item.isCompleted && <Check size={12} />}
-            </button>
-            <span className="text-lg">{getCategoryEmoji(item.category)}</span>
-          </div>
-
-          <div className="flex gap-1">
-            {!isFavorited ? (
-              <button
-                onClick={handleAddToFavorites}
-                disabled={addFavoriteProduct.isPending}
-                className="p-1 text-gray-400 hover:text-yellow-500 transition-colors disabled:opacity-50"
-                title="Dodaj do ulubionych">
-                <Star size={14} />
-              </button>
-            ) : (
-              <button
-                onClick={handleRemoveFromFavorites}
-                disabled={deleteFavorite.isPending}
-                className="p-1 text-yellow-500 hover:text-gray-400 transition-colors disabled:opacity-50"
-                title="Usuń z ulubionych">
-                <Star size={14} fill="currentColor" />
-              </button>
-            )}
-            <button
-              onClick={() => setIsEditing(true)}
-              className="p-1 text-gray-400 hover:text-blue-500 transition-colors"
-              title="Edytuj">
-              <Edit2 size={14} />
-            </button>
-            <button
-              onClick={handleDelete}
-              className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-              title="Usuń">
-              <Trash2 size={14} />
-            </button>
-          </div>
-        </div>
-
-        <div className={item.isCompleted ? "opacity-60" : ""}>
-          <h4 className={`font-medium mb-2 ${item.isCompleted ? "line-through" : ""}`}>{item.name}</h4>
-
-          <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Ilość:</span>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handleUpdateQuantity(item.quantity - 1)}
-                  className="w-6 h-6 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100"
-                  disabled={item.quantity <= 1}>
-                  <Minus size={12} />
-                </button>
-                <span className="font-medium">
-                  {item.quantity} {item.unit}
-                </span>
-                <button
-                  onClick={() => handleUpdateQuantity(item.quantity + 1)}
-                  className="w-6 h-6 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100">
-                  <Plus size={12} />
-                </button>
-              </div>
-            </div>
-
-            {item.price && (
-              <div className="flex justify-between">
-                <span className="text-gray-600">Cena:</span>
-                <span className="font-medium">{formatPrice()}</span>
-              </div>
-            )}
-
-            <div className="flex justify-between">
-              <span className="text-gray-600">Kategoria:</span>
-              <span className="text-xs bg-gray-100 px-2 py-1 rounded">{item.category}</span>
-            </div>
-          </div>
-
-          {item.notes && <div className="mt-2 text-xs text-gray-500 italic">{item.notes}</div>}
-        </div>
-
-        {isFavorited && (
-          <div className="mt-2 flex items-center gap-1 text-xs text-yellow-600">
-            <Heart size={12} />
-            <span>Ulubiony</span>
-          </div>
-        )}
-      </div>
-    );
-  }
 
   // List view
   return (

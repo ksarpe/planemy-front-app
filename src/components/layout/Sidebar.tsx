@@ -84,7 +84,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
           <div className="flex flex-col justify-between px-2 gap-2">
             <NavLink
               to="/labels"
-              className="flex items-center gap-2 text-text hover:text-primary hover:cursor-pointer"
+              className="flex items-center gap-4 text-text hover:text-primary hover:cursor-pointer"
               onClick={handleNavigate}>
               <Tag size={20} />
               <span className="text-sm">Etykiety</span>
@@ -92,7 +92,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
 
             <NavLink
               to="/notifications"
-              className="relative flex items-center gap-2 text-text hover:text-primary hover:cursor-pointer"
+              className="relative flex items-center gap-4 text-text hover:text-primary hover:cursor-pointer"
               onClick={handleNavigate}>
               <Bell size={20} />
               <span className="text-sm">Powiadomienia</span>

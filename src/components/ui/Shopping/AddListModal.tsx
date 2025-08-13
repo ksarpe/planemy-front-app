@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCreateShoppingList } from "@/hooks/shopping/useShoppingLists";
-import { X, Plus, Palette } from "lucide-react";
+import { X } from "lucide-react";
 import type { AddListModalProps } from "@/data/Shopping/interfaces";
-import { SHOPPING_LIST_COLORS } from "@/data/Shopping/types";
 
 function AddListModal({ isOpen, onClose }: AddListModalProps) {
   const createList = useCreateShoppingList();
   const [formData, setFormData] = useState({
     name: "",
-    description: "",
-    color: "#3B82F6",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+        setFormData({ name: "" });
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,10 +30,8 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
     try {
       await createList.mutateAsync({
         name: formData.name.trim(),
-        description: formData.description.trim() || "",
-        color: formData.color,
       });
-      setFormData({ name: "", description: "", color: "#3B82F6" });
+      setFormData({ name: "" });
       onClose();
     } catch (error) {
       console.error("Error creating list:", error);
@@ -34,63 +41,35 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
   };
 
   const handleClose = () => {
-    setFormData({ name: "", description: "", color: "#3B82F6" });
+    setFormData({ name: "" });
     onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white  rounded-md shadow-xl w-full max-w-md mx-4">
-        <div className="flex justify-between items-center p-6 border-b">
+        <div className="flex justify-between items-center px-4 pt-4">
+          <div></div>
           <h2 className="text-xl font-semibold">Utwórz nową listę</h2>
-          <button onClick={handleClose} className="p-1 hover:bg-gray-100  rounded-md transition-colors">
+          <button onClick={handleClose} className=" hover:bg-gray-100  rounded-md transition-colors">
             <X size={20} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700  mb-2">Nazwa listy *</label>
+            <div>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-              placeholder="np. Zakupy na tydzień"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Zakupy na tydzień"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-300"
               required
+              autoFocus
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700  mb-2">Opis (opcjonalny)</label>
-            <textarea
-              value={formData.description}
-              onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-              placeholder="Dodaj opis listy..."
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700  mb-2">Kolor</label>
-            <div className="grid grid-cols-4 gap-2">
-              {SHOPPING_LIST_COLORS.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  onClick={() => setFormData((prev) => ({ ...prev, color }))}
-                  className={`w-full h-10 rounded-md border-2 transition-all ${
-                    formData.color === color ? "border-gray-800 scale-110" : "border-gray-200 hover:border-gray-300"
-                  }`}
-                  style={{ backgroundColor: color }}>
-                  {formData.color === color && <Palette size={16} className="mx-auto text-white" />}
-                </button>
-              ))}
             </div>
-          </div>
 
           <div className="flex gap-3 pt-4">
             <button
@@ -102,14 +81,11 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
             <button
               type="submit"
               disabled={!formData.name.trim() || isSubmitting}
-              className="flex-1 flex items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              className="flex-1 flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
               {isSubmitting ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
               ) : (
-                <>
-                  <Plus size={16} />
-                  Utwórz listę
-                </>
+                <>Utwórz</>
               )}
             </button>
           </div>

@@ -1,7 +1,6 @@
-import { Plus } from "lucide-react";
 import type { ShoppingHeaderProps } from "@/data/Shopping/interfaces";
 
-export function ShoppingHeader({ name, stats, onAddItem }: ShoppingHeaderProps) {
+export function ShoppingHeader({ name, stats }: ShoppingHeaderProps) {
   const { pending, completed, totalValue } = stats;
 
   return (
@@ -35,17 +34,6 @@ export function ShoppingHeader({ name, stats, onAddItem }: ShoppingHeaderProps) 
           </div>
         </div>
       </div>
-
-      {pending + completed != 0 && (
-        <div className="md:pt-1">
-          <button
-            onClick={onAddItem}
-            className="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
-            <Plus size={18} />
-            Dodaj produkt
-          </button>
-        </div>
-      )}
     </div>
   );
 }

@@ -21,14 +21,11 @@ export interface ShoppingItemInterface {
 export interface ShoppingListInterface {
   id: string;
   name: string;
-  description?: string;
-  emoji?: string; // used in UI
   isShared: boolean;
   createdAt: Date;
   updatedAt: Date;
   userId: string;
-  type: "personal" | "shared" | "template";
-  color?: string;
+  type: "personal" | "shared";
 }
 
 export interface FavoriteProductInterface {
@@ -67,23 +64,17 @@ export interface AddListModalProps {
 export interface ShoppingHeaderProps {
   name: string;
   stats: { pending: number; completed: number; totalValue: number };
-  onAddItem: () => void;
 }
 
 export interface ShoppingFiltersProps {
   searchQuery: string;
   onSearchChange: (v: string) => void;
-  selectedCategory: string | null;
-  onCategoryChange: (v: string | null) => void;
   categories: ShoppingCategoryInterface[];
-  viewMode: "grid" | "list";
-  onToggleView: () => void;
 }
 
 export interface ShoppingItemsSectionProps {
   items: ShoppingItemInterface[];
   listId: string;
-  viewMode: "grid" | "list";
   onAddItem: () => void;
   isFiltered: boolean;
 }
@@ -103,7 +94,6 @@ export interface ShoppingListPanelProps {
 export interface ShoppingItemProps {
   item: ShoppingItemInterface;
   listId: string;
-  viewMode: "grid" | "list";
 }
 
 export interface FavoriteProductsPanelProps {

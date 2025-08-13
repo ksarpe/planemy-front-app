@@ -2,7 +2,7 @@ import { Package, Plus } from "lucide-react";
 import { ShoppingItem } from "./ShoppingItem";
 import type { ShoppingItemsSectionProps } from "@/data/Shopping/interfaces";
 
-export function ShoppingItemsSection({ items, listId, viewMode, onAddItem, isFiltered }: ShoppingItemsSectionProps) {
+export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: ShoppingItemsSectionProps) {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0 mb-3">
@@ -27,14 +27,19 @@ export function ShoppingItemsSection({ items, listId, viewMode, onAddItem, isFil
           )}
         </div>
       ) : (
-        <div
-          className={
-            viewMode === "grid"
-              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4"
-              : "space-y-3 md:space-y-4"
-          }>
+        <div className="space-y-3 md:space-y-4">
+          {
+            <div className="md:pt-1">
+              <button
+                onClick={onAddItem}
+                className="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
+                <Plus size={18} />
+                Dodaj produkt
+              </button>
+            </div>
+          }
           {items.map((item) => (
-            <ShoppingItem key={item.id} item={item} listId={listId} viewMode={viewMode} />
+            <ShoppingItem key={item.id} item={item} listId={listId} />
           ))}
         </div>
       )}
