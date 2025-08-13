@@ -11,6 +11,7 @@ import {
 import { Check, Edit2, Trash2, Star, Plus, Minus, Heart } from "lucide-react";
 import type { ShoppingItemProps } from "@/data/Shopping/interfaces";
 import { SHOPPING_UNITS } from "@/data/Shopping/types";
+import { motion } from "framer-motion";
 
 function ShoppingItem({ item, listId }: ShoppingItemProps) {
   const addFavoriteProduct = useAddFavoriteProduct();
@@ -151,7 +152,8 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
 
   // List view
   return (
-    <div
+    <motion.div
+      layout
       className={[
         "group p-3 md:p-4 rounded-xl border transition-all",
         item.isCompleted
@@ -329,7 +331,7 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

@@ -1,8 +1,16 @@
 import { Package, Plus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useMemo } from "react";
 import { ShoppingItem } from "./ShoppingItem";
 import type { ShoppingItemsSectionProps } from "@/data/Shopping/interfaces";
 
 export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: ShoppingItemsSectionProps) {
+  // Keep incomplete items on top; completed at the bottom, preserving relative order
+  const sortedItems = useMemo(() => {
+    const pending = items.filter((i) => !i.isCompleted);
+    const done = items.filter((i) => i.isCompleted);
+    return [...pending, ...done];
+  }, [items]);
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0 mb-3">
@@ -27,7 +35,7 @@ export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: S
           )}
         </div>
       ) : (
-        <div className="space-y-3 md:space-y-4">
+        <motion.div layout className="space-y-3 md:space-y-4">
           {
             <div className="md:pt-1">
               <button
@@ -38,10 +46,20 @@ export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: S
               </button>
             </div>
           }
-          {items.map((item) => (
-            <ShoppingItem key={item.id} item={item} listId={listId} />
-          ))}
-        </div>
+          <AnimatePresence initial={false}>
+            {sortedItems.map((item) => (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0.6, y: 0 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0.5 }}
+                transition={{ type: "spring", stiffness: 500, damping: 40, mass: 0.6 }}>
+                <ShoppingItem item={item} listId={listId} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       )}
     </div>
   );
