@@ -110,7 +110,7 @@ export default function TaskDetails() {
   };
 
   return (
-    <div className="w-1/5 bg-gradient-to-r from-bg-alt to-bg-bg   rounded-md p-4 shadow-[-8px_0_10px_rgba(0,0,0,0.1)]">
+    <div className="h-full bg-gradient-to-r from-bg-alt to-bg-bg p-4 overflow-auto">
       <div className="h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center pb-4 justify-between">

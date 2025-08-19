@@ -58,7 +58,7 @@ export default function AITextbox({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`w-full ${className}`}>
+    <form onSubmit={handleSubmit} className={`w-full relative ${className}`}>
       {/* Animated container - animacja cały czas */}
       <div className="ai-textbox-animated">
         <div
@@ -69,12 +69,7 @@ export default function AITextbox({
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}
           `}>
           {/* Robot Icon */}
-          <Bot
-            size={20}
-            className={`flex-shrink-0 transition-colors duration-300 ${
-              isFocused ? "text-purple-500" : "text-gray-400"
-            }`}
-          />
+          <Bot size={20} className={`${isFocused ? "text-purple-500" : "text-gray-400"}`} />
 
           <input
             type="text"

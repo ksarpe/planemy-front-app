@@ -56,7 +56,7 @@ export default function EditableText({ value, onSave, className, placeholder }: 
     <div
       onClick={() => setIsEditing(true)}
       className={`w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md cursor-pointer hover:bg-gray-100 hover:border-gray-300 transition-colors min-h-[42px] flex items-center ${className}`}>
-      <span className="text-base">
+      <span className="text-base sm:text-sm">
         {tempValue || <span className="text-gray-400 italic">{placeholder || "Kliknij, aby edytować"}</span>}
       </span>
     </div>

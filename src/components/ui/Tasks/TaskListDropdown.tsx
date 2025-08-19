@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, List, Calendar, Users } from "lucide-react";
+import { ChevronDown, List, Users } from "lucide-react";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { TaskListInterface } from "@/data/Tasks/interfaces";
@@ -28,7 +28,7 @@ export default function TaskListDropdown() {
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 bg-white  border border-gray-200  rounded-md px-4 py-2 shadow-sm hover:shadow-md  transition-all duration-200 min-w-[250px] h-[64px]">
+        className="flex items-center gap-3 bg-white  border border-gray-200  rounded-md px-4 py-2 shadow-sm hover:shadow-md truncate transition-all duration-200 h-[64px]">
         <List size={18} className="text-gray-500 " />
         <div className="flex-1 text-left">
           {currentTaskList && (
@@ -40,7 +40,7 @@ export default function TaskListDropdown() {
                     <Users size={12} />
                   </span>
                 )}
-                <span className="text-gray-400 ">Ilość zadań: {currentTaskList.totalTasks ?? 0} </span>
+                <span className="text-gray-400 flex-shrink-0">Ilość zadań: {currentTaskList.totalTasks ?? 0} </span>
               </div>
             </div>
           )}
@@ -71,17 +71,14 @@ export default function TaskListDropdown() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className={`font-medium`}>{list.name}</div>
-                    {mainListId === list.id && <span className="text-xs font-light text-gray-500 ">domyślna</span>}
                     <div className="flex items-center gap-3 text-xs text-gray-500 ">
                       {list.shared && (
                         <span className="text-blue-600 ">
                           <Users size={12} />
                         </span>
                       )}
-                      <span className="flex items-center gap-1">
-                        <Calendar size={12} />
-                        {list.totalTasks ?? 0} zadań
-                      </span>
+                      <span className="">{list.totalTasks ?? 0} zadań</span>
+                      {mainListId === list.id && <span className="text-xs font-light text-primary ">domyślna</span>}
                     </div>
                   </div>
                   {isSelected && <div className="w-2 h-2 bg-primary  rounded-full"></div>}

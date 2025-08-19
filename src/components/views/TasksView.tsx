@@ -48,12 +48,17 @@ export default function TasksView() {
   }
 
   return (
-    <div className="flex h-full p-4 gap-4">
-      {/* Main panel */}
+    <div className="relative h-full p-2 sm:p-4 flex flex-col scrollbar-hide">
+      {/* Task Details Drawer */}
       <div
-        className={`${
-          clickedTask ? "w-4/5" : "w-full"
-        } relative rounded-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg  p-6 transition-all duration-600`}>
+        className={`fixed top-0 right-0 h-full w-full sm:w-96 max-w-full bg-bg-alt border-l border-bg-hover shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+          clickedTask ? "translate-x-0" : "translate-x-full"
+        }`}>
+        {clickedTask && <TaskDetails />}
+      </div>
+
+      {/* Main content */}
+      <div className="bg-bg-alt rounded-md shadow-md flex-1 overflow-auto p-3 sm:p-4 md:p-6 space-y-4 md:space-y-6">
         {/* Header with Task Lists */}
         <TaskViewHeader
           tasks={tasks}
@@ -96,10 +101,6 @@ export default function TasksView() {
           />
         )}
       </div>
-
-      {/* Right Panel - Task Details */}
-      {/* Show only when there is task selected */}
-      {clickedTask && <TaskDetails />}
     </div>
   );
 }

@@ -15,9 +15,9 @@ export default function TaskStatistics({ tasks, onFilterChange, filter }: TaskSt
   });
 
   return (
-    <div className="grid grid-cols-10 gap-4 mb-4">
+    <div className="mb-4">
       {/* Task Statistics Cards */}
-      <div className="grid grid-cols-2 col-span-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <StatisticCard
           title="W toku"
           count={pendingTasks.length}
