@@ -14,6 +14,7 @@ export interface UserSettings {
   timezone?: string;
   shareNotificationEnabled: boolean;
   defaultTaskListId?: string;
+  defaultShoppingListId?: string; // new: default shopping list
   colorThemeIndex?: number; // 0 Cozy, 1 Sweet, 2 Business, 3 Dark Mode
 }
 

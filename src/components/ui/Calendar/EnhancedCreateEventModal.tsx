@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Calendar, Clock, Tag, Check, Repeat } from "lucide-react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
-import { EventInterface, RecurrencePattern } from "../../../data/types";
+import { EventInterface, RecurrencePattern } from "@/data/Calendar/events";
 import { useAuthContext } from "../../../hooks/context/useAuthContext";
 
 interface EnhancedCreateEventModalProps {

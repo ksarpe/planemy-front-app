@@ -12,7 +12,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "./config";
-import { EventInterface, RecurrenceRule } from "../data/types";
+import { EventInterface, RecurrenceRule } from "@/data/Calendar/events";
 import { useAuthContext } from "../hooks/context/useAuthContext";
 
 // Hook to get all events for current user

@@ -1,6 +1,6 @@
 import { createContext, useState, ReactNode, useEffect, useMemo, useRef } from "react";
 // Removed useTheme: dark mode is now controlled only by selected color theme
-import type { PreferencesContextProps } from "@/data/typesProps";
+import type { PreferencesContextProps } from "@/data/User/preferencesContext";
 
 import { getUserSettings, updateUserSettings } from "@/api/user_settings";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
@@ -13,8 +13,8 @@ export { PreferencesContext };
 export function PreferencesProvider({ children }: { children: ReactNode }) {
   const { showToast } = useToastContext();
   const { user } = useAuthContext();
-  const [showWeekends, setShowWeekends] = useState(true);
   const [mainListId, setMainListId] = useState<string | null>(null);
+  const [defaultShoppingListId, setDefaultShoppingListId] = useState<string | null>(null);
 
   // Color theme: 0 Cozy, 1 Sweet, 2 Business, 3 Dark Mode
   const [colorTheme, _setColorTheme] = useState(0);
@@ -47,7 +47,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     suppressNextThemePersistRef.current = true;
     setColorTheme(index);
   };
-
 
   /**
    * persistThemeDebounced
@@ -84,6 +83,10 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         if (settings.language) setLanguage(settings.language);
         if (settings.timezone) setTimezone(settings.timezone);
         if (settings.defaultTaskListId) setMainListId(settings.defaultTaskListId);
+        // Load shopping list default if exists (backward compatible)
+        if (settings.defaultShoppingListId) {
+          setDefaultShoppingListId(settings.defaultShoppingListId);
+        }
       }
     };
     hydrate();
@@ -136,6 +139,11 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         setMainListId(settings.defaultTaskListId);
         showToast("success", "Domyślna lista zadań została zaktualizowana!");
       }
+      // Handle new shopping default list id
+      if (settings.defaultShoppingListId !== undefined) {
+        setDefaultShoppingListId(settings.defaultShoppingListId || null);
+        showToast("success", "Domyślna lista zakupów została zaktualizowana!");
+      }
       if (settings.language) setLanguage(settings.language);
       if (settings.timezone) setTimezone(settings.timezone);
     } catch (error) {
@@ -153,8 +161,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   return (
     <PreferencesContext.Provider
       value={{
-        showWeekends,
-        setShowWeekends,
         colorTheme,
         setColorTheme,
         setColorThemePreview,
@@ -164,6 +170,8 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         timezone,
         mainListId,
         setMainListId,
+        defaultShoppingListId,
+        setDefaultShoppingListId,
         updateSettings,
       }}>
       {children}

@@ -1,13 +1,27 @@
 import type { ShoppingHeaderProps } from "@/data/Shopping/interfaces";
+import { Menu } from "lucide-react";
 
-export function ShoppingHeader({ name, stats }: ShoppingHeaderProps) {
+interface ExtendedShoppingHeaderProps extends ShoppingHeaderProps {
+  onToggleLists?: () => void;
+  listsOpen?: boolean;
+}
+
+export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: ExtendedShoppingHeaderProps) {
   const { pending, completed, totalValue } = stats;
 
   return (
     <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-      <div>
-        <div className="flex items-center gap-3 mb-2 md:mb-4">
+      <div className="flex flex-col">
+        <div className="flex items-center gap-3 mb-2 md:mb-4 flex-wrap justify-between md:justify-start">
           <h1 className="text-2xl font-semibold">{name}</h1>
+          {onToggleLists && !listsOpen && (
+            <button
+              type="button"
+              onClick={onToggleLists}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-bg-alt border border-bg-hover hover:bg-bg-hover transition-colors text-sm">
+              <Menu size={16} /> {listsOpen ? "Zamknij listy" : "Listy / Ulubione"}
+            </button>
+          )}
         </div>
 
         {/* Statistics Cards */}

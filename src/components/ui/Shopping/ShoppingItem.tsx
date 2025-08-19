@@ -8,7 +8,7 @@ import {
   useFavoriteProductsQuery,
   useDeleteFavoriteProduct,
 } from "@/hooks/shopping/useShoppingItems";
-import { Check, Edit2, Trash2, Star, Plus, Minus, Heart } from "lucide-react";
+import { Check, Edit2, Trash2, Plus, Minus, Heart } from "lucide-react";
 import type { ShoppingItemProps } from "@/data/Shopping/interfaces";
 import { SHOPPING_UNITS } from "@/data/Shopping/types";
 import { motion } from "framer-motion";
@@ -42,7 +42,8 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
     }
   }, [favorites, item.name, item.unit, item.category, item.isFavorite, listId, item.id, updateItem]);
 
-  const handleToggleComplete = () => {
+  const handleToggleComplete = (e: React.MouseEvent) => {
+    e.stopPropagation();
     toggleItemComplete.mutate({ listId, itemId: item.id, isCompleted: !item.isCompleted });
   };
 
@@ -169,7 +170,6 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
   // List view
   return (
     <motion.div
-      layout
       className={[
         "group p-3 md:p-4 rounded-xl border transition-all",
         item.isCompleted
@@ -310,7 +310,7 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
         <div className="flex items-start gap-3 cursor-pointer" onClick={handleContainerClick}>
           {/* Checkbox */}
           <button
-            onClick={handleToggleComplete}
+            onClick={(e) => handleToggleComplete(e)}
             className={[
               "mt-1 h-5 w-5 rounded-full border-2 flex items-center justify-center",
               item.isCompleted ? "border-green-500 bg-green-500 text-white" : "border-gray-300 hover:border-green-500",
@@ -383,7 +383,7 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
                   disabled={addFavoriteProduct.isPending}
                   className="p-2 rounded-md text-gray-400 hover:text-yellow-500 hover:bg-gray-50 transition-colors disabled:opacity-50"
                   title="Dodaj do ulubionych">
-                  <Star size={16} />
+                  <Heart size={16} />
                 </button>
               ) : (
                 <button
@@ -391,7 +391,7 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
                   disabled={deleteFavorite.isPending}
                   className="p-2 rounded-md text-yellow-600 hover:text-gray-400 hover:bg-gray-50 transition-colors disabled:opacity-50"
                   title="Usuń z ulubionych">
-                  <Star size={16} fill="currentColor" />
+                  <Heart size={16} fill="currentColor" />
                 </button>
               )}
               <button

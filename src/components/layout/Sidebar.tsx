@@ -1,18 +1,22 @@
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 import { usePendingShares } from "@/hooks/permissions/usePermissions";
-import { LogOut, Tag, Bell, LayoutDashboard, Calendar, ListTodo, ShoppingCart, Coins } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import SidebarLink from "../ui/Sidebar/SidebarLink";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
+import { SidebarNav } from "../ui/Sidebar/SidebarNav";
+import { SidebarUserSection } from "../ui/Sidebar/SidebarUserSection";
 
-// Add props to control mobile open/close state
+// Sidebar with collapsible (icon-only) desktop mode. When collapsed:
+// - Width shrinks to 72px
+// - Logo hidden, only nav icons shown centered
+// - Bottom user section replaced by a circular avatar (click opens profile) + logout icon inside tooltip area
+// - Expand/collapse toggle is a vertical strip hoverable or a button overlay
 export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   const { user, logout } = useAuthContext();
   const { showToast } = useToastContext();
 
-  // Get notification counts
-  // TODO: only for counting purpuse. Change for more efficient solutioin
+  // counts (lightweight; consider optimization later)
   const { data: taskListShares = [] } = usePendingShares("task_list");
   const { data: shoppingListShares = [] } = usePendingShares("shopping_list");
   const totalNotifications = taskListShares.length + shoppingListShares.length;
@@ -22,14 +26,13 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
       await logout();
       showToast("success", "Pomyślnie wylogowano!");
       onClose?.();
-    } catch (error) {
-      showToast("error", error instanceof Error ? error.message : "Błąd podczas wylogowywania");
+    } catch (e) {
+      showToast("error", e instanceof Error ? e.message : "Błąd podczas wylogowywania");
     }
   };
-
   const handleNavigate = () => onClose?.();
 
-  // Swipe-to-close on the sidebar surface
+  // touch swipe (mobile)
   const startRef = useRef<{ x: number; y: number } | null>(null);
   const onTouchStart = (e: React.TouchEvent) => {
     if (window.innerWidth >= 768) return;
@@ -43,98 +46,78 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
     const t = e.changedTouches[0];
     const dx = t.clientX - s.x;
     const dy = Math.abs(t.clientY - s.y);
-    // swipe left to close
     if (dx < -60 && dy < 40) onClose?.();
     startRef.current = null;
   };
 
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    const stored = localStorage.getItem("app_sidebar_collapsed");
+    if (stored === "true") setCollapsed(true);
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("app_sidebar_collapsed", collapsed ? "true" : "false");
+  }, [collapsed]);
+  useEffect(() => {
+    if (isOpen && window.innerWidth < 768) setCollapsed(false);
+  }, [isOpen]);
+
+  const widthClasses = collapsed ? "w-[72px] min-w-[72px]" : "w-58 min-w-58";
+  const linkPadding = collapsed ? "px-3 justify-center" : "px-5";
+  const labelHidden = collapsed ? "opacity-0 pointer-events-none select-none w-0 overflow-hidden" : "opacity-100";
+  const iconSize = 24;
+
   return (
     <>
-      {/* Mobile overlay */}
       {isOpen && <div className="fixed inset-0 bg-black/40 md:hidden z-40" onClick={onClose} aria-hidden="true" />}
-
-      {/* whole sidebar with logo,links and bottom content */}
       <aside
-        className={
-          `fixed inset-y-0 left-0 z-50 w-58 min-w-58 h-full transform transition-transform duration-300 
-           bg-bg-alt text-text border-r border-bg-hover md:static md:translate-x-0 md:flex
-           flex flex-col justify-between p-2 ` + (isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0")
-        }
+        className={`fixed inset-y-0 left-0 z-50 ${widthClasses} h-full transform transition-all duration-300 bg-bg-alt text-text border-r border-bg-hover md:static md:translate-x-0 md:flex flex flex-col justify-between p-2${
+          isOpen ? " translate-x-0" : " -translate-x-full md:translate-x-0"
+        }`}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}>
-        {/* logo + links */}
-        <div className="flex flex-col gap-1 justify-between">
-          <NavLink to="/" className={"flex justify-center"} onClick={handleNavigate}>
+        {/* collapse toggle (desktop) */}
+        <button
+          type="button"
+          aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
+          className="hidden md:flex absolute -right-3 top-8 h-8 w-6 items-center justify-center rounded-md border border-bg-hover bg-bg-alt shadow-sm hover:bg-bg-hover transition-colors"
+          onClick={() => setCollapsed((c) => !c)}>
+          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
+
+        {/* top section */}
+        <div className="flex flex-col gap-1 flex-1 overflow-hidden">
+          <NavLink
+            to="/"
+            className={`flex items-center justify-center mb-2 transition-all duration-300 ${
+              collapsed ? "h-16" : "h-28"
+            }`}
+            onClick={handleNavigate}>
             <img
-              src="logo.png" // albo .png – ścieżkę dopasuj do siebie
+              src={collapsed ? "minilogo.png" : "logo.png"}
               alt="Planora logo"
-              className="h-20 w-45 mb-2"
+              className={` ${collapsed ? "h-10 w-10" : "h-20 w-45"}`}
             />
           </NavLink>
-          <SidebarLink to="/dashboard" icon={LayoutDashboard} label="Panel" onNavigate={handleNavigate} />
-          <SidebarLink to="/calendar" icon={Calendar} label="Kalendarz" onNavigate={handleNavigate} />
-          <SidebarLink to="/tasks" icon={ListTodo} label="Zadania" onNavigate={handleNavigate} />
-          <SidebarLink to="/shopping" icon={ShoppingCart} label="Zakupy" onNavigate={handleNavigate} />
-          <SidebarLink to="/payments" icon={Coins} label="Płatności" onNavigate={handleNavigate} />
+          <SidebarNav
+            handleNavigate={handleNavigate}
+            linkPadding={linkPadding}
+            labelHiddenClass={labelHidden}
+            iconSize={iconSize}
+            totalNotifications={totalNotifications}
+            collapsed={collapsed}
+          />
         </div>
-        {/* logo + links END*/}
-        {/* botton content */}
-        <div className="flex flex-col gap-2">
-          {/* Theme toggle and logout */}
-          <div className="flex flex-col justify-between px-2 gap-2">
-            <NavLink
-              to="/labels"
-              className="flex items-center gap-4 text-text hover:text-primary hover:cursor-pointer"
-              onClick={handleNavigate}>
-              <Tag size={20} />
-              <span className="text-sm">Etykiety</span>
-            </NavLink>
 
-            <NavLink
-              to="/notifications"
-              className="relative flex items-center gap-4 text-text hover:text-primary hover:cursor-pointer"
-              onClick={handleNavigate}>
-              <Bell size={20} />
-              <span className="text-sm">Powiadomienia</span>
-              {totalNotifications > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {totalNotifications > 9 ? "9+" : totalNotifications}
-                </span>
-              )}
-            </NavLink>
-          </div>
-          {/* User info */}
-          {/* Panel użytkownika */}
-          <div className="border-t border-slate-300 pt-4 flex items-center gap-3 justify-between">
-            {/* User Profile Link */}
-            <NavLink
-              to="/profile"
-              onClick={handleNavigate}
-              className="flex items-center gap-3 flex-1 min-w-0 overflow-hidden p-2 rounded-md hover:bg-bg-hover transition-colors group">
-              {/* Avatar */}
-              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white">
-                {(user?.displayName || user?.email || "U").charAt(0).toUpperCase()}
-              </div>
-
-              {/* Stable-width username to avoid flicker on theme change */}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate group-hover:text-primary transition-colors duration-0">
-                  {user?.displayName || user?.email || "Użytkownik"}
-                </p>
-                <p className="text-xs text-slate-500  truncate">{user?.email}</p>
-              </div>
-            </NavLink>
-
-            {/* Przycisk wylogowania */}
-            <button
-              onClick={handleLogout}
-              title="Wyloguj się"
-              className="shrink-0 p-2 rounded-md cursor-pointer text-slate-600 hover:bg-red-100 hover:text-red-600 transition-colors duration-200">
-              <LogOut size={20} />
-            </button>
-          </div>
+        {/* bottom user section extracted */}
+        <div className="mt-2 pt-3">
+          <SidebarUserSection
+            collapsed={collapsed}
+            user={user}
+            handleNavigate={handleNavigate}
+            handleLogout={handleLogout}
+          />
         </div>
-        {/* bottom content END */}
       </aside>
     </>
   );

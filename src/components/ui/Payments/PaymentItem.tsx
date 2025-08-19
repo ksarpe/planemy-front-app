@@ -1,5 +1,5 @@
 import { usePaymentsContext } from "@/hooks/context/usePaymentsContext";
-import { PaymentInterface } from "@/data/types";
+import { PaymentInterface } from "@/data/Payments/interfaces";
 import { useState } from "react";
 import {
   ChevronDown,

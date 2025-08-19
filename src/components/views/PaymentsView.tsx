@@ -1,5 +1,5 @@
 import { usePaymentsContext } from "@/hooks/context/usePaymentsContext";
-import { PaymentInterface } from "@/data/types";
+import { PaymentInterface } from "@/data/Payments/interfaces";
 import { useState } from "react";
 import PaymentItem from "@/components/ui/Payments/PaymentItem";
 import { AddPaymentModal } from "@/components/ui/Payments/AddPaymentModal";

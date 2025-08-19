@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Calendar, Clock, Tag, Check, Eye } from "lucide-react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
-import { EventInterface } from "../../../data/types";
+import { EventInterface } from "@/data/Calendar/events";
 
 interface CreateEventModalProps {
   isOpen: boolean;

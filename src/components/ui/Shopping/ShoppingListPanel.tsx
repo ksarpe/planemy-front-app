@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useDeleteShoppingList, useUpdateShoppingList } from "@/hooks/shopping/useShoppingLists";
 import { useShoppingListStats } from "@/hooks/shopping/useShoppingListStats";
-import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Calendar } from "lucide-react";
+import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Check } from "lucide-react";
 import type { ShoppingListPanelProps, ShoppingListInterface } from "@/data/Shopping/interfaces";
 import { BasicDropdown, BasicDropdownItem } from "../Common";
+import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 
 function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: ShoppingListPanelProps) {
   const deleteList = useDeleteShoppingList();
@@ -11,6 +12,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
   const [editingListId, setEditingListId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   // Using BasicDropdown with portal, so no local dropdown state needed
+  const { defaultShoppingListId, updateSettings } = usePreferencesContext();
 
   const handleStartEdit = (list: ShoppingListInterface) => {
     setEditingListId(list.id);
@@ -44,16 +46,6 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
     return stats;
   };
 
-  const formatDate = (date: Date) => {
-    const now = new Date();
-    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return "Dzisiaj";
-    if (diffDays === 1) return "Wczoraj";
-    if (diffDays < 7) return `${diffDays} dni temu`;
-    return date.toLocaleDateString("pl-PL");
-  };
-
   return (
     <div className="p-4">
       {/* Header */}
@@ -61,7 +53,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
         <h3 className="text-lg font-semibold">Moje listy</h3>
         <button
           onClick={onAddList}
-          className="p-2 bg-primary text-white rounded-md hover:bg-primary-hover transition-colors">
+          className="p-2 bg-success text-white rounded-md hover:bg-success-hover transition-colors">
           <Plus size={16} />
         </button>
       </div>
@@ -114,13 +106,13 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                         </div>
                       )}
 
-                      <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
-                        <span>{stats.total} produktów</span>
-                        {stats.completed > 0 && <span className="text-green-600">{stats.completed} kupione</span>}
-                        <span className="flex items-center gap-1">
-                          <Calendar size={10} />
-                          {formatDate(list.updatedAt)}
+                      <div className="flex items-center gap-3 mt-1 text-xs text-gray-500 justify-between">
+                        <span className={`${stats.completed === stats.total ? "text-success" : ""}`}>
+                          {stats.completed}/{stats.total}
                         </span>
+                        {defaultShoppingListId === list.id && (
+                          <span className="flex items-center gap-1 text-primary font-medium">Domyślna</span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -136,7 +128,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                         align="right"
                         usePortal={true}
                         closeOnItemClick={true}
-                        width="w-56">
+                        width="w-60">
                         <BasicDropdownItem icon={Edit2} onClick={() => handleStartEdit(list)}>
                           Edytuj nazwę
                         </BasicDropdownItem>
@@ -149,6 +141,17 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                         </BasicDropdownItem>
                         <BasicDropdownItem icon={Share2} onClick={() => console.log("Share list", list.id)}>
                           Udostępnij
+                        </BasicDropdownItem>
+                        <BasicDropdownItem
+                          icon={Check}
+                          onClick={() => updateSettings({ defaultShoppingListId: list.id })}>
+                          {defaultShoppingListId === list.id ? (
+                            <span className="flex items-center gap-2">
+                              <span className="inline-flex h-2 w-2 rounded-full bg-green-500" /> Domyślna lista
+                            </span>
+                          ) : (
+                            "Ustaw jako domyślną"
+                          )}
                         </BasicDropdownItem>
                         <BasicDropdownItem icon={Trash2} variant="red" onClick={() => handleDeleteList(list.id)}>
                           Usuń

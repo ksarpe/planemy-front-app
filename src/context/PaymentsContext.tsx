@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import type { PaymentInterface } from "@/data/types";
-import type { PaymentsContextProps } from "@/data/typesProps";
+import type { PaymentInterface } from "@/data/Payments/interfaces";
+import type { PaymentsContextProps } from "@/data/Payments/context";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 import {

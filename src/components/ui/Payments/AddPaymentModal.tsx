@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X, DollarSign, Calendar, Tag, RefreshCw } from "lucide-react";
-import { PaymentInterface } from "@/data/types";
+import { PaymentInterface } from "@/data/Payments/interfaces";
 import { calculateNextPaymentDate } from "@/api/payments";
 
 interface AddPaymentModalProps {

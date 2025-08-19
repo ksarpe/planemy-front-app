@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { format, startOfWeek, endOfWeek, eachDayOfInterval, isToday, isSameDay } from "date-fns";
 import EnhancedEventBlock from "./EnhancedEventBlock";
-import { EventInterface } from "../../../data/types";
+import { EventInterface } from "@/data/Calendar/events";
 
 export default function WeekView() {
   const { currentDate, events } = useCalendarContext();

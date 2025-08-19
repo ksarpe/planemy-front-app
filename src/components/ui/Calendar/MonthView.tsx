@@ -12,7 +12,7 @@ import {
   isToday,
 } from "date-fns";
 import EnhancedEventBlock from "./EnhancedEventBlock";
-import { EventInterface } from "../../../data/types";
+import { EventInterface } from "@/data/Calendar/events";
 
 export default function MonthView() {
   const { currentDate, events } = useCalendarContext();

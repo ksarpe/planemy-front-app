@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Calendar, Heart, Pill, Dumbbell, Coffee, Plus, X } from "lucide-react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { useAuthContext } from "../../../hooks/context/useAuthContext";
-import { EventInterface } from "../../../data/types";
+import { EventInterface } from "@/data/Calendar/events";
 
 interface QuickEventCreatorProps {
   selectedDate?: Date;
