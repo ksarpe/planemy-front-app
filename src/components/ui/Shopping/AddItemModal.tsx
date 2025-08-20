@@ -1,304 +1,250 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { X, Plus, Minus, Star, ChevronDown, ChevronUp } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useShoppingContext } from "@/hooks/context/useShoppingContext";
 import { useAddShoppingItem } from "@/hooks/shopping/useShoppingItems";
-import type { FavoriteProductInterface, AddItemModalProps } from "@/data/Shopping";
-import { SHOPPING_UNITS } from "@/data/Shopping/types";
-
-function normalizeNumber(input: string): number | null {
-  if (!input.trim()) return null;
-  const n = Number(input.replace(",", "."));
-  return Number.isFinite(n) ? n : null;
-}
-
-function unitStepMin(unit: string) {
-  const fractional = ["kg", "l", "L", "ml", "g"];
-  if (fractional.includes(unit)) return { step: 0.1, min: 0.1 };
-  if (unit === "szt") return { step: 1, min: 1 };
-  return { step: 1, min: 0 }; // fallback
-}
+import type { AddItemModalProps } from "@/data/Shopping";
 
 export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
-  const { categories, favoriteProducts } = useShoppingContext();
+  const { categories } = useShoppingContext();
   const addItem = useAddShoppingItem();
 
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
     name: "",
-    quantity: "1", // <-- string!
+    quantity: 1,
     unit: "szt",
     category: "Inne",
-    price: "", // <-- string!
+    price: "",
     notes: "",
   });
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
-  const { step, min } = useMemo(() => unitStepMin(form.unit), [form.unit]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Reset form when modal opens
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
+    if (isOpen) {
+      setFormData({
+        name: "",
+        quantity: 1,
+        unit: "szt",
+        category: "Inne",
+        price: "",
+        notes: "",
+      });
+      // Prevent body scroll
+      document.body.style.overflow = "hidden";
+    } else {
+      // Restore body scroll
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
+  // Handle ESC key
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
         onClose();
-        setForm({
-          name: "",
-          quantity: "1",
-          unit: "szt",
-          category: "Inne",
-          price: "",
-          notes: "",
-        });
       }
     };
 
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
+    if (isOpen) {
+      window.addEventListener("keydown", handleEsc);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
-  const handleFavorite = (fav: FavoriteProductInterface) => {
-    setForm((s) => ({
-      ...s,
-      name: fav.name,
-      category: fav.category,
-      unit: fav.unit,
-      price: fav.price ? String(fav.price) : "",
-    }));
-  };
-
-  const bumpQty = (delta: number) => {
-    const n = normalizeNumber(form.quantity) ?? (min || 1);
-    const next = Math.max(min ?? 0, Math.round((n + delta * step) * 100) / 100);
-    setForm((s) => ({ ...s, quantity: String(next) }));
-  };
-
-  const onQtyChange = (v: string) => {
-    // pozwól na pusty string w trakcie edycji
-    setForm((s) => ({ ...s, quantity: v }));
-  };
-
-  const onQtyBlur = () => {
-    const n = normalizeNumber(form.quantity);
-    if (n == null) {
-      setForm((s) => ({ ...s, quantity: String(min ?? 1) }));
-    } else {
-      setForm((s) => ({ ...s, quantity: String(Math.max(min ?? 0, n)) }));
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
     }
   };
 
-  const submit = async (e: React.FormEvent, closeAfter = true) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim()) return;
+    if (!formData.name.trim() || isSubmitting) return;
 
-    const qty = normalizeNumber(form.quantity);
-    const price = normalizeNumber(form.price || "");
-
-    const safeQty = qty == null ? min || 1 : Math.max(min ?? 0, qty);
-    const safePrice = price == null ? 0 : Math.max(0, price);
-
-    setSubmitting(true);
+    setIsSubmitting(true);
     try {
       await addItem.mutateAsync({
         listId,
         item: {
-          name: form.name.trim(),
-          quantity: safeQty,
-          unit: form.unit,
-          category: form.category,
-          price: safePrice,
+          name: formData.name.trim(),
+          quantity: formData.quantity,
+          unit: formData.unit,
+          category: formData.category,
+          price: formData.price ? parseFloat(formData.price) : undefined,
+          notes: formData.notes.trim() || undefined,
           isFavorite: false,
           isCompleted: false,
-          notes: form.notes?.trim() || "",
         },
       });
-
-      // reset lub przygotuj do kolejnego dodania
-      setForm({ name: "", quantity: String(min || 1), unit: form.unit, category: "Inne", price: "", notes: "" });
-      if (closeAfter) onClose();
+      onClose();
+    } catch (error) {
+      console.error("Error adding item:", error);
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
-  const cancel = () => {
-    setForm({ name: "", quantity: "1", unit: "szt", category: "Inne", price: "", notes: "" });
-    onClose();
-  };
-
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 grid place-items-center">
-      <div className="bg-white rounded-xl p-4 w-full max-w-md shadow-xl">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-medium text-gray-800">Dodaj przedmiot</h2>
-          <button onClick={cancel} className="text-gray-500 hover:text-gray-700 transition-colors">
-            <X size={18} />
-          </button>
-        </div>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}>
+          {/* Backdrop with blur */}
+          <motion.div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={handleBackdropClick}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
 
-        {favoriteProducts.length > 0 && (
-          <div className="mb-3">
-            <div className="text-xs text-gray-600 mb-1">Ulubione</div>
-            <div className="flex gap-2 overflow-x-auto py-1">
-              {favoriteProducts.slice(0, 5).map((f) => (
-                <button
-                  key={f.id}
-                  onClick={() => handleFavorite(f)}
-                  className="shrink-0 px-2 py-1 rounded-full text-sm bg-gray-100 hover:bg-gray-200 flex items-center gap-1">
-                  <Star size={12} className="text-yellow-500" />
-                  {f.name} <span className="text-gray-500">({f.unit})</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <form onSubmit={(e) => submit(e, true)} className="space-y-4">
-          {/* Row 1: name */}
-          <div>
-            <input
-              autoFocus
-              placeholder="Nazwa produktu"
-              value={form.name}
-              onChange={(e) => setForm((s) => ({ ...s, name: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-[15px]
-                         hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
-                         placeholder:text-gray-400 transition-colors"
-              required
-            />
-          </div>
-
-          {/* Row 2: qty controls + unit + price per unit */}
-          <div className="grid grid-cols-12 gap-2">
-            <div className="col-span-6 flex items-stretch gap-1">
+          {/* Modal Content */}
+          <motion.div
+            className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}>
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-900">Dodaj produkt</h2>
               <button
                 type="button"
-                onClick={() => bumpQty(-1)}
-                className="px-2 border border-gray-300 rounded-md bg-white text-gray-600
-                           hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                aria-label="Zmniejsz ilość">
-                <Minus size={16} />
-              </button>
-              <input
-                inputMode="decimal"
-                pattern="[0-9]*[.,]?[0-9]*"
-                value={form.quantity}
-                onChange={(e) => onQtyChange(e.target.value)}
-                onBlur={onQtyBlur}
-                className="w-full text-center px-2 py-2 border border-gray-300 rounded-md
-                           hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-              />
-              <button
-                type="button"
-                onClick={() => bumpQty(1)}
-                className="px-2 border border-gray-300 rounded-md bg-white text-gray-600
-                           hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                aria-label="Zwiększ ilość">
-                <Plus size={16} />
+                onClick={onClose}
+                className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+                disabled={isSubmitting}>
+                <X size={20} />
               </button>
             </div>
-            <div className="col-span-3">
-              <select
-                value={form.unit}
-                onChange={(e) => setForm((s) => ({ ...s, unit: e.target.value }))}
-                className="w-full px-2 py-2 border border-gray-300 rounded-md bg-white text-gray-700
-                           hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                {SHOPPING_UNITS.map((u) => (
-                  <option key={u} value={u}>
-                    {u}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="col-span-3">
-              <input
-                inputMode="decimal"
-                pattern="[0-9]*[.,]?[0-9]*"
-                placeholder="Cena/szt. (zł)"
-                value={form.price}
-                onChange={(e) => setForm((s) => ({ ...s, price: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white
-                           hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-              />
-            </div>
-          </div>
 
-          {/* Kategorie – najczęstsze jako chipy + select */}
-          <div>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {categories.slice(0, 6).map((c) => (
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+              {/* Product Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Nazwa produktu</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                  placeholder="Wpisz nazwę produktu"
+                  required
+                  autoFocus
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              {/* Quantity and Unit */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Ilość</label>
+                  <input
+                    type="number"
+                    min="0.1"
+                    step="0.1"
+                    value={formData.quantity}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, quantity: parseFloat(e.target.value) || 1 }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Jednostka</label>
+                  <select
+                    value={formData.unit}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, unit: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                    disabled={isSubmitting}>
+                    <option value="szt">szt</option>
+                    <option value="kg">kg</option>
+                    <option value="g">g</option>
+                    <option value="l">l</option>
+                    <option value="ml">ml</option>
+                    <option value="op">op</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Category */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Kategoria</label>
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primaryt focus:border-primary transition-colors"
+                  disabled={isSubmitting}>
+                  <option value="Inne">Inne</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Price */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Cena (opcjonalnie)</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formData.price}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, price: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                  placeholder="0.00 zł"
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              {/* Notes */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Notatki (opcjonalnie)</label>
+                <textarea
+                  value={formData.notes}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, notes: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-none"
+                  rows={3}
+                  placeholder="Dodaj notatki..."
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4">
                 <button
-                  key={c.id}
                   type="button"
-                  onClick={() => setForm((s) => ({ ...s, category: c.name }))}
-                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors duration-150
-                    ${
-                      form.category === c.name
-                        ? "bg-primary text-white border-transparent hover:bg-primary/90"
-                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                    }
-                  `}>
-                  {c.name}
+                  onClick={onClose}
+                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  disabled={isSubmitting}>
+                  Anuluj
                 </button>
-              ))}
-            </div>
-            <select
-              value={form.category}
-              onChange={(e) => setForm((s) => ({ ...s, category: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-700
-                         hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
-              {categories.map((c) => (
-                <option key={c.id} value={c.name}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Advanced */}
-          <button
-            type="button"
-            onClick={() => setShowAdvanced((v) => !v)}
-            className="text-sm text-gray-600 hover:text-gray-800 flex items-center gap-1 transition-colors">
-            {showAdvanced ? <ChevronUp size={16} /> : <ChevronDown size={16} />} Więcej opcji
-          </button>
-
-          {showAdvanced && (
-            <>
-              <textarea
-                placeholder="Notatki (opcjonalne)"
-                rows={2}
-                value={form.notes}
-                onChange={(e) => setForm((s) => ({ ...s, notes: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md
-                           hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-              />
-            </>
-          )}
-
-          <div className="flex gap-2 pt-2">
-            <button
-              type="button"
-              onClick={cancel}
-              className="flex-1 border border-gray-300 rounded-md py-2 text-gray-700 hover:bg-gray-50 transition-colors">
-              Anuluj
-            </button>
-            <button
-              type="button"
-              disabled={submitting || !form.name.trim()}
-              onClick={(e) => submit(e, false)} // dodaj i czyść, ale nie zamykaj
-              className="px-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-              title="Ctrl/Cmd+Enter">
-              Dodaj następny
-            </button>
-            <button
-              type="submit"
-              disabled={submitting || !form.name.trim()}
-              className="flex-1 bg-primary text-white rounded-md py-2 hover:bg-primary/90 disabled:opacity-50">
-              {submitting ? "Dodawanie..." : "Dodaj"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hoverary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  disabled={isSubmitting}>
+                  {isSubmitting ? "Dodaję..." : "Dodaj produkt"}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
