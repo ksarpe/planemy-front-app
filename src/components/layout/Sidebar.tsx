@@ -80,7 +80,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         <button
           type="button"
           aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
-          className="hidden md:flex absolute -right-3 top-8 h-8 w-6 items-center justify-center rounded-md border border-bg-hover bg-bg-alt shadow-sm hover:bg-bg-hover transition-colors"
+          className="hidden md:flex absolute -right-3 top-8 h-8 w-6 items-center justify-center rounded-md border border-bg-hover bg-bg-hover shadow-sm hover:bg-primary transition-colors"
           onClick={() => setCollapsed((c) => !c)}>
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
         </button>

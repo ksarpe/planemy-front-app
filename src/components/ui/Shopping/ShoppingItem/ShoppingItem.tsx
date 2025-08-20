@@ -145,7 +145,7 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
         className={[
           "group p-3 md:p-4 rounded-xl border transition-all",
           item.isCompleted
-            ? "border-green-200 bg-green-50"
+            ? "border-gray-200 bg-success/40"
             : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm",
         ].join(" ")}>
         <ShoppingItemDisplay

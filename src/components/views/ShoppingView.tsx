@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useShoppingContext } from "@/hooks/context/useShoppingContext";
 import { useShoppingItemsQuery } from "@/hooks/shopping/useShoppingItems";
-import { ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart, X, Plus } from "lucide-react";
 import { AddListModal } from "../ui/Shopping/AddListModal";
 import { AddItemModal } from "../ui/Shopping/AddItemModal";
 import { ShoppingListPanel } from "../ui/Shopping/ShoppingListPanel";
@@ -9,7 +9,6 @@ import { FavoriteProductsPanel } from "../ui/Shopping/FavoriteProductsPanel";
 import { ShoppingHeader } from "../ui/Shopping/ShoppingHeader";
 import { ShoppingFilters } from "../ui/Shopping/ShoppingFilters";
 import { ShoppingItemsSection } from "../ui/Shopping/ShoppingItem/ShoppingItemsSection";
-import { ShoppingProgress } from "../ui/Shopping/ShoppingProgress";
 
 export default function ShoppingView() {
   const {
@@ -30,21 +29,6 @@ export default function ShoppingView() {
 
   const { data: listItems = [], isLoading: itemsLoading } = useShoppingItemsQuery(currentList ? currentList.id : "");
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-500">Ładowanie list zakupów...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Items come from a separate collection now
-  // moved up to satisfy Hooks rules
-
-  // Filter and search logic for current list items
   const filteredItems = (listItems || []).filter((item) =>
     searchQuery
       ? item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -64,8 +48,19 @@ export default function ShoppingView() {
     }`;
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-500">Ładowanie list zakupów...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative h-full p-4 flex flex-col">
+    <div className="relative h-full p-4 flex flex-row">
       {/* Drawer (scoped inside this view) */}
       {/* Full-screen overlay + right drawer (desktop & mobile unified) */}
       <div
@@ -79,7 +74,7 @@ export default function ShoppingView() {
       <div
         role="dialog"
         aria-label="Panel list zakupów"
-        className={`fixed top-0 right-0 h-full w-80 sm:w-88 max-w-full bg-bg-alt border-l border-bg-hover shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-full w-80 sm:w-100 max-w-full bg-bg-alt border-l border-bg-hover shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
           showListsPanel ? "translate-x-0" : "translate-x-full"
         }`}
         onClick={(e) => e.stopPropagation()}>
@@ -96,8 +91,8 @@ export default function ShoppingView() {
           </div>
           <button
             onClick={() => setShowListsPanel(false)}
-            className="text-xs px-3 py-2 rounded-md bg-bg-hover hover:bg-bg-hover/80 transition-colors">
-            Zamknij
+            className="inline px-2 rounded-md hover:text-negative cursor-pointer">
+            <X size={22} />
           </button>
         </div>
         <div className="flex-1 overflow-auto p-2">
@@ -118,7 +113,7 @@ export default function ShoppingView() {
       </div>
 
       {/* Main content card (adds left padding when drawer open on desktop) */}
-      <div className="bg-bg-alt rounded-md shadow-md flex-1 overflow-auto p-6 space-y-6 md:relative">
+      <div className="bg-bg-alt rounded-md shadow-md flex-1 overflow-auto p-4 space-y-4 md:relative">
         {currentList ? (
           <>
             <ShoppingHeader
@@ -127,7 +122,18 @@ export default function ShoppingView() {
               onToggleLists={() => setShowListsPanel((v) => !v)}
               listsOpen={showListsPanel}
             />
-            <ShoppingFilters searchQuery={searchQuery} onSearchChange={setSearchQuery} categories={categories} />
+
+            <div className="flex flex-col-reverse md:flex-row gap-2">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                <button
+                  onClick={() => setIsAddItemModalOpen(true)}
+                  className="w-full md:w-auto flex items-center justify-center gap-2 bg-success text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
+                  <Plus size={18} />
+                  Dodaj produkt
+                </button>
+              </div>
+              <ShoppingFilters searchQuery={searchQuery} onSearchChange={setSearchQuery} categories={categories} />
+            </div>
             {itemsLoading ? (
               <div className="text-gray-500">Ładowanie produktów...</div>
             ) : (
@@ -138,7 +144,6 @@ export default function ShoppingView() {
                 isFiltered={Boolean(searchQuery)}
               />
             )}
-            <ShoppingProgress total={totalItems} completed={completedItems} />
           </>
         ) : (
           <div className="flex items-center justify-center h-full">

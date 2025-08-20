@@ -30,18 +30,7 @@ export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: S
           )}
         </div>
       ) : (
-        <motion.div className="space-y-2 md:space-y-2">
-          {
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-              <button
-                onClick={onAddItem}
-                className="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
-                <Plus size={18} />
-                Dodaj produkt
-              </button>
-              <span className="text-sm text-gray-500 pt-2 sm:pt-0">{items.length} produktów</span>
-            </div>
-          }
+        <motion.div className="space-y-2">
           <AnimatePresence initial={false}>
             {sortedItems.map((item) => (
               <motion.div

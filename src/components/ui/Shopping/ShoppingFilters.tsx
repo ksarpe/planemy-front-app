@@ -3,15 +3,15 @@ import type { ShoppingFiltersProps } from "@/data/Shopping/Components/ShoppingCo
 
 export function ShoppingFilters({ searchQuery, onSearchChange }: ShoppingFiltersProps) {
   return (
-    <div className="flex flex-col md:flex-row gap-3 md:gap-4">
-      <div className="relative flex gap-1">
-        <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+    <div className="flex flex-col md:flex-row gap-4">
+      <div className="relative flex">
+        <Search size={20} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-text-light" />
         <input
           type="text"
           placeholder="Szukaj..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md"
+          className="w-full pl-8 py-2 border border-text-light rounded-md"
         />
       </div>
     </div>
