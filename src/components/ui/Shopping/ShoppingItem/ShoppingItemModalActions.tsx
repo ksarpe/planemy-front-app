@@ -11,6 +11,7 @@ export function ShoppingItemModalActions({
   return (
     <div className="flex gap-1">
       <button
+        type="button"
         onClick={onToggleFavorite}
         disabled={favoriteLoading}
         className={`p-2 rounded-md transition-colors disabled:opacity-50 ${
@@ -21,6 +22,7 @@ export function ShoppingItemModalActions({
       </button>
 
       <button
+        type="button"
         onClick={onDelete}
         disabled={deleteLoading}
         className="p-2 rounded-md text-gray-400 hover:text-red-600 transition-colors disabled:opacity-50"

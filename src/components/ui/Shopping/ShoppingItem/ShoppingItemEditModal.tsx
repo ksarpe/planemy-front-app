@@ -47,9 +47,13 @@ export function ShoppingItemEditModal({
     onClose();
   };
 
-  const handleDelete = () => {
-    onDelete();
-    onClose();
+  const handleDelete = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    onDelete(); // Wywołaj funkcję usuwania (która pokaże confirmation modal)
+    // Nie zamykamy edit modal - użytkownik może anulować usuwanie
   };
 
   // Handle ESC key

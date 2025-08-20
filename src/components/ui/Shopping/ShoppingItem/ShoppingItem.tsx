@@ -11,6 +11,7 @@ import {
 import { motion } from "framer-motion";
 import { ShoppingItemDisplay } from "./ShoppingItemDisplay";
 import { ShoppingItemEditModal } from "./ShoppingItemEditModal";
+import { DeleteConfirmationModal } from "@/components/ui/Common";
 
 function ShoppingItem({ item, listId }: ShoppingItemProps) {
   const addFavoriteProduct = useAddFavoriteProduct();
@@ -20,6 +21,7 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
   const removeItem = useRemoveShoppingItem();
   const toggleItemComplete = useToggleShoppingItemComplete();
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editData, setEditData] = useState({
     name: item.name,
     price: item.price?.toString() || "",
@@ -39,11 +41,15 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
 
   // If server favorites no longer include this item, clear local isFavorite flag for consistency
   useEffect(() => {
-    if (!favorites) return;
+    // Only proceed if favorites are loaded and item is currently marked as favorite
+    if (!favorites || !item.isFavorite) return;
+
     const stillFavorite = favorites.some(
       (p) => p.name === item.name && p.unit === item.unit && p.category === item.category,
     );
-    if (!stillFavorite && item.isFavorite) {
+
+    // Only update if this item is no longer in favorites
+    if (!stillFavorite) {
       updateItem.mutate({ listId, itemId: item.id, updates: { isFavorite: false, favoriteProductId: "" } });
     }
   }, [favorites, item.name, item.unit, item.category, item.isFavorite, listId, item.id, updateItem]);
@@ -87,9 +93,13 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
   };
 
   const handleDelete = () => {
-    if (window.confirm("Czy na pewno chcesz usunąć ten produkt?")) {
-      removeItem.mutate({ listId, itemId: item.id });
-    }
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    removeItem.mutate({ listId, itemId: item.id });
+    setShowDeleteConfirm(false);
+    setIsEditing(false); // Zamknij modal edycji po potwierdzeniu usunięcia
   };
 
   const handleAddToFavorites = () => {
@@ -188,6 +198,18 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
         onDelete={handleDelete}
         favoriteLoading={addFavoriteProduct.isPending || deleteFavorite.isPending}
         deleteLoading={removeItem.isPending}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Usuń produkt"
+        message="Czy na pewno chcesz usunąć produkt"
+        itemName={item.name}
+        confirmButtonText="Usuń produkt"
+        isLoading={removeItem.isPending}
       />
     </>
   );
