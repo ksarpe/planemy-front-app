@@ -81,9 +81,9 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
   }
 
   return (
-    <div className="flex-1 min-h-0">
+    <div className="flex-1 min-h-0 flex flex-col">
       {/* Add Task Button */}
-      <div className={`${showQuickAdd ? "w-full" : "w-fit"} mb-3 mt-1`}>
+      <div className={`${showQuickAdd ? "w-full" : "w-fit"} mb-3 mt-1 flex-shrink-0`}>
         {showQuickAdd ? (
           <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
         ) : (
@@ -97,11 +97,15 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
           />
         )}
       </div>
-      <ul className="space-y-3">
-        {sortedTasks.map((task) => (
-          <TaskItem key={task.id} task={task} />
-        ))}
-      </ul>
+
+      {/* Scrollable task list */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <ul className="space-y-3 pb-4">
+          {sortedTasks.map((task) => (
+            <TaskItem key={task.id} task={task} />
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

@@ -19,11 +19,9 @@ export interface ShoppingItemDisplayProps {
 export interface ShoppingItemModalActionsProps {
   isFavorited: boolean;
   onToggleFavorite: () => void;
-  onEdit: () => void;
   onDelete: () => void;
   favoriteLoading?: boolean;
   deleteLoading?: boolean;
-  isMobile?: boolean;
 }
 
 export interface EditFormData {

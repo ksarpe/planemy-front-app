@@ -10,7 +10,6 @@ export function ShoppingItemEditModal({
   editData,
   setEditData,
   onSubmit,
-  itemName,
   isFavorited,
   onToggleFavorite,
   onDelete,
@@ -96,10 +95,9 @@ export function ShoppingItemEditModal({
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}>
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-gray-100">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900">Edytuj produkt</h2>
-                <p className="text-sm text-gray-500 mt-1 line-clamp-1">{itemName}</p>
               </div>
               <button
                 onClick={onClose}
@@ -110,12 +108,9 @@ export function ShoppingItemEditModal({
             </div>
 
             {/* Form Content */}
-            <form onSubmit={handleFormSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleFormSubmit} className="p-4 space-y-4">
               {/* Product name */}
               <div>
-                <label htmlFor="product-name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Nazwa produktu
-                </label>
                 <input
                   id="product-name"
                   autoFocus
@@ -123,16 +118,13 @@ export function ShoppingItemEditModal({
                   value={editData.name}
                   onChange={(e) => setEditData((p) => ({ ...p, name: e.target.value }))}
                   placeholder="Wpisz nazwę produktu"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                   required
                 />
               </div>
 
               {/* Price */}
               <div>
-                <label htmlFor="product-price" className="block text-sm font-medium text-gray-700 mb-2">
-                  Cena za jednostkę
-                </label>
                 <div className="relative">
                   <input
                     id="product-price"
@@ -153,7 +145,7 @@ export function ShoppingItemEditModal({
               {/* Notes */}
               <div>
                 <label htmlFor="product-notes" className="block text-sm font-medium text-gray-700 mb-2">
-                  Notatki <span className="text-gray-400 font-normal">(opcjonalne)</span>
+                  Notatki
                 </label>
                 <textarea
                   id="product-notes"
@@ -172,11 +164,9 @@ export function ShoppingItemEditModal({
                   <ShoppingItemModalActions
                     isFavorited={isFavorited}
                     onToggleFavorite={onToggleFavorite}
-                    onEdit={() => {}} // Not used in modal
                     onDelete={handleDelete}
                     favoriteLoading={favoriteLoading}
                     deleteLoading={deleteLoading}
-                    isMobile={false}
                   />
                 </div>
 
@@ -190,8 +180,8 @@ export function ShoppingItemEditModal({
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors shadow-sm">
-                    Zapisz zmiany
+                    className="px-6 py-2.5 text-sm font-medium text-white bg-primary hover:bg-blue-700 rounded-xl transition-colors shadow-sm">
+                    Zapisz
                   </button>
                 </div>
               </div>

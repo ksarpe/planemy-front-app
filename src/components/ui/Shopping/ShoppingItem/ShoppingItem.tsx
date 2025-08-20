@@ -26,6 +26,15 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
     notes: item.notes || "",
   });
 
+  // Sync editData with item changes (when item updates from server)
+  useEffect(() => {
+    setEditData({
+      name: item.name,
+      price: item.price?.toString() || "",
+      notes: item.notes || "",
+    });
+  }, [item.name, item.price, item.notes]);
+
   const totalPrice = item.price ? (item.price * item.quantity).toFixed(2) + " zł" : null;
 
   // If server favorites no longer include this item, clear local isFavorite flag for consistency

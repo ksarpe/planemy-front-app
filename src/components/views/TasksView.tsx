@@ -48,7 +48,7 @@ export default function TasksView() {
   }
 
   return (
-    <div className="relative h-full p-2 sm:p-4 flex flex-col scrollbar-hide">
+    <div className="h-full flex flex-col">
       {/* Task Details Drawer */}
       <div
         className={`fixed top-0 right-0 h-full w-full sm:w-96 max-w-full bg-bg-alt border-l border-bg-hover shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
@@ -57,27 +57,33 @@ export default function TasksView() {
         {clickedTask && <TaskDetails />}
       </div>
 
-      {/* Main content */}
-      <div className="bg-bg-alt rounded-md shadow-md flex-1 overflow-auto p-3 sm:p-4 md:p-6 space-y-4 md:space-y-6">
-        {/* Header with Task Lists */}
-        <TaskViewHeader
-          tasks={tasks}
-          onNewListClick={() => setIsCreateListModalOpen(true)}
-          onShareListClick={handleShareList}
-        />
+      {/* Main content - remove redundant height and overflow classes */}
+      <div className="flex flex-col p-6 gap-4">
+        <div className="">
+          {/* Header with Task Lists */}
+          <TaskViewHeader
+            tasks={tasks}
+            onNewListClick={() => setIsCreateListModalOpen(true)}
+            onShareListClick={handleShareList}
+          />
+        </div>
 
         {!currentTaskList && (!taskLists || taskLists.length === 0) && (
-          <EmptyStates type="no-lists" onCreateListClick={() => setIsCreateListModalOpen(true)} />
+          <div className="flex-1 flex items-center justify-center">
+            <EmptyStates type="no-lists" onCreateListClick={() => setIsCreateListModalOpen(true)} />
+          </div>
         )}
 
         {/* Task list content */}
         {currentTaskList && (
-          <div className="flex flex-col h-full justify-between">
-            <div className="space-y-4">
+          <div className="flex flex-col pb-4">
+            <div>
               <TaskStatistics tasks={tasks} filter={filter} onFilterChange={setFilter} />
               <TaskAlerts tasks={tasks} />
-              <TaskList tasks={tasks} filter={filter} isLoading={loading} />
             </div>
+
+            {/* Task list with proper scrolling */}
+            <TaskList tasks={tasks} filter={filter} isLoading={loading} />
           </div>
         )}
 

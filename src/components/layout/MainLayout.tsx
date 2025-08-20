@@ -36,10 +36,6 @@ export default function MainLayout() {
         {/* Top bar (mobile only) */}
         <div className="md:hidden flex items-center justify-between h-14 px-6 border-b border-bg-hover bg-bg-alt/90 backdrop-blur supports-[backdrop-filter]:bg-bg-alt/70 sticky top-0 z-30">
           <div className="flex items-center gap-2">
-            <img src="minilogo.png" alt="Logo" className="h-8 w-auto" />
-          </div>
-          {/* Placeholder for right side (future actions) */}
-          <div className="flex items-center gap-3 text-xs text-slate-500">
             <button
               type="button"
               aria-label="Otwórz menu"
@@ -47,7 +43,10 @@ export default function MainLayout() {
               className="inline-flex items-center justify-center rounded-md p-2 border border-bg-hover bg-bg-alt hover:bg-bg-hover transition-colors">
               <Menu size={20} />
             </button>{" "}
+            <img src="logo.png" alt="Logo" className="h-14 w-auto" />
           </div>
+          {/* Placeholder for right side (future actions) */}
+          <div className="flex items-center gap-3 text-xs text-slate-500"></div>
         </div>
         <main className="flex-1 overflow-auto">
           <Outlet />

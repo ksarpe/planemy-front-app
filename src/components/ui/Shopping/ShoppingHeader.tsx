@@ -1,5 +1,5 @@
 import type { ExtendedShoppingHeaderProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
-import { Menu } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import { ShoppingProgress } from "./ShoppingProgress";
 
 export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: ExtendedShoppingHeaderProps) {
@@ -9,14 +9,14 @@ export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: Extend
     // Main container
     <div className="flex flex-col gap-4">
       {/* name and lists button */}
-      <div className="grid grid-cols-3 gap-2">
-        <h1 className="col-span-2 text-2xl">{name}</h1>
+      <div className="flex gap-2">
+        <h1 className="text-2xl">{name}</h1>
         {onToggleLists && !listsOpen && (
           <button
-            type="button"
-            onClick={onToggleLists}
-            className="col-span-1 flex items-center gap-2 px-2 py-2 rounded-md bg-bg-hover border border-bg-hover hover:bg-primary transition-colors text-xs sm:text-sm">
-            <Menu size={14} /> {listsOpen ? "Zamknij listy" : "Listy / Ulubione"}
+        type="button"
+        onClick={onToggleLists}
+        className="px-2 py-2 rounded-md bg-bg-hover border border-bg-hover hover:bg-primary transition-colors text-xs sm:text-sm cursor-pointer">
+        <MoreVertical size={14} />
           </button>
         )}
       </div>
