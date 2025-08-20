@@ -1,8 +1,4 @@
-import type {
-  ShoppingListInterface,
-  FavoriteProductInterface,
-  ShoppingCategoryInterface,
-} from "@/data/Shopping/interfaces";
+import type { ShoppingListInterface, FavoriteProductInterface, ShoppingCategoryInterface } from "@/data/Shopping";
 import { createContext, useEffect, useState } from "react";
 import { useShoppingLists, useFavoriteProducts, defaultCategories } from "../api/shopping";
 

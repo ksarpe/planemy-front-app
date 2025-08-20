@@ -2,7 +2,7 @@ import { Package, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMemo } from "react";
 import { ShoppingItem } from "./ShoppingItem";
-import type { ShoppingItemsSectionProps } from "@/data/Shopping/interfaces";
+import type { ShoppingItemsSectionProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
 
 export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: ShoppingItemsSectionProps) {
   // Keep incomplete items on top; completed at the bottom, preserving relative order
@@ -13,11 +13,6 @@ export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: S
   }, [items]);
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0 mb-3">
-        <h2 className="text-lg font-medium">{isFiltered ? "Wyniki wyszukiwania" : "Produkty na liście"}</h2>
-        <span className="text-sm text-gray-500">{items.length} produktów</span>
-      </div>
-
       {items.length === 0 ? (
         <div className="text-center py-12 flex flex-col justify-center items-center">
           <Package size={48} className="mx-auto text-gray-400 mb-4" />
@@ -35,15 +30,16 @@ export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: S
           )}
         </div>
       ) : (
-        <motion.div className="space-y-3 md:space-y-4">
+        <motion.div className="space-y-2 md:space-y-2">
           {
-            <div className="md:pt-1">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
               <button
                 onClick={onAddItem}
                 className="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
                 <Plus size={18} />
                 Dodaj produkt
               </button>
+              <span className="text-sm text-gray-500 pt-2 sm:pt-0">{items.length} produktów</span>
             </div>
           }
           <AnimatePresence initial={false}>

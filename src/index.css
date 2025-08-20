@@ -28,7 +28,7 @@
 @theme {
   /* 🎨 Default theme (Cozy Room) */
   --color-text: #1e1e1e; /* nigth */
-  --color-text-light: #4a4a4a; /*  ciemniejszy szary */
+  --color-text-light: #666666; /*  ciemniejszy szary */
   --color-bg: #fdf6ec; /* jasny kremowy */
   --color-bg-alt: #f4e3d3; /*  ciemniejszy kremowy */
   --color-bg-hover: #e3cdbf; /* Coffee */
@@ -37,6 +37,7 @@
 
   --color-success: #6a9e6f; /* brunswick  green #588157(maybe) */
   --color-success-hover: #4e7c54; /* emerald-700 */
+  --color-negative: #e74c3c; /* red-600 */
 }
 /* 🍭 Sweet Factory Theme */
 .theme-sweet-factory {

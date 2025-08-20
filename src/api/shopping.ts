@@ -19,7 +19,7 @@ import {
   ShoppingItemInterface,
   FavoriteProductInterface,
   ShoppingCategoryInterface,
-} from "@/data/Shopping/interfaces";
+} from "@/data/Shopping";
 import { useAuthContext } from "../hooks/context/useAuthContext";
 import { useState, useEffect } from "react";
 

@@ -1,7 +1,7 @@
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { getShoppingItemsForList, deleteShoppingItem } from "@/api/shopping";
-import type { ShoppingItemInterface, ShoppingListInterface } from "@/data/Shopping/interfaces";
+import type { ShoppingItemInterface, ShoppingListInterface } from "@/data/Shopping";
 
 export interface ListStats {
   total: number;

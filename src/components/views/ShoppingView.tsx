@@ -8,7 +8,7 @@ import { ShoppingListPanel } from "../ui/Shopping/ShoppingListPanel";
 import { FavoriteProductsPanel } from "../ui/Shopping/FavoriteProductsPanel";
 import { ShoppingHeader } from "../ui/Shopping/ShoppingHeader";
 import { ShoppingFilters } from "../ui/Shopping/ShoppingFilters";
-import { ShoppingItemsSection } from "../ui/Shopping/ShoppingItemsSection";
+import { ShoppingItemsSection } from "../ui/Shopping/ShoppingItem/ShoppingItemsSection";
 import { ShoppingProgress } from "../ui/Shopping/ShoppingProgress";
 
 export default function ShoppingView() {

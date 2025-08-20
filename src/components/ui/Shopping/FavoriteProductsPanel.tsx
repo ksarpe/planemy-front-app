@@ -1,8 +1,7 @@
 import { useState } from "react";
-import type { FavoriteProductInterface } from "@/data/Shopping/interfaces";
+import type { FavoriteProductInterface, FavoriteProductsPanelProps } from "@/data/Shopping";
 import { useAddFavoriteToList, useDeleteFavoriteProduct } from "@/hooks/shopping/useShoppingItems";
 import { Plus, Star, Trash2, Search, Package } from "lucide-react";
-import type { FavoriteProductsPanelProps } from "@/data/Shopping/interfaces";
 
 function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPanelProps) {
   const removeFromFavorites = useDeleteFavoriteProduct();
@@ -48,7 +47,7 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
           <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Szukaj produktów..."
+            placeholder="Szukaj..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"

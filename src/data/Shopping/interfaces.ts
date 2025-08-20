@@ -50,55 +50,9 @@ export interface ShoppingCategoryInterface {
   order: number;
 }
 
-export interface AddItemModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  listId: string;
-}
-
-export interface AddListModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export interface ShoppingHeaderProps {
-  name: string;
-  stats: { pending: number; completed: number; totalValue: number };
-}
-
-export interface ShoppingFiltersProps {
-  searchQuery: string;
-  onSearchChange: (v: string) => void;
-  categories: ShoppingCategoryInterface[];
-}
-
-export interface ShoppingItemsSectionProps {
-  items: ShoppingItemInterface[];
-  listId: string;
-  onAddItem: () => void;
-  isFiltered: boolean;
-}
-
-export interface ShoppingProgressProps {
-  total: number;
-  completed: number;
-}
-
-export interface ShoppingListPanelProps {
-  lists: ShoppingListInterface[];
-  currentList: ShoppingListInterface | null;
-  onSelectList: (list: ShoppingListInterface) => void;
-  onAddList: () => void;
-}
-
 export interface ShoppingItemProps {
   item: ShoppingItemInterface;
   listId: string;
-}
-
-export interface FavoriteProductsPanelProps {
-  products: FavoriteProductInterface[];
-  currentListId?: string;
 }
 
 // Context types for Shopping feature (moved from '@/data/typesProps')

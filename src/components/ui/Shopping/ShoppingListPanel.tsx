@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useDeleteShoppingList, useUpdateShoppingList } from "@/hooks/shopping/useShoppingLists";
 import { useShoppingListStats } from "@/hooks/shopping/useShoppingListStats";
 import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Check } from "lucide-react";
-import type { ShoppingListPanelProps, ShoppingListInterface } from "@/data/Shopping/interfaces";
+import type { ShoppingListPanelProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
+import type { ShoppingListInterface } from "@/data/Shopping";
 import { BasicDropdown, BasicDropdownItem } from "../Common";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 

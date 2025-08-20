@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import type { ShoppingProgressProps } from "@/data/Shopping/interfaces";
+import type { ShoppingProgressProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
 
 export function ShoppingProgress({ total, completed }: ShoppingProgressProps) {
   if (total <= 0) return null;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useCreateShoppingList } from "@/hooks/shopping/useShoppingLists";
 import { X } from "lucide-react";
-import type { AddListModalProps } from "@/data/Shopping/interfaces";
+import type { AddListModalProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
 
 function AddListModal({ isOpen, onClose }: AddListModalProps) {
   const createList = useCreateShoppingList();
@@ -59,7 +59,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-            <div>
+          <div>
             <input
               type="text"
               value={formData.name}
@@ -69,7 +69,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
               required
               autoFocus
             />
-            </div>
+          </div>
 
           <div className="flex gap-3 pt-4">
             <button

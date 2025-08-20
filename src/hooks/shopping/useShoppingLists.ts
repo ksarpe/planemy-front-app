@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 import { getUserShoppingLists, addShoppingList, updateShoppingList, deleteShoppingList } from "@/api/shopping";
-import type { ShoppingListInterface } from "@/data/Shopping/interfaces";
+import type { ShoppingListInterface } from "@/data/Shopping";
 
 // --- QUERIES ---
 export const useShoppingLists = () => {
@@ -21,11 +21,7 @@ export const useCreateShoppingList = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      name,
-    }: {
-      name: string;
-    }) => {
+    mutationFn: async ({ name }: { name: string }) => {
       const payload: Omit<ShoppingListInterface, "id" | "createdAt" | "updatedAt"> = {
         name,
         isShared: false,

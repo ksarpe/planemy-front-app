@@ -1,10 +1,5 @@
-import type { ShoppingHeaderProps } from "@/data/Shopping/interfaces";
+import type { ExtendedShoppingHeaderProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
 import { Menu } from "lucide-react";
-
-interface ExtendedShoppingHeaderProps extends ShoppingHeaderProps {
-  onToggleLists?: () => void;
-  listsOpen?: boolean;
-}
 
 export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: ExtendedShoppingHeaderProps) {
   const { pending, completed, totalValue } = stats;

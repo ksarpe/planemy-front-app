@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { X, Plus, Minus, Star, ChevronDown, ChevronUp } from "lucide-react";
 import { useShoppingContext } from "@/hooks/context/useShoppingContext";
 import { useAddShoppingItem } from "@/hooks/shopping/useShoppingItems";
-import type { FavoriteProductInterface, AddItemModalProps } from "@/data/Shopping/interfaces";
+import type { FavoriteProductInterface, AddItemModalProps } from "@/data/Shopping";
 import { SHOPPING_UNITS } from "@/data/Shopping/types";
 
 function normalizeNumber(input: string): number | null {

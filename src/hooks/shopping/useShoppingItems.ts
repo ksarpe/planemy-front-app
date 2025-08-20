@@ -11,7 +11,7 @@ import {
   deleteFavoriteProduct,
   updateFavoriteProduct,
 } from "@/api/shopping";
-import type { ShoppingItemInterface, FavoriteProductInterface } from "@/data/Shopping/interfaces";
+import type { ShoppingItemInterface, FavoriteProductInterface } from "@/data/Shopping";
 // useQuery already imported above
 
 export const useShoppingItemsQuery = (listId?: string) => {
