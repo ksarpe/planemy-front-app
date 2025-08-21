@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
-import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Grid3X3, AlignJustify } from "lucide-react";
+import { ChevronLeft, ChevronRight, Grid3X3, AlignJustify } from "lucide-react";
 import { getVisibleMonthsInWeek } from "../../../utils/weeksHelper";
 import EnhancedCreateEventModal from "./EnhancedCreateEventModal";
 
@@ -9,7 +9,6 @@ export default function CalendarHeader() {
   const visibleMonths = getVisibleMonthsInWeek(currentDate);
   const year = currentDate.getFullYear();
   const [showCreateEvent, setShowCreateEvent] = useState(false);
-  const createButtonRef = useRef<HTMLButtonElement>(null);
 
   const getDateDisplay = () => {
     if (view === "week" && visibleMonths.length > 1) {
@@ -18,89 +17,49 @@ export default function CalendarHeader() {
     return `${currentDate.toLocaleString("en", { month: "long" })} ${year}`;
   };
 
-  const formatToday = () => {
-    const today = new Date();
-    return today.toLocaleDateString("en", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   return (
-    <div className="border-b border-gray-200  bg-white ">
-      <div className="flex items-center justify-between px-6 py-4">
+    <div className="border-b border-gray-200  bg-bg ">
+      <div className="flex items-center justify-between px-8 py-2 md:py-4">
         {/* Left side - Logo and navigation */}
-        <div className="flex items-center space-x-6">
-          {/* Calendar logo/title */}
-          <div className="flex items-center space-x-3">
-            <CalendarIcon className="h-6 w-6 text-blue-600" />
-            <h1 className="text-xl font-semibold text-gray-900 ">Calendar</h1>
+        <div className="flex items-center space-x-4">
+          {/* Current date display */}
+          <div className="flex flex-col sm:flex-row gap-2 items-center">
+            <h2 className="text-xs sm:text-sm text-center md:text-2xl font-semibold text-text ">{getDateDisplay()}</h2>
+            {/* Navigation arrows */}
+            <div className="flex items-center space-x-2">
+              <button onClick={loadPrev} className=" text-text-light  rounded-md transition-colors" title="Previous">
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button onClick={loadNext} className=" text-text-light rounded-md transition-colors" title="Next">
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
-
           {/* Today button */}
           <button
             onClick={goToday}
-            className="px-4 py-2 text-sm font-medium text-gray-700  bg-white  border border-gray-300  rounded-md hover:bg-gray-50  transition-colors">
+            className="px-2 py-2 text-xs md:text-sm font-medium text-text-light  bg-white  border border-gray-300  rounded-md hover:bg-gray-50  transition-colors">
             Today
           </button>
-
-          {/* Navigation arrows */}
-          <div className="flex items-center space-x-1">
-            <button
-              onClick={loadPrev}
-              className="p-2 text-gray-600  hover:bg-gray-100  rounded-md transition-colors"
-              title="Previous">
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              onClick={loadNext}
-              className="p-2 text-gray-600  hover:bg-gray-100  rounded-md transition-colors"
-              title="Next">
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Current date display */}
-          <h2 className="text-2xl font-semibold text-gray-900 ">{getDateDisplay()}</h2>
         </div>
-
-        {/* Right side - Actions and view controls */}
-        <div className="flex items-center space-x-4">
-          {/* Create event button */}
+        {/* Right side - view controls */}
+        <div className="flex flex-col sm:flex-row items-center bg-gray-100  rounded-md ">
           <button
-            ref={createButtonRef}
-            onClick={() => setShowCreateEvent(!showCreateEvent)}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors font-medium">
-            <Plus className="h-4 w-4" />
-            <span>Create</span>
+            onClick={() => setView("month")}
+            className={`flex items-center space-x-2 px-2 py-2 rounded-md transition-colors text-xs sm:text-sm  ${
+              view === "month" ? "bg-white  text-text  shadow-sm" : "text-text-light  hover:text-text "
+            }`}>
+            <Grid3X3 className="h-4 w-4" />
+            <span>Month</span>
           </button>
-
-          {/* View toggle */}
-          <div className="flex items-center bg-gray-100  rounded-md p-1">
-            <button
-              onClick={() => setView("month")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors text-sm font-medium ${
-                view === "month" ? "bg-white  text-gray-900  shadow-sm" : "text-gray-600  hover:text-gray-900 "
-              }`}>
-              <Grid3X3 className="h-4 w-4" />
-              <span>Month</span>
-            </button>
-            <button
-              onClick={() => setView("week")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors text-sm font-medium ${
-                view === "week" ? "bg-white  text-gray-900  shadow-sm" : "text-gray-600  hover:text-gray-900 "
-              }`}>
-              <AlignJustify className="h-4 w-4" />
-              <span>Week</span>
-            </button>
-          </div>
-
-          {/* Today's date indicator */}
-          <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500 ">
-            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-            <span>{formatToday()}</span>
-          </div>
+          <button
+            onClick={() => setView("week")}
+            className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors text-xs sm:text-sm  ${
+              view === "week" ? "bg-white  text-text  shadow-sm" : "text-text-light  hover:text-text "
+            }`}>
+            <AlignJustify className="h-4 w-4" />
+            <span>Week</span>
+          </button>
         </div>
       </div>
 

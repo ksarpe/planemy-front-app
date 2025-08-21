@@ -48,7 +48,7 @@ export default function MainLayout() {
           {/* Placeholder for right side (future actions) */}
           <div className="flex items-center gap-3 text-xs text-slate-500"></div>
         </div>
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-hidden">
           <Outlet />
         </main>
       </div>

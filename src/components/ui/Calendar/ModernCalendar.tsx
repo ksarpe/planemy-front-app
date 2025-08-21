@@ -1,16 +1,11 @@
 import ModernCalendarHeader from "./ModernCalendarHeader";
 import ModernCalendarBody from "./ModernCalendarBody";
 
-interface ModernCalendarProps {
-  className?: string;
-}
-
-export default function ModernCalendar({ className = "" }: ModernCalendarProps) {
+export default function ModernCalendar() {
   return (
-    <div className={`h-full flex flex-col bg-white  ${className}`}>
+    <div className="h-full flex flex-col bg-white">
       {/* Calendar Header */}
       <ModernCalendarHeader />
-
       {/* Calendar Body */}
       <ModernCalendarBody />
     </div>

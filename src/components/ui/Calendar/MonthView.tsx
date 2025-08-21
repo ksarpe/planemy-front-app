@@ -35,6 +35,10 @@ export default function MonthView() {
     return weeksArray;
   }, [calendarDays]);
 
+  // Dynamically calculate grid rows based on actual number of weeks
+  const numberOfWeeks = weeks.length;
+  const gridTemplateRows = `repeat(${numberOfWeeks}, 1fr)`;
+
   const getEventsForDay = (day: Date): EventInterface[] => {
     return events.filter((event) => {
       const eventStart = new Date(event.start);
@@ -57,20 +61,20 @@ export default function MonthView() {
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col overflow-hidden">
       {/* Week header */}
-      <div className="grid grid-cols-7 border-b border-gray-200  bg-gray-50 ">
+      <div className="grid grid-cols-7 border-b border-gray-200 bg-bg-alt">
         {weekDays.map((day) => (
-          <div key={day} className="p-3 text-center text-sm font-medium text-gray-600  uppercase tracking-wide">
+          <div key={day} className="p-3 text-center text-sm font-medium text-gray-600 uppercase tracking-wide">
             {day}
           </div>
         ))}
       </div>
 
       {/* Calendar grid */}
-      <div className="flex-1 grid grid-rows-6">
+      <div className="flex-1 grid" style={{ gridTemplateRows }}>
         {weeks.map((week, weekIndex) => (
-          <div key={weekIndex} className="grid grid-cols-7 border-b border-gray-200  last:border-b-0">
+          <div key={weekIndex} className="grid grid-cols-7 border-b border-gray-200 last:border-b-0">
             {week.map((day, dayIndex) => {
               const dayEvents = getEventsForDay(day);
               const isCurrentMonth = isSameMonth(day, currentDate);
@@ -79,25 +83,25 @@ export default function MonthView() {
               return (
                 <div
                   key={dayIndex}
-                  className={`relative border-r border-gray-200  last:border-r-0 min-h-[120px] ${
-                    !isCurrentMonth ? "bg-gray-50 " : "bg-white "
-                  } hover:bg-gray-50  transition-colors`}>
+                  className={`relative border-r border-gray-200 last:border-r-0 h-full ${
+                    !isCurrentMonth ? "bg-gray-50" : "bg-white"
+                  } hover:bg-gray-50 transition-colors flex flex-col`}>
                   {/* Day number */}
-                  <div className="p-2">
+                  <div className="text-center flex-shrink-0">
                     <div
-                      className={`inline-flex items-center justify-center w-8 h-8 text-sm font-medium rounded-full ${
+                      className={`inline-flex items-center justify-center w-8 h-8 text-xs sm:text-sm font-medium rounded-full ${
                         isDayToday
-                          ? "bg-blue-600 text-white"
+                          ? "bg-primary text-white"
                           : isCurrentMonth
-                          ? "text-gray-900  hover:bg-blue-50 "
-                          : "text-gray-400 "
+                          ? "text-gray-900 hover:bg-blue-50"
+                          : "text-gray-400"
                       }`}>
                       {format(day, "d")}
                     </div>
                   </div>
 
                   {/* Events */}
-                  <div className="px-2 pb-2 space-y-1">
+                  <div className="sm:px-1 space-y-1 flex-1">
                     {/* Standard events */}
                     {dayEvents.slice(0, 2).map((event, eventIndex) => (
                       <EnhancedEventBlock
@@ -109,7 +113,7 @@ export default function MonthView() {
                     ))}
 
                     {dayEvents.length > 3 && (
-                      <div className="text-xs text-gray-500  pl-2 py-1">+{dayEvents.length - 3} more</div>
+                      <div className="text-xs text-gray-500 pl-2 py-1">+{dayEvents.length - 3} more</div>
                     )}
                   </div>
 

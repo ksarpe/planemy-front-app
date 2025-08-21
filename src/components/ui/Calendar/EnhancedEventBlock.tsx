@@ -134,8 +134,8 @@ export default function EnhancedEventBlock({
         )} text-white rounded-md shadow-sm hover:shadow-md transition-all cursor-pointer border-l-4 ${className}`}
         style={style}
         onClick={handleEventClick}>
-        <div className="p-2">
-          <div className="font-medium text-sm truncate flex items-center space-x-1">
+        <div className="p-0.5 sm:p-1">
+          <div className="text-[10px] sm:text-sm truncate flex items-center space-x-1">
             <span>{event.title}</span>
           </div>
           {showTime && !event.allDay && (

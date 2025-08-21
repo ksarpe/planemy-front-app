@@ -4,11 +4,9 @@ import ModernCalendar from "../ui/Calendar/ModernCalendar";
 
 export default function CalendarView() {
   return (
-    <div className="flex h-[100vh]">
+    <div className="h-full flex flex-col overflow-hidden">
       {/* flex-col for header and body. Separated right bar to have flex-col */}
-      <div className="flex-1 flex flex-col">
-        <ModernCalendar />
-      </div>
+      <ModernCalendar />
     </div>
   );
 }
