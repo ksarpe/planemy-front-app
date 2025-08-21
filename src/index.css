@@ -72,6 +72,7 @@
 
 .ai-textbox-animated {
   position: relative;
+  width: 100%;
   border-radius: 8px;
   padding: 2px; /* Grubość ramki */
   background: linear-gradient(

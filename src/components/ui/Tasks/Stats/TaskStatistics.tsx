@@ -16,7 +16,7 @@ export default function TaskStatistics({ tasks, onFilterChange, filter }: TaskSt
   });
 
   return (
-    <div className="grid grid-cols-9 gap-4 mb-4">
+    <div className="grid grid-cols-9 gap-2">
       {/* Task Statistics Cards */}
       <StatisticCard
         title="W toku"
@@ -37,7 +37,7 @@ export default function TaskStatistics({ tasks, onFilterChange, filter }: TaskSt
       />
 
       <StatisticCard
-        title="Przeterminowane"
+        title="Zaległe"
         count={overdueTasks.length}
         icon={AlertTriangle}
         iconColor="text-red-600"

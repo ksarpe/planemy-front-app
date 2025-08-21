@@ -34,14 +34,14 @@ const sizeClasses: Record<NonNullable<ActionButtonProps["size"]>, string> = {
   xs: "px-2 py-1 text-xs",
   sm: "px-3 py-1.5 text-sm",
   md: "px-4 py-2 text-sm",
-  lg: "px-5 py-4.5 text-lg",
+  lg: "px-5 py-2 text-lg",
 };
 
 const iconSizeClasses: Record<NonNullable<ActionButtonProps["size"]>, string> = {
   xs: "w-8 h-8",
   sm: "w-10 h-10",
   md: "w-12 h-12",
-  lg: "w-14 h-14",
+  lg: "w-12 h-12",
 };
 
 export default function ActionButton({
@@ -63,16 +63,15 @@ export default function ActionButton({
         onClick={onClick}
         disabled={disabled}
         className={clsx(
-          "flex items-center justify-center rounded-full border shadow-md",
-          "hover:-translate-y-0.5 active:scale-95 hover:shadow-lg",
+          "flex items-center flex-col justify-center rounded-md border shadow-md hover:shadow-lg w-full",
           styles.base,
           styles.hover,
           iconSizeClasses[size],
           disabled && "opacity-50 cursor-not-allowed",
           className,
         )}>
-        <span className="sr-only">{text}</span>
         <Icon size={iconSize} />
+        <span className="text-xs">{text}</span>
       </button>
     );
   }
@@ -83,7 +82,7 @@ export default function ActionButton({
       disabled={disabled}
       className={clsx(
         "flex items-center justify-center gap-2 rounded-md font-semibold shadow-md",
-        "hover:-translate-y-0.5 hover:shadow-lg",
+        " hover:shadow-lg",
         styles.base,
         styles.hover,
         sizeClasses[size],

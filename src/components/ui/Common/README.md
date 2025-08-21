@@ -106,25 +106,7 @@ import { DeleteConfirmationModal } from "@/components/ui/Common";
 
 ## Zastosowanie w projekcie
 
-### TaskListActions.tsx
-
-Modal usuwania i zmiany nazwy list zadań zostały zrefaktoryzowane do używania nowych komponentów:
-
-```tsx
-// Poprzednio: ~50 linii HTML w komponencie
-// Obecnie:
-<DeleteConfirmationModal
-  isOpen={showDeleteConfirm}
-  onClose={() => setShowDeleteConfirm(false)}
-  onConfirm={handleDelete}
-  title="Usuń listę zadań"
-  message="Czy na pewno chcesz usunąć listę"
-  itemName={currentTaskList.name}
-  additionalInfo={`Liczba zadań, która zostanie usunięta: ${totalCount}`}
-  confirmButtonText="Usuń listę"
-  isLoading={loading}
-/>
-```
+````
 
 ## Rozszerzanie
 
@@ -153,7 +135,7 @@ interface SuccessModalProps {
 export default function SuccessModal({ isOpen, onClose, title, message, autoClose }: SuccessModalProps) {
   // implementacja...
 }
-```
+````
 
 ## Style i Animacje
 

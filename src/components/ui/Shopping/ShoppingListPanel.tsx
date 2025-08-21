@@ -4,7 +4,7 @@ import { useShoppingListStats } from "@/hooks/shopping/useShoppingListStats";
 import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Check } from "lucide-react";
 import type { ShoppingListPanelProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
 import type { ShoppingListInterface } from "@/data/Shopping";
-import { BasicDropdown, BasicDropdownItem } from "../Common";
+import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 
 function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: ShoppingListPanelProps) {
@@ -12,6 +12,8 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
   const updateList = useUpdateShoppingList();
   const [editingListId, setEditingListId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [listToDelete, setListToDelete] = useState<ShoppingListInterface | null>(null);
   // Using BasicDropdown with portal, so no local dropdown state needed
   const { defaultShoppingListId, updateSettings } = usePreferencesContext();
 
@@ -34,9 +36,14 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
   };
 
   const handleDeleteList = async (listId: string) => {
-    if (window.confirm("Czy na pewno chcesz usunąć tę listę?")) {
-      await deleteList.mutateAsync(listId);
-    }
+    await deleteList.mutateAsync(listId);
+    setShowDeleteConfirm(false);
+    setListToDelete(null);
+  };
+
+  const handleDeleteClick = (list: ShoppingListInterface) => {
+    setListToDelete(list);
+    setShowDeleteConfirm(true);
   };
 
   // Derive stats and actions from the hook (keeps Query Client inside hooks)
@@ -50,8 +57,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
   return (
     <div className="p-4">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">Moje listy</h3>
+      <div className="flex items-center mb-4">
         <button
           onClick={onAddList}
           className="p-2 bg-success text-white rounded-md hover:bg-success-hover transition-colors">
@@ -143,18 +149,14 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                         <BasicDropdownItem icon={Share2} onClick={() => console.log("Share list", list.id)}>
                           Udostępnij
                         </BasicDropdownItem>
-                        <BasicDropdownItem
-                          icon={Check}
-                          onClick={() => updateSettings({ defaultShoppingListId: list.id })}>
-                          {defaultShoppingListId === list.id ? (
-                            <span className="flex items-center gap-2">
-                              <span className="inline-flex h-2 w-2 rounded-full bg-green-500" /> Domyślna lista
-                            </span>
-                          ) : (
-                            "Ustaw jako domyślną"
-                          )}
-                        </BasicDropdownItem>
-                        <BasicDropdownItem icon={Trash2} variant="red" onClick={() => handleDeleteList(list.id)}>
+                        {defaultShoppingListId != list.id && (
+                          <BasicDropdownItem
+                            icon={Check}
+                            onClick={() => updateSettings({ defaultShoppingListId: list.id })}>
+                            <span className="flex items-center">Ustaw jako domyślną</span>
+                          </BasicDropdownItem>
+                        )}
+                        <BasicDropdownItem icon={Trash2} variant="red" onClick={() => handleDeleteClick(list)}>
                           Usuń
                         </BasicDropdownItem>
                       </BasicDropdown>
@@ -177,6 +179,23 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
           })
         )}
       </div>
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setListToDelete(null);
+        }}
+        onConfirm={() => {
+          if (listToDelete) {
+            handleDeleteList(listToDelete.id);
+          }
+        }}
+        title="Usuń listę zakupów"
+        message="Czy na pewno chcesz usunąć listę zakupów"
+        itemName={listToDelete?.name || ""}
+        confirmButtonText="Usuń listę"
+      />
     </div>
   );
 }

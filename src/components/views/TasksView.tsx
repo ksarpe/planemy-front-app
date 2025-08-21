@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTasks } from "@/hooks/tasks/useTasks";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
+import { X } from "lucide-react";
 import {
   TaskViewHeader,
   CreateTaskListModal,
@@ -11,13 +12,15 @@ import {
   TaskDetails,
   EmptyStates,
 } from "@/components/ui/Tasks";
+import { TaskListPanel } from "@/components/ui/Tasks/TaskListPanel";
 import Spinner from "../ui/Utils/Spinner";
 import { useTaskLists, useCreateTaskList } from "@/hooks/tasks/useTasksLists";
 import type { TaskListFilter } from "@/data/Tasks/types";
+import type { TaskListInterface } from "@/data/Tasks/interfaces";
 
 export default function TasksView() {
-  const { currentTaskListId, currentTaskList, clickedTask } = useTaskContext();
-  const { data: taskLists, isLoading: areListsLoading } = useTaskLists();
+  const { currentTaskListId, currentTaskList, clickedTask, taskLists, setCurrentTaskListId } = useTaskContext();
+  const { isLoading: areListsLoading } = useTaskLists();
   const { data: tasksData, isLoading: loading } = useTasks(currentTaskListId);
   const { mutate: createTaskList } = useCreateTaskList();
   const tasks = tasksData ? tasksData : [];
@@ -26,6 +29,7 @@ export default function TasksView() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareListId, setShareListId] = useState<string | null>(null);
   const [filter, setFilter] = useState<TaskListFilter>("pending");
+  const [showListsPanel, setShowListsPanel] = useState(false);
 
   // Get tasks from current list using new hook
 
@@ -38,6 +42,15 @@ export default function TasksView() {
     createTaskList(name);
   };
 
+  const handleSelectList = (list: TaskListInterface) => {
+    setCurrentTaskListId(list.id);
+    setShowListsPanel(false);
+  };
+
+  const handleAddList = () => {
+    setIsCreateListModalOpen(true);
+  };
+
   if (areListsLoading) {
     return (
       <div className="flex flex-col items-center justify-center h-full">
@@ -48,7 +61,43 @@ export default function TasksView() {
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="relative h-full flex flex-col">
+      {/* Task Lists Panel Overlay */}
+      <div
+        className={`fixed inset-0 z-40 transition-opacity duration-300 ${
+          showListsPanel ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        aria-hidden={showListsPanel ? "false" : "true"}
+        onClick={() => setShowListsPanel(false)}>
+        <div className="absolute inset-0 bg-black/30" />
+      </div>
+
+      {/* Task Lists Panel Drawer */}
+      <div
+        role="dialog"
+        aria-label="Panel list zadań"
+        className={`fixed top-0 right-0 h-full w-80 sm:w-100 max-w-full bg-bg-alt border-l border-bg-hover shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
+          showListsPanel ? "translate-x-0" : "translate-x-full"
+        }`}
+        onClick={(e) => e.stopPropagation()}>
+        <div className="p-4 border-b border-bg-hover flex items-center justify-between bg-bg-alt sticky top-0 z-10">
+          <span className="text-lg px-2">Moje listy</span>
+          <button
+            onClick={() => setShowListsPanel(false)}
+            className="px-2 hover:text-negative cursor-pointer rounded-md hover:bg-bg-hover">
+            <X size={22} />
+          </button>
+        </div>
+        <div className="flex-1 overflow-auto p-2">
+          <TaskListPanel
+            lists={taskLists || []}
+            currentList={currentTaskList}
+            onSelectList={handleSelectList}
+            onAddList={handleAddList}
+          />
+        </div>
+      </div>
+
       {/* Task Details Drawer */}
       <div
         className={`fixed top-0 right-0 h-full w-full sm:w-96 max-w-full bg-bg-alt border-l border-bg-hover shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
@@ -57,14 +106,14 @@ export default function TasksView() {
         {clickedTask && <TaskDetails />}
       </div>
 
-      {/* Main content - remove redundant height and overflow classes */}
-      <div className="flex flex-col p-6 gap-4">
+      {/* Main content */}
+      <div className="flex flex-col p-4 md:p-8 gap-4">
         <div className="">
           {/* Header with Task Lists */}
           <TaskViewHeader
-            tasks={tasks}
-            onNewListClick={() => setIsCreateListModalOpen(true)}
             onShareListClick={handleShareList}
+            onToggleLists={() => setShowListsPanel(!showListsPanel)}
+            listsOpen={showListsPanel}
           />
         </div>
 
@@ -76,9 +125,10 @@ export default function TasksView() {
 
         {/* Task list content */}
         {currentTaskList && (
-          <div className="flex flex-col pb-4">
+          <div className="flex flex-col gap-4">
             <div>
               <TaskStatistics tasks={tasks} filter={filter} onFilterChange={setFilter} />
+              {/* Alerts in case some task is overdue */}
               <TaskAlerts tasks={tasks} />
             </div>
 

@@ -18,14 +18,16 @@ export default function StatisticCard({
         // Niezaznaczony
         "bg-white  shadow-sm hover:shadow-lg hover:-translate-y-0.5": !isSelected,
       })}>
-      {/* Górna część: Ikona i Tytuł */}
-      <div className="flex items-center gap-2 text-gray-500 text-center">
-        <Icon size={16} className={clsx("flex-shrink-0", iconColor)} />
-        <span className="text-sm font-medium truncate">{title}</span>
-      </div>
+      <div className="flex flex-col lg:flex-row xl:flex-col justify-center gap-2">
+        {/* Górna część: Ikona i Tytuł */}
+        <div className="flex items-center gap-2 text-gray-500 text-center justify-center xl:justify-start">
+          <Icon size={16} className={clsx("flex-shrink-0", iconColor)} />
+          <span className="text-sm font-medium truncate hidden xl:block">{title}</span>
+        </div>
 
-      {/* Dolna część: Licznik */}
-      <div className="block text-xl font-bold text-gray-800 ">{count}</div>
+        {/* Dolna część: Licznik */}
+        <div className="block text-xl font-bold text-gray-800 text-center xl:text-left ">{count}</div>
+      </div>
     </button>
   );
 }

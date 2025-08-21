@@ -83,7 +83,7 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
   return (
     <div className="flex-1 min-h-0 flex flex-col">
       {/* Add Task Button */}
-      <div className={`${showQuickAdd ? "w-full" : "w-fit"} mb-3 mt-1 flex-shrink-0`}>
+      <div className={`${showQuickAdd ? "w-full" : "w-fit"} mb-4 flex-shrink-0`}>
         {showQuickAdd ? (
           <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
         ) : (

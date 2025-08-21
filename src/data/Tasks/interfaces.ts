@@ -122,9 +122,9 @@ export interface TaskStatisticsProps {
 }
 
 export interface TaskViewHeaderProps {
-  onNewListClick: () => void;
-  tasks: TaskInterface[];
   onShareListClick: (listId: string) => void;
+  onToggleLists?: () => void;
+  listsOpen?: boolean;
 }
 
 export interface StatisticCardProps {
