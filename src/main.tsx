@@ -17,6 +17,7 @@ import TasksView from "@/components/views/TasksView";
 import PaymentsView from "@/components/views/PaymentsView";
 import LabelsView from "@/components/views/LabelsView";
 import NotificationsView from "@/components/views/NotificationsView";
+import FeedbackView from "@/components/views/FeedbackView";
 
 // context
 import Providers from "@/context/AllProviders";
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
       { path: "/payments", element: <PaymentsView /> },
       { path: "/labels", element: <LabelsView /> },
       { path: "/notifications", element: <NotificationsView /> },
+      { path: "/feedback", element: <FeedbackView /> },
       { path: "*", element: <NotFoundView /> },
     ],
   },

@@ -11,11 +11,11 @@ interface SidebarUserSectionProps {
 export function SidebarUserSection({ collapsed, user, handleNavigate, handleLogout }: SidebarUserSectionProps) {
   if (collapsed) {
     return (
-      <div className="flex flex-col items-center gap-4 pb-2">
+      <div className="flex flex-col items-center gap-2 pb-2">
         <NavLink
           to="/profile"
           onClick={handleNavigate}
-          className="w-12 h-12 rounded-full bg-primary flex items-center justify-center font-bold text-white hover:ring-2 hover:ring-primary/60 transition-all"
+          className="w-12 h-12 rounded-md bg-primary flex items-center justify-center font-bold text-white hover:ring-2 hover:ring-primary/60 transition-all"
           title={user?.displayName || user?.email || "Profil"}>
           {(user?.displayName || user?.email || "U").charAt(0).toUpperCase()}
         </NavLink>
@@ -23,7 +23,7 @@ export function SidebarUserSection({ collapsed, user, handleNavigate, handleLogo
         <button
           onClick={handleLogout}
           title="Wyloguj się"
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-bg-hover hover:bg-red-100 text-slate-600 hover:text-red-600 transition-colors">
+          className="w-12 h-12 flex items-center justify-center rounded-md bg-bg-hover hover:bg-red-100 text-slate-600 hover:text-red-600 transition-colors">
           <LogOut size={20} />
         </button>
       </div>
@@ -37,7 +37,7 @@ export function SidebarUserSection({ collapsed, user, handleNavigate, handleLogo
           to="/profile"
           onClick={handleNavigate}
           className="flex items-center gap-3 flex-1 min-w-0 overflow-hidden group">
-          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white">
+          <div className="w-12 h-12 rounded-md bg-primary flex items-center justify-center font-bold text-white">
             {(user?.displayName || user?.email || "U").charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">

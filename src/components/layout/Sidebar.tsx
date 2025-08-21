@@ -62,7 +62,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
     if (isOpen && window.innerWidth < 768) setCollapsed(false);
   }, [isOpen]);
 
-  const widthClasses = collapsed ? "w-[72px] min-w-[72px]" : "w-58 min-w-58";
+  const widthClasses = collapsed ? "w-[84px] min-w-[84px]" : "w-58 min-w-58";
   const linkPadding = collapsed ? "px-3 justify-center" : "px-5";
   const labelHidden = collapsed ? "opacity-0 pointer-events-none select-none w-0 overflow-hidden" : "opacity-100";
   const iconSize = 24;

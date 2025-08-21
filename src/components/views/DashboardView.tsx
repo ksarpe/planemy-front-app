@@ -5,6 +5,7 @@ import {
   UpcomingPayments,
   WeeklyProgress,
   QuickActions,
+  FeedbackBanner,
 } from "@/components/ui/Dashboard";
 import { useShoppingContext } from "@/hooks/context/useShoppingContext";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
@@ -94,6 +95,8 @@ export default function DashboardView() {
           </button>
           {/* Placeholder keep other stats grid (mock for now) */}
         </div>
+        {/* Feedback Banner */}
+        <FeedbackBanner />
         <StatsGrid stats={mockStats} />
         {/* Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
