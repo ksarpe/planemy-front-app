@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { format, startOfWeek, endOfWeek, eachDayOfInterval, isToday, isSameDay } from "date-fns";
-import EnhancedEventBlock from "./EnhancedEventBlock";
+import EventBlock from "./EventBlock";
 import { EventInterface } from "@/data/Calendar/events";
 
 export default function WeekView() {
@@ -66,14 +66,12 @@ export default function WeekView() {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col overflow-hidden">
       {/* Week header */}
-      <div className="border-b border-gray-200  bg-white ">
+      <div className="border-b border-gray-200 bg-white flex-shrink-0">
         <div className="grid grid-cols-8">
           {/* Time column header */}
-          <div className="p-4 border-r border-gray-200 ">
-            <div className="text-sm font-medium text-gray-600 ">{format(currentDate, "MMM yyyy")}</div>
-          </div>
+          <div className="border-r border-gray-200"></div>
 
           {/* Day headers */}
           {weekDays.map((day) => {
@@ -82,13 +80,13 @@ export default function WeekView() {
             return (
               <div
                 key={day.toISOString()}
-                className={`p-4 text-center border-r border-gray-200  last:border-r-0 ${
-                  isDayToday ? "bg-blue-50 " : ""
+                className={`p-2 flex flex-col text-center border-r border-gray-200 last:border-r-0 ${
+                  isDayToday ? "bg-bg-alt" : ""
                 }`}>
-                <div className="text-sm font-medium text-gray-600  uppercase">{format(day, "EEE")}</div>
-                <div className={`mt-1 text-xl font-semibold ${isDayToday ? "text-blue-600 " : "text-gray-900 "}`}>
+                <span className="text-xs sm:text-sm text-text-light uppercase">{format(day, "EEE")}</span>
+                <span className={`text-sm sm:text-lg font-semibold ${isDayToday ? "text-primary" : "text-gray-900"}`}>
                   {format(day, "d")}
-                </div>
+                </span>
               </div>
             );
           })}
@@ -96,14 +94,14 @@ export default function WeekView() {
       </div>
 
       {/* Week grid */}
-      <div className="flex-1 overflow-auto">
-        <div className="relative">
-          <div className="grid grid-cols-8">
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full overflow-y-auto">
+          <div className="grid grid-cols-8 min-h-full">
             {/* Time column */}
-            <div className="border-r border-gray-200 ">
+            <div className="border-r border-gray-200">
               {timeSlots.map((slot) => (
-                <div key={slot.hour} className="h-15 border-b border-gray-100  px-2 py-1" style={{ height: "60px" }}>
-                  <div className="text-xs text-gray-500 ">{slot.time}</div>
+                <div key={slot.hour} className="border-b border-gray-100 px-2 py-1" style={{ height: "60px" }}>
+                  <div className="text-xs text-gray-500">{slot.time}</div>
                 </div>
               ))}
             </div>
@@ -116,26 +114,24 @@ export default function WeekView() {
               return (
                 <div
                   key={day.toISOString()}
-                  className={`relative border-r border-gray-200  last:border-r-0 ${
-                    isDayToday ? "bg-blue-50/30 " : ""
-                  }`}>
+                  className={`relative border-r border-gray-200 last:border-r-0 ${isDayToday ? "bg-success/10" : ""}`}>
                   {/* Hour grid lines */}
                   {timeSlots.map((slot) => (
                     <div
                       key={slot.hour}
-                      className="h-15 border-b border-gray-100  hover:bg-gray-50  transition-colors"
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                       style={{ height: "60px" }}
                     />
                   ))}
 
                   {/* All-day events */}
-                  <div className="absolute top-0 left-0 right-0 z-10 p-1 bg-white  border-b border-gray-200 ">
+                  <div className="absolute top-0 left-0 right-0 z-10 p-1 bg-white border-b border-gray-200">
                     {dayEvents
                       .filter((event) => event.allDay)
                       .slice(0, 2)
                       .map((event) => (
                         <div key={event.id} className="mb-1">
-                          <EnhancedEventBlock event={event} className="w-full" />
+                          <EventBlock event={event} className="w-full" />
                         </div>
                       ))}
                   </div>
@@ -155,7 +151,7 @@ export default function WeekView() {
                               top: `${position.top}px`,
                               height: `${position.height}px`,
                             }}>
-                            <EnhancedEventBlock event={event} className="w-full h-full" />
+                            <EventBlock event={event} className="w-full h-full" />
                           </div>
                         );
                       })}

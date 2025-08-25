@@ -11,7 +11,6 @@ export interface CalendarContextProps {
   hourlyEvents: Record<string, EventInterface[]>;
   dailyEvents: Record<string, EventInterface[]>;
   updateEvent: (event: EventInterface) => Promise<void>;
-  addEvent: (event: Omit<EventInterface, "id" | "createdAt" | "updatedAt">) => Promise<void>;
   calendarClickContent: CalendarClickContent | null;
   setCalendarClickContent: (content: CalendarClickContent | null) => void;
   view: "month" | "week";

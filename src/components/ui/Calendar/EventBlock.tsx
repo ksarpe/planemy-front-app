@@ -3,7 +3,7 @@ import { EventInterface } from "@/data/Calendar/events";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { Edit2, Clock, User, X, Check } from "lucide-react";
 
-interface EnhancedEventBlockProps {
+interface EventBlockProps {
   event: EventInterface;
   style?: React.CSSProperties;
   className?: string;
@@ -11,13 +11,7 @@ interface EnhancedEventBlockProps {
   showTime?: boolean;
 }
 
-export default function EnhancedEventBlock({
-  event,
-  style,
-  className = "",
-  onClick,
-  showTime = true,
-}: EnhancedEventBlockProps) {
+export default function EventBlock({ event, style, className = "", onClick, showTime = true }: EventBlockProps) {
   const { updateEvent } = useCalendarContext();
   const [isEditing, setIsEditing] = useState(false);
   const [showDetails, setShowDetails] = useState(false);

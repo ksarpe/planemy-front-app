@@ -11,7 +11,7 @@ interface StatsGridProps {
 
 export default function StatsGrid({ stats }: StatsGridProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Today's Tasks */}
       <div className="bg-bg-alt  rounded-lg p-6 border border-gray-200 ">
         <div className="flex items-center justify-between">

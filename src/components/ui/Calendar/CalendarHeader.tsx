@@ -1,14 +1,11 @@
-import { useState } from "react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { ChevronLeft, ChevronRight, Grid3X3, AlignJustify } from "lucide-react";
 import { getVisibleMonthsInWeek } from "../../../utils/weeksHelper";
-import EnhancedCreateEventModal from "./EnhancedCreateEventModal";
 
 export default function CalendarHeader() {
   const { currentDate, loadNext, loadPrev, goToday, setView, view } = useCalendarContext();
   const visibleMonths = getVisibleMonthsInWeek(currentDate);
   const year = currentDate.getFullYear();
-  const [showCreateEvent, setShowCreateEvent] = useState(false);
 
   const getDateDisplay = () => {
     if (view === "week" && visibleMonths.length > 1) {
@@ -62,9 +59,6 @@ export default function CalendarHeader() {
           </button>
         </div>
       </div>
-
-      {/* Create Event Modal */}
-      <EnhancedCreateEventModal isOpen={showCreateEvent} onClose={() => setShowCreateEvent(false)} />
     </div>
   );
 }

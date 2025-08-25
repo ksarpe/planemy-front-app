@@ -1,11 +1,11 @@
 import {
   StatsGrid,
-  TodaySchedule,
   RecentActivity,
   UpcomingPayments,
   WeeklyProgress,
   QuickActions,
   FeedbackBanner,
+  UpcomingEvents,
 } from "@/components/ui/Dashboard";
 import { useShoppingContext } from "@/hooks/context/useShoppingContext";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
@@ -39,12 +39,6 @@ export default function DashboardView() {
     totalNotifications: 4,
     weeklyProgress: 75,
   };
-
-  const mockUpcomingTasks = [
-    { id: 1, title: "Spotkanie zespołu", time: "10:00", priority: "high" as const },
-    { id: 2, title: "Przegląd miesięczny", time: "14:00", priority: "medium" as const },
-    { id: 3, title: "Zakupy spożywcze", time: "18:00", priority: "low" as const },
-  ];
 
   const mockRecentActivity = [
     { id: 1, action: "Ukończono zadanie", item: "Prezentacja Q4", time: "2 godz. temu" },
@@ -94,14 +88,15 @@ export default function DashboardView() {
             </div>
           </button>
           {/* Placeholder keep other stats grid (mock for now) */}
+          {/* Upcoming Events */}
+          <UpcomingEvents />
+          <StatsGrid stats={mockStats} />
         </div>
         {/* Feedback Banner */}
         <FeedbackBanner />
-        <StatsGrid stats={mockStats} />
         {/* Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Today's Schedule */}
-          <TodaySchedule tasks={mockUpcomingTasks} />
 
           {/* Recent Activity */}
           <RecentActivity activities={mockRecentActivity} />
@@ -109,9 +104,11 @@ export default function DashboardView() {
           {/* Upcoming Payments Details */}
           <UpcomingPayments payments={mockUpcomingPayments} />
 
-          {/* Weekly Progress */}
-          <WeeklyProgress progress={mockStats.weeklyProgress} />
+          {/* Weekly Progress - spans full width */}
         </div>
+
+        {/* Weekly Progress - full width */}
+        <WeeklyProgress progress={mockStats.weeklyProgress} />
 
         {/* Quick Actions */}
         <QuickActions />

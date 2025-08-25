@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import {
   format,
@@ -11,11 +11,16 @@ import {
   isSameDay,
   isToday,
 } from "date-fns";
-import EnhancedEventBlock from "./EnhancedEventBlock";
+import EventBlock from "./EventBlock";
+import QuickEventCreator from "./QuickEventCreator";
 import { EventInterface } from "@/data/Calendar/events";
 
 export default function MonthView() {
   const { currentDate, events } = useCalendarContext();
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [showQuickCreator, setShowQuickCreator] = useState(false);
+  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -38,6 +43,45 @@ export default function MonthView() {
   // Dynamically calculate grid rows based on actual number of weeks
   const numberOfWeeks = weeks.length;
   const gridTemplateRows = `repeat(${numberOfWeeks}, 1fr)`;
+
+  // Mobile detection and responsive handling
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Handle day tile click
+  const handleDayClick = (day: Date, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSelectedDate(day);
+
+    if (isMobile) {
+      setShowQuickCreator(true);
+    } else {
+      // Calculate popup position relative to clicked element
+      const rect = (event.target as HTMLElement).getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+      setPopupPosition({
+        x: rect.left + scrollLeft + rect.width / 2,
+        y: rect.bottom + scrollTop + 5,
+      });
+      setShowQuickCreator(true);
+    }
+  };
+
+  // Close quick creator
+  const closeQuickCreator = () => {
+    setShowQuickCreator(false);
+    setSelectedDate(null);
+    setPopupPosition({ x: 0, y: 0 });
+  };
 
   const getEventsForDay = (day: Date): EventInterface[] => {
     return events.filter((event) => {
@@ -85,7 +129,8 @@ export default function MonthView() {
                   key={dayIndex}
                   className={`relative border-r border-gray-200 last:border-r-0 h-full ${
                     !isCurrentMonth ? "bg-gray-50" : "bg-white"
-                  } hover:bg-gray-50 transition-colors flex flex-col`}>
+                  } hover:bg-gray-50 transition-colors flex flex-col cursor-pointer`}
+                  onClick={(e) => handleDayClick(day, e)}>
                   {/* Day number */}
                   <div className="text-center flex-shrink-0">
                     <div
@@ -104,12 +149,7 @@ export default function MonthView() {
                   <div className="sm:px-1 space-y-1 flex-1">
                     {/* Standard events */}
                     {dayEvents.slice(0, 2).map((event, eventIndex) => (
-                      <EnhancedEventBlock
-                        key={`${event.id}-${eventIndex}`}
-                        event={event}
-                        className="w-full"
-                        showTime={false}
-                      />
+                      <EventBlock key={`${event.id}-${eventIndex}`} event={event} className="w-full" showTime={false} />
                     ))}
 
                     {dayEvents.length > 3 && (
@@ -125,8 +165,7 @@ export default function MonthView() {
                         title="Add event"
                         onClick={(e) => {
                           e.stopPropagation();
-                          // TODO: Open add event modal with this date pre-selected
-                          console.log("Add event for", format(day, "yyyy-MM-dd"));
+                          handleDayClick(day, e);
                         }}>
                         +
                       </button>
@@ -138,6 +177,36 @@ export default function MonthView() {
           </div>
         ))}
       </div>
+
+      {/* QuickEventCreator */}
+      {showQuickCreator && selectedDate && (
+        <>
+          {isMobile ? (
+            /* Mobile: Full screen modal */
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-lg max-w-sm w-full max-h-[90vh] overflow-y-auto">
+                <QuickEventCreator selectedDate={selectedDate} onClose={closeQuickCreator} />
+              </div>
+            </div>
+          ) : (
+            /* Desktop: Popup positioned near clicked day */
+            <div
+              className="fixed z-50"
+              style={{
+                left: `${popupPosition.x}px`,
+                top: `${popupPosition.y}px`,
+                transform: "translateX(-50%)",
+              }}>
+              <div className="bg-white rounded-lg shadow-xl border border-gray-200 max-w-sm">
+                <QuickEventCreator selectedDate={selectedDate} onClose={closeQuickCreator} />
+              </div>
+            </div>
+          )}
+
+          {/* Overlay to close on outside click */}
+          <div className="fixed inset-0 z-40" onClick={closeQuickCreator} />
+        </>
+      )}
     </div>
   );
 }

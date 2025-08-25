@@ -1,6 +1,6 @@
 import type { CalendarClickContent, EventInterface } from "@/data/Calendar/events";
 import type { CalendarContextProps } from "@/data/Calendar/context";
-import { useEvents, addEvent as firebaseAddEvent, updateEvent as firebaseUpdateEvent } from "../api/events";
+import { useEvents, updateEvent as firebaseUpdateEvent } from "../api/events";
 import { getDateKey } from "../utils/helpers";
 import { createContext, useEffect, useMemo, useState } from "react";
 
@@ -48,17 +48,6 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
       // Firebase will trigger a real-time update through useEvents hook
     } catch (error) {
       console.error("Failed to update event:", error);
-    }
-  };
-
-  const addEvent = async (eventData: Omit<EventInterface, "id" | "createdAt" | "updatedAt">) => {
-    try {
-      const eventId = await firebaseAddEvent(eventData);
-      console.log("Event added with ID:", eventId);
-      // Firebase will trigger a real-time update through useEvents hook
-    } catch (error) {
-      console.error("Failed to add event:", error);
-      throw error;
     }
   };
 
@@ -134,7 +123,6 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
         setIsInitialized,
         events: events,
         updateEvent,
-        addEvent,
         hourlyEvents,
         dailyEvents,
         calendarClickContent,

@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Calendar, Heart, Pill, Dumbbell, Coffee, Plus, X } from "lucide-react";
-import { useCalendarContext } from "@/hooks/context/useCalendarContext";
-import { useAuthContext } from "../../../hooks/context/useAuthContext";
-import { EventInterface } from "@/data/Calendar/events";
+import { X, Calendar, Clock } from "lucide-react";
+import { useAddEvent } from "@/hooks/events";
+import { format } from "date-fns";
 
 interface QuickEventCreatorProps {
   selectedDate?: Date;
@@ -11,214 +10,180 @@ interface QuickEventCreatorProps {
 }
 
 export default function QuickEventCreator({ selectedDate, onClose, className = "" }: QuickEventCreatorProps) {
-  const { addEvent } = useCalendarContext();
-  const { user } = useAuthContext();
-  const [isCreating, setIsCreating] = useState(false);
+  const { addEvent, isLoading: isCreating } = useAddEvent();
 
-  const quickEvents = [
-    {
-      id: "period",
-      title: "Period",
-      icon: <Heart className="h-4 w-4" />,
-      color: "bg-pink-500",
-      description: "Monthly cycle tracking",
-      template: {
-        title: "Period",
-        category: "Health" as const,
-        displayType: "icon" as const,
-        icon: "Circle",
-        iconColor: "#ec4899",
-        allDay: true,
-        isRecurring: true,
-        recurrence: {
-          pattern: "monthly" as const,
-          interval: 1,
-          daysOfWeek: [],
-        },
-        isPrivate: true,
-        visibility: "private" as const,
-        healthData: {
-          type: "period" as const,
-          notes: "Regular cycle tracking",
-        },
-      },
-    },
-    {
-      id: "medication",
-      title: "Medication",
-      icon: <Pill className="h-4 w-4" />,
-      color: "bg-blue-500",
-      description: "Daily medication reminder",
-      template: {
-        title: "Medication",
-        category: "Health" as const,
-        displayType: "icon" as const,
-        icon: "Pill",
-        iconColor: "#3b82f6",
-        allDay: false,
-        isRecurring: true,
-        recurrence: {
-          pattern: "daily" as const,
-          interval: 1,
-          daysOfWeek: [],
-        },
-        healthData: {
-          type: "medication" as const,
-          notes: "Daily medication reminder",
-        },
-      },
-    },
-    {
-      id: "workout",
-      title: "Workout",
-      icon: <Dumbbell className="h-4 w-4" />,
-      color: "bg-green-500",
-      description: "Exercise session",
-      template: {
-        title: "Workout",
-        category: "Fitness" as const,
-        displayType: "standard" as const,
-        icon: "Dumbbell",
-        iconColor: "#10b981",
-      },
-    },
-    {
-      id: "coffee",
-      title: "Coffee Break",
-      icon: <Coffee className="h-4 w-4" />,
-      color: "bg-amber-500",
-      description: "Quick coffee break",
-      template: {
-        title: "Coffee Break",
-        category: "Personal" as const,
-        displayType: "standard" as const,
-        allDay: false,
-      },
-    },
-  ];
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState(
+    selectedDate ? format(selectedDate, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
+  );
+  const [startTime, setStartTime] = useState("09:00");
+  const [endTime, setEndTime] = useState("10:00");
+  const [allDay, setAllDay] = useState(false);
 
-  const createQuickEvent = async (template: Partial<EventInterface> & { description?: string }) => {
-    if (!user?.uid || !selectedDate) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    setIsCreating(true);
+    if (!title.trim()) return;
 
     try {
-      const startDate = new Date(selectedDate);
-      const endDate = new Date(selectedDate);
+      const eventDate = new Date(date);
 
-      // Set default times based on event type
-      if (!template.allDay) {
-        switch (template.title) {
-          case "Medication":
-            startDate.setHours(8, 0, 0, 0);
-            endDate.setHours(8, 15, 0, 0);
-            break;
-          case "Workout":
-            startDate.setHours(18, 0, 0, 0);
-            endDate.setHours(19, 0, 0, 0);
-            break;
-          case "Coffee Break":
-            startDate.setHours(15, 0, 0, 0);
-            endDate.setHours(15, 15, 0, 0);
-            break;
-          default:
-            startDate.setHours(9, 0, 0, 0);
-            endDate.setHours(10, 0, 0, 0);
-        }
+      let start: Date;
+      let end: Date;
+
+      if (allDay) {
+        start = new Date(eventDate);
+        start.setHours(0, 0, 0, 0);
+        end = new Date(eventDate);
+        end.setHours(23, 59, 59, 999);
       } else {
-        // For period tracking, create 5-day duration
-        if (template.title === "Period") {
-          endDate.setDate(endDate.getDate() + 4);
-        }
+        const [startHour, startMinute] = startTime.split(":").map(Number);
+        const [endHour, endMinute] = endTime.split(":").map(Number);
+
+        start = new Date(eventDate);
+        start.setHours(startHour, startMinute, 0, 0);
+
+        end = new Date(eventDate);
+        end.setHours(endHour, endMinute, 0, 0);
       }
 
-      const eventData: Omit<EventInterface, "id" | "createdAt" | "updatedAt"> = {
-        title: template.title || "Event",
-        category: template.category || "Other",
-        allDay: template.allDay || false,
-        isRecurring: template.isRecurring || false,
-        isPrivate: template.isPrivate || false,
-        visibility: template.visibility || "public",
-        ...template,
-        start: template.allDay ? startDate.toISOString().split("T")[0] : startDate.toISOString(),
-        end: template.allDay ? endDate.toISOString().split("T")[0] : endDate.toISOString(),
-        color: template.color || getCategoryColor(template.category || "Other"),
-        userId: user.uid,
-        description: template.description,
+      const newEvent = {
+        title: title.trim(),
+        start: start.toISOString(),
+        end: end.toISOString(),
+        allDay,
+        category: "Personal" as const,
+        displayType: "block" as const,
+        color: "#3b82f6",
+        isRecurring: false,
+        isPrivate: false,
+        visibility: "private" as const,
       };
 
-      await addEvent(eventData);
+      await addEvent(newEvent);
       onClose?.();
     } catch (error) {
-      console.error("Failed to create quick event:", error);
-    } finally {
-      setIsCreating(false);
+      console.error("Error creating event:", error);
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    const colors = {
-      Health: "bg-pink-500",
-      Fitness: "bg-green-500",
-      Personal: "bg-purple-500",
-      Work: "bg-blue-500",
-      Other: "bg-gray-500",
-    };
-    return colors[category as keyof typeof colors] || "bg-gray-500";
-  };
-
   return (
-    <div className={`bg-white  rounded-md shadow-lg border border-gray-200  p-4 ${className}`}>
+    <div className={`p-4 ${className}`}>
+      {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900  flex items-center">
-          <Plus className="h-5 w-5 mr-2" />
-          Quick Add
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900">Create Event</h3>
         {onClose && (
-          <button onClick={onClose} className="p-1 text-gray-400 hover:bg-gray-100  rounded">
-            <X className="h-4 w-4" />
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+            <X className="h-5 w-5 text-gray-500" />
           </button>
         )}
       </div>
 
-      {selectedDate && (
-        <div className="mb-4 text-sm text-gray-600  flex items-center">
-          <Calendar className="h-4 w-4 mr-1" />
-          {selectedDate.toLocaleDateString("en", {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-          })}
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Event Title */}
+        <div>
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+            Event Title
+          </label>
+          <input
+            id="title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter event title..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
+            autoFocus
+          />
         </div>
-      )}
 
-      <div className="grid grid-cols-2 gap-3">
-        {quickEvents.map((event) => (
-          <button
-            key={event.id}
-            onClick={() => createQuickEvent(event.template)}
-            disabled={isCreating || !selectedDate}
-            className={`
-              ${event.color} text-white p-3 rounded-md text-left transition-all
-              hover:shadow-md hover:scale-105 active:scale-95
-              disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
-              flex flex-col items-start space-y-1
-            `}>
-            <div className="flex items-center space-x-2">
-              {event.icon}
-              <span className="font-medium text-sm">{event.title}</span>
+        {/* Date */}
+        <div>
+          <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+            Date
+          </label>
+          <div className="relative">
+            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              id="date"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
+        </div>
+
+        {/* All Day Toggle */}
+        <div className="flex items-center">
+          <input
+            id="allDay"
+            type="checkbox"
+            checked={allDay}
+            onChange={(e) => setAllDay(e.target.checked)}
+            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          />
+          <label htmlFor="allDay" className="ml-2 block text-sm text-gray-700">
+            All day event
+          </label>
+        </div>
+
+        {/* Time Fields (only if not all day) */}
+        {!allDay && (
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="startTime" className="block text-sm font-medium text-gray-700 mb-1">
+                Start Time
+              </label>
+              <div className="relative">
+                <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  id="startTime"
+                  type="time"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
             </div>
-            <span className="text-xs text-white/80">{event.description}</span>
-          </button>
-        ))}
-      </div>
+            <div>
+              <label htmlFor="endTime" className="block text-sm font-medium text-gray-700 mb-1">
+                End Time
+              </label>
+              <div className="relative">
+                <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  id="endTime"
+                  type="time"
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
-      {isCreating && (
-        <div className="mt-4 flex items-center justify-center space-x-2 text-sm text-gray-500 ">
-          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
-          <span>Creating event...</span>
+        {/* Action Buttons */}
+        <div className="flex gap-3 pt-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={!title.trim() || isCreating}
+            className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            {isCreating ? "Creating..." : "Create Event"}
+          </button>
         </div>
-      )}
+      </form>
     </div>
   );
 }
