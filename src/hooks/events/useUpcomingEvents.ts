@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useEvents } from "../../api/events";
-import { EventInterface } from "@/data/Calendar/events";
+import type { EventInterface } from "@/data/Calendar/events";
+import type { UpcomingEventGroup } from "@/data/Events";
 import {
   startOfDay,
   isToday,
@@ -13,12 +14,6 @@ import {
   isThisMonth,
 } from "date-fns";
 import { pl } from "date-fns/locale";
-
-export interface UpcomingEventGroup {
-  title: string;
-  events: EventInterface[];
-  dateRange: string;
-}
 
 export const useUpcomingEvents = () => {
   const allEvents = useEvents();

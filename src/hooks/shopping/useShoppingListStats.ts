@@ -1,13 +1,7 @@
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { getShoppingItemsForList, deleteShoppingItem } from "@/api/shopping";
-import type { ShoppingItemInterface, ShoppingListInterface } from "@/data/Shopping";
-
-export interface ListStats {
-  total: number;
-  completed: number;
-  pending: number;
-}
+import type { ShoppingItemInterface, ShoppingListInterface, ListStats } from "@/data/Shopping";
 
 /**
  * Aggregates shopping item stats per list and exposes a clear-completed action.

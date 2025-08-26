@@ -1,5 +1,38 @@
 // Shopping domain interfaces and shared UI props for the Shopping feature
 
+// Hook-specific types
+export interface ListStats {
+  total: number;
+  completed: number;
+  pending: number;
+}
+
+export type NewShoppingItem = Omit<ShoppingItemInterface, "id" | "addedAt" | "listId" | "userId">;
+
+// Context type
+export interface ShoppingContextType {
+  // Shopping Lists (no CRUD here anymore)
+  shoppingLists: ShoppingListInterface[];
+  currentList: ShoppingListInterface | null;
+  setCurrentList: (list: ShoppingListInterface | null) => void;
+
+  // Shopping Items
+  // moved to hooks in '@/hooks/shopping'
+
+  // Favorite Products
+  favoriteProducts: FavoriteProductInterface[];
+
+  // Categories
+  categories: ShoppingCategoryInterface[];
+
+  // UI State
+  loading: boolean;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  selectedCategory: string | null;
+  setSelectedCategory: (category: string | null) => void;
+}
+
 // Domain models (moved from '@/data/types')
 export interface ShoppingItemInterface {
   id: string;

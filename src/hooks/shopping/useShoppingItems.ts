@@ -11,7 +11,7 @@ import {
   deleteFavoriteProduct,
   updateFavoriteProduct,
 } from "@/api/shopping";
-import type { ShoppingItemInterface, FavoriteProductInterface } from "@/data/Shopping";
+import type { ShoppingItemInterface, NewShoppingItem, FavoriteProductInterface } from "@/data/Shopping";
 // useQuery already imported above
 
 export const useShoppingItemsQuery = (listId?: string) => {
@@ -22,8 +22,6 @@ export const useShoppingItemsQuery = (listId?: string) => {
     enabled: !!user && !!listId,
   });
 };
-
-type NewShoppingItem = Omit<ShoppingItemInterface, "id" | "addedAt" | "listId" | "userId">;
 
 export const useAddShoppingItem = () => {
   const { user } = useAuthContext();

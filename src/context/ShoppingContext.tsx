@@ -1,29 +1,6 @@
-import type { ShoppingListInterface, FavoriteProductInterface, ShoppingCategoryInterface } from "@/data/Shopping";
+import type { ShoppingListInterface, ShoppingCategoryInterface, ShoppingContextType } from "@/data/Shopping";
 import { createContext, useEffect, useState } from "react";
 import { useShoppingLists, useFavoriteProducts, defaultCategories } from "../api/shopping";
-
-interface ShoppingContextType {
-  // Shopping Lists (no CRUD here anymore)
-  shoppingLists: ShoppingListInterface[];
-  currentList: ShoppingListInterface | null;
-  setCurrentList: (list: ShoppingListInterface | null) => void;
-
-  // Shopping Items
-  // moved to hooks in '@/hooks/shopping'
-
-  // Favorite Products
-  favoriteProducts: FavoriteProductInterface[];
-
-  // Categories
-  categories: ShoppingCategoryInterface[];
-
-  // UI State
-  loading: boolean;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  selectedCategory: string | null;
-  setSelectedCategory: (category: string | null) => void;
-}
 
 const ShoppingContext = createContext<ShoppingContextType | undefined>(undefined);
 export { ShoppingContext };
