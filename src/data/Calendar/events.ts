@@ -1,14 +1,13 @@
 // Calendar & Event related domain models (migrated from '@/data/types')
 
 export type EventColor =
-  | "bg-red-500"
-  | "bg-blue-400"
-  | "bg-yellow-500"
-  | "bg-green-500"
-  | "bg-purple-500"
-  | "bg-pink-500"
-  | "bg-indigo-500"
-  | "bg-orange-500";
+  | "primary" // a27b77 - główny kolor motywu
+  | "success" // 6a9e6f - zielony sukcesu
+  | "negative" // e74c3c - czerwony błędu
+  | "text" // 1e1e1e - ciemny tekst
+  | "text-light" // 666666 - jasnoszary tekst
+  | "bg-hover" // e3cdbf - hover color
+  | "custom"; // pozwala na custom hex color
 
 export type EventCategory =
   | "Important"

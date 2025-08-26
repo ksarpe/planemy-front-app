@@ -5,7 +5,7 @@ import { useUpcomingEvents } from "@/hooks/events";
 import { useNavigate } from "react-router-dom";
 
 export default function UpcomingEvents() {
-  const { groups, totalEvents, hasEvents, nextEvent, hasNearEvents } = useUpcomingEvents();
+  const { groups, totalEvents, hasEvents, nextEvent } = useUpcomingEvents();
   const navigate = useNavigate();
 
   if (!hasEvents) {

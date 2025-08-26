@@ -1,4 +1,4 @@
-import type { EventInterface } from "@/data/types";
+import type { EventInterface } from "@/data/Calendar/events";
 
 // Event related hook interfaces
 
