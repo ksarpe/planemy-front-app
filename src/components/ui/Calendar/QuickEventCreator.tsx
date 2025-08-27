@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Calendar, Clock } from "lucide-react";
 import { useAddEvent } from "@/hooks/events";
 import { format } from "date-fns";
+import { EventInterface } from "@/data/Calendar/events";
 
 interface QuickEventCreatorProps {
   selectedDate?: Date;
   onClose?: () => void;
+  onPreviewChange?: (previewData: Partial<EventInterface>) => void;
   className?: string;
 }
 
-export default function QuickEventCreator({ selectedDate, onClose, className = "" }: QuickEventCreatorProps) {
+export default function QuickEventCreator({
+  selectedDate,
+  onClose,
+  onPreviewChange,
+  className = "",
+}: QuickEventCreatorProps) {
   const { addEvent, isLoading: isCreating } = useAddEvent();
 
   const [title, setTitle] = useState("");
@@ -19,6 +26,47 @@ export default function QuickEventCreator({ selectedDate, onClose, className = "
   const [startTime, setStartTime] = useState("09:00");
   const [endTime, setEndTime] = useState("10:00");
   const [allDay, setAllDay] = useState(false);
+
+  // Przekazuj dane preview do rodzica za każdym razem gdy się zmieniają
+  useEffect(() => {
+    if (!onPreviewChange) return;
+
+    try {
+      const eventDate = new Date(date);
+      let start: Date;
+      let end: Date;
+
+      if (allDay) {
+        start = new Date(eventDate);
+        start.setHours(0, 0, 0, 0);
+        end = new Date(eventDate);
+        end.setHours(23, 59, 59, 999);
+      } else {
+        const [startHour, startMinute] = startTime.split(":").map(Number);
+        const [endHour, endMinute] = endTime.split(":").map(Number);
+
+        start = new Date(eventDate);
+        start.setHours(startHour, startMinute, 0, 0);
+
+        end = new Date(eventDate);
+        end.setHours(endHour, endMinute, 0, 0);
+      }
+
+      const previewEvent = {
+        title: title.trim() || "New Event",
+        start: start.toISOString(),
+        end: end.toISOString(),
+        allDay,
+        category: "Personal" as const,
+        color: "#3b82f6",
+      };
+
+      onPreviewChange(previewEvent);
+    } catch {
+      // Jeśli date jest invalid, wyczyść preview
+      onPreviewChange({});
+    }
+  }, [title, date, startTime, endTime, allDay, onPreviewChange]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

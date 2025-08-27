@@ -11,8 +11,9 @@ import {
   isSameDay,
   isToday,
 } from "date-fns";
-import EventBlock from "./EventBlock";
+import EventBlock from "./Event/EventBlock";
 import QuickEventCreator from "./QuickEventCreator";
+import PreviewEventBlock from "./PreviewEventBlock";
 import { EventInterface } from "@/data/Calendar/events";
 
 export default function MonthView() {
@@ -21,6 +22,10 @@ export default function MonthView() {
   const [showQuickCreator, setShowQuickCreator] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Preview event state
+  const [previewEvent, setPreviewEvent] = useState<Partial<EventInterface>>({});
+  const [selectedDayRect, setSelectedDayRect] = useState<DOMRect | null>(null);
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -60,18 +65,47 @@ export default function MonthView() {
     event.stopPropagation();
     setSelectedDate(day);
 
+    // Zapisz rect klikniętego dnia dla preview
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    setSelectedDayRect(rect);
+
     if (isMobile) {
       setShowQuickCreator(true);
     } else {
-      // Calculate popup position relative to clicked element
-      const rect = (event.target as HTMLElement).getBoundingClientRect();
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+      // Calculate smart popup position
+      const modalWidth = 384; // max-w-sm ≈ 384px
+      const modalHeight = 400; // estimated height
+      const offset = 8;
 
-      setPopupPosition({
-        x: rect.left + scrollLeft + rect.width / 2,
-        y: rect.bottom + scrollTop + 5,
-      });
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      // Calculate available space
+      const spaceBelow = viewportHeight - rect.bottom;
+
+      let x = rect.left + rect.width / 2; // center horizontally on day
+      let y = rect.bottom + offset; // below by default
+
+      // Adjust horizontal position if modal would overflow
+      if (x + modalWidth / 2 > viewportWidth - offset) {
+        x = viewportWidth - modalWidth / 2 - offset;
+      }
+      if (x - modalWidth / 2 < offset) {
+        x = modalWidth / 2 + offset;
+      }
+
+      // Adjust vertical position if modal would overflow
+      if (spaceBelow < modalHeight + offset) {
+        // Try above
+        if (rect.top > modalHeight + offset) {
+          y = rect.top - modalHeight - offset;
+        } else {
+          // Center vertically if neither works
+          y = Math.max(offset, (viewportHeight - modalHeight) / 2);
+        }
+      }
+
+      setPopupPosition({ x, y });
       setShowQuickCreator(true);
     }
   };
@@ -81,6 +115,15 @@ export default function MonthView() {
     setShowQuickCreator(false);
     setSelectedDate(null);
     setPopupPosition({ x: 0, y: 0 });
+
+    // Wyczyść preview
+    setPreviewEvent({});
+    setSelectedDayRect(null);
+  };
+
+  // Handler dla zmiany danych preview
+  const handlePreviewChange = (newPreviewEvent: Partial<EventInterface>) => {
+    setPreviewEvent(newPreviewEvent);
   };
 
   const getEventsForDay = (day: Date): EventInterface[] => {
@@ -185,7 +228,11 @@ export default function MonthView() {
             /* Mobile: Full screen modal */
             <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
               <div className="bg-white rounded-lg max-w-sm w-full max-h-[90vh] overflow-y-auto">
-                <QuickEventCreator selectedDate={selectedDate} onClose={closeQuickCreator} />
+                <QuickEventCreator
+                  selectedDate={selectedDate}
+                  onClose={closeQuickCreator}
+                  onPreviewChange={handlePreviewChange}
+                />
               </div>
             </div>
           ) : (
@@ -198,7 +245,11 @@ export default function MonthView() {
                 transform: "translateX(-50%)",
               }}>
               <div className="bg-white rounded-lg shadow-xl border border-gray-200 max-w-sm">
-                <QuickEventCreator selectedDate={selectedDate} onClose={closeQuickCreator} />
+                <QuickEventCreator
+                  selectedDate={selectedDate}
+                  onClose={closeQuickCreator}
+                  onPreviewChange={handlePreviewChange}
+                />
               </div>
             </div>
           )}
@@ -206,6 +257,11 @@ export default function MonthView() {
           {/* Overlay to close on outside click */}
           <div className="fixed inset-0 z-40" onClick={closeQuickCreator} />
         </>
+      )}
+
+      {/* Preview Event Block - pokazuje się w tle podczas tworzenia eventu */}
+      {showQuickCreator && selectedDayRect && previewEvent.title && (
+        <PreviewEventBlock event={previewEvent} dayRect={selectedDayRect} />
       )}
     </div>
   );
