@@ -1,13 +1,17 @@
 import { EventInterface } from "@/data/Calendar/events";
 import { Clock } from "lucide-react";
 
-interface PreviewEventBlockProps {
+interface PreviewEventBlockInlineProps {
   event: Partial<EventInterface>;
-  dayRect: DOMRect;
   showTime?: boolean;
+  className?: string;
 }
 
-export default function PreviewEventBlock({ event, dayRect, showTime = true }: PreviewEventBlockProps) {
+export default function PreviewEventBlockInline({
+  event,
+  showTime = false,
+  className = "",
+}: PreviewEventBlockInlineProps) {
   const getEventColor = () => {
     if (event.color && event.color.startsWith("#")) {
       return { backgroundColor: event.color };
@@ -43,21 +47,10 @@ export default function PreviewEventBlock({ event, dayRect, showTime = true }: P
     })}`;
   };
 
-  // Pozycjonowanie w centrum klikniętego dnia
-  const previewStyle = {
-    position: "fixed" as const,
-    left: `${dayRect.left + 4}px`, // mały offset od krawędzi
-    top: `${dayRect.top + 4}px`,
-    width: `${dayRect.width - 8}px`, // trochę mniejszy od komórki
-    zIndex: 30, // pod QuickEventCreator ale nad kalendarzem
-    pointerEvents: "none" as const, // nie blokuje interakcji
-  };
-
   return (
     <div
-      className="text-white rounded-md shadow-sm border-l-4 border-dashed animate-pulse"
+      className={`text-white rounded-md shadow-sm hover:shadow-md transition-all border-l-4 border-dashed animate-pulse ${className}`}
       style={{
-        ...previewStyle,
         ...getEventColor(),
         borderLeftColor: getEventColor().backgroundColor,
         opacity: 0.7,

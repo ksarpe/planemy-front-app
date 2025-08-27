@@ -1,19 +1,19 @@
 import { Edit2, Clock, X } from "lucide-react";
 import { EventInterface } from "@/data/Calendar/events";
-import { useMousePosition } from "../../../../hooks/useMousePosition";
+import { useElementPosition } from "@/hooks/useElementPosition";
 
 interface EventDetailsModalProps {
   event: EventInterface;
   onClose: () => void;
-  onEdit: (mousePosition: { x: number; y: number }) => void;
-  mousePosition: { x: number; y: number };
+  onEdit: (elementPosition: { x: number; y: number }) => void;
+  elementPosition: { x: number; y: number };
 }
 
-export default function EventDetailsModal({ event, onClose, onEdit, mousePosition }: EventDetailsModalProps) {
+export default function EventDetailsModal({ event, onClose, onEdit, elementPosition }: EventDetailsModalProps) {
   // Mouse positioning hook - pozycjonuje blisko kursora
-  const { positionStyles } = useMousePosition({
+  const { positionStyles } = useElementPosition({
     isOpen: true,
-    mousePosition,
+    elementPosition,
     modalWidth: 300, // min-w-72 ≈ 288px + padding
     modalHeight: 150, // mniejszy dla details modal
   });

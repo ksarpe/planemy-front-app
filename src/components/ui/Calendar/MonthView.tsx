@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
+import { useElementPosition } from "@/hooks/useElementPosition";
 import {
   format,
   startOfMonth,
@@ -13,19 +14,28 @@ import {
 } from "date-fns";
 import EventBlock from "./Event/EventBlock";
 import QuickEventCreator from "./QuickEventCreator";
-import PreviewEventBlock from "./PreviewEventBlock";
+import PreviewEventBlockInline from "./PreviewEventBlockInline";
 import { EventInterface } from "@/data/Calendar/events";
 
 export default function MonthView() {
   const { currentDate, events } = useCalendarContext();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showQuickCreator, setShowQuickCreator] = useState(false);
-  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+  const [elementPosition, setElementPosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Preview event state
   const [previewEvent, setPreviewEvent] = useState<Partial<EventInterface>>({});
-  const [selectedDayRect, setSelectedDayRect] = useState<DOMRect | null>(null);
+  const previewEventRef = useRef<HTMLDivElement>(null);
+
+  // Use element position hook
+  const { positionStyles } = useElementPosition({
+    isOpen: showQuickCreator && !isMobile,
+    elementPosition,
+    modalWidth: 384,
+    modalHeight: 400,
+    offset: 8,
+  });
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -50,7 +60,7 @@ export default function MonthView() {
   const gridTemplateRows = `repeat(${numberOfWeeks}, 1fr)`;
 
   // Mobile detection and responsive handling
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -65,47 +75,11 @@ export default function MonthView() {
     event.stopPropagation();
     setSelectedDate(day);
 
-    // Zapisz rect klikniętego dnia dla preview
-    const rect = (event.target as HTMLElement).getBoundingClientRect();
-    setSelectedDayRect(rect);
-
     if (isMobile) {
       setShowQuickCreator(true);
     } else {
-      // Calculate smart popup position
-      const modalWidth = 384; // max-w-sm ≈ 384px
-      const modalHeight = 400; // estimated height
-      const offset = 8;
-
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-
-      // Calculate available space
-      const spaceBelow = viewportHeight - rect.bottom;
-
-      let x = rect.left + rect.width / 2; // center horizontally on day
-      let y = rect.bottom + offset; // below by default
-
-      // Adjust horizontal position if modal would overflow
-      if (x + modalWidth / 2 > viewportWidth - offset) {
-        x = viewportWidth - modalWidth / 2 - offset;
-      }
-      if (x - modalWidth / 2 < offset) {
-        x = modalWidth / 2 + offset;
-      }
-
-      // Adjust vertical position if modal would overflow
-      if (spaceBelow < modalHeight + offset) {
-        // Try above
-        if (rect.top > modalHeight + offset) {
-          y = rect.top - modalHeight - offset;
-        } else {
-          // Center vertically if neither works
-          y = Math.max(offset, (viewportHeight - modalHeight) / 2);
-        }
-      }
-
-      setPopupPosition({ x, y });
+      // Set mouse position for useElementPosition hook
+      setElementPosition({ x: event.clientX, y: event.clientY });
       setShowQuickCreator(true);
     }
   };
@@ -114,11 +88,10 @@ export default function MonthView() {
   const closeQuickCreator = () => {
     setShowQuickCreator(false);
     setSelectedDate(null);
-    setPopupPosition({ x: 0, y: 0 });
+    setElementPosition({ x: 0, y: 0 });
 
     // Wyczyść preview
     setPreviewEvent({});
-    setSelectedDayRect(null);
   };
 
   // Handler dla zmiany danych preview
@@ -127,7 +100,7 @@ export default function MonthView() {
   };
 
   const getEventsForDay = (day: Date): EventInterface[] => {
-    return events.filter((event) => {
+    const dayEvents = events.filter((event) => {
       const eventStart = new Date(event.start);
       const eventEnd = new Date(event.end);
 
@@ -143,6 +116,25 @@ export default function MonthView() {
 
       return eventStart <= dayEnd && eventEnd >= dayStart;
     });
+
+    return dayEvents;
+  };
+
+  // Funkcja do uzyskania eventów z preview eventem wstawionym w odpowiednie miejsce
+  const getEventsForDayWithPreview = (
+    day: Date,
+  ): (EventInterface | { isPreview: true; event: Partial<EventInterface> })[] => {
+    const dayEvents = getEventsForDay(day);
+
+    // Sprawdź czy to dzień dla którego pokazujemy preview
+    const isPreviewDay = selectedDate && isSameDay(day, selectedDate);
+    if (!isPreviewDay || !previewEvent.title) {
+      return dayEvents;
+    }
+
+    // Dodaj preview event na początek, nie sortuj regularnych eventów
+    const previewItem = { isPreview: true as const, event: previewEvent };
+    return [previewItem, ...dayEvents];
   };
 
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -163,7 +155,7 @@ export default function MonthView() {
         {weeks.map((week, weekIndex) => (
           <div key={weekIndex} className="grid grid-cols-7 border-b border-gray-200 last:border-b-0">
             {week.map((day, dayIndex) => {
-              const dayEvents = getEventsForDay(day);
+              const dayEventsWithPreview = getEventsForDayWithPreview(day);
               const isCurrentMonth = isSameMonth(day, currentDate);
               const isDayToday = isToday(day);
 
@@ -190,14 +182,56 @@ export default function MonthView() {
 
                   {/* Events */}
                   <div className="sm:px-1 space-y-1 flex-1">
-                    {/* Standard events */}
-                    {dayEvents.slice(0, 2).map((event, eventIndex) => (
-                      <EventBlock key={`${event.id}-${eventIndex}`} event={event} className="w-full" showTime={false} />
-                    ))}
+                    {/* Preview event (always first if exists) */}
+                    {(() => {
+                      const previewItem = dayEventsWithPreview.find((item) => "isPreview" in item && item.isPreview);
+                      if (previewItem && "isPreview" in previewItem && previewItem.isPreview) {
+                        return (
+                          <div ref={previewEventRef}>
+                            <PreviewEventBlockInline event={previewItem.event} className="w-full" showTime={false} />
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
 
-                    {dayEvents.length > 3 && (
-                      <div className="text-xs text-gray-500 pl-2 py-1">+{dayEvents.length - 3} more</div>
-                    )}
+                    {/* Regular events */}
+                    {(() => {
+                      const regularEvents = dayEventsWithPreview.filter((eventItem) => !("isPreview" in eventItem));
+                      const hasPreview = dayEventsWithPreview.some((item) => "isPreview" in item && item.isPreview);
+
+                      // Jeśli jest preview, pokaż mniej regularnych eventów aby nie rozszerzać kafelka
+                      const maxRegularEvents = hasPreview ? 2 : 3;
+
+                      return regularEvents.slice(0, maxRegularEvents).map((eventItem, eventIndex) => {
+                        const event = eventItem as EventInterface;
+                        return (
+                          <EventBlock
+                            key={`${event.id}-${eventIndex}`}
+                            event={event}
+                            className="w-full"
+                            showTime={false}
+                          />
+                        );
+                      });
+                    })()}
+
+                    {/* Show "more" indicator */}
+                    {(() => {
+                      const regularEventsCount = dayEventsWithPreview.filter((item) => !("isPreview" in item)).length;
+                      const hasPreview = dayEventsWithPreview.some((item) => "isPreview" in item && item.isPreview);
+
+                      // Jeśli jest preview, pokazujemy 1 preview + 1 regular, więc remaining = regularEventsCount - 1
+                      // Jeśli nie ma preview, pokazujemy 2 regular, więc remaining = regularEventsCount - 2
+                      const maxRegularEvents = hasPreview ? 1 : 2;
+                      const shownRegularEvents = Math.min(regularEventsCount, maxRegularEvents);
+                      const remainingEvents = regularEventsCount - shownRegularEvents;
+
+                      if (remainingEvents > 0) {
+                        return <div className="text-xs text-gray-500 pl-2 py-1">+{remainingEvents} more</div>;
+                      }
+                      return null;
+                    })()}
                   </div>
 
                   {/* Add event overlay (appears on hover) */}
@@ -236,32 +270,24 @@ export default function MonthView() {
               </div>
             </div>
           ) : (
-            /* Desktop: Popup positioned near clicked day */
-            <div
-              className="fixed z-50"
-              style={{
-                left: `${popupPosition.x}px`,
-                top: `${popupPosition.y}px`,
-                transform: "translateX(-50%)",
-              }}>
-              <div className="bg-white rounded-lg shadow-xl border border-gray-200 max-w-sm">
+            /* Desktop: Popup positioned using useElementPosition - only render when position is ready */
+            positionStyles.left !== undefined &&
+            positionStyles.top !== undefined && (
+              <div
+                className="bg-white rounded-lg shadow-xl border border-gray-200 max-w-sm transition-opacity duration-150 opacity-100"
+                style={positionStyles}>
                 <QuickEventCreator
                   selectedDate={selectedDate}
                   onClose={closeQuickCreator}
                   onPreviewChange={handlePreviewChange}
                 />
               </div>
-            </div>
+            )
           )}
 
           {/* Overlay to close on outside click */}
           <div className="fixed inset-0 z-40" onClick={closeQuickCreator} />
         </>
-      )}
-
-      {/* Preview Event Block - pokazuje się w tle podczas tworzenia eventu */}
-      {showQuickCreator && selectedDayRect && previewEvent.title && (
-        <PreviewEventBlock event={previewEvent} dayRect={selectedDayRect} />
       )}
     </div>
   );

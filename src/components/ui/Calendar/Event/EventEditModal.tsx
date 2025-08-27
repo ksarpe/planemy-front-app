@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Check, Clock } from "lucide-react";
 import { EventInterface } from "@/data/Calendar/events";
-import { useMousePosition } from "../../../../hooks/useMousePosition";
+import { useElementPosition } from "@/hooks/useElementPosition";
 
 interface EventEditModalProps {
   event: EventInterface;
   onClose: () => void;
   onSave: (updatedEvent: EventInterface) => void;
-  mousePosition: { x: number; y: number };
+  elementPosition: { x: number; y: number };
 }
 
-export default function EventEditModal({ event, onClose, onSave, mousePosition }: EventEditModalProps) {
+export default function EventEditModal({ event, onClose, onSave, elementPosition }: EventEditModalProps) {
   const [editData, setEditData] = useState({
     title: event.title,
     description: event.description || "",
@@ -26,9 +26,9 @@ export default function EventEditModal({ event, onClose, onSave, mousePosition }
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   // Mouse positioning hook - tylko dla desktop
-  const { positionStyles } = useMousePosition({
+  const { positionStyles } = useElementPosition({
     isOpen: true,
-    mousePosition,
+    elementPosition,
     modalWidth: 384, // max-w-96
     modalHeight: 600, // większy dla edit modal
   });

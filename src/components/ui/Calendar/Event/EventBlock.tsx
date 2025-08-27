@@ -116,7 +116,7 @@ export default function EventBlock({ event, style, className = "", onClick, show
           event={event}
           onClose={() => setIsEditing(false)}
           onSave={handleSave}
-          mousePosition={mousePosition}
+          elementPosition={mousePosition}
         />
       )}
 
@@ -129,7 +129,7 @@ export default function EventBlock({ event, style, className = "", onClick, show
             setShowDetails(false);
             setIsEditing(true);
           }}
-          mousePosition={mousePosition}
+          elementPosition={mousePosition}
         />
       )}
     </div>
