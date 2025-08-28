@@ -17,7 +17,7 @@ export default function EventBlock({ event, style, className = "", onClick, show
   const { updateEvent } = useCalendarContext();
   const [isEditing, setIsEditing] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
   const editRef = useRef<HTMLDivElement>(null);
   const eventBlockRef = useRef<HTMLDivElement>(null);
@@ -45,7 +45,7 @@ export default function EventBlock({ event, style, className = "", onClick, show
     e.stopPropagation();
 
     // Zapisz pozycję kursora dla obu modali
-    setMousePosition({ x: e.clientX, y: e.clientY });
+    setMousePosition({ x: e.clientX, y: e.clientY, width: eventBlockRef.current?.offsetWidth || 0, height: eventBlockRef.current?.offsetHeight || 0 });
 
     if (onClick) {
       onClick(e);

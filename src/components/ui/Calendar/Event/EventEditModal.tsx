@@ -7,7 +7,7 @@ interface EventEditModalProps {
   event: EventInterface;
   onClose: () => void;
   onSave: (updatedEvent: EventInterface) => void;
-  elementPosition: { x: number; y: number };
+  elementPosition: { x: number; y: number; width: number; height: number };
 }
 
 export default function EventEditModal({ event, onClose, onSave, elementPosition }: EventEditModalProps) {

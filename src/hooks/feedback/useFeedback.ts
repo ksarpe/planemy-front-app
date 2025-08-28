@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { feedbackAPI, CreateFeedbackData } from "@/api/feedback";
+import { feedbackAPI } from "@/api/feedback";
+import type { CreateFeedbackData } from "@/data/User/interfaces";
 import { useToastContext } from "@/hooks/context/useToastContext";
 
 export const useFeedback = () => {

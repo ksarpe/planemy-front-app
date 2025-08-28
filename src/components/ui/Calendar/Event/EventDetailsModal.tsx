@@ -5,8 +5,8 @@ import { useElementPosition } from "@/hooks/useElementPosition";
 interface EventDetailsModalProps {
   event: EventInterface;
   onClose: () => void;
-  onEdit: (elementPosition: { x: number; y: number }) => void;
-  elementPosition: { x: number; y: number };
+  onEdit: (elementPosition: { x: number; y: number; width: number; height: number }) => void;
+  elementPosition: { x: number; y: number; width: number; height: number };
 }
 
 export default function EventDetailsModal({ event, onClose, onEdit, elementPosition }: EventDetailsModalProps) {
@@ -39,7 +39,7 @@ export default function EventDetailsModal({ event, onClose, onEdit, elementPosit
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
     // Przekaż pozycję kursora z kliknięcia przycisku Edit
-    onEdit({ x: e.clientX, y: e.clientY });
+    onEdit({ x: e.clientX, y: e.clientY, width: 300, height: 150 });
   };
 
   const handleClose = (e: React.MouseEvent) => {
