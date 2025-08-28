@@ -64,3 +64,25 @@ export interface AppearanceThemeSectionProps {
   selectedTheme: number;
   setSelectedTheme: (index: number) => void;
 }
+
+// Feedback related interfaces (moved from src/api/feedback.ts)
+export interface Feedback {
+  id: string;
+  message: string;
+  userId: string;
+  createdAt: Date;
+  status?: "pending" | "read" | "accepted" | "resolved";
+  priority?: "low" | "medium" | "high";
+}
+
+export interface CreateFeedbackData {
+  message: string;
+}
+
+// User profile document interface (moved from src/api/user_profile.ts)
+export interface UserProfileDoc {
+  id: string;
+  userId: string;
+  nickname: string;
+  email: string;
+}

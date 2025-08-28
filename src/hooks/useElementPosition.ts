@@ -1,19 +1,7 @@
 import { useEffect, useState } from "react";
+import type { UseElementPositionProps } from "@/data/Utils/interfaces";
 
-interface ElementPosition {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-interface UseElementPositionProps {
-  isOpen: boolean;
-  elementPosition: ElementPosition;
-  modalWidth?: number;
-  modalHeight?: number;
-  offset?: number;
-}
+export type { ElementPosition } from "@/data/Utils/interfaces";
 
 export function useElementPosition({
   isOpen,

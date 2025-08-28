@@ -12,25 +12,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useAuthContext } from "../hooks/context/useAuthContext";
-
-export interface Payment {
-  id: string;
-  name: string;
-  amount: number;
-  currency: string;
-  cycle: "weekly" | "monthly" | "quarterly" | "yearly";
-  category: "subscription" | "utility" | "insurance" | "loan" | "rent" | "other";
-  description?: string;
-  nextPaymentDate: string;
-  lastPaymentDate?: string;
-  isActive: boolean;
-  isPaid: boolean;
-  autoRenew: boolean;
-  reminderDays: number;
-  userId: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import type { Payment } from "@/data/Payments/interfaces";
 
 export const useUserPayments = (): Payment[] => {
   const [payments, setPayments] = useState<Payment[]>([]);
