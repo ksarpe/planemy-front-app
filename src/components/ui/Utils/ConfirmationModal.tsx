@@ -1,15 +1,6 @@
 // src/components/ui/Utils/ConfirmationModal.tsx
 import { useEffect, useRef } from "react";
-
-interface ConfirmationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title?: string;
-  message: string;
-  confirmLabel?: string;
-  cancelLabel?: string;
-}
+import type { ConfirmationModalProps } from "@/data/Utils/UI/ComponentInterfaces";
 
 export default function ConfirmationModal({
   isOpen,

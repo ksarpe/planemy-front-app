@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect } from "react";
+import type { ToastProps } from "@/data/Utils/UI/ComponentInterfaces";
 
 // --- Lepsze Ikony dla każdego typu powiadomienia ---
 const ICONS = {
@@ -39,13 +40,6 @@ const TOAST_CONFIG = {
     icon: ICONS.warning,
   },
 };
-
-interface ToastProps {
-  type: "success" | "error" | "warning";
-  message: string;
-  onClose: () => void;
-  duration?: number;
-}
 
 export default function Toast({ type, message, onClose, duration = 3000 }: ToastProps) {
   useEffect(() => {

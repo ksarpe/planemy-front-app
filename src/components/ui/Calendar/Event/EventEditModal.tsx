@@ -22,7 +22,7 @@ export default function EventEditModal({ event, onClose, onSave, elementPosition
   // Mouse positioning hook - tylko dla desktop
   const { positionStyles } = useElementPosition({
     isOpen: true,
-    elementPosition,
+    elementPosition: { ...elementPosition, width: 0, height: 0 },
     modalWidth: 384, // max-w-96
     modalHeight: 600, // większy dla edit modal
   });

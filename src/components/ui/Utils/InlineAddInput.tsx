@@ -1,12 +1,6 @@
 // src/components/ui/InlineAddInput.tsx
 import { useEffect, useRef } from "react";
-
-interface InlineAddInputProps {
-  onSubmit: (value: string) => void;
-  onCancel: () => void;
-  placeholder?: string;
-  classNames?: string;
-}
+import type { InlineAddInputProps } from "@/data/Utils/UI/ComponentInterfaces";
 
 export default function InlineAddInput({
   onSubmit,

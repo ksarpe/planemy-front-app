@@ -10,6 +10,8 @@ export interface ConfirmationModalProps {
   onConfirm: () => void;
   title?: string;
   message: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
 }
 
 export interface DropdownMenuProps {
@@ -79,6 +81,7 @@ export interface SidebarNavProps {
   labelHiddenClass: string;
   iconSize: number;
   totalNotifications: number;
+  collapsed?: boolean;
 }
 
 export interface SidebarUserSectionProps {

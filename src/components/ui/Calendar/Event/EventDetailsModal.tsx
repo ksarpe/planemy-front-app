@@ -6,7 +6,7 @@ export default function EventDetailsModal({ event, onClose, onEdit, elementPosit
   // Mouse positioning hook - pozycjonuje blisko kursora
   const { positionStyles } = useElementPosition({
     isOpen: true,
-    elementPosition,
+    elementPosition: { ...elementPosition, width: 0, height: 0 },
     modalWidth: 300, // min-w-72 ≈ 288px + padding
     modalHeight: 150, // mniejszy dla details modal
   });

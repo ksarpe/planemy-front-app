@@ -1,11 +1,5 @@
 import { Tag, Edit3, Trash2 } from "lucide-react";
-import { LabelInterface } from "@/data/Utils/interfaces";
-
-interface LabelCardProps {
-  label: LabelInterface;
-  onEdit: (label: LabelInterface) => void;
-  onDelete: (labelId: string) => void;
-}
+import type { LabelCardProps } from "@/data/Utils/UI/ComponentInterfaces";
 
 export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   const handleDelete = () => {
