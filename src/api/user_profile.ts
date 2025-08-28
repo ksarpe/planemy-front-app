@@ -1,12 +1,6 @@
 import { db } from "./config";
 import { collection, getDocs, query, updateDoc, where, setDoc, doc } from "firebase/firestore";
-
-export interface UserProfileDoc {
-  id: string;
-  userId: string;
-  nickname: string;
-  email: string;
-}
+import type { UserProfileDoc } from "@/data/User/interfaces";
 
 export const getUserProfile = async (userId: string): Promise<UserProfileDoc | null> => {
   const col = collection(db, "user_profile");

@@ -89,3 +89,19 @@ export interface LabelContextType {
   //hasLabel: (objectId: string, objectType: string, labelId: string) => boolean;
   refreshLabels: () => void;
 }
+
+// Element positioning interfaces (moved from src/hooks/useElementPosition.ts)
+export interface ElementPosition {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface UseElementPositionProps {
+  isOpen: boolean;
+  elementPosition: ElementPosition;
+  modalWidth?: number;
+  modalHeight?: number;
+  offset?: number;
+}

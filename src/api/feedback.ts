@@ -1,18 +1,6 @@
 import { db, auth } from "./config";
 import { collection, addDoc, query, where, getDocs, serverTimestamp, Timestamp } from "firebase/firestore";
-
-export interface Feedback {
-  id: string;
-  message: string;
-  userId: string;
-  createdAt: Date;
-  status?: "pending" | "read" | "accepted" | "resolved";
-  priority?: "low" | "medium" | "high";
-}
-
-export interface CreateFeedbackData {
-  message: string;
-}
+import type { Feedback, CreateFeedbackData } from "@/data/User/interfaces";
 
 export const feedbackAPI = {
   // Create new feedback

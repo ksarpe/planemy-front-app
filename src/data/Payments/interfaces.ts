@@ -15,4 +15,9 @@ export interface PaymentInterface {
   autoRenew: boolean;
   reminderDays: number;
   userId: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
+
+// Legacy Payment interface (moved from src/api/payments.ts, now consolidated with PaymentInterface above)
+export type Payment = PaymentInterface;
