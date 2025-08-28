@@ -66,7 +66,8 @@ export default function QuickEventCreator({
       // Jeśli date jest invalid, wyczyść preview
       onPreviewChange({});
     }
-  }, [title, date, startTime, endTime, allDay, onPreviewChange]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title, date, startTime, endTime, allDay]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,7 +117,7 @@ export default function QuickEventCreator({
   };
 
   return (
-    <div className={`p-4 ${className}`}>
+    <div className={`p-4 ${className} min-w-[320px] min-h-[200px]`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Create Event</h3>

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 interface ElementPosition {
   x: number;
   y: number;
+  width: number;
+  height: number;
 }
 
 interface UseElementPositionProps {
@@ -34,9 +36,9 @@ export function useElementPosition({
 
     // Sprawdź czy modal zmieści się po prawej stronie kursora
     if (x + modalWidth + offset > viewportWidth) {
-      x = elementPosition.x - modalWidth - offset;
+      x = elementPosition.x - modalWidth / 2 ;
     } else {
-      x = elementPosition.x + offset;
+      x = elementPosition.x + elementPosition.width + offset;
     }
 
     // Sprawdź czy modal zmieści się poniżej kursora
@@ -74,10 +76,10 @@ export function useElementPosition({
     // Sprawdź czy modal zmieści się po prawej stronie kursora
     if (x + modalWidth + offset > viewportWidth) {
       // Przenieś na lewą stronę
-      x = elementPosition.x - modalWidth - offset;
+      x = elementPosition.x - elementPosition.width
     } else {
       // Zostaw po prawej stronie
-      x = elementPosition.x + offset;
+      x = elementPosition.x + elementPosition.width + offset;
     }
 
     // Sprawdź czy modal zmieści się poniżej kursora

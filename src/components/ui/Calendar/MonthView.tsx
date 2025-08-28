@@ -21,7 +21,7 @@ export default function MonthView() {
   const { currentDate, events } = useCalendarContext();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showQuickCreator, setShowQuickCreator] = useState(false);
-  const [elementPosition, setElementPosition] = useState({ x: 0, y: 0 });
+  const [elementPosition, setElementPosition] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Preview event state
@@ -79,7 +79,12 @@ export default function MonthView() {
       setShowQuickCreator(true);
     } else {
       // Set mouse position for useElementPosition hook
-      setElementPosition({ x: event.clientX, y: event.clientY });
+      setTimeout(() => {
+        if (previewEventRef.current) {
+          const previewRect = previewEventRef.current.getBoundingClientRect();
+          setElementPosition({ x: previewRect.left, y: previewRect.top, width: previewRect.width, height: previewRect.height });
+        }
+      }, 50);
       setShowQuickCreator(true);
     }
   };
@@ -88,9 +93,7 @@ export default function MonthView() {
   const closeQuickCreator = () => {
     setShowQuickCreator(false);
     setSelectedDate(null);
-    setElementPosition({ x: 0, y: 0 });
-
-    // Wyczyść preview
+    setElementPosition({ x: 0, y: 0, width: 0, height: 0 });
     setPreviewEvent({});
   };
 
@@ -223,7 +226,7 @@ export default function MonthView() {
 
                       // Jeśli jest preview, pokazujemy 1 preview + 1 regular, więc remaining = regularEventsCount - 1
                       // Jeśli nie ma preview, pokazujemy 2 regular, więc remaining = regularEventsCount - 2
-                      const maxRegularEvents = hasPreview ? 1 : 2;
+                      const maxRegularEvents = hasPreview ? 2 : 3;
                       const shownRegularEvents = Math.min(regularEventsCount, maxRegularEvents);
                       const remainingEvents = regularEventsCount - shownRegularEvents;
 
