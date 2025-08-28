@@ -5,13 +5,7 @@ import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Co
 import type { TaskListInterface } from "@/data/Tasks/interfaces";
 import { useDeleteTaskList, useUpdateTaskList } from "@/hooks/tasks/useTasksLists";
 import { useTasks } from "@/hooks/tasks/useTasks";
-
-interface TaskListPanelProps {
-  lists: TaskListInterface[];
-  currentList: TaskListInterface | null;
-  onSelectList: (list: TaskListInterface) => void;
-  onAddList: () => void;
-}
+import type { TaskListPanelProps } from "@/data/Tasks/UI/ComponentInterfaces";
 
 export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: TaskListPanelProps) {
   const { mainListId, updateSettings } = usePreferencesContext();

@@ -1,10 +1,7 @@
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import MonthView from "./MonthView";
 import WeekView from "./WeekView";
-
-interface CalendarBodyProps {
-  className?: string;
-}
+import type { CalendarBodyProps } from "@/data/Calendar/UI/ComponentInterfaces";
 
 export default function CalendarBody({ className = "" }: CalendarBodyProps) {
   const { view } = useCalendarContext();
