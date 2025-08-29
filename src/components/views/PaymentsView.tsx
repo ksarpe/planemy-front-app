@@ -41,16 +41,16 @@ export default function Payments() {
           <div className="flex-1">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {/* Total Monthly */}
-              <div className="bg-bg dark:bg-bg-dark rounded-md p-3 md:p-4 shadow-md border border-bg-alt dark:border-bg-alt-dark">
-                <div className="flex items-center gap-2 text-success dark:text-success-dark mb-1">
+              <div className="bg-bg rounded-md p-3 md:p-4 shadow-md border border-bg-alt">
+                <div className="flex items-center gap-2 text-success mb-1">
                   <TrendingUp size={18} />
                   <span className="text-xs md:text-sm font-medium">{t("payments.monthlyExpenses")}</span>
                 </div>
-                <div className="text-lg md:text-2xl font-bold text-text dark:text-text-dark">{totalMonthlyAmount.toFixed(2)} PLN</div>
+                <div className="text-lg md:text-2xl font-bold text-text">{totalMonthlyAmount.toFixed(2)} PLN</div>
               </div>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 bg-primary dark:bg-primary-dark text-text dark:text-text-dark px-3 md:px-4 py-2 rounded-md hover:opacity-90 transition-opacity w-full md:w-auto justify-center shadow-md">
+                className="flex items-center gap-2 bg-primary text-text px-3 md:px-4 py-2 rounded-md hover:opacity-90 transition-opacity w-full md:w-auto justify-center shadow-md">
                 <Plus size={18} />
                 <span className="text-sm md:text-base">{t("payments.addPayment")}</span>
               </button>
@@ -65,12 +65,12 @@ export default function Payments() {
         <div className="space-y-4">
           {payments.length === 0 ? (
             <div className="text-center py-8 md:py-12">
-              <DollarSign size={40} className="mx-auto text-text-light dark:text-text-light-dark mb-4 md:mb-4" />
-              <h3 className="text-base md:text-lg font-medium text-text dark:text-text-dark mb-2">{t("payments.noPayments")}</h3>
-              <p className="text-sm md:text-base text-text-light dark:text-text-light-dark mb-4">{t("payments.addFirstPayment")}</p>
+              <DollarSign size={40} className="mx-auto text-text-light mb-4 md:mb-4" />
+              <h3 className="text-base md:text-lg font-medium text-text mb-2">{t("payments.noPayments")}</h3>
+              <p className="text-sm md:text-base text-text-light mb-4">{t("payments.addFirstPayment")}</p>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-primary dark:bg-primary-dark text-text dark:text-text-dark px-4 py-2 rounded-md hover:opacity-90 transition-opacity text-sm md:text-base shadow-md">
+                className="bg-primary text-text px-4 py-2 rounded-md hover:opacity-90 transition-opacity text-sm md:text-base shadow-md">
                 {t("payments.addPayment")}
               </button>
             </div>
@@ -81,8 +81,8 @@ export default function Payments() {
                 title={t("dashboard.urgent")}
                 payments={overduePayments}
                 icon={AlertTriangle}
-                iconColor="text-negative dark:text-negative-dark"
-                bgColor="bg-bg dark:bg-bg-dark"
+                iconColor="text-negative"
+                bgColor="bg-bg"
                 emptyMessage={t("payments.noOverduePayments")}
                 expandedPaymentId={expandedPaymentId}
                 onToggleExpand={handleToggleExpand}
@@ -93,8 +93,8 @@ export default function Payments() {
                   title={t("payments.thisWeek") + thisWeekTitle}
                   payments={upcomingThisWeek}
                   icon={Clock}
-                  iconColor="text-primary dark:text-primary-dark"
-                  bgColor="bg-bg dark:bg-bg-dark"
+                  iconColor="text-primary"
+                  bgColor="bg-bg"
                   emptyMessage={t("payments.noPaymentsThisWeek")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}
@@ -105,8 +105,8 @@ export default function Payments() {
                   title={t("payments.nextWeek") + nextWeekTitle}
                   payments={upcomingNextWeek}
                   icon={Calendar}
-                  iconColor="text-primary dark:text-primary-dark"
-                  bgColor="bg-bg dark:bg-bg-dark"
+                  iconColor="text-primary"
+                  bgColor="bg-bg"
                   emptyMessage={t("payments.noPaymentsNextWeek")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}
@@ -117,8 +117,8 @@ export default function Payments() {
                   title={t("payments.inTheFuture")}
                   payments={remainingPayments}
                   icon={Calendar}
-                  iconColor="text-text-light dark:text-text-light-dark"
-                  bgColor="bg-bg dark:bg-bg-dark"
+                  iconColor="text-text-light"
+                  bgColor="bg-bg"
                   emptyMessage={t("payments.noPaymentsInFuture")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}
