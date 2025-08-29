@@ -2,14 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Calendar, Clock } from "lucide-react";
 import { useAddEvent } from "@/hooks/events";
 import { format } from "date-fns";
-import { EventInterface } from "@/data/Calendar/events";
-
-interface QuickEventCreatorProps {
-  selectedDate?: Date;
-  onClose?: () => void;
-  onPreviewChange?: (previewData: Partial<EventInterface>) => void;
-  className?: string;
-}
+import type { QuickEventCreatorProps } from "@/data/Calendar/Components/CalendarComponentInterfaces";
 
 export default function QuickEventCreator({
   selectedDate,

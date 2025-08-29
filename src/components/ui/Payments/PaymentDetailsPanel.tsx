@@ -1,4 +1,3 @@
-import { PaymentInterface } from "@/data/Payments/interfaces";
 import { usePayments } from "@/hooks/payments";
 import {
   Tag,
@@ -17,10 +16,7 @@ import { getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@/api/paymen
 import { format } from "date-fns";
 import { EditableText } from "../Common/EditableText";
 import { useTranslation } from "react-i18next";
-
-interface PaymentDetailsPanelProps {
-  payment: PaymentInterface;
-}
+import type { PaymentDetailsPanelProps } from "@/data/Payments/Components/PaymentComponentInterfaces";
 
 export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
   const { t } = useTranslation();

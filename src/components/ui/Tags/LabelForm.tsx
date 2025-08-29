@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Plus, Edit3 } from "lucide-react";
-import { LabelInterface } from "@/data/Utils/interfaces";
 
 const predefinedColors = [
   "#EF4444",
@@ -25,13 +24,7 @@ const predefinedColors = [
   "#1F2937",
 ];
 
-interface LabelFormProps {
-  mode: "create" | "edit";
-  initialLabel?: LabelInterface;
-  onSubmit: (data: { name: string; color: string; description?: string }, labelId?: string) => Promise<void>;
-  onCancel: () => void;
-  loading: boolean;
-}
+import type { LabelFormProps } from "@/data/Utils/Components/UtilComponentInterfaces";
 
 export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, loading }: LabelFormProps) {
   const [formData, setFormData] = useState({

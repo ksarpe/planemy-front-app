@@ -1,13 +1,6 @@
 import { Edit2, Clock, X } from "lucide-react";
-import { EventInterface } from "@/data/Calendar/events";
 import { useElementPosition } from "@/hooks/useElementPosition";
-
-interface EventDetailsModalProps {
-  event: EventInterface;
-  onClose: () => void;
-  onEdit: (elementPosition: { x: number; y: number; width: number; height: number }) => void;
-  elementPosition: { x: number; y: number; width: number; height: number };
-}
+import type { EventDetailsModalProps } from "@/data/Calendar/Components/CalendarComponentInterfaces";
 
 export default function EventDetailsModal({ event, onClose, onEdit, elementPosition }: EventDetailsModalProps) {
   // Mouse positioning hook - pozycjonuje blisko kursora

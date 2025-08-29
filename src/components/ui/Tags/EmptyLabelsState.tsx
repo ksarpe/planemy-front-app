@@ -1,8 +1,5 @@
 import { Tag, Plus } from "lucide-react";
-
-interface EmptyLabelsStateProps {
-  onCreateFirst: () => void;
-}
+import type { EmptyLabelsStateProps } from "@/data/Utils/Components/UtilComponentInterfaces";
 
 export default function EmptyLabelsState({ onCreateFirst }: EmptyLabelsStateProps) {
   return (

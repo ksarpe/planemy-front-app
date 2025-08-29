@@ -1,14 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { Calendar, ListTodo, ShoppingCart, Tag, Bell, BookOpenCheck, Banknote, LayoutGrid } from "lucide-react";
+import type { SidebarNavProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
 
-export interface SidebarNavProps {
-  handleNavigate: () => void;
-  linkPadding: string;
-  labelHiddenClass: string;
-  iconSize: number;
-  totalNotifications: number;
-  collapsed?: boolean;
-}
+export type { SidebarNavProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
 
 export function SidebarNav({
   handleNavigate,
