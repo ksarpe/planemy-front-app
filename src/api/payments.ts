@@ -179,3 +179,51 @@ export const getDaysUntilPayment = (nextPaymentDate: string): number => {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return diffDays;
 };
+
+// Helper function to check if payment is paid for the current period
+export const isPaymentPaidForCurrentPeriod = (payment: Payment): boolean => {
+  if (!payment.isPaid || !payment.lastPaymentDate) {
+    return false;
+  }
+
+  const today = new Date();
+  const lastPayment = new Date(payment.lastPaymentDate);
+
+  switch (payment.cycle) {
+    case "weekly": {
+      // Check if both dates are in the same week
+      const todayWeekStart = new Date(today);
+      todayWeekStart.setDate(today.getDate() - today.getDay());
+      todayWeekStart.setHours(0, 0, 0, 0);
+
+      const lastPaymentWeekStart = new Date(lastPayment);
+      lastPaymentWeekStart.setDate(lastPayment.getDate() - lastPayment.getDay());
+      lastPaymentWeekStart.setHours(0, 0, 0, 0);
+
+      return todayWeekStart.getTime() === lastPaymentWeekStart.getTime();
+    }
+    
+    case "monthly": {
+      // Check if both dates are in the same month and year
+      return today.getFullYear() === lastPayment.getFullYear() &&
+             today.getMonth() === lastPayment.getMonth();
+    }
+    
+    case "quarterly": {
+      // Check if both dates are in the same quarter and year
+      const todayQuarter = Math.floor(today.getMonth() / 3);
+      const lastPaymentQuarter = Math.floor(lastPayment.getMonth() / 3);
+      
+      return today.getFullYear() === lastPayment.getFullYear() &&
+             todayQuarter === lastPaymentQuarter;
+    }
+    
+    case "yearly": {
+      // Check if both dates are in the same year
+      return today.getFullYear() === lastPayment.getFullYear();
+    }
+    
+    default:
+      return false;
+  }
+};
