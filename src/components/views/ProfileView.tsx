@@ -14,12 +14,14 @@ import { upsertUserProfile, getUserProfile } from "@/api/user_profile";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
 import Spinner from "@/components/ui/Utils/Spinner";
+import { useT } from "@/hooks/useT";
 
 export default function ProfileView() {
   const { user } = useAuthContext();
   const { showToast } = useToastContext();
   const { colorTheme, setColorTheme, setColorThemePreview, language, timezone, updateSettings } =
     usePreferencesContext();
+  const { t } = useT();
 
   // Track hydration/loading states
   const [profileLoaded, setProfileLoaded] = useState(false);
@@ -161,10 +163,10 @@ export default function ProfileView() {
       initialNotifications.current = notifications;
       initialThemeRef.current = pendingTheme;
       setDirtyTick((v) => v + 1); // force re-render to recompute isDirty
-      showToast("success", "Zapisano zmiany profilu");
+      showToast("success", t("profileChangesSaved"));
     } catch (e) {
       console.error("Failed to save profile changes", e);
-      showToast("error", "Nie udało się zapisać zmian");
+      showToast("error", t("failedToSaveChanges"));
       throw e;
     }
   };
@@ -178,7 +180,7 @@ export default function ProfileView() {
     setPendingTheme(initialThemeRef.current);
     setColorTheme(initialThemeRef.current); // revert preview
     setDirtyTick((v) => v + 1); // force re-render to recompute isDirty
-    showToast("warning", "Zmiany odrzucone");
+    showToast("warning", t("profileChangesDiscarded"));
   };
 
   return (
@@ -187,7 +189,7 @@ export default function ProfileView() {
         <div className="p-6 pb-24">
           {isLoading ? (
             <div className="w-full min-h-[300px] flex items-center justify-center">
-              <Spinner text="Ładuję profil..." />
+              <Spinner text={t("loadingProfile")} />
             </div>
           ) : (
             <>

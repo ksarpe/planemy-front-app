@@ -4,11 +4,13 @@ import { useState } from "react";
 import { AddPaymentModal, PaymentSection, PaymentSummary, categorizePayments } from "@/components/ui/Payments";
 import { Plus, TrendingUp, DollarSign, AlertTriangle, Clock, Calendar } from "lucide-react";
 import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
+import { useT } from "@/hooks/useT";
 
 export default function Payments() {
   const { payments } = usePaymentsContext();
   const { addPayment } = usePayments();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t } = useT();
 
   // Calculate week boundaries for dynamic titles
   const now = new Date();
@@ -51,7 +53,7 @@ export default function Payments() {
                 onClick={() => setIsModalOpen(true)}
                 className="flex items-center gap-2 bg-primary text-white px-3 md:px-4 py-2 rounded-md hover:opacity-90 transition-opacity w-full md:w-auto justify-center">
                 <Plus size={18} />
-                <span className="text-sm md:text-base">Dodaj płatność</span>
+                <span className="text-sm md:text-base">{t("addPayment")}</span>
               </button>
             </div>
           </div>
@@ -65,12 +67,12 @@ export default function Payments() {
           {payments.length === 0 ? (
             <div className="text-center py-8 md:py-12">
               <DollarSign size={40} className="mx-auto text-gray-400 mb-4 md:mb-4" />
-              <h3 className="text-base md:text-lg font-medium text-gray-500 mb-2">Brak płatności</h3>
+              <h3 className="text-base md:text-lg font-medium text-gray-500 mb-2">{t("noPayments")}</h3>
               <p className="text-sm md:text-base text-gray-400 mb-4">Dodaj swoją pierwszą płatność lub subskrypcję</p>
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity text-sm md:text-base">
-                Dodaj płatność
+                {t("addPayment")}
               </button>
             </div>
           ) : (
@@ -82,7 +84,7 @@ export default function Payments() {
                 icon={AlertTriangle}
                 iconColor="text-red-500"
                 bgColor="bg-red-50"
-                emptyMessage="Brak przeterminowanych płatności"
+                emptyMessage={t("noOverduePayments")}
               />
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
                 {/* This Week */}
@@ -92,7 +94,7 @@ export default function Payments() {
                   icon={Clock}
                   iconColor="text-orange-500"
                   bgColor="bg-orange-50"
-                  emptyMessage="Brak płatności w tym tygodniu"
+                  emptyMessage={t("noPaymentsThisWeek")}
                 />
 
                 {/* Next Week */}
