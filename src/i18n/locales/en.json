@@ -194,5 +194,15 @@
   },
   "feedback": {
     "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application."
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "tasks": "Tasks",
+    "shopping": "Shopping",
+    "payments": "Payments",
+    "labels": "Labels",
+    "notifications": "Notifications",
+    "feedback": "Feedback"
   }
 }
