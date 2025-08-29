@@ -163,10 +163,10 @@ export default function ProfileView() {
       initialNotifications.current = notifications;
       initialThemeRef.current = pendingTheme;
       setDirtyTick((v) => v + 1); // force re-render to recompute isDirty
-      showToast("success", t("profileChangesSaved"));
+      showToast("success", t("profile.changesSaved"));
     } catch (e) {
       console.error("Failed to save profile changes", e);
-      showToast("error", t("failedToSaveChanges"));
+      showToast("error", t("profile.failedToSaveChanges"));
       throw e;
     }
   };
@@ -180,7 +180,7 @@ export default function ProfileView() {
     setPendingTheme(initialThemeRef.current);
     setColorTheme(initialThemeRef.current); // revert preview
     setDirtyTick((v) => v + 1); // force re-render to recompute isDirty
-    showToast("warning", t("profileChangesDiscarded"));
+    showToast("warning", t("profile.changesDiscarded"));
   };
 
   return (
@@ -189,13 +189,13 @@ export default function ProfileView() {
         <div className="p-6 pb-24">
           {isLoading ? (
             <div className="w-full min-h-[300px] flex items-center justify-center">
-              <Spinner text={t("loadingProfile")} />
+              <Spinner text={t("profile.loadingProfile")} />
             </div>
           ) : (
             <>
-              {/* Nowoczesny układ kafelków */}
+              {/* Modern tile layout */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-6">
-                {/* Row 1: Duże dane osobowe + kompaktowy motyw */}
+                {/* Row 1: Large personal data + compact theme */}
                 <div className="md:col-span-8 flex flex-col gap-2">
                   <PersonalInformationSection userInfo={userInfo} handleUserInfoChange={handleUserInfoChange} />
                   <LanguageRegionSection
@@ -210,15 +210,12 @@ export default function ProfileView() {
                   />
                 </div>
                 <div className="md:col-span-4">
-                  <AppearanceThemeSection
-                    selectedTheme={pendingTheme}
-                    setSelectedTheme={handleThemeSelect}
-                  />
+                  <AppearanceThemeSection selectedTheme={pendingTheme} setSelectedTheme={handleThemeSelect} />
                 </div>
 
-                {/* Row 2: Język/strefa w węższej kolumnie + szerokie powiadomienia */}
+                {/* Row 2: Language/timezone in narrower column + wide notifications */}
 
-                {/* Row 3: Bezpieczeństwo pełna szerokość */}
+                {/* Row 3: Security full width */}
                 <div className="md:col-span-12">
                   <SecuritySection />
                 </div>

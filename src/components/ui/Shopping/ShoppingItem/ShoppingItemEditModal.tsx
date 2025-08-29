@@ -184,7 +184,7 @@ export function ShoppingItemEditModal({
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 text-sm font-medium text-white bg-primary hover:bg-blue-700 rounded-xl transition-colors shadow-sm">
+                    className="px-6 py-2.5 text-sm font-medium text-white bg-primary hover:bg-blue-700 rounded-xl transition-colors shadow-md">
                     Zapisz
                   </button>
                 </div>

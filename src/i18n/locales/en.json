@@ -1,0 +1,198 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning"
+  },
+  "languageAndRegion": {
+    "title": "Language and Region",
+    "language": "Language",
+    "timezone": "Timezone",
+    "polish": "Polish",
+    "english": "English",
+    "timezones": {
+      "warsaw": "Europe/Warsaw (GMT+1)",
+      "london": "Europe/London (GMT+0)",
+      "berlin": "Europe/Berlin (GMT+1)",
+      "newYork": "America/New York (GMT-5)"
+    }
+  },
+  "profile": {
+    "changesDiscarded": "Changes discarded",
+    "changesSaved": "Profile changes saved",
+    "loadingProfile": "Loading profile...",
+    "failedToSaveChanges": "Failed to save changes",
+    "discardChanges": "Discard changes",
+    "discard": "Discard",
+    "saveChanges": "Save changes"
+  },
+  "personalInformation": {
+    "title": "User Information",
+    "nickname": "Nickname",
+    "nicknamePlaceholder": "e.g. Kasper",
+    "email": "Email"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "email": {
+      "title": "Email notifications",
+      "description": "Receive notifications via email"
+    },
+    "push": {
+      "title": "Push notifications",
+      "description": "Browser notifications"
+    },
+    "taskReminders": {
+      "title": "Task reminders",
+      "description": "Notifications about task deadlines"
+    },
+    "eventNotifications": {
+      "title": "Event notifications",
+      "description": "Reminders about upcoming events"
+    },
+    "sharingNotifications": {
+      "title": "Sharing notifications",
+      "description": "Information about shared lists"
+    },
+    "noNewNotifications": "No new notifications or invitations"
+  },
+  "security": {
+    "title": "Security",
+    "changePassword": "Change password",
+    "setup2FA": "Setup 2FA",
+    "deleteAccount": "Delete account"
+  },
+  "appearance": {
+    "title": "Appearance and Themes",
+    "selectColorScheme": "Select color scheme",
+    "themes": {
+      "cozyRoom": {
+        "name": "Cozy Room",
+        "description": "Warm, cozy shades"
+      },
+      "sweetFactory": {
+        "name": "Sweet Factory",
+        "description": "Sweet, pastel colors"
+      },
+      "productiveBusiness": {
+        "name": "Productive Business",
+        "description": "Professional, focused colors"
+      },
+      "darkMode": {
+        "name": "Dark Mode",
+        "description": "Deep, contrasting tones"
+      }
+    }
+  },
+  "dashboard": {
+    "upcomingPayments": "Upcoming Payments",
+    "noUpcomingPayments": "No upcoming payments",
+    "seeAllPayments": "See all payments",
+    "seeShoppingList": "See shopping list",
+    "seeAllTasks": "See all tasks",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "inDays": "In {{count}} days",
+    "urgent": "Urgent",
+    "soon": "Soon",
+    "ok": "OK"
+  },
+  "payments": {
+    "title": "Payments",
+    "monthlyExpenses": "Monthly expenses",
+    "addFirstPayment": "Add your first payment or subscription",
+    "noPayments": "No payments",
+    "noOverduePayments": "No overdue payments",
+    "noPaymentsThisWeek": "No payments this week",
+    "noPaymentsNextWeek": "No payments next week",
+    "noPaymentsInFuture": "No payments in the future",
+    "addPayment": "Add payment",
+    "inTheFuture": "In the future",
+    "thisWeek": "This week ",
+    "nextWeek": "Next week ",
+    "summary": {
+      "overdue": "overdue",
+      "thisWeek": "this week",
+      "nextWeek": "next week",
+      "activeTotal": "active out of",
+      "total": "total"
+    },
+    "item": {
+      "paid": "Paid",
+      "overdue": "Overdue ({{days}} days)",
+      "dueSoon": "In {{days}} days",
+      "dueIn": "In {{days}} days"
+    },
+    "details": {
+      "title": "Payment Details",
+      "description": "Description",
+      "addDescription": "Add description...",
+      "addDescriptionPlaceholder": "Add payment description...",
+      "name": "Name",
+      "amount": "Amount",
+      "reminder": "Reminder",
+      "reminderSuffix": "days before",
+      "nextPayment": "Next",
+      "lastPayment": "Last",
+      "noLastPayment": "No data",
+      "autoRenewal": "Auto-renewal:",
+      "autoRenewalEnabled": "Enabled",
+      "autoRenewalDisabled": "Disabled",
+      "category": "Category:",
+      "yearlyCost": "Yearly cost:",
+      "markAsPaid": "Mark as paid",
+      "markAsPaidShort": "Pay",
+      "delete": "Delete",
+      "errors": {
+        "invalidAmount": "Invalid amount",
+        "invalidDays": "Invalid number of days",
+        "invalidDate": "Invalid date"
+      }
+    },
+    "modal": {
+      "addNewPayment": "Add new payment",
+      "paymentName": "Payment name",
+      "paymentNameRequired": "Payment name *",
+      "paymentNamePlaceholder": "e.g. Netflix, Electricity, Insurance",
+      "amount": "Amount",
+      "amountRequired": "Amount *",
+      "amountPlaceholder": "0.00",
+      "currency": "Currency",
+      "category": "Category",
+      "paymentFrequency": "Payment frequency",
+      "nextPayment": "Next payment",
+      "reminderDays": "Reminder (days before)",
+      "description": "Description (optional)",
+      "descriptionPlaceholder": "Additional information...",
+      "autoRenew": "Auto renew",
+      "cancel": "Cancel",
+      "adding": "Adding...",
+      "addPaymentButton": "Add payment",
+      "categories": {
+        "subscription": "Subscription",
+        "utility": "Utilities/Bills",
+        "insurance": "Insurance",
+        "loan": "Loan/Credit",
+        "rent": "Rent",
+        "other": "Other"
+      },
+      "frequencies": {
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "quarterly": "Quarterly",
+        "yearly": "Yearly"
+      }
+    }
+  },
+  "labels": {
+    "noLabels": "No labels"
+  },
+  "feedback": {
+    "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application."
+  }
+}

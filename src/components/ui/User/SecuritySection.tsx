@@ -1,21 +1,24 @@
 import { Lock } from "lucide-react";
+import { useT } from "@/hooks/useT";
 
 export default function SecuritySection() {
+  const { t } = useT();
+
   return (
     <div className="bg-white rounded-lg p-6 border border-gray-200 ">
       <h3 className="text-lg font-semibold text-gray-900  mb-6 flex items-center gap-2">
         <Lock size={20} className="text-primary" />
-        Bezpieczeństwo
+        {t("security.title")}
       </h3>
       <div className="flex gap-4 items-center">
         <button className="w-full md:w-auto px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors">
-          Zmień hasło
+          {t("security.changePassword")}
         </button>
         <button className="w-full md:w-auto px-4 py-2 border border-gray-300  text-gray-700  rounded-md hover:bg-gray-50  transition-colors">
-          Skonfiguruj 2FA
+          {t("security.setup2FA")}
         </button>
         <button className="w-full md:w-auto px-4 py-2 border border-red-300 text-red-600 rounded-md hover:bg-red-50 transition-colors">
-          Usuń konto
+          {t("security.deleteAccount")}
         </button>
       </div>
     </div>

@@ -1,42 +1,41 @@
 import { Palette } from "lucide-react";
 import type { ColorTheme, AppearanceThemeSectionProps } from "@/data/User";
+import { useT } from "@/hooks/useT";
 
-const colorThemes: ColorTheme[] = [
-  {
-    name: "Cozy Room",
-    description: "Ciepłe, przytulne odcienie",
-    colors: ["bg-[#fdf2e4]", "bg-[#f0e4d3]", "bg-[#dcc5b2]", "bg-[#776472]"],
-  },
-  {
-    name: "Sweet Factory",
-    description: "Słodkie, pastelowe barwy",
-    colors: ["bg-[#F5BECD]", "bg-[#D486A1]", "bg-[#6B2D5C]", "bg-[#ec4899]"],
-  },
-  {
-    name: "Productive Business",
-    description: "Profesjonalne, skupione kolory",
-    colors: ["bg-[#e2e8f0]", "bg-[#cad8eb]", "bg-[#64748b]", "bg-[#1e40af]"],
-  },
-  {
-    name: "Dark Mode",
-    description: "Głębokie, kontrastowe tony",
-    colors: ["bg-[#0f172a]", "bg-[#1e293b]", "bg-[#374151]", "bg-[#4b5563]"],
-  },
-];
+export default function AppearanceThemeSection({ selectedTheme, setSelectedTheme }: AppearanceThemeSectionProps) {
+  const { t } = useT();
 
-export default function AppearanceThemeSection({
-  selectedTheme,
-  setSelectedTheme,
-}: AppearanceThemeSectionProps) {
+  const colorThemes: ColorTheme[] = [
+    {
+      name: t("appearance.themes.cozyRoom.name"),
+      description: t("appearance.themes.cozyRoom.description"),
+      colors: ["bg-[#fdf2e4]", "bg-[#f0e4d3]", "bg-[#dcc5b2]", "bg-[#776472]"],
+    },
+    {
+      name: t("appearance.themes.sweetFactory.name"),
+      description: t("appearance.themes.sweetFactory.description"),
+      colors: ["bg-[#F5BECD]", "bg-[#D486A1]", "bg-[#6B2D5C]", "bg-[#ec4899]"],
+    },
+    {
+      name: t("appearance.themes.productiveBusiness.name"),
+      description: t("appearance.themes.productiveBusiness.description"),
+      colors: ["bg-[#e2e8f0]", "bg-[#cad8eb]", "bg-[#64748b]", "bg-[#1e40af]"],
+    },
+    {
+      name: t("appearance.themes.darkMode.name"),
+      description: t("appearance.themes.darkMode.description"),
+      colors: ["bg-[#0f172a]", "bg-[#1e293b]", "bg-[#374151]", "bg-[#4b5563]"],
+    },
+  ];
   return (
     <div className="bg-white  rounded-lg p-6 border border-gray-200 ">
       <h3 className="text-lg font-semibold text-gray-900  mb-6 flex items-center gap-2">
         <Palette size={20} className="text-primary" />
-        Wygląd i motywy
+        {t("appearance.title")}
       </h3>
       {/* Color Themes */}
       <div>
-        <p className="font-medium text-gray-900  mb-4">Wybierz schemat kolorów</p>
+        <p className="font-medium text-gray-900  mb-4">{t("appearance.selectColorScheme")}</p>
         <div className="space-y-4">
           {colorThemes.map((theme, index) => (
             <button
@@ -48,7 +47,7 @@ export default function AppearanceThemeSection({
               <div className="flex items-center gap-4">
                 <div className="flex gap-1 min-w-0">
                   {theme.colors.map((color, colorIndex) => (
-                    <div key={colorIndex} className={`w-12 h-9 rounded ${color} shadow-sm`}></div>
+                    <div key={colorIndex} className={`w-12 h-9 rounded ${color} shadow-md`}></div>
                   ))}
                 </div>
                 <div className="text-left">

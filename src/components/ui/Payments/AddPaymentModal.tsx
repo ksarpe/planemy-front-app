@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X, Calendar, Tag, RefreshCw } from "lucide-react";
 import { PaymentInterface } from "@/data/Payments/interfaces";
 import { calculateNextPaymentDate } from "@/api/payments";
+import { useT } from "@/hooks/useT";
 
 interface AddPaymentModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface AddPaymentModalProps {
 }
 
 export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalProps) => {
+  const { t } = useT();
   const [formData, setFormData] = useState({
     name: "",
     amount: "",
@@ -84,7 +86,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-md shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-800">Dodaj nową płatność</h2>
+          <h2 className="text-xl font-semibold text-gray-800">{t("payments.modal.addNewPayment")}</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
             <X size={24} />
           </button>
@@ -93,13 +95,15 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nazwa płatności *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t("payments.modal.paymentNameRequired")}
+            </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
               className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="np. Netflix, Prąd, Ubezpieczenie"
+              placeholder={t("payments.modal.paymentNamePlaceholder")}
               required
             />
           </div>
@@ -107,7 +111,9 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
           {/* Amount and Currency */}
           <div className="flex gap-2">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Kwota *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t("payments.modal.amountRequired")}
+              </label>
               <div className="relative">
                 <input
                   type="number"
@@ -115,13 +121,13 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
                   value={formData.amount}
                   onChange={(e) => setFormData((prev) => ({ ...prev, amount: e.target.value }))}
                   className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="0.00"
+                  placeholder={t("payments.modal.amountPlaceholder")}
                   required
                 />
               </div>
             </div>
             <div className="w-20">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Waluta</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t("payments.modal.currency")}</label>
               <select
                 value={formData.currency}
                 onChange={(e) => setFormData((prev) => ({ ...prev, currency: e.target.value }))}
@@ -137,7 +143,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               <Tag size={16} className="inline mr-1" />
-              Kategoria
+              {t("payments.modal.category")}
             </label>
             <select
               value={formData.category}
@@ -145,12 +151,12 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
                 setFormData((prev) => ({ ...prev, category: e.target.value as PaymentInterface["category"] }))
               }
               className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="subscription">Subskrypcja</option>
-              <option value="utility">Media/Rachunki</option>
-              <option value="insurance">Ubezpieczenie</option>
-              <option value="loan">Kredyt/Pożyczka</option>
-              <option value="rent">Czynsz</option>
-              <option value="other">Inne</option>
+              <option value="subscription">{t("payments.modal.categories.subscription")}</option>
+              <option value="utility">{t("payments.modal.categories.utility")}</option>
+              <option value="insurance">{t("payments.modal.categories.insurance")}</option>
+              <option value="loan">{t("payments.modal.categories.loan")}</option>
+              <option value="rent">{t("payments.modal.categories.rent")}</option>
+              <option value="other">{t("payments.modal.categories.other")}</option>
             </select>
           </div>
 
@@ -158,14 +164,14 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               <RefreshCw size={16} className="inline mr-1" />
-              Częstotliwość płatności
+              {t("payments.modal.paymentFrequency")}
             </label>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { value: "weekly", label: "Tygodniowo" },
-                { value: "monthly", label: "Miesięcznie" },
-                { value: "quarterly", label: "Kwartalnie" },
-                { value: "yearly", label: "Rocznie" },
+                { value: "weekly", label: t("payments.modal.frequencies.weekly") },
+                { value: "monthly", label: t("payments.modal.frequencies.monthly") },
+                { value: "quarterly", label: t("payments.modal.frequencies.quarterly") },
+                { value: "yearly", label: t("payments.modal.frequencies.yearly") },
               ].map((option) => (
                 <button
                   key={option.value}
@@ -186,7 +192,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               <Calendar size={16} className="inline mr-1" />
-              Następna płatność
+              {t("payments.modal.nextPayment")}
             </label>
             <input
               type="date"
@@ -198,7 +204,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
 
           {/* Reminder Days */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Przypomnienie (dni wcześniej)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t("payments.modal.reminderDays")}</label>
             <input
               type="number"
               min="0"
@@ -211,13 +217,13 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Opis (opcjonalnie)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t("payments.modal.description")}</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
               className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={2}
-              placeholder="Dodatkowe informacje..."
+              placeholder={t("payments.modal.descriptionPlaceholder")}
             />
           </div>
 
@@ -231,7 +237,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="autoRenew" className="ml-2 block text-sm text-gray-700">
-              Automatyczne odnawianie
+              {t("payments.modal.autoRenew")}
             </label>
           </div>
 
@@ -241,13 +247,13 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               type="button"
               onClick={onClose}
               className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors">
-              Anuluj
+              {t("payments.modal.cancel")}
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
               className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-              {isSubmitting ? "Dodawanie..." : "Dodaj płatność"}
+              {isSubmitting ? t("payments.modal.adding") : t("payments.modal.addPaymentButton")}
             </button>
           </div>
         </form>

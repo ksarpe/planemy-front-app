@@ -114,7 +114,7 @@ export default function NotificationsView() {
                 {allShares.map((share: Permission) => (
                   <div
                     key={share.id}
-                    className="bg-white  border border-gray-200  rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    className="bg-white  border border-gray-200  rounded-lg shadow-md hover:shadow-md transition-shadow">
                     <div className="p-6">
                       <div className="flex items-start gap-4">
                         {/* Icon */}

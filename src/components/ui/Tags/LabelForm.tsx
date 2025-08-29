@@ -71,7 +71,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
   const SubmitIcon = mode === "create" ? Plus : Edit3;
 
   return (
-    <div className="bg-white  rounded-md p-6 shadow-sm border border-gray-200 ">
+    <div className="bg-white  rounded-md p-6 shadow-md border border-gray-200 ">
       <h3 className="text-lg font-semibold mb-4 text-text ">{title}</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

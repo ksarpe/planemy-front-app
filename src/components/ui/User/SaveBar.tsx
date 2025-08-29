@@ -1,5 +1,6 @@
 import { Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useT } from "@/hooks/useT";
 
 interface SaveBarProps {
   visible: boolean;
@@ -10,6 +11,7 @@ interface SaveBarProps {
 
 export default function SaveBar({ visible, onSave, onDiscard, ping = 0 }: SaveBarProps) {
   const [flash, setFlash] = useState(false);
+  const { t } = useT();
 
   useEffect(() => {
     if (!visible) return;
@@ -31,9 +33,9 @@ export default function SaveBar({ visible, onSave, onDiscard, ping = 0 }: SaveBa
         <button
           onClick={onDiscard}
           className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300  text-gray-700  hover:bg-gray-50  transition-colors"
-          title="Odrzuć zmiany">
+          title={t("profile.discardChanges")}>
           <X size={16} />
-          Odrzuć
+          {t("profile.discard")}
         </button>
         <button
           onClick={onSave}
@@ -42,9 +44,9 @@ export default function SaveBar({ visible, onSave, onDiscard, ping = 0 }: SaveBa
             "animate-bounce",
             flash ? "ring-2 ring-red-500/70" : "",
           ].join(" ")}
-          title="Zapisz zmiany">
+          title={t("profile.saveChanges")}>
           <Save size={16} />
-          Zapisz
+          {t("common.save")}
         </button>
       </div>
     </div>

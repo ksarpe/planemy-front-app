@@ -45,7 +45,12 @@ export default function EventBlock({ event, style, className = "", onClick, show
     e.stopPropagation();
 
     // Zapisz pozycję kursora dla obu modali
-    setMousePosition({ x: e.clientX, y: e.clientY, width: eventBlockRef.current?.offsetWidth || 0, height: eventBlockRef.current?.offsetHeight || 0 });
+    setMousePosition({
+      x: e.clientX,
+      y: e.clientY,
+      width: eventBlockRef.current?.offsetWidth || 0,
+      height: eventBlockRef.current?.offsetHeight || 0,
+    });
 
     if (onClick) {
       onClick(e);
@@ -94,7 +99,7 @@ export default function EventBlock({ event, style, className = "", onClick, show
       {/* Main event block */}
       <div
         ref={eventBlockRef}
-        className={`text-white rounded-md shadow-sm hover:shadow-md transition-all cursor-pointer border-l-4 ${className}`}
+        className={`text-white rounded-md shadow-md hover:shadow-md transition-all cursor-pointer border-l-4 ${className}`}
         style={{ ...style, ...getEventColor(), borderLeftColor: getEventColor().backgroundColor }}
         onClick={handleEventClick}>
         <div className="p-0.5 sm:p-1">

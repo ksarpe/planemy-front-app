@@ -2,6 +2,7 @@ import { PaymentInterface } from "@/data/Payments/interfaces";
 import { ChevronDown, ChevronUp, Check, DollarSign, Calendar, AlertCircle } from "lucide-react";
 import { getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@/api/payments";
 import { PaymentDetailsPanel } from "./PaymentDetailsPanel";
+import { useTranslation } from "react-i18next";
 
 interface PaymentItemProps {
   payment: PaymentInterface;
@@ -10,6 +11,8 @@ interface PaymentItemProps {
 }
 
 export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentItemProps) {
+  const { t } = useTranslation();
+
   const daysUntil = getDaysUntilPayment(payment.nextPaymentDate);
   const isOverdue = daysUntil < 0;
   const isDueSoon = daysUntil <= payment.reminderDays && daysUntil >= 0;
@@ -50,14 +53,14 @@ export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentIt
   };
 
   const getStatusColor = () => {
-    if (isPaidForCurrentPeriod) return "bg-green-50 border-green-200";
-    if (isOverdue) return "bg-red-50 border-red-200";
-    if (isDueSoon) return "bg-yellow-50 border-yellow-200";
-    return "bg-white border-gray-200";
+    if (isPaidForCurrentPeriod) return "bg-green-100";
+    if (isOverdue) return "bg-red-100";
+    if (isDueSoon) return "bg-yellow-100";
+    return "bg-white";
   };
 
   return (
-    <div className={`rounded-md shadow-sm border-2 transition-all duration-200 ${getStatusColor()}`}>
+    <div className={`rounded-md shadow-md transition-all duration-200 ${getStatusColor()}`}>
       <div
         onClick={onToggle}
         className="flex justify-between items-center p-3 md:p-4 cursor-pointer hover:bg-opacity-80">
@@ -69,7 +72,7 @@ export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentIt
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-medium text-sm md:text-base truncate">{payment.name}</span>
                 <span className={`px-2 py-1 text-xs rounded-full flex-shrink-0 ${getCategoryColor(payment.category)}`}>
-                  {payment.category}
+                  {t(`payments.modal.categories.${payment.category}`)}
                 </span>
               </div>
             </div>
@@ -80,7 +83,7 @@ export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentIt
                 <span className="font-medium">
                   {payment.amount.toFixed(2)} {payment.currency}
                 </span>
-                <span className="text-gray-500">({payment.cycle})</span>
+                <span className="text-gray-500">({t(`payments.modal.frequencies.${payment.cycle}`)})</span>
               </div>
 
               <div className="flex items-center gap-1">
@@ -88,12 +91,12 @@ export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentIt
                 {isOverdue ? (
                   <span className="text-red-600 font-medium flex items-center gap-1">
                     <AlertCircle size={12} className="md:w-[14px] md:h-[14px]" />
-                    Przeterminowane ({Math.abs(daysUntil)} dni)
+                    {t("payments.item.overdue", { days: Math.abs(daysUntil) })}
                   </span>
                 ) : isDueSoon ? (
-                  <span className="text-yellow-600 font-medium">Za {daysUntil} dni</span>
+                  <span className="text-yellow-600 font-medium">{t("payments.item.dueSoon", { days: daysUntil })}</span>
                 ) : (
-                  <span>Za {daysUntil} dni</span>
+                  <span>{t("payments.item.dueIn", { days: daysUntil })}</span>
                 )}
               </div>
             </div>
@@ -104,7 +107,7 @@ export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentIt
           {isPaidForCurrentPeriod && (
             <div className="flex items-center gap-1 text-green-600 text-xs md:text-sm">
               <Check size={14} className="md:w-4 md:h-4" />
-              <span className="hidden md:inline">Opłacone</span>
+              <span className="hidden md:inline">{t("payments.item.paid")}</span>
             </div>
           )}
 

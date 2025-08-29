@@ -16,7 +16,7 @@ export default function StatisticCard({
         // Zaznaczony
         "bg-white  border-primary  shadow-md border-2": isSelected,
         // Niezaznaczony
-        "bg-white  shadow-sm hover:shadow-lg hover:-translate-y-0.5": !isSelected,
+        "bg-white  shadow-md hover:shadow-lg hover:-translate-y-0.5": !isSelected,
       })}>
       <div className="flex flex-col lg:flex-row xl:flex-col justify-center gap-2">
         {/* Górna część: Ikona i Tytuł */}

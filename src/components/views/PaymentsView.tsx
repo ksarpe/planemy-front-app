@@ -25,8 +25,8 @@ export default function Payments() {
   const nextWeekEnd = addWeeks(thisWeekEnd, 1);
 
   // Dynamic titles with actual dates
-  const thisWeekTitle = `Ten tydzień (${format(thisWeekStart, "dd.MM")} - ${format(thisWeekEnd, "dd.MM")})`;
-  const nextWeekTitle = `Następny tydzień (${format(nextWeekStart, "dd.MM")} - ${format(nextWeekEnd, "dd.MM")})`;
+  const thisWeekTitle = `(${format(thisWeekStart, "dd.MM")} - ${format(thisWeekEnd, "dd.MM")})`;
+  const nextWeekTitle = `(${format(nextWeekStart, "dd.MM")} - ${format(nextWeekEnd, "dd.MM")})`;
 
   // Use the extracted categorization logic
   const categorizedPayments = categorizePayments(payments);
@@ -41,10 +41,10 @@ export default function Payments() {
           <div className="flex-1">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {/* Total Monthly */}
-              <div className="bg-white rounded-md p-3 md:p-4 shadow-sm">
+              <div className="bg-white rounded-md p-3 md:p-4 shadow-md">
                 <div className="flex items-center gap-2 text-green-600 mb-1">
                   <TrendingUp size={18} />
-                  <span className="text-xs md:text-sm font-medium">Miesięczne wydatki</span>
+                  <span className="text-xs md:text-sm font-medium">{t("payments.monthlyExpenses")}</span>
                 </div>
                 <div className="text-lg md:text-2xl font-bold text-gray-800">{totalMonthlyAmount.toFixed(2)} PLN</div>
               </div>
@@ -52,7 +52,7 @@ export default function Payments() {
                 onClick={() => setIsModalOpen(true)}
                 className="flex items-center gap-2 bg-primary text-white px-3 md:px-4 py-2 rounded-md hover:opacity-90 transition-opacity w-full md:w-auto justify-center">
                 <Plus size={18} />
-                <span className="text-sm md:text-base">{t("addPayment")}</span>
+                <span className="text-sm md:text-base">{t("payments.addPayment")}</span>
               </button>
             </div>
           </div>
@@ -66,56 +66,60 @@ export default function Payments() {
           {payments.length === 0 ? (
             <div className="text-center py-8 md:py-12">
               <DollarSign size={40} className="mx-auto text-gray-400 mb-4 md:mb-4" />
-              <h3 className="text-base md:text-lg font-medium text-gray-500 mb-2">{t("noPayments")}</h3>
-              <p className="text-sm md:text-base text-gray-400 mb-4">Dodaj swoją pierwszą płatność lub subskrypcję</p>
+              <h3 className="text-base md:text-lg font-medium text-gray-500 mb-2">{t("payments.noPayments")}</h3>
+              <p className="text-sm md:text-base text-gray-400 mb-4">{t("payments.addFirstPayment")}</p>
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity text-sm md:text-base">
-                {t("addPayment")}
+                {t("payments.addPayment")}
               </button>
             </div>
           ) : (
             <>
               {/* Urgent - Overdue Payments */}
               <PaymentSection
-                title="Pilne"
+                title={t("dashboard.urgent")}
                 payments={overduePayments}
                 icon={AlertTriangle}
                 iconColor="text-red-500"
                 bgColor="bg-red-50"
-                emptyMessage={t("noOverduePayments")}
+                emptyMessage={t("payments.noOverduePayments")}
                 expandedPaymentId={expandedPaymentId}
                 onToggleExpand={handleToggleExpand}
               />
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
                 {/* This Week */}
                 <PaymentSection
-                  title={thisWeekTitle}
+                  title={t("payments.thisWeek") + thisWeekTitle}
                   payments={upcomingThisWeek}
                   icon={Clock}
                   iconColor="text-orange-500"
-                  bgColor="bg-orange-50"
-                  emptyMessage={t("noPaymentsThisWeek")}
+                  bgColor="bg-orange-100"
+                  emptyMessage={t("payments.noPaymentsThisWeek")}
+                  expandedPaymentId={expandedPaymentId}
+                  onToggleExpand={handleToggleExpand}
                 />
 
                 {/* Next Week */}
                 <PaymentSection
-                  title={nextWeekTitle}
+                  title={t("payments.nextWeek") + nextWeekTitle}
                   payments={upcomingNextWeek}
                   icon={Calendar}
                   iconColor="text-blue-500"
                   bgColor="bg-blue-50"
+                  emptyMessage={t("payments.noPaymentsNextWeek")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}
                 />
 
                 {/* Remaining - Later */}
                 <PaymentSection
-                  title="Pozostałe"
+                  title={t("payments.inTheFuture")}
                   payments={remainingPayments}
                   icon={Calendar}
                   iconColor="text-gray-500"
                   bgColor="bg-gray-50"
+                  emptyMessage={t("payments.noPaymentsInFuture")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}
                 />

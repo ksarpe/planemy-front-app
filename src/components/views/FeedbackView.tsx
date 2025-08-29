@@ -63,7 +63,7 @@ export default function FeedbackView() {
       </div>
 
       {/* Formularz wysyłania feedbacku */}
-      <div className="bg-white rounded-lg shadow-sm border border-border p-6 mb-8">
+      <div className="bg-white rounded-lg shadow-md border border-border p-6 mb-8">
         <h2 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
           <MessageCircle className="w-5 h-5 text-orange-500" />
           Wyślij feedback
@@ -107,14 +107,12 @@ export default function FeedbackView() {
       </div>
 
       {/* Publiczne zgłoszenia - roadmap */}
-      <div className="bg-white rounded-lg shadow-sm border border-border p-6">
+      <div className="bg-white rounded-lg shadow-md border border-border p-6">
         <h2 className="text-lg font-semibold text-text-primary mb-2 flex items-center gap-2">
           <Users className="w-5 h-5 text-primary" />
           Roadmap & Changelog
         </h2>
-        <p className="text-text-secondary text-sm mb-6">
-          {t("seeWhatWeAreWorking")}
-        </p>
+        <p className="text-text-secondary text-sm mb-6">{t("seeWhatWeAreWorking")}</p>
 
         {isLoadingPublic ? (
           <div className="flex items-center justify-center py-8">

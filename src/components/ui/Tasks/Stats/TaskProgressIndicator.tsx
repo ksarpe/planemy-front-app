@@ -10,7 +10,7 @@ export default function TaskProgressIndicator({
       : 0;
 
   return (
-    <div className="bg-white  rounded-md p-4 shadow-sm">
+    <div className="bg-white  rounded-md p-4 shadow-md">
       <div className="flex justify-between items-center mb-2">
         <span className="text-sm font-medium text-gray-700 ">Postęp</span>
         <span className="text-sm text-gray-500 ">

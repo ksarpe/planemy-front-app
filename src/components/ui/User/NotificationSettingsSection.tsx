@@ -1,23 +1,38 @@
 import { Bell } from "lucide-react";
 import type { NotificationSettingsSectionProps } from "@/data/User";
+import { useT } from "@/hooks/useT";
 
 export default function NotificationSettingsSection({
   notifications,
   handleNotificationChange,
 }: NotificationSettingsSectionProps) {
+  const { t } = useT();
+
   const notificationSettings = [
-    { key: "email", label: "Powiadomienia email", description: "Otrzymuj powiadomienia na email" },
-    { key: "push", label: "Powiadomienia push", description: "Powiadomienia w przeglądarce" },
-    { key: "tasks", label: "Przypomnienia o zadaniach", description: "Powiadomienia o terminach zadań" },
-    { key: "events", label: "Powiadomienia o eventach", description: "Przypomnienia o nadchodzących eventach" },
-    { key: "sharing", label: "Powiadomienia o udostępnianiu", description: "Informacje o udostępnionych listach" },
+    { key: "email", label: t("notifications.email.title"), description: t("notifications.email.description") },
+    { key: "push", label: t("notifications.push.title"), description: t("notifications.push.description") },
+    {
+      key: "tasks",
+      label: t("notifications.taskReminders.title"),
+      description: t("notifications.taskReminders.description"),
+    },
+    {
+      key: "events",
+      label: t("notifications.eventNotifications.title"),
+      description: t("notifications.eventNotifications.description"),
+    },
+    {
+      key: "sharing",
+      label: t("notifications.sharingNotifications.title"),
+      description: t("notifications.sharingNotifications.description"),
+    },
   ];
 
   return (
     <div className="bg-white  rounded-lg p-6 border border-gray-200 ">
       <h3 className="text-lg font-semibold text-gray-900  mb-6 flex items-center gap-2">
         <Bell size={20} className="text-primary" />
-        Powiadomienia
+        {t("notifications.title")}
       </h3>
       <div className="space-y-4">
         {notificationSettings.map((setting) => (

@@ -25,7 +25,7 @@ export const PaymentSection = ({
   if (payments.length === 0 && !emptyMessage) return null;
 
   return (
-    <div className={`${bgColor} rounded-lg p-4 shadow-sm border border-gray-100`}>
+    <div className={`${bgColor} rounded-lg p-4 shadow-md border border-gray-100`}>
       <div className="flex items-center gap-2 mb-3">
         <Icon size={18} className={iconColor} />
         <h3 className="font-medium text-gray-800">{title}</h3>

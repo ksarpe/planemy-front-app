@@ -49,7 +49,7 @@ export default function PreviewEventBlockInline({
 
   return (
     <div
-      className={`text-white rounded-md shadow-sm hover:shadow-md transition-all border-l-4 border-dashed animate-pulse ${className}`}
+      className={`text-white rounded-md shadow-md hover:shadow-md transition-all border-l-4 border-dashed animate-pulse ${className}`}
       style={{
         ...getEventColor(),
         borderLeftColor: getEventColor().backgroundColor,

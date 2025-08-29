@@ -43,7 +43,7 @@ export default function CalendarHeader() {
         <button
           onClick={() => setView("month")}
           className={`flex items-center space-x-2 px-2 py-2 rounded-md transition-colors text-xs sm:text-sm  ${
-            view === "month" ? "bg-white  text-text  shadow-sm" : "text-text-light  hover:text-text "
+            view === "month" ? "bg-white  text-text  shadow-md" : "text-text-light  hover:text-text "
           }`}>
           <Grid3X3 className="h-4 w-4" />
           <span>Month</span>
@@ -51,7 +51,7 @@ export default function CalendarHeader() {
         <button
           onClick={() => setView("week")}
           className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors text-xs sm:text-sm  ${
-            view === "week" ? "bg-white  text-text  shadow-sm" : "text-text-light  hover:text-text "
+            view === "week" ? "bg-white  text-text  shadow-md" : "text-text-light  hover:text-text "
           }`}>
           <AlignJustify className="h-4 w-4" />
           <span>Week</span>

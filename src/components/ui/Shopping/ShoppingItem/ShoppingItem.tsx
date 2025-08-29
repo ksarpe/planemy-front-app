@@ -165,7 +165,7 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
           "group p-3 md:p-4 rounded-xl border transition-all",
           item.isCompleted
             ? "border-gray-200 bg-success/40"
-            : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm",
+            : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md",
         ].join(" ")}>
         <ShoppingItemDisplay
           item={item}
