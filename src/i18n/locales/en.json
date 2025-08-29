@@ -100,7 +100,26 @@
     "inDays": "In {{count}} days",
     "urgent": "Urgent",
     "soon": "Soon",
-    "ok": "OK"
+    "ok": "OK",
+    "quickActions": "Quick Actions",
+    "addTask": "Add task",
+    "newEvent": "New event",
+    "shoppingList": "Shopping list",
+    "newPayment": "New payment",
+    "tasks": "Tasks",
+    "upcomingEvents": "Upcoming Events",
+    "nextEvent": "Next event",
+    "addEvent": "Add event",
+    "seeMore": "See {{count}} more...",
+    "seeAllInCalendar": "See all in calendar",
+    "noUpcomingEvents": "No upcoming events in the next two months",
+    "allBought": "All bought!",
+    "productsCount": "{{count}} products",
+    "allDone": "All done!",
+    "openTasks": "{{count}} open",
+    "listCreated": "Shopping list created!",
+    "listCreationFailed": "Failed to create shopping list",
+    "listName": "List {{date}}"
   },
   "payments": {
     "title": "Payments",
@@ -193,6 +212,27 @@
     "noLabels": "No labels"
   },
   "feedback": {
-    "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application."
+    "title": "Feedback",
+    "subtitle": "Have a problem or suggestion? Write to us! Your feedback will help us improve the app.",
+    "sendFeedback": "Send feedback",
+    "yourMessage": "Your message *",
+    "messagePlaceholder": "Describe your problem, suggestion or opinion...",
+    "minimumCharacters": "Minimum 10 characters required",
+    "sending": "Sending...",
+    "roadmapTitle": "Roadmap & Changelog",
+    "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application.",
+    "noPublicFeedback": "No public feedback yet",
+    "featureImplemented": "This feature has been implemented in the app",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Planned",
+      "resolved": "Implemented", 
+      "unknown": "Unknown"
+    },
+    "banner": {
+      "title": "Have a problem or idea for improvement?",
+      "description": "Use our feedback system to report bugs or suggest new features.",
+      "clickHere": "Click this banner!"
+    }
   }
 }
