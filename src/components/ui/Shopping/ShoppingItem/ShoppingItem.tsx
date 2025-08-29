@@ -12,8 +12,10 @@ import { motion } from "framer-motion";
 import { ShoppingItemDisplay } from "./ShoppingItemDisplay";
 import { ShoppingItemEditModal } from "./ShoppingItemEditModal";
 import { DeleteConfirmationModal } from "@/components/ui/Common";
+import { useT } from "@/hooks/useT";
 
 function ShoppingItem({ item, listId }: ShoppingItemProps) {
+  const { t } = useT();
   const addFavoriteProduct = useAddFavoriteProduct();
   const { data: favorites } = useFavoriteProductsQuery();
   const deleteFavorite = useDeleteFavoriteProduct();
@@ -99,7 +101,7 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
   const confirmDelete = () => {
     removeItem.mutate({ listId, itemId: item.id });
     setShowDeleteConfirm(false);
-    setIsEditing(false); // Zamknij modal edycji po potwierdzeniu usunięcia
+    setIsEditing(false); // Close edit modal after confirmation of deletion
   };
 
   const handleAddToFavorites = () => {
@@ -205,10 +207,10 @@ function ShoppingItem({ item, listId }: ShoppingItemProps) {
         isOpen={showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(false)}
         onConfirm={confirmDelete}
-        title="Usuń produkt"
-        message="Czy na pewno chcesz usunąć produkt"
+        title={t("shopping.deleteProduct.title")}
+        message={t("shopping.deleteProduct.message")}
         itemName={item.name}
-        confirmButtonText="Usuń produkt"
+        confirmButtonText={t("shopping.deleteProduct.confirmButton")}
         isLoading={removeItem.isPending}
       />
     </>

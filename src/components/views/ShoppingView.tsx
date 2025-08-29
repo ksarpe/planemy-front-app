@@ -9,9 +9,11 @@ import { FavoriteProductsPanel } from "../ui/Shopping/FavoriteProductsPanel";
 import { ShoppingHeader } from "../ui/Shopping/ShoppingHeader";
 import { ShoppingFilters } from "../ui/Shopping/ShoppingFilters";
 import { ShoppingItemsSection } from "../ui/Shopping/ShoppingItem/ShoppingItemsSection";
+import { useT } from "@/hooks/useT";
 
 
 export default function ShoppingView() {
+  const { t } = useT();
   const {
     shoppingLists,
     currentList,
@@ -54,7 +56,7 @@ export default function ShoppingView() {
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-500">Ładowanie list zakupów...</p>
+          <p className="text-gray-500">{t("shopping.loading")}</p>
         </div>
       </div>
     );
@@ -83,11 +85,11 @@ export default function ShoppingView() {
           <div className="flex gap-2 flex-1">
             <button onClick={() => setActiveTab("shopping")} className={getTabButtonClass("shopping")}>
               <ShoppingCart size={16} className="inline mr-2" />
-              Listy
+              {t("shopping.tabs.lists")}
             </button>
             <button onClick={() => setActiveTab("favorites")} className={getTabButtonClass("favorites")}>
               <Heart size={16} className="inline mr-2" />
-              Ulubione
+              {t("shopping.tabs.favorites")}
             </button>
           </div>
           <button
@@ -131,14 +133,14 @@ export default function ShoppingView() {
                   onClick={() => setIsAddItemModalOpen(true)}
                   className="w-full md:w-auto flex items-center justify-center gap-2 bg-success text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
                   <Plus size={18} />
-                  Dodaj produkt
+                  {t("shopping.actions.addProduct")}
                 </button>
               </div>
               <ShoppingFilters searchQuery={searchQuery} onSearchChange={setSearchQuery} categories={categories} />
             </div>
             
             {itemsLoading ? (
-              <div className="text-gray-500">Ładowanie produktów...</div>
+              <div className="text-gray-500">{t("shopping.loadingProducts")}</div>
             ) : (
               <ShoppingItemsSection
                 items={filteredItems}
@@ -152,12 +154,12 @@ export default function ShoppingView() {
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
               <ShoppingCart size={48} className="mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-500 mb-2">Wybierz listę zakupów</h3>
-              <p className="text-gray-400 mb-4">Otwórz panel list aby wybrać lub utwórz nową</p>
+              <h3 className="text-lg font-medium text-gray-500 mb-2">{t("shopping.emptyState.selectList")}</h3>
+              <p className="text-gray-400 mb-4">{t("shopping.emptyState.openPanelToSelect")}</p>
               <button
                 onClick={() => setIsAddListModalOpen(true)}
                 className="bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
-                Utwórz nową listę
+                {t("shopping.actions.createNewList")}
               </button>
             </div>
           </div>

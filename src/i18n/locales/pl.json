@@ -189,6 +189,44 @@
       }
     }
   },
+  "shopping": {
+    "title": "Zakupy",
+    "loading": "Ładowanie list zakupów...",
+    "loadingProducts": "Ładowanie produktów...",
+    "tabs": {
+      "lists": "Listy",
+      "favorites": "Ulubione"
+    },
+    "actions": {
+      "addProduct": "Dodaj produkt",
+      "createNewList": "Utwórz nową listę"
+    },
+    "emptyState": {
+      "selectList": "Wybierz listę zakupów",
+      "openPanelToSelect": "Otwórz panel list aby wybrać lub utwórz nową"
+    },
+    "stats": {
+      "toBuy": "Do kupienia",
+      "bought": "Kupione",
+      "value": "Wartość",
+      "currency": "zł"
+    },
+    "deleteProduct": {
+      "title": "Usuń produkt",
+      "message": "Czy na pewno chcesz usunąć produkt",
+      "confirmButton": "Usuń produkt"
+    },
+    "categories": {
+      "fruitsAndVegetables": "Owoce i warzywa",
+      "meatAndFish": "Mięso i ryby", 
+      "dairy": "Nabiał",
+      "bread": "Pieczywo",
+      "beverages": "Napoje",
+      "sweets": "Słodycze",
+      "chemistry": "Chemia",
+      "cosmetics": "Kosmetyki"
+    }
+  },
   "labels": {
     "noLabels": "Brak etykiet"
   },

@@ -189,6 +189,44 @@
       }
     }
   },
+  "shopping": {
+    "title": "Shopping",
+    "loading": "Loading shopping lists...",
+    "loadingProducts": "Loading products...",
+    "tabs": {
+      "lists": "Lists",
+      "favorites": "Favorites"
+    },
+    "actions": {
+      "addProduct": "Add product",
+      "createNewList": "Create new list"
+    },
+    "emptyState": {
+      "selectList": "Select shopping list",
+      "openPanelToSelect": "Open lists panel to select or create new"
+    },
+    "stats": {
+      "toBuy": "To buy",
+      "bought": "Bought",
+      "value": "Value",
+      "currency": "USD"
+    },
+    "deleteProduct": {
+      "title": "Delete product",
+      "message": "Are you sure you want to delete product",
+      "confirmButton": "Delete product"
+    },
+    "categories": {
+      "fruitsAndVegetables": "Fruits and Vegetables",
+      "meatAndFish": "Meat and Fish", 
+      "dairy": "Dairy",
+      "bread": "Bread",
+      "beverages": "Beverages",
+      "sweets": "Sweets",
+      "chemistry": "Household Chemicals",
+      "cosmetics": "Cosmetics"
+    }
+  },
   "labels": {
     "noLabels": "No labels"
   },
