@@ -57,8 +57,3 @@ export interface AddListModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-export interface QuickAddShoppingItemProps {
-  listId: string;
-  onCancel: () => void;
-}
