@@ -194,5 +194,32 @@
   },
   "feedback": {
     "seeWhatWeAreWorking": "Zobacz nad czym pracujemy i co zostało już wprowadzone do aplikacji."
+  },
+  "auth": {
+    "login": "Zaloguj się",
+    "register": "Zarejestruj się",
+    "email": "Email",
+    "password": "Hasło",
+    "emailPlaceholder": "Wprowadź swój email",
+    "passwordPlaceholder": "Wprowadź swoje hasło",
+    "loggingIn": "Logowanie...",
+    "registering": "Rejestrowanie...",
+    "loginSuccess": "Pomyślnie zalogowano!",
+    "registerSuccess": "Pomyślnie zarejestrowano!",
+    "operationError": "Błąd operacji",
+    "fillAllFields": "Wypełnij wszystkie pola",
+    "noAccount": "Nie masz konta?",
+    "hasAccount": "Masz już konto?",
+    "errors": {
+      "userNotFound": "Nie znaleziono użytkownika z tym adresem email.",
+      "wrongPassword": "Nieprawidłowe hasło.",
+      "emailAlreadyInUse": "Ten adres email jest już używany.",
+      "weakPassword": "Hasło jest zbyt słabe.",
+      "invalidEmail": "Nieprawidłowy adres email.",
+      "userDisabled": "To konto zostało wyłączone.",
+      "tooManyRequests": "Zbyt wiele nieudanych prób logowania. Spróbuj ponownie później.",
+      "networkRequestFailed": "Błąd połączenia z siecią.",
+      "unknownError": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
+    }
   }
 }

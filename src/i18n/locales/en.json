@@ -194,5 +194,32 @@
   },
   "feedback": {
     "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application."
+  },
+  "auth": {
+    "login": "Log in",
+    "register": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "loggingIn": "Logging in...",
+    "registering": "Signing up...",
+    "loginSuccess": "Successfully logged in!",
+    "registerSuccess": "Successfully registered!",
+    "operationError": "Operation error",
+    "fillAllFields": "Fill in all fields",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "errors": {
+      "userNotFound": "No user found with this email address.",
+      "wrongPassword": "Incorrect password.",
+      "emailAlreadyInUse": "This email address is already in use.",
+      "weakPassword": "Password is too weak.",
+      "invalidEmail": "Invalid email address.",
+      "userDisabled": "This account has been disabled.",
+      "tooManyRequests": "Too many failed login attempts. Please try again later.",
+      "networkRequestFailed": "Network connection error.",
+      "unknownError": "An unexpected error occurred. Please try again."
+    }
   }
 }
