@@ -1,14 +1,15 @@
 import { PaymentInterface } from "@/data/Payments/interfaces";
-import { useState } from "react";
 import { ChevronDown, ChevronUp, Check, DollarSign, Calendar, AlertCircle } from "lucide-react";
 import { getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@/api/payments";
 import { PaymentDetailsPanel } from "./PaymentDetailsPanel";
 
-export default function PaymentItem({ payment }: { payment: PaymentInterface }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+interface PaymentItemProps {
+  payment: PaymentInterface;
+  isExpanded: boolean;
+  onToggle: () => void;
+}
 
-  const toggleExpand = () => setIsExpanded(!isExpanded);
-
+export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentItemProps) {
   const daysUntil = getDaysUntilPayment(payment.nextPaymentDate);
   const isOverdue = daysUntil < 0;
   const isDueSoon = daysUntil <= payment.reminderDays && daysUntil >= 0;
@@ -58,7 +59,7 @@ export default function PaymentItem({ payment }: { payment: PaymentInterface }) 
   return (
     <div className={`rounded-md shadow-sm border-2 transition-all duration-200 ${getStatusColor()}`}>
       <div
-        onClick={toggleExpand}
+        onClick={onToggle}
         className="flex justify-between items-center p-3 md:p-4 cursor-pointer hover:bg-opacity-80">
         <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
           <div className="text-xl md:text-2xl flex-shrink-0">{getCategoryIcon(payment.category)}</div>

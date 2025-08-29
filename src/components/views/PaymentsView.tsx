@@ -11,6 +11,11 @@ export default function Payments() {
   const { addPayment } = usePayments();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useT();
+  const [expandedPaymentId, setExpandedPaymentId] = useState<string | null>(null);
+
+  const handleToggleExpand = (paymentId: string) => {
+    setExpandedPaymentId(expandedPaymentId === paymentId ? null : paymentId);
+  };
 
   // Calculate week boundaries for dynamic titles
   const now = new Date();
@@ -25,14 +30,8 @@ export default function Payments() {
 
   // Use the extracted categorization logic
   const categorizedPayments = categorizePayments(payments);
-  const {
-    overduePayments,
-    upcomingThisWeek,
-    upcomingNextWeek,
-    remainingPayments,
-    inactivePayments,
-    totalMonthlyAmount,
-  } = categorizedPayments;
+  const { overduePayments, upcomingThisWeek, upcomingNextWeek, remainingPayments, totalMonthlyAmount } =
+    categorizedPayments;
 
   return (
     <div className="flex h-full p-2 md:p-4">
@@ -85,6 +84,8 @@ export default function Payments() {
                 iconColor="text-red-500"
                 bgColor="bg-red-50"
                 emptyMessage={t("noOverduePayments")}
+                expandedPaymentId={expandedPaymentId}
+                onToggleExpand={handleToggleExpand}
               />
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
                 {/* This Week */}
@@ -104,6 +105,8 @@ export default function Payments() {
                   icon={Calendar}
                   iconColor="text-blue-500"
                   bgColor="bg-blue-50"
+                  expandedPaymentId={expandedPaymentId}
+                  onToggleExpand={handleToggleExpand}
                 />
 
                 {/* Remaining - Later */}
@@ -113,18 +116,10 @@ export default function Payments() {
                   icon={Calendar}
                   iconColor="text-gray-500"
                   bgColor="bg-gray-50"
+                  expandedPaymentId={expandedPaymentId}
+                  onToggleExpand={handleToggleExpand}
                 />
               </div>
-              {/* Inactive Payments */}
-              {inactivePayments.length > 0 && (
-                <PaymentSection
-                  title="⏸Nieaktywne"
-                  payments={inactivePayments}
-                  icon={Clock}
-                  iconColor="text-gray-400"
-                  bgColor="bg-gray-50"
-                />
-              )}
             </>
           )}
         </div>

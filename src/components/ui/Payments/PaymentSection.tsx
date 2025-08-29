@@ -8,6 +8,8 @@ interface PaymentSectionProps {
   iconColor: string;
   bgColor?: string;
   emptyMessage?: string;
+  expandedPaymentId?: string | null;
+  onToggleExpand?: (paymentId: string) => void;
 }
 
 export const PaymentSection = ({
@@ -17,6 +19,8 @@ export const PaymentSection = ({
   iconColor,
   bgColor = "bg-white",
   emptyMessage,
+  expandedPaymentId,
+  onToggleExpand,
 }: PaymentSectionProps) => {
   if (payments.length === 0 && !emptyMessage) return null;
 
@@ -32,7 +36,12 @@ export const PaymentSection = ({
       ) : (
         <div className="space-y-2">
           {payments.map((payment) => (
-            <PaymentItem key={payment.id} payment={payment} />
+            <PaymentItem
+              key={payment.id}
+              payment={payment}
+              isExpanded={expandedPaymentId === payment.id}
+              onToggle={() => onToggleExpand?.(payment.id)}
+            />
           ))}
         </div>
       )}

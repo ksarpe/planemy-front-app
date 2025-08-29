@@ -28,7 +28,7 @@ export const PaymentSummary = ({ categorizedPayments }: PaymentSummaryProps) => 
         </span>
       )}
       <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
-        {activePayments.length} aktywnych z {activePayments.length + categorizedPayments.inactivePayments.length}{" "}
+        {activePayments.length} aktywnych z {activePayments.length}{" "}
         łącznie
       </span>
     </div>

@@ -7,7 +7,6 @@ export interface CategorizedPayments {
   upcomingThisWeek: PaymentInterface[];
   upcomingNextWeek: PaymentInterface[];
   remainingPayments: PaymentInterface[];
-  inactivePayments: PaymentInterface[];
   activePayments: PaymentInterface[];
   totalMonthlyAmount: number;
 }
@@ -54,7 +53,6 @@ export const categorizePayments = (payments: PaymentInterface[]): CategorizedPay
     upcomingThisWeek,
     upcomingNextWeek,
     remainingPayments,
-    inactivePayments: [],
     activePayments: payments,
     totalMonthlyAmount,
   };
