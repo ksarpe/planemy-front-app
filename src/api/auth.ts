@@ -1,3 +1,6 @@
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./config";
+
 export interface LoginRequest {
   username: string;
   password: string;
@@ -19,44 +22,22 @@ export interface AuthResponse {
 
 export const loginUser = async (credentials: LoginRequest): Promise<AuthResponse> => {
   try {
-    // Hardcoded for now - will replace with actual backend call
-    const response = await fetch("http://localhost:8080/api/v1/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: credentials.username,
-        password: credentials.password,
-      }),
-    });
+    // Use Firebase authentication for testing purposes
+    const userCredential = await signInWithEmailAndPassword(auth, credentials.username, credentials.password);
+    const user = userCredential.user;
 
-    if (!response.ok) {
-      throw new Error(`Login failed: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch {
-    // For development, simulate the API call
-    console.log(`Simulated login call:`, {
-      method: "POST",
-      url: "http://localhost:8080/api/v1/auth/login",
-      body: {
-        username: credentials.username,
-        password: "**", // Hide password in logs
-      },
-    });
-
-    // Simulate success for development
     return {
       message: "Login successful",
-      token: "mock-jwt-token",
+      token: await user.getIdToken(), // Get Firebase JWT token
       user: {
-        id: "mock-user-id",
-        username: credentials.username,
+        id: user.uid,
+        username: user.email || credentials.username,
       },
     };
+  } catch (error) {
+    // Handle Firebase auth errors
+    console.error("Firebase login error:", error);
+    throw new Error(error instanceof Error ? error.message : "Login failed");
   }
 };
 

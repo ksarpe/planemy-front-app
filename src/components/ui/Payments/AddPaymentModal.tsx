@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, DollarSign, Calendar, Tag, RefreshCw } from "lucide-react";
+import { X, Calendar, Tag, RefreshCw } from "lucide-react";
 import { PaymentInterface } from "@/data/Payments/interfaces";
 import { calculateNextPaymentDate } from "@/api/payments";
 
@@ -44,7 +44,6 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
         category: formData.category,
         description: formData.description,
         nextPaymentDate: selectedDate,
-        isActive: true,
         isPaid: false,
         autoRenew: formData.autoRenew,
         reminderDays: formData.reminderDays,
@@ -82,7 +81,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-md shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-6 border-b">
           <h2 className="text-xl font-semibold text-gray-800">Dodaj nową płatność</h2>
@@ -99,24 +98,23 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               type="text"
               value={formData.name}
               onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="np. Netflix, Prąd, Ubezpieczenie"
               required
             />
           </div>
 
           {/* Amount and Currency */}
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">Kwota *</label>
               <div className="relative">
-                <DollarSign size={18} className="absolute left-3 top-2.5 text-gray-400" />
                 <input
                   type="number"
                   step="0.01"
                   value={formData.amount}
                   onChange={(e) => setFormData((prev) => ({ ...prev, amount: e.target.value }))}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="0.00"
                   required
                 />
@@ -146,7 +144,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, category: e.target.value as PaymentInterface["category"] }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="subscription">Subskrypcja</option>
               <option value="utility">Media/Rachunki</option>
               <option value="insurance">Ubezpieczenie</option>
@@ -173,7 +171,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
                   key={option.value}
                   type="button"
                   onClick={() => handleCycleChange(option.value as PaymentInterface["cycle"])}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-2 py-2 rounded-md text-sm font-medium transition-colors ${
                     formData.cycle === option.value
                       ? "bg-blue-500 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -194,7 +192,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -217,7 +215,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
             <textarea
               value={formData.description}
               onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={2}
               placeholder="Dodatkowe informacje..."
             />
@@ -238,7 +236,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
           </div>
 
           {/* Submit Button */}
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-2 pt-4">
             <button
               type="button"
               onClick={onClose}

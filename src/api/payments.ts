@@ -78,11 +78,11 @@ export const getPaymentById = async (paymentId: string): Promise<Payment> => {
     const paymentsCollection = collection(db, "payments");
     const paymentDocRef = doc(paymentsCollection, paymentId);
     const paymentDoc = await getDoc(paymentDocRef);
-    
+
     if (!paymentDoc.exists()) {
       throw new Error(`Payment with ID ${paymentId} not found`);
     }
-    
+
     return {
       id: paymentDoc.id,
       ...paymentDoc.data(),
@@ -135,16 +135,6 @@ export const markPaymentAsPaid = async (paymentId: string): Promise<void> => {
     });
   } catch (error) {
     console.error("Error marking payment as paid:", error);
-    throw error;
-  }
-};
-
-// Function to toggle payment active status
-export const togglePaymentStatus = async (paymentId: string, isActive: boolean): Promise<void> => {
-  try {
-    await updatePayment(paymentId, { isActive });
-  } catch (error) {
-    console.error("Error toggling payment status:", error);
     throw error;
   }
 };
@@ -202,27 +192,25 @@ export const isPaymentPaidForCurrentPeriod = (payment: Payment): boolean => {
 
       return todayWeekStart.getTime() === lastPaymentWeekStart.getTime();
     }
-    
+
     case "monthly": {
       // Check if both dates are in the same month and year
-      return today.getFullYear() === lastPayment.getFullYear() &&
-             today.getMonth() === lastPayment.getMonth();
+      return today.getFullYear() === lastPayment.getFullYear() && today.getMonth() === lastPayment.getMonth();
     }
-    
+
     case "quarterly": {
       // Check if both dates are in the same quarter and year
       const todayQuarter = Math.floor(today.getMonth() / 3);
       const lastPaymentQuarter = Math.floor(lastPayment.getMonth() / 3);
-      
-      return today.getFullYear() === lastPayment.getFullYear() &&
-             todayQuarter === lastPaymentQuarter;
+
+      return today.getFullYear() === lastPayment.getFullYear() && todayQuarter === lastPaymentQuarter;
     }
-    
+
     case "yearly": {
       // Check if both dates are in the same year
       return today.getFullYear() === lastPayment.getFullYear();
     }
-    
+
     default:
       return false;
   }

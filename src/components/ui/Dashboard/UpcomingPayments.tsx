@@ -8,9 +8,9 @@ export default function UpcomingPayments() {
   const { payments } = usePaymentsContext();
   const navigate = useNavigate();
 
-  // Filter active payments and calculate days left
+  // Filter payments and calculate days left
   const upcomingPayments = payments
-    .filter((payment) => payment.isActive && !isPaymentPaidForCurrentPeriod(payment))
+    .filter((payment) => !isPaymentPaidForCurrentPeriod(payment))
     .map((payment) => ({
       ...payment,
       daysLeft: differenceInDays(new Date(payment.nextPaymentDate), new Date()),

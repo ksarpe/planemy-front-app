@@ -3,7 +3,6 @@ import {
   addPayment as addPaymentToFirebase,
   removePayment as removePaymentFromFirebase,
   markPaymentAsPaid as markPaymentAsPaidFirebase,
-  togglePaymentStatus as togglePaymentStatusFirebase,
   updatePayment as updatePaymentFirebase,
 } from "../../api/payments";
 import { useAuthContext } from "../context/useAuthContext";
@@ -62,20 +61,6 @@ export const usePayments = () => {
     },
   });
 
-  const togglePaymentStatusMutation = useMutation({
-    mutationFn: async ({ paymentId, isActive }: { paymentId: string; isActive: boolean }) => {
-      return await togglePaymentStatusFirebase(paymentId, isActive);
-    },
-    onSuccess: (_, { isActive }) => {
-      queryClient.invalidateQueries({ queryKey: ["payments"] });
-      showToast("success", `Płatność została ${isActive ? "aktywowana" : "dezaktywowana"}!`);
-    },
-    onError: (error) => {
-      console.error("Error toggling payment status:", error);
-      showToast("error", "Błąd podczas zmiany statusu płatności");
-    },
-  });
-
   const updatePaymentMutation = useMutation({
     mutationFn: async ({ paymentId, updateData }: { paymentId: string; updateData: Partial<PaymentInterface> }) => {
       return await updatePaymentFirebase(paymentId, updateData);
@@ -97,8 +82,7 @@ export const usePayments = () => {
     addPaymentError: addPaymentMutation.error,
 
     // Mark as paid
-    markAsPaid: (paymentId: string) => 
-      markAsPaidMutation.mutateAsync(paymentId),
+    markAsPaid: (paymentId: string) => markAsPaidMutation.mutateAsync(paymentId),
     isMarkingAsPaid: markAsPaidMutation.isPending,
     markAsPaidError: markAsPaidMutation.error,
 
@@ -107,14 +91,8 @@ export const usePayments = () => {
     isRemovingPayment: removePaymentMutation.isPending,
     removePaymentError: removePaymentMutation.error,
 
-    // Toggle payment status
-    togglePaymentStatus: (paymentId: string, isActive: boolean) => 
-      togglePaymentStatusMutation.mutateAsync({ paymentId, isActive }),
-    isTogglingStatus: togglePaymentStatusMutation.isPending,
-    toggleStatusError: togglePaymentStatusMutation.error,
-
     // Update payment
-    updatePayment: (paymentId: string, updateData: Partial<PaymentInterface>) => 
+    updatePayment: (paymentId: string, updateData: Partial<PaymentInterface>) =>
       updatePaymentMutation.mutateAsync({ paymentId, updateData }),
     isUpdatingPayment: updatePaymentMutation.isPending,
     updatePaymentError: updatePaymentMutation.error,
@@ -123,7 +101,6 @@ export const usePayments = () => {
     resetAddPayment: addPaymentMutation.reset,
     resetMarkAsPaid: markAsPaidMutation.reset,
     resetRemovePayment: removePaymentMutation.reset,
-    resetToggleStatus: togglePaymentStatusMutation.reset,
     resetUpdatePayment: updatePaymentMutation.reset,
   };
 };

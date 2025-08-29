@@ -10,7 +10,6 @@ export interface PaymentInterface {
   description?: string;
   nextPaymentDate: string;
   lastPaymentDate?: string;
-  isActive: boolean;
   isPaid: boolean;
   autoRenew: boolean;
   reminderDays: number;
