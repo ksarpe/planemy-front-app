@@ -34,7 +34,7 @@ export default function Payments() {
     categorizedPayments;
 
   return (
-    <div className="flex h-full p-2 md:p-4">
+    <div className="flex h-full overflow-auto scrollbar-hide p-2 md:p-4">
       <div className="w-full overflow-auto flex flex-col gap-4 md:gap-6 p-4 md:p-6">
         {/* Header with Stats */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
@@ -50,7 +50,7 @@ export default function Payments() {
               </div>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 bg-primary text-text px-3 md:px-4 py-2 rounded-md hover:opacity-90 transition-opacity w-full md:w-auto justify-center shadow-md">
+                className="flex items-center gap-2 p-2 bg-primary text-white rounded-md hover:opacity-90 transition-opacity w-full md:w-auto justify-center shadow-md">
                 <Plus size={18} />
                 <span className="text-sm md:text-base">{t("payments.addPayment")}</span>
               </button>
@@ -81,11 +81,10 @@ export default function Payments() {
                 title={t("dashboard.urgent")}
                 payments={overduePayments}
                 icon={AlertTriangle}
-                iconColor="text-negative"
-                bgColor="bg-bg"
                 emptyMessage={t("payments.noOverduePayments")}
                 expandedPaymentId={expandedPaymentId}
                 onToggleExpand={handleToggleExpand}
+                isImportant={true}
               />
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
                 {/* This Week */}
@@ -93,8 +92,6 @@ export default function Payments() {
                   title={t("payments.thisWeek") + thisWeekTitle}
                   payments={upcomingThisWeek}
                   icon={Clock}
-                  iconColor="text-primary"
-                  bgColor="bg-bg"
                   emptyMessage={t("payments.noPaymentsThisWeek")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}
@@ -105,8 +102,6 @@ export default function Payments() {
                   title={t("payments.nextWeek") + nextWeekTitle}
                   payments={upcomingNextWeek}
                   icon={Calendar}
-                  iconColor="text-primary"
-                  bgColor="bg-bg"
                   emptyMessage={t("payments.noPaymentsNextWeek")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}
@@ -117,8 +112,6 @@ export default function Payments() {
                   title={t("payments.inTheFuture")}
                   payments={remainingPayments}
                   icon={Calendar}
-                  iconColor="text-text-light"
-                  bgColor="bg-bg"
                   emptyMessage={t("payments.noPaymentsInFuture")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}

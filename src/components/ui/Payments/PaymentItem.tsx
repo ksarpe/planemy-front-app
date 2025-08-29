@@ -35,23 +35,11 @@ export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentIt
     }
   };
 
-  const getCategoryColor = (category: PaymentInterface["category"]) => {
-    // Use unified theme colors for all categories
-    return "bg-bg-alt text-text";
-  };
-
-  const getStatusColor = () => {
-    if (isPaidForCurrentPeriod) return "bg-success";
-    if (isOverdue) return "bg-negative";
-    if (isDueSoon) return "bg-bg-hover";
-    return "bg-bg";
-  };
-
   return (
-    <div className={`rounded-md shadow-md transition-all duration-200 ${getStatusColor()}`}>
+    <div className={`rounded-md shadow-md transition-all duration-200 bg-bg-alt/50 p-2`}>
       <div
         onClick={onToggle}
-        className="flex justify-between items-center p-3 md:p-4 cursor-pointer hover:bg-bg-hover hover:bg-opacity-80 transition-colors">
+        className="flex justify-between items-center md:p-4 cursor-pointer hover:bg-bg-hover rounded-md transition-colors">
         <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
           <div className="text-xl md:text-2xl flex-shrink-0">{getCategoryIcon(payment.category)}</div>
 
@@ -59,7 +47,7 @@ export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentIt
             <div className="flex flex-col gap-1 mb-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-medium text-sm md:text-base truncate text-text">{payment.name}</span>
-                <span className={`px-2 py-1 text-xs rounded-full flex-shrink-0 ${getCategoryColor(payment.category)}`}>
+                <span className={`px-2 py-1 text-xs rounded-full flex-shrink-0 bg-bg-alt text-text`}>
                   {t(`payments.modal.categories.${payment.category}`)}
                 </span>
               </div>

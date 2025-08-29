@@ -97,9 +97,9 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
   };
 
   return (
-    <div className="px-4 pb-4 border-t border-bg-alt bg-bg-alt">
+    <div className="px-4 pb-4 border-t border-bg-alt bg-bg-alt/10">
       {/* Status and Description */}
-      <div className="flex items-center justify-between py-3 border-b border-bg-alt">
+      <div className="flex items-center justify-between py-3">
         <div className="flex items-center gap-2">
           <h4 className="font-medium text-text">{t("payments.details.title")}</h4>
           {getStatusBadge()}
@@ -107,7 +107,7 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
       </div>
 
       {/* Editable Description */}
-      <div className="py-3 border-b border-bg-alt">
+      <div className="py-2">
         <div className="flex items-start gap-2 text-sm text-text-light">
           <Tag size={14} className="mt-0.5 text-text-light" />
           <div className="flex-1">
@@ -124,7 +124,7 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
 
       {/* Payment Details Grid - With Editable Fields */}
       <div className="py-4">
-        <div className="grid grid-cols-2 gap-3 md:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
           {/* Nazwa płatności */}
           <div className="lg:col-span-2 flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
             <div className="p-2 bg-primary rounded-lg">
@@ -215,7 +215,7 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
       </div>
 
       {/* Additional Info */}
-      <div className="py-3 border-t border-bg-alt">
+      <div className="py-3 ">
         <div className="flex flex-wrap gap-3 text-xs">
           <div className="flex items-center gap-1">
             <Repeat size={12} className="text-text-light" />
@@ -241,7 +241,7 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-wrap gap-2 pt-3 border-t border-bg-alt">
+      <div className="flex flex-wrap gap-2 pt-3 ">
         {!isPaidForCurrentPeriod && (
           <button
             onClick={() => markAsPaid(payment.id)}

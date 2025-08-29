@@ -88,7 +88,7 @@ export const EditableText = ({
           onChange={(e) => setEditValue(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={handleSave}
-          className="flex-1 min-w-0 px-1 py-0.5 text-sm border border-blue-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="flex-1 min-w-0 px-1 py-0.5 text-sm border rounded bg-white"
           placeholder={placeholder}
           disabled={isSaving}
           step={type === "number" ? "0.01" : undefined}
@@ -116,7 +116,7 @@ export const EditableText = ({
   return (
     <div
       onClick={handleEdit}
-      className={`group cursor-pointer hover:bg-blue-50 rounded px-1 py-0.5 transition-colors ${
+      className={`group cursor-pointer rounded px-1 py-0.5 transition-colors ${
         disabled ? "cursor-not-allowed opacity-50" : ""
       } ${className}`}
       title={disabled ? "" : "Kliknij aby edytować"}>
