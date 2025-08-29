@@ -35,7 +35,7 @@ export default function Payments() {
 
   return (
     <div className="flex h-full overflow-auto scrollbar-hide p-2 md:p-4">
-      <div className="w-full overflow-auto flex flex-col gap-4 md:gap-6 p-4 md:p-6">
+      <div className="w-full flex flex-col gap-4 md:gap-6 p-4 md:p-6">
         {/* Header with Stats */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
           <div className="flex-1">

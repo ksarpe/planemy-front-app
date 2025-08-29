@@ -61,7 +61,7 @@ export default function ShoppingView() {
   }
 
   return (
-    <div className="relative h-full p-4 flex flex-row">
+    <div className="relative h-full p-4 flex flex-row overflow-auto scrollbar-hide">
       {/* Drawer (scoped inside this view) */}
       {/* Full-screen overlay + right drawer (desktop & mobile unified) */}
       <div
@@ -114,7 +114,7 @@ export default function ShoppingView() {
       </div>
 
       {/* Main content card (adds left padding when drawer open on desktop) */}
-      <div className="rounded-md flex-1 overflow-auto scrollbar-hide p-4 space-y-4 md:relative">
+      <div className="rounded-md flex-1 p-4 space-y-4 md:relative">
         {currentList ? (
           <>
             <ShoppingHeader

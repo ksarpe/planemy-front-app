@@ -96,3 +96,25 @@
     display: none; /* Safari and Chrome */
   }
 }
+
+@media (min-width: 1024px) {
+  .scrollbar-hide {
+    scrollbar-width: thin; /* Firefox - thin scrollbar */
+    -ms-overflow-style: auto; /* Internet Explorer 10+ */
+    &::-webkit-scrollbar {
+      display: block; /* Safari and Chrome */
+      width: 8px; /* Szerokość scrollbara */
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent; /* Przezroczyste tło ścieżki */
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2); /* Przezroczysty thumb */
+      border-radius: 4px; /* Zaokrąglone rogi */
+      border: 1px solid transparent; /* Odstęp od krawędzi */
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(0, 0, 0, 0.3); /* Ciemniejszy przy hover */
+    }
+  }
+}
