@@ -1,24 +1,6 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./config";
-
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  username: string;
-  password: string;
-}
-
-export interface AuthResponse {
-  message: string;
-  token?: string;
-  user?: {
-    id: string;
-    username: string;
-  };
-}
+import type { LoginRequest, RegisterRequest, AuthResponse } from "@/data/Auth/interfaces";
 
 export const loginUser = async (credentials: LoginRequest): Promise<AuthResponse> => {
   try {
