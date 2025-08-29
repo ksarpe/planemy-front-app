@@ -126,7 +126,7 @@ export const markPaymentAsPaid = async (paymentId: string): Promise<void> => {
   try {
     // Fetch the payment data to get the cycle information
     const payment = await getPaymentById(paymentId);
-    const nextDate = calculateNextPaymentDate(payment.cycle, new Date());
+    const nextDate = calculateNextPaymentDate(payment.cycle, new Date(payment.nextPaymentDate));
 
     await updatePayment(paymentId, {
       isPaid: true,
