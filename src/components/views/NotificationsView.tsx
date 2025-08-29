@@ -62,7 +62,7 @@ export default function NotificationsView() {
   if (isLoading) {
     return (
       <div className="flex h-full p-4 gap-4">
-        <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto">
+        <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto scrollbar-hide">
           <div className="flex items-center justify-center min-h-[400px]">
             <Spinner text="Ładowanie powiadomień i ogłoszeń..." />
           </div>
@@ -73,7 +73,7 @@ export default function NotificationsView() {
 
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto">
+      <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto scrollbar-hide">
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
