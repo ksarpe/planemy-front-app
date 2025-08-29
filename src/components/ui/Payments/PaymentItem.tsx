@@ -13,7 +13,7 @@ import {
   Tag,
   AlertCircle,
 } from "lucide-react";
-import { getDaysUntilPayment } from "@/api/payments";
+import { getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@/api/payments";
 
 export default function PaymentItem({ payment }: { payment: PaymentInterface }) {
   const { markAsPaid, removePayment, togglePaymentStatus, updatePayment } = usePayments();
@@ -30,6 +30,7 @@ export default function PaymentItem({ payment }: { payment: PaymentInterface }) 
   const daysUntil = getDaysUntilPayment(payment.nextPaymentDate);
   const isOverdue = daysUntil < 0;
   const isDueSoon = daysUntil <= payment.reminderDays && daysUntil >= 0;
+  const isPaidForCurrentPeriod = isPaymentPaidForCurrentPeriod(payment);
 
   const handleSaveEdit = async () => {
     try {
@@ -80,7 +81,7 @@ export default function PaymentItem({ payment }: { payment: PaymentInterface }) 
 
   const getStatusColor = () => {
     if (!payment.isActive) return "bg-gray-100 border-gray-300";
-    if (payment.isPaid) return "bg-green-50 border-green-200";
+    if (isPaidForCurrentPeriod) return "bg-green-50 border-green-200";
     if (isOverdue) return "bg-red-50 border-red-200";
     if (isDueSoon) return "bg-yellow-50 border-yellow-200";
     return "bg-white border-gray-200";
@@ -130,7 +131,7 @@ export default function PaymentItem({ payment }: { payment: PaymentInterface }) 
         </div>
 
         <div className="flex items-center gap-2">
-          {payment.isPaid && (
+          {isPaidForCurrentPeriod && (
             <div className="flex items-center gap-1 text-green-600 text-sm">
               <Check size={16} />
               <span>Opłacone</span>
@@ -227,7 +228,7 @@ export default function PaymentItem({ payment }: { payment: PaymentInterface }) 
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {payment.isActive && !payment.isPaid && (
+                {payment.isActive && !isPaidForCurrentPeriod && (
                   <button
                     onClick={() => markAsPaid(payment.id)}
                     className="text-xs bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors flex items-center gap-1">

@@ -2,6 +2,7 @@ import { usePaymentsContext } from "@/hooks/context/usePaymentsContext";
 import { Package, ChevronRight } from "lucide-react";
 import { differenceInDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { isPaymentPaidForCurrentPeriod } from "@/api/payments";
 
 export default function UpcomingPayments() {
   const { payments } = usePaymentsContext();
@@ -9,7 +10,7 @@ export default function UpcomingPayments() {
 
   // Filter active payments and calculate days left
   const upcomingPayments = payments
-    .filter((payment) => payment.isActive)
+    .filter((payment) => payment.isActive && !isPaymentPaidForCurrentPeriod(payment))
     .map((payment) => ({
       ...payment,
       daysLeft: differenceInDays(new Date(payment.nextPaymentDate), new Date()),
