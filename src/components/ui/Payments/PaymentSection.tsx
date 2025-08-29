@@ -17,7 +17,7 @@ export const PaymentSection = ({
   payments,
   icon: Icon,
   iconColor,
-  bgColor = "bg-white",
+  bgColor = "bg-bg", // Use theme background instead of rainbow colors
   emptyMessage,
   expandedPaymentId,
   onToggleExpand,
@@ -25,14 +25,14 @@ export const PaymentSection = ({
   if (payments.length === 0 && !emptyMessage) return null;
 
   return (
-    <div className={`${bgColor} rounded-lg p-4 shadow-md border border-gray-100`}>
+    <div className="bg-bg rounded-lg p-4 shadow-md border border-bg-alt">
       <div className="flex items-center gap-2 mb-3">
-        <Icon size={18} className={iconColor} />
-        <h3 className="font-medium text-gray-800">{title}</h3>
+        <Icon size={18} className="text-primary" />
+        <h3 className="font-medium text-text">{title}</h3>
       </div>
 
       {payments.length === 0 ? (
-        <p className="text-sm text-gray-500 italic">{emptyMessage}</p>
+        <p className="text-sm text-text-light italic">{emptyMessage}</p>
       ) : (
         <div className="space-y-2">
           {payments.map((payment) => (

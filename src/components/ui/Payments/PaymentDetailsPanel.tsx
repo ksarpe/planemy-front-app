@@ -66,7 +66,7 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
   const getStatusBadge = () => {
     if (isPaidForCurrentPeriod) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">
+        <span className="inline-flex items-center gap-1 px-2 py-1 bg-success text-text rounded-full text-xs">
           <Check size={10} />
           Opłacone
         </span>
@@ -74,7 +74,7 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
     }
     if (daysUntil < 0) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs">
+        <span className="inline-flex items-center gap-1 px-2 py-1 bg-negative text-text rounded-full text-xs">
           <Clock size={10} />
           Przeterminowane
         </span>
@@ -82,14 +82,14 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
     }
     if (daysUntil <= payment.reminderDays) {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs">
+        <span className="inline-flex items-center gap-1 px-2 py-1 bg-bg-hover text-text rounded-full text-xs">
           <Bell size={10} />
           Wkrótce
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
+      <span className="inline-flex items-center gap-1 px-2 py-1 bg-primary text-text rounded-full text-xs">
         <Calendar size={10} />
         Planowane
       </span>
@@ -97,21 +97,21 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
   };
 
   return (
-    <div className="px-4 pb-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-slate-50">
+    <div className="px-4 pb-4 border-t border-bg-alt bg-bg-alt">
       {/* Status and Description */}
-      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+      <div className="flex items-center justify-between py-3 border-b border-bg-alt">
         <div className="flex items-center gap-2">
-          <h4 className="font-medium text-gray-800">{t("payments.details.title")}</h4>
+          <h4 className="font-medium text-text">{t("payments.details.title")}</h4>
           {getStatusBadge()}
         </div>
       </div>
 
       {/* Editable Description */}
-      <div className="py-3 border-b border-gray-100">
-        <div className="flex items-start gap-2 text-sm text-gray-700">
-          <Tag size={14} className="mt-0.5 text-gray-500" />
+      <div className="py-3 border-b border-bg-alt">
+        <div className="flex items-start gap-2 text-sm text-text-light">
+          <Tag size={14} className="mt-0.5 text-text-light" />
           <div className="flex-1">
-            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t("payments.details.description")}</p>
+            <p className="text-xs text-text-light uppercase tracking-wide mb-1">{t("payments.details.description")}</p>
             <EditableText
               value={payment.description || t("payments.details.addDescription")}
               onSave={handleUpdateDescription}
@@ -126,12 +126,12 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
       <div className="py-4">
         <div className="grid grid-cols-2 gap-3 md:gap-4">
           {/* Nazwa płatności */}
-          <div className="lg:col-span-2 flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 shadow-md">
-            <div className="p-2 bg-indigo-100 rounded-lg">
-              <Tag size={16} className="text-indigo-600" />
+          <div className="lg:col-span-2 flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
+            <div className="p-2 bg-primary rounded-lg">
+              <Tag size={16} className="text-text" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">{t("payments.details.name")}</p>
+              <p className="text-xs text-text-light uppercase tracking-wide">{t("payments.details.name")}</p>
               <EditableText
                 value={payment.name}
                 onSave={handleUpdateName}
@@ -142,12 +142,12 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
           </div>
 
           {/* Kwota */}
-          <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 shadow-md">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <DollarSign size={16} className="text-green-600" />
+          <div className="flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
+            <div className="p-2 bg-success rounded-lg">
+              <DollarSign size={16} className="text-text" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">{t("payments.details.amount")}</p>
+              <p className="text-xs text-text-light uppercase tracking-wide">{t("payments.details.amount")}</p>
               <EditableText
                 value={payment.amount.toFixed(2)}
                 onSave={handleUpdateAmount}
@@ -159,12 +159,12 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
           </div>
 
           {/* Przypomnienie */}
-          <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 shadow-md">
-            <div className="p-2 bg-orange-100 rounded-lg">
-              <Bell size={16} className="text-orange-600" />
+          <div className="flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
+            <div className="p-2 bg-bg-hover rounded-lg">
+              <Bell size={16} className="text-text" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">{t("payments.details.reminder")}</p>
+              <p className="text-xs text-text-light uppercase tracking-wide">{t("payments.details.reminder")}</p>
               <EditableText
                 value={payment.reminderDays.toString()}
                 onSave={handleUpdateReminderDays}
@@ -176,12 +176,12 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
           </div>
 
           {/* Następna płatność - Now Editable */}
-          <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 shadow-md">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Calendar size={16} className="text-blue-600" />
+          <div className="flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
+            <div className="p-2 bg-primary rounded-lg">
+              <Calendar size={16} className="text-text" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">{t("payments.details.nextPayment")}</p>
+              <p className="text-xs text-text-light uppercase tracking-wide">{t("payments.details.nextPayment")}</p>
               <EditableText
                 value={format(new Date(payment.nextPaymentDate), "yyyy-MM-dd")}
                 displayValue={format(new Date(payment.nextPaymentDate), "dd.MM.yyyy")}
@@ -189,7 +189,7 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
                 type="date"
                 className="w-full"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-text-light mt-1">
                 {daysUntil >= 0
                   ? t("payments.item.dueIn", { days: daysUntil })
                   : t("payments.item.overdue", { days: Math.abs(daysUntil) })}
@@ -198,13 +198,13 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
           </div>
 
           {/* Ostatnia płatność - Read only */}
-          <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100 shadow-md">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <History size={16} className="text-purple-600" />
+          <div className="flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
+            <div className="p-2 bg-bg-hover rounded-lg">
+              <History size={16} className="text-text" />
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide">{t("payments.details.lastPayment")}</p>
-              <p className="font-semibold text-gray-800 text-sm">
+              <p className="text-xs text-text-light uppercase tracking-wide">{t("payments.details.lastPayment")}</p>
+              <p className="font-semibold text-text text-sm">
                 {payment.lastPaymentDate
                   ? format(new Date(payment.lastPaymentDate), "dd.MM.yyyy")
                   : t("payments.details.noLastPayment")}
@@ -215,24 +215,24 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
       </div>
 
       {/* Additional Info */}
-      <div className="py-3 border-t border-gray-100">
+      <div className="py-3 border-t border-bg-alt">
         <div className="flex flex-wrap gap-3 text-xs">
           <div className="flex items-center gap-1">
-            <Repeat size={12} className="text-gray-500" />
-            <span className="text-gray-600">
+            <Repeat size={12} className="text-text-light" />
+            <span className="text-text-light">
               {t("payments.details.autoRenewal")}{" "}
               {payment.autoRenew ? t("payments.details.autoRenewalEnabled") : t("payments.details.autoRenewalDisabled")}
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <CreditCard size={12} className="text-gray-500" />
-            <span className="text-gray-600">
+            <CreditCard size={12} className="text-text-light" />
+            <span className="text-text-light">
               {t("payments.details.category")} {t(`payments.modal.categories.${payment.category}`)}
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <TrendingUp size={12} className="text-gray-500" />
-            <span className="text-gray-600">
+            <TrendingUp size={12} className="text-text-light" />
+            <span className="text-text-light">
               {t("payments.details.yearlyCost")} {(payment.amount * (payment.cycle === "monthly" ? 12 : 1)).toFixed(2)}{" "}
               {payment.currency}
             </span>
@@ -241,11 +241,11 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
+      <div className="flex flex-wrap gap-2 pt-3 border-t border-bg-alt">
         {!isPaidForCurrentPeriod && (
           <button
             onClick={() => markAsPaid(payment.id)}
-            className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium">
+            className="inline-flex items-center gap-2 bg-success text-text px-4 py-2 rounded-lg hover:bg-success-hover transition-colors text-sm font-medium">
             <Check size={14} />
             <span className="hidden sm:inline">{t("payments.details.markAsPaid")}</span>
             <span className="sm:hidden">{t("payments.details.markAsPaidShort")}</span>
@@ -254,7 +254,7 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
 
         <button
           onClick={() => removePayment(payment.id)}
-          className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm font-medium ml-auto">
+          className="inline-flex items-center gap-2 bg-negative text-text px-4 py-2 rounded-lg hover:opacity-80 transition-colors text-sm font-medium ml-auto">
           <Trash2 size={14} />
           <span className="hidden sm:inline">{t("payments.details.delete")}</span>
         </button>
