@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Send, MessageCircle, Clock, CheckCircle, Users, Wrench } from "lucide-react";
 import { useFeedback } from "@/hooks/feedback/useFeedback";
+import { useT } from "@/hooks/useT";
 
 export default function FeedbackView() {
   const [message, setMessage] = useState("");
   const { createFeedback, isCreating, publicFeedbacks, isLoadingPublic } = useFeedback();
+  const { t } = useT();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,7 +113,7 @@ export default function FeedbackView() {
           Roadmap & Changelog
         </h2>
         <p className="text-text-secondary text-sm mb-6">
-          Zobacz nad czym pracujemy i co zostało już wprowadzone do aplikacji.
+          {t("seeWhatWeAreWorking")}
         </p>
 
         {isLoadingPublic ? (

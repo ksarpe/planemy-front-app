@@ -46,6 +46,7 @@ const resources = {
       noPayments: "No payments",
       noOverduePayments: "No overdue payments",
       noPaymentsThisWeek: "No payments this week",
+      addPayment: "Add payment",
       
       // Notifications
       noNewNotifications: "No new notifications or invitations",
@@ -99,6 +100,7 @@ const resources = {
       noPayments: "Brak płatności",
       noOverduePayments: "Brak przeterminowanych płatności",
       noPaymentsThisWeek: "Brak płatności w tym tygodniu",
+      addPayment: "Dodaj płatność",
       
       // Notifications
       noNewNotifications: "Brak nowych powiadomień lub zaproszeń",
