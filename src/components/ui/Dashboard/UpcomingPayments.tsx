@@ -3,10 +3,12 @@ import { Package, ChevronRight } from "lucide-react";
 import { differenceInDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { isPaymentPaidForCurrentPeriod } from "@/api/payments";
+import { useT } from "@/hooks/useT";
 
 export default function UpcomingPayments() {
   const { payments } = usePaymentsContext();
   const navigate = useNavigate();
+  const { t } = useT();
 
   // Filter payments and calculate days left
   const upcomingPayments = payments
@@ -23,7 +25,7 @@ export default function UpcomingPayments() {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-text  flex items-center">
           <Package className="h-5 w-5 mr-2 text-primary" />
-          Nadchodzące płatności
+          {t("upcomingPayments")}
           {upcomingPayments.length > 0 && (
             <span className="ml-2 bg-primary/10 text-primary text-xs font-medium px-2 py-1 rounded-full">
               {upcomingPayments.length}
@@ -40,7 +42,7 @@ export default function UpcomingPayments() {
         {upcomingPayments.length === 0 ? (
           <div className="text-center py-8">
             <Package className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 text-sm">Brak nadchodzących płatności</p>
+            <p className="text-gray-500 text-sm">{t("noUpcomingPayments")}</p>
           </div>
         ) : (
           upcomingPayments.slice(0, 5).map((payment) => (
@@ -48,7 +50,7 @@ export default function UpcomingPayments() {
               <div>
                 <p className="text-sm font-medium text-text ">{payment.name}</p>
                 <p className="text-xs text-gray-500 ">
-                  {payment.daysLeft === 0 ? "Dzisiaj" : payment.daysLeft === 1 ? "Jutro" : `Za ${payment.daysLeft} dni`}{" "}
+                  {payment.daysLeft === 0 ? t("today") : payment.daysLeft === 1 ? t("tomorrow") : t("inDays", { count: payment.daysLeft })}{" "}
                   • {payment.category}
                 </p>
               </div>
@@ -64,7 +66,7 @@ export default function UpcomingPayments() {
                       ? "text-yellow-500"
                       : "text-green-500"
                   }`}>
-                  {payment.daysLeft <= 3 ? "Pilne" : payment.daysLeft <= 7 ? "Wkrótce" : "OK"}
+                  {payment.daysLeft <= 3 ? t("urgent") : payment.daysLeft <= 7 ? t("soon") : t("ok")}
                 </p>
               </div>
             </div>
@@ -77,7 +79,7 @@ export default function UpcomingPayments() {
         <button
           onClick={() => navigate("/payments")}
           className="w-full text-center py-2 text-sm text-primary hover:text-primary/80 font-medium">
-          Zobacz wszystkie płatności
+          {t("seeAllPayments")}
         </button>
       </div>
     </div>

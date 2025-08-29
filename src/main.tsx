@@ -3,6 +3,9 @@
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+// i18n setup
+import "./i18n";
+
 //compontents
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 

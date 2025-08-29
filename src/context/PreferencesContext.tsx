@@ -1,6 +1,7 @@
 import { createContext, useState, ReactNode, useEffect, useMemo, useRef } from "react";
 // Removed useTheme: dark mode is now controlled only by selected color theme
 import type { PreferencesContextProps } from "@/data/User/preferencesContext";
+import { useTranslation } from "react-i18next";
 
 import { getUserSettings, updateUserSettings } from "@/api/user_settings";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
@@ -13,6 +14,7 @@ export { PreferencesContext };
 export function PreferencesProvider({ children }: { children: ReactNode }) {
   const { showToast } = useToastContext();
   const { user } = useAuthContext();
+  const { i18n } = useTranslation();
   const [mainListId, setMainListId] = useState<string | null>(null);
   const [defaultShoppingListId, setDefaultShoppingListId] = useState<string | null>(null);
 
@@ -29,6 +31,13 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 
   // Derived dark mode from selected theme
   const isDark = colorTheme === 3;
+
+  // Sync language with i18next
+  useEffect(() => {
+    if (i18n.language !== language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language, i18n]);
 
   /**
    * setColorTheme
