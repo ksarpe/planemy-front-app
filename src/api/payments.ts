@@ -10,6 +10,7 @@ import {
   deleteDoc,
   doc,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { useAuthContext } from "../hooks/context/useAuthContext";
 import type { Payment } from "@/data/Payments/interfaces";
@@ -71,6 +72,27 @@ export const addPayment = async (
   }
 };
 
+// Function to get a single payment by ID
+export const getPaymentById = async (paymentId: string): Promise<Payment> => {
+  try {
+    const paymentsCollection = collection(db, "payments");
+    const paymentDocRef = doc(paymentsCollection, paymentId);
+    const paymentDoc = await getDoc(paymentDocRef);
+    
+    if (!paymentDoc.exists()) {
+      throw new Error(`Payment with ID ${paymentId} not found`);
+    }
+    
+    return {
+      id: paymentDoc.id,
+      ...paymentDoc.data(),
+    } as Payment;
+  } catch (error) {
+    console.error("Error getting payment:", error);
+    throw error;
+  }
+};
+
 // Function to update payment
 export const updatePayment = async (paymentId: string, updateData: Partial<Payment>): Promise<void> => {
   try {
@@ -100,8 +122,10 @@ export const removePayment = async (paymentId: string): Promise<void> => {
 };
 
 // Function to mark payment as paid and calculate next payment date
-export const markPaymentAsPaid = async (paymentId: string, payment: Payment): Promise<void> => {
+export const markPaymentAsPaid = async (paymentId: string): Promise<void> => {
   try {
+    // Fetch the payment data to get the cycle information
+    const payment = await getPaymentById(paymentId);
     const nextDate = calculateNextPaymentDate(payment.cycle, new Date());
 
     await updatePayment(paymentId, {

@@ -229,7 +229,7 @@ export default function PaymentItem({ payment }: { payment: PaymentInterface }) 
               <div className="flex flex-wrap gap-2">
                 {payment.isActive && !payment.isPaid && (
                   <button
-                    onClick={() => markAsPaid(payment.id, payment)}
+                    onClick={() => markAsPaid(payment.id)}
                     className="text-xs bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors flex items-center gap-1">
                     <Check size={12} />
                     Oznacz jako opłacone
