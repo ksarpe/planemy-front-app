@@ -1,6 +1,7 @@
 import type { ShoppingListInterface, ShoppingCategoryInterface, ShoppingContextType } from "@/data/Shopping";
 import { createContext, useEffect, useState } from "react";
 import { useShoppingLists, useFavoriteProducts, defaultCategories } from "../api/shopping";
+import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 
 const ShoppingContext = createContext<ShoppingContextType | undefined>(undefined);
 export { ShoppingContext };
@@ -8,6 +9,7 @@ export { ShoppingContext };
 export const ShoppingProvider = ({ children }: { children: React.ReactNode }) => {
   const { shoppingLists, loading: listsLoading } = useShoppingLists();
   const { favoriteProducts, loading: favoritesLoading } = useFavoriteProducts();
+  const { defaultShoppingListId } = usePreferencesContext();
 
   const [currentList, setCurrentList] = useState<ShoppingListInterface | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,12 +18,23 @@ export const ShoppingProvider = ({ children }: { children: React.ReactNode }) =>
 
   const loading = listsLoading || favoritesLoading;
 
-  // Set first list as current when lists load
+  // Set current list based on default preference or first list when lists load
   useEffect(() => {
     if (shoppingLists.length > 0 && !currentList) {
-      setCurrentList(shoppingLists[0]);
+      // First try to use the default shopping list from preferences
+      const defaultList = shoppingLists.find(list => list.id === defaultShoppingListId);
+      const selectedList = defaultList || shoppingLists[0];
+      setCurrentList(selectedList);
+      
+      if (import.meta.env.DEV) {
+        console.log("[ShoppingContext] effect: selecting list", {
+          chosen: selectedList.id,
+          defaultShoppingListId,
+          wasDefault: Boolean(defaultList),
+        });
+      }
     }
-  }, [shoppingLists, currentList]);
+  }, [shoppingLists, currentList, defaultShoppingListId]);
 
   // Update current list when shoppingLists change (e.g., after adding an item)
   useEffect(() => {

@@ -10,10 +10,14 @@ export default function SummaryCards() {
   const navigate = useNavigate();
   const { shoppingLists, currentList } = useShoppingContext();
   const { currentTaskList, currentTaskListId } = useTaskContext();
-  const { mainListId } = usePreferencesContext();
+  const { mainListId, defaultShoppingListId } = usePreferencesContext();
 
-  // Determine default shopping list (first or current) & fetch items
-  const defaultShoppingList = currentList || shoppingLists[0] || null;
+  // Determine default shopping list (default from preferences, then current, then first)
+  const defaultShoppingList = 
+    shoppingLists.find(list => list.id === defaultShoppingListId) || 
+    currentList || 
+    shoppingLists[0] || 
+    null;
   const { data: shoppingItems = [] } = useShoppingItemsQuery(defaultShoppingList ? defaultShoppingList.id : "");
   const shoppingPending = shoppingItems.filter((i) => !i.isCompleted).length;
 

@@ -60,6 +60,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         console.log("[TaskContext] effect: selecting default list", {
           chosen: defaultList.id,
           mainListId,
+          wasDefault: Boolean(taskLists.find((list) => list.id === mainListId)),
         });
       }
       setCurrentTaskListId(defaultList.id);
