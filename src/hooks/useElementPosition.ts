@@ -24,8 +24,19 @@ export function useElementPosition({
 
     // Sprawdź czy modal zmieści się po prawej stronie kursora
     if (x + modalWidth + offset > viewportWidth) {
-      x = elementPosition.x - modalWidth / 2 ;
+      // Przenieś na lewą stronę - wyrównaj prawą krawędź modala z lewą krawędzią elementu
+      x = elementPosition.x - modalWidth;
+      
+      // Jeśli modal wychodzi poza lewą krawędź ekranu, spróbuj wyrównać z lewą krawędzią elementu
+      if (x < offset) {
+        x = elementPosition.x;
+        // Jeśli nadal nie pasuje, użyj minimalnego offsetu
+        if (x + modalWidth > viewportWidth - offset) {
+          x = offset;
+        }
+      }
     } else {
+      // Zostaw po prawej stronie
       x = elementPosition.x + elementPosition.width + offset;
     }
 
@@ -63,8 +74,17 @@ export function useElementPosition({
 
     // Sprawdź czy modal zmieści się po prawej stronie kursora
     if (x + modalWidth + offset > viewportWidth) {
-      // Przenieś na lewą stronę
-      x = elementPosition.x - elementPosition.width
+      // Przenieś na lewą stronę - wyrównaj prawą krawędź modala z lewą krawędzią elementu
+      x = elementPosition.x - modalWidth;
+      
+      // Jeśli modal wychodzi poza lewą krawędź ekranu, spróbuj wyrównać z lewą krawędzią elementu
+      if (x < offset) {
+        x = elementPosition.x;
+        // Jeśli nadal nie pasuje, użyj minimalnego offsetu
+        if (x + modalWidth > viewportWidth - offset) {
+          x = offset;
+        }
+      }
     } else {
       // Zostaw po prawej stronie
       x = elementPosition.x + elementPosition.width + offset;
