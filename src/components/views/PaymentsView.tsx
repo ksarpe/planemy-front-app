@@ -1,4 +1,5 @@
 import { usePaymentsContext } from "@/hooks/context/usePaymentsContext";
+import { usePayments } from "@/hooks/payments";
 import { PaymentInterface } from "@/data/Payments/interfaces";
 import { useState } from "react";
 import PaymentItem from "@/components/ui/Payments/PaymentItem";
@@ -7,7 +8,8 @@ import { Plus, TrendingUp, TrendingDown, DollarSign, Calendar } from "lucide-rea
 import { getDaysUntilPayment } from "@/api/payments";
 
 export default function Payments() {
-  const { payments, addPayment } = usePaymentsContext();
+  const { payments } = usePaymentsContext();
+  const { addPayment } = usePayments();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Calculate statistics
