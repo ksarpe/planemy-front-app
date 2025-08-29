@@ -1,11 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-
-interface EditableTextProps {
-  value: string; //taskTitle from taskDetails
-  onSave: (newValue: string) => void; //taskTitle change handler
-  className?: string;
-  placeholder?: string;
-}
+import type { EditableTextProps } from "@/data/Common/Components/CommonComponentInterfaces";
 
 export default function EditableText({ value, onSave, className, placeholder }: EditableTextProps) {
   const [isEditing, setIsEditing] = useState(false);

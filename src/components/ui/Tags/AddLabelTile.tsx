@@ -1,9 +1,5 @@
 import { Plus } from "lucide-react";
-
-interface AddLabelTileProps {
-  onClick: () => void;
-  loading: boolean;
-}
+import type { AddLabelTileProps } from "@/data/Utils/Components/UtilComponentInterfaces";
 
 export default function AddLabelTile({ onClick, loading }: AddLabelTileProps) {
   return (

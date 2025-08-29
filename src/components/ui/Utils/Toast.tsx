@@ -40,12 +40,7 @@ const TOAST_CONFIG = {
   },
 };
 
-interface ToastProps {
-  type: "success" | "error" | "warning";
-  message: string;
-  onClose: () => void;
-  duration?: number;
-}
+import type { ToastProps } from "@/data/Utils/Components/UtilComponentInterfaces";
 
 export default function Toast({ type, message, onClose, duration = 3000 }: ToastProps) {
   useEffect(() => {

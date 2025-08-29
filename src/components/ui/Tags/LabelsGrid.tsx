@@ -2,14 +2,7 @@ import { LabelInterface } from "@/data/Utils/interfaces";
 import LabelCard from "./LabelCard";
 import AddLabelTile from "./AddLabelTile";
 import EmptyLabelsState from "./EmptyLabelsState";
-
-interface LabelsGridProps {
-  labels: LabelInterface[];
-  onEdit: (label: LabelInterface) => void;
-  onDelete: (labelId: string) => void;
-  onCreateNew: () => void;
-  loading: boolean;
-}
+import type { LabelsGridProps } from "@/data/Utils/Components/UtilComponentInterfaces";
 
 export default function LabelsGrid({ labels, onEdit, onDelete, onCreateNew, loading }: LabelsGridProps) {
   if (labels.length === 0) {

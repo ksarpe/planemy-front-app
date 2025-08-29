@@ -1,16 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Check, X, Edit3 } from "lucide-react";
-
-interface EditableTextProps {
-  value: string;
-  onSave: (newValue: string) => Promise<void>;
-  type?: "text" | "number" | "date";
-  suffix?: string;
-  className?: string;
-  placeholder?: string;
-  disabled?: boolean;
-  displayValue?: string; // Optional display value different from edit value
-}
+import type { EditableTextProps } from "@/data/Utils/Components/UtilComponentInterfaces";
 
 export const EditableText = ({
   value,

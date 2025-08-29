@@ -29,3 +29,8 @@ export interface AuthResponse {
     username: string;
   };
 }
+
+// Component interfaces
+export interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
