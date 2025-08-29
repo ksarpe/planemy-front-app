@@ -60,7 +60,7 @@ export default function QuickAddShoppingItem({ listId, onCancel }: QuickAddShopp
   };
 
   return (
-    <div ref={containerRef} className="border-l-4 border-success rounded-md p-4 bg-green-50 dark:bg-green-900/20 hover:shadow-md mb-3">
+    <div ref={containerRef} className="border-l-4 border-success rounded-md p-4 bg-success/10 hover:shadow-md mb-3">
       <div className="flex items-center gap-3">
         {/* Plus Icon */}
         <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
@@ -75,7 +75,7 @@ export default function QuickAddShoppingItem({ listId, onCancel }: QuickAddShopp
           onKeyDown={handleKeyDown}
           placeholder="Wpisz nazwę produktu..."
           autoFocus
-          className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+          className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-text placeholder-text-light"
         />
 
         {/* Action Buttons */}
@@ -92,7 +92,7 @@ export default function QuickAddShoppingItem({ listId, onCancel }: QuickAddShopp
           {/* Cancel Button */}
           <button 
             onClick={onCancel} 
-            className="p-1 text-red-400 cursor-pointer hover:text-red-500" 
+            className="p-1 text-negative cursor-pointer hover:opacity-80" 
             title="Anuluj (Escape)"
           >
             <X size={16} />
