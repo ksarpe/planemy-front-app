@@ -1,9 +1,5 @@
-import { CategorizedPayments } from "./PaymentStats";
 import { useT } from "@/hooks/useT";
-
-interface PaymentSummaryProps {
-  categorizedPayments: CategorizedPayments;
-}
+import type { PaymentSummaryProps } from "@/data/Payments/Components/PaymentComponentInterfaces";
 
 export const PaymentSummary = ({ categorizedPayments }: PaymentSummaryProps) => {
   const { t } = useT();

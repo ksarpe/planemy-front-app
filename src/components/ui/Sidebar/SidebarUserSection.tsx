@@ -1,12 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { LogOut } from "lucide-react";
-
-interface SidebarUserSectionProps {
-  collapsed: boolean;
-  user: { displayName?: string | null; email?: string | null } | null;
-  handleNavigate: () => void;
-  handleLogout: () => void;
-}
+import type { SidebarUserSectionProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
 
 export function SidebarUserSection({ collapsed, user, handleNavigate, handleLogout }: SidebarUserSectionProps) {
   if (collapsed) {

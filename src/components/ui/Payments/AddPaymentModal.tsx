@@ -3,12 +3,7 @@ import { X, Calendar, Tag, RefreshCw } from "lucide-react";
 import { PaymentInterface } from "@/data/Payments/interfaces";
 import { calculateNextPaymentDate } from "@/api/payments";
 import { useT } from "@/hooks/useT";
-
-interface AddPaymentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (paymentData: Omit<PaymentInterface, "id" | "userId">) => Promise<void>;
-}
+import type { AddPaymentModalProps } from "@/data/Payments/Components/PaymentComponentInterfaces";
 
 export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalProps) => {
   const { t } = useT();

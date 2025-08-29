@@ -1,15 +1,5 @@
-import { PaymentInterface } from "@/data/Payments/interfaces";
 import PaymentItem from "./PaymentItem";
-
-interface PaymentSectionProps {
-  title: string;
-  payments: PaymentInterface[];
-  icon: React.ComponentType<{ size?: number; className?: string }>;
-  emptyMessage?: string;
-  expandedPaymentId?: string | null;
-  isImportant?: boolean;
-  onToggleExpand?: (paymentId: string) => void;
-}
+import type { PaymentSectionProps } from "@/data/Payments/Components/PaymentComponentInterfaces";
 
 export const PaymentSection = ({
   title,

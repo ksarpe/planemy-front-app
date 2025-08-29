@@ -1,13 +1,7 @@
 import { Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useT } from "@/hooks/useT";
-
-interface SaveBarProps {
-  visible: boolean;
-  onSave: () => void | Promise<void>;
-  onDiscard: () => void;
-  ping?: number; // increment to trigger attention animation
-}
+import type { SaveBarProps } from "@/data/User/Components/UserComponentInterfaces";
 
 export default function SaveBar({ visible, onSave, onDiscard, ping = 0 }: SaveBarProps) {
   const [flash, setFlash] = useState(false);
