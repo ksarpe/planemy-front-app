@@ -59,7 +59,30 @@
       "title": "Powiadomienia o udostępnianiu",
       "description": "Informacje o udostępnionych listach"
     },
-    "noNewNotifications": "Brak nowych powiadomień lub zaproszeń"
+    "noNewNotifications": "Brak nowych powiadomień lub zaproszeń",
+    "view": {
+      "title": "Powiadomienia",
+      "description": "Zarządzaj zaproszeniami i oglądaj ogłoszenia",
+      "loading": "Ładowanie powiadomień i ogłoszeń...",
+      "new": "nowe",
+      "listInvitations": "Zaproszenia do list",
+      "allUpToDate": "Wszystko jest aktualne!",
+      "noNewNotificationsOrInvitations": "Brak nowych powiadomień lub zaproszeń"
+    },
+    "sharing": {
+      "newSharing": "Nowe udostępnienie",
+      "hasBeenShared": "została udostępniona",
+      "permissions": "Uprawnienia",
+      "read": "Odczyt",
+      "edit": "Edycja",
+      "accept": "Akceptuj",
+      "reject": "Odrzuć"
+    },
+    "objectTypes": {
+      "task_list": "Lista zadań",
+      "shopping_list": "Lista zakupów",
+      "object": "Obiekt"
+    }
   },
   "security": {
     "title": "Bezpieczeństwo",
@@ -190,7 +213,29 @@
     }
   },
   "labels": {
-    "noLabels": "Brak etykiet"
+    "title": "Menedżer etykiet",
+    "yourLabels": "Twoje etykiety",
+    "noLabels": "Brak etykiet",
+    "newLabel": "Nowa etykieta",
+    "createFirstLabel": "Utwórz pierwszą etykietę",
+    "startOrganizing": "Rozpocznij organizację swoich zadań tworząc pierwszą etykietę",
+    "form": {
+      "createTitle": "Utwórz nową etykietę",
+      "editTitle": "Edytuj etykietę",
+      "create": "Utwórz",
+      "save": "Zapisz",
+      "name": "Nazwa etykiety",
+      "namePlaceholder": "Wprowadź nazwę etykiety...",
+      "description": "Opis",
+      "descriptionOptional": "Opis (opcjonalny)",
+      "descriptionPlaceholder": "Krótki opis etykiety...",
+      "color": "Kolor etykiety"
+    },
+    "actions": {
+      "edit": "Edytuj etykietę",
+      "delete": "Usuń etykietę",
+      "confirmDelete": "Czy na pewno chcesz usunąć tę etykietę?"
+    }
   },
   "feedback": {
     "seeWhatWeAreWorking": "Zobacz nad czym pracujemy i co zostało już wprowadzone do aplikacji."
