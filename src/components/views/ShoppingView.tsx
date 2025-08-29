@@ -9,6 +9,7 @@ import { FavoriteProductsPanel } from "../ui/Shopping/FavoriteProductsPanel";
 import { ShoppingHeader } from "../ui/Shopping/ShoppingHeader";
 import { ShoppingFilters } from "../ui/Shopping/ShoppingFilters";
 import { ShoppingItemsSection } from "../ui/Shopping/ShoppingItem/ShoppingItemsSection";
+import QuickAddShoppingItem from "../ui/Shopping/QuickAddShoppingItem";
 
 export default function ShoppingView() {
   const {
@@ -26,6 +27,7 @@ export default function ShoppingView() {
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"shopping" | "favorites">("shopping");
   const [showListsPanel, setShowListsPanel] = useState(false);
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
 
   const { data: listItems = [], isLoading: itemsLoading } = useShoppingItemsQuery(currentList ? currentList.id : "");
 
@@ -124,16 +126,32 @@ export default function ShoppingView() {
             />
 
             <div className="flex flex-col-reverse md:flex-row gap-2">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                 <button
                   onClick={() => setIsAddItemModalOpen(true)}
                   className="w-full md:w-auto flex items-center justify-center gap-2 bg-success text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
                   <Plus size={18} />
                   Dodaj produkt
                 </button>
+                
+                <button
+                  onClick={() => setShowQuickAdd(true)}
+                  className="w-full md:w-auto flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md transition-colors text-sm">
+                  <Plus size={16} />
+                  Szybkie dodawanie
+                </button>
               </div>
               <ShoppingFilters searchQuery={searchQuery} onSearchChange={setSearchQuery} categories={categories} />
             </div>
+            
+            {/* QuickAdd Section */}
+            {showQuickAdd && currentList && (
+              <QuickAddShoppingItem 
+                listId={currentList.id} 
+                onCancel={() => setShowQuickAdd(false)} 
+              />
+            )}
+            
             {itemsLoading ? (
               <div className="text-gray-500">Ładowanie produktów...</div>
             ) : (
