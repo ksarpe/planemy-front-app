@@ -1,11 +1,5 @@
-import { EventInterface } from "@/data/Calendar/events";
 import { Clock } from "lucide-react";
-
-interface PreviewEventBlockInlineProps {
-  event: Partial<EventInterface>;
-  showTime?: boolean;
-  className?: string;
-}
+import type { PreviewEventBlockInlineProps } from "@/data/Calendar/Components/CalendarComponentInterfaces";
 
 export default function PreviewEventBlockInline({
   event,
