@@ -88,7 +88,7 @@ export default function TasksView() {
             <X size={22} />
           </button>
         </div>
-        <div className="flex-1 overflow-auto p-2">
+        <div className="flex-1 overflow-auto scrollbar-hide p-2">
           <TaskListPanel
             lists={taskLists || []}
             currentList={currentTaskList}

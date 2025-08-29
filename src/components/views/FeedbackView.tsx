@@ -54,7 +54,7 @@ export default function FeedbackView() {
   };
 
   return (
-    <div className="flex-1 p-6 max-w-4xl mx-auto">
+    <div className="flex-1 p-6 max-w-4xl mx-auto overflow-auto scrollbar-hide">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-text-primary mb-2">Feedback</h1>
         <p className="text-text-secondary">
