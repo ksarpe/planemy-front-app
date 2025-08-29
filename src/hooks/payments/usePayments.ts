@@ -35,8 +35,8 @@ export const usePayments = () => {
   });
 
   const markAsPaidMutation = useMutation({
-    mutationFn: async ({ paymentId, payment }: { paymentId: string; payment: PaymentInterface }) => {
-      return await markPaymentAsPaidFirebase(paymentId, payment);
+    mutationFn: async (paymentId: string) => {
+      return await markPaymentAsPaidFirebase(paymentId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
@@ -97,8 +97,8 @@ export const usePayments = () => {
     addPaymentError: addPaymentMutation.error,
 
     // Mark as paid
-    markAsPaid: (paymentId: string, payment: PaymentInterface) => 
-      markAsPaidMutation.mutateAsync({ paymentId, payment }),
+    markAsPaid: (paymentId: string) => 
+      markAsPaidMutation.mutateAsync(paymentId),
     isMarkingAsPaid: markAsPaidMutation.isPending,
     markAsPaidError: markAsPaidMutation.error,
 
