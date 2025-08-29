@@ -1,11 +1,13 @@
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { useLabelContext } from "@/hooks/context/useLabelContext";
 import { useCompleteTask } from "@/hooks/tasks/useTasks";
+import { useTranslation } from "react-i18next";
 import { Calendar, AlertCircle, Clock, CheckCircle2, Tag, Trash } from "lucide-react";
 import type { TaskItemProps } from "@/data/Tasks/interfaces";
 import { ActionButton, BasicDropdown, BasicDropdownItem } from "../Common";
 
 export default function TaskItem({ task }: TaskItemProps) {
+  const { t } = useTranslation();
   const { mutate: completeTask } = useCompleteTask();
   const { clickedTask, setClickedTask, currentTaskList } = useTaskContext();
   const { labels, createLabelConnection, removeLabelConnection } = useLabelContext();
@@ -32,11 +34,11 @@ export default function TaskItem({ task }: TaskItemProps) {
   const formatDueDate = () => {
     if (!task.dueDate || task.dueDate === "") return null;
     const days = getDaysUntilDue()!;
-    if (days === 0) return "Dziś";
-    if (days === 1) return "Jutro";
-    if (days === -1) return "Wczoraj";
-    if (days < -1) return `${Math.abs(days)} dni temu`;
-    if (days > 1) return `Za ${days} dni`;
+    if (days === 0) return t("tasks.dates.today");
+    if (days === 1) return t("tasks.dates.tomorrow");
+    if (days === -1) return t("tasks.dates.yesterday");
+    if (days < -1) return t("tasks.dates.daysAgo", { count: Math.abs(days) });
+    if (days > 1) return t("tasks.dates.inDays", { count: days });
     return task.dueDate;
   };
 
@@ -119,7 +121,7 @@ export default function TaskItem({ task }: TaskItemProps) {
 
         {/* Status indicators */}
         <div className="flex flex-col items-end gap-3">
-          {task.isCompleted && <span className="text-xs text-green-600  font-medium">Ukończone</span>}
+          {task.isCompleted && <span className="text-xs text-green-600  font-medium">{t("tasks.status.completed")}</span>}
           {isOverdue() && <span className="text-xs text-red-600  font-medium">Przeterminowane</span>}
           {isDueSoon() && <span className="text-xs text-yellow-600  font-medium">Pilne</span>}
 

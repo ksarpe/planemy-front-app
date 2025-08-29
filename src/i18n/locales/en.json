@@ -194,5 +194,35 @@
   },
   "feedback": {
     "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application."
+  },
+  "tasks": {
+    "loading": {
+      "lists": "Loading lists..."
+    },
+    "panel": {
+      "ariaLabel": "Task lists panel",
+      "title": "My lists"
+    },
+    "header": {
+      "pomodoro": "Pomodoro"
+    },
+    "details": {
+      "addDescription": "Add task description...",
+      "selectDueDate": "Select date"
+    },
+    "dates": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "yesterday": "Yesterday",
+      "inDays": "In {{count}} days",
+      "daysAgo": "{{count}} days ago"
+    },
+    "status": {
+      "completed": "Completed"
+    },
+    "messages": {
+      "taskDeleted": "Task has been deleted!",
+      "allTasksUnchecked": "All tasks unchecked!"
+    }
   }
 }

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
 import { useAuthContext } from "@/hooks/context/useAuthContext";
 import { useToastContext } from "@/hooks/context/useToastContext";
+import { useT } from "@/hooks/useT";
 import { clearCompletedTasks, uncheckAllTasks } from "@/api/tasks_lists";
 import { createTaskApi, updateTaskApi, removeTaskApi, completeTaskApi } from "@/api/tasks";
 import { fetchTasksForListApi } from "@/api/tasks";
@@ -142,6 +143,7 @@ export const useUpdateTask = () => {
 };
 
 export const useDeleteTask = () => {
+  const { t } = useT();
   const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
@@ -168,7 +170,7 @@ export const useDeleteTask = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Zadanie zostało usunięte!");
+      showToast("success", t("tasks.messages.taskDeleted"));
     },
 
     onSettled: () => {
@@ -246,6 +248,7 @@ export const useClearCompletedTasks = () => {
 };
 
 export const useUncheckAllTasks = () => {
+  const { t } = useT();
   const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
@@ -265,7 +268,7 @@ export const useUncheckAllTasks = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Odznaczono wszystkie zadania!");
+      showToast("success", t("tasks.messages.allTasksUnchecked"));
     },
 
     onSettled: (_d, _e, listId) => {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTasks } from "@/hooks/tasks/useTasks";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
+import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
 import {
   TaskViewHeader,
@@ -19,6 +20,7 @@ import type { TaskListFilter } from "@/data/Tasks/types";
 import type { TaskListInterface } from "@/data/Tasks/interfaces";
 
 export default function TasksView() {
+  const { t } = useTranslation();
   const { currentTaskListId, currentTaskList, clickedTask, taskLists, setCurrentTaskListId } = useTaskContext();
   const { isLoading: areListsLoading } = useTaskLists();
   const { data: tasksData, isLoading: loading } = useTasks(currentTaskListId);
@@ -55,7 +57,7 @@ export default function TasksView() {
     return (
       <div className="flex flex-col items-center justify-center h-full">
         <Spinner />
-        <p>Ładowanie list...</p>
+        <p>{t("tasks.loading.lists")}</p>
       </div>
     );
   }
@@ -75,13 +77,13 @@ export default function TasksView() {
       {/* Task Lists Panel Drawer */}
       <div
         role="dialog"
-        aria-label="Panel list zadań"
+        aria-label={t("tasks.panel.ariaLabel")}
         className={`fixed top-0 right-0 h-full w-80 sm:w-100 max-w-full bg-bg-alt border-l border-bg-hover shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
           showListsPanel ? "translate-x-0" : "translate-x-full"
         }`}
         onClick={(e) => e.stopPropagation()}>
         <div className="p-4 border-b border-bg-hover flex items-center justify-between bg-bg-alt sticky top-0 z-10">
-          <span className="text-lg px-2">Moje listy</span>
+          <span className="text-lg px-2">{t("tasks.panel.title")}</span>
           <button
             onClick={() => setShowListsPanel(false)}
             className="px-2 hover:text-negative cursor-pointer rounded-md hover:bg-bg-hover">
