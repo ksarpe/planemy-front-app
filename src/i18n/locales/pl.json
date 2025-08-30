@@ -281,6 +281,35 @@
     }
     "seeWhatWeAreWorking": "Zobacz nad czym pracujemy i co zostało już wprowadzone do aplikacji."
   },
+  "calendar": {
+    "today": "Dzisiaj",
+    "month": "Miesiąc",
+    "week": "Tydzień",
+    "weekdays": {
+      "short": {
+        "monday": "Pon",
+        "tuesday": "Wt", 
+        "wednesday": "Śr",
+        "thursday": "Czw",
+        "friday": "Pt",
+        "saturday": "Sob",
+        "sunday": "Nie"
+      }
+    },
+    "months": {
+      "january": "Styczeń",
+      "february": "Luty",
+      "march": "Marzec",
+      "april": "Kwiecień",
+      "may": "Maj",
+      "june": "Czerwiec",
+      "july": "Lipiec",
+      "august": "Sierpień",
+      "september": "Wrzesień",
+      "october": "Październik",
+      "november": "Listopad",
+      "december": "Grudzień"
+    }
   "auth": {
     "login": "Zaloguj się",
     "register": "Zarejestruj się",

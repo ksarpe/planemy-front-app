@@ -1,15 +1,21 @@
 import { useMemo } from "react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { format, startOfWeek, endOfWeek, eachDayOfInterval, isToday, isSameDay } from "date-fns";
+import { pl } from "date-fns/locale";
+import { useT } from "@/hooks/useT";
 import EventBlock from "./Event/EventBlock";
 import { EventInterface } from "@/data/Calendar/events";
 
 export default function WeekView() {
   const { currentDate, events } = useCalendarContext();
+  const { currentLanguage } = useT();
 
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 }); // Monday start
   const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
+
+  // Choose locale based on current language
+  const locale = currentLanguage === 'pl' ? pl : undefined;
 
   // Generate time slots (24 hours)
   const timeSlots = useMemo(() => {
@@ -83,7 +89,7 @@ export default function WeekView() {
                 className={`p-2 flex flex-col text-center border-r border-gray-200 last:border-r-0 ${
                   isDayToday ? "bg-bg-alt" : ""
                 }`}>
-                <span className="text-xs sm:text-sm text-text-light uppercase">{format(day, "EEE")}</span>
+                <span className="text-xs sm:text-sm text-text-light uppercase">{format(day, "EEE", { locale })}</span>
                 <span className={`text-sm sm:text-lg font-semibold ${isDayToday ? "text-primary" : "text-gray-900"}`}>
                   {format(day, "d")}
                 </span>
