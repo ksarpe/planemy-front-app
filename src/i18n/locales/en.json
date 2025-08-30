@@ -316,7 +316,7 @@
       "title": "Have a problem or idea for improvement?",
       "description": "Use our feedback system to report bugs or suggest new features.",
       "clickHere": "Click this banner!"
-    }
+    },
     "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application."
   },
   "tasks": {
@@ -348,6 +348,7 @@
       "taskDeleted": "Task has been deleted!",
       "allTasksUnchecked": "All tasks unchecked!"
     }
+  },
   "calendar": {
     "today": "Today",
     "month": "Month",
@@ -377,6 +378,7 @@
       "november": "November",
       "december": "December"
     }
+  },
   "auth": {
     "login": "Log in",
     "register": "Sign up",
@@ -403,6 +405,7 @@
       "networkRequestFailed": "Network connection error.",
       "unknownError": "An unexpected error occurred. Please try again."
     }
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "calendar": "Calendar",
