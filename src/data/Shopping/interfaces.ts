@@ -1,5 +1,7 @@
 // Shopping domain interfaces and shared UI props for the Shopping feature
 
+import type { LabelInterface } from "@/data/Utils/interfaces";
+
 // Hook-specific types
 export interface ListStats {
   total: number;
@@ -59,6 +61,7 @@ export interface ShoppingListInterface {
   updatedAt: Date;
   userId: string;
   type: "personal" | "shared";
+  labels?: LabelInterface[]; // Optional array of labels for the list
 }
 
 export interface FavoriteProductInterface {
