@@ -14,7 +14,11 @@ export const usePendingShares = (objectType: ShareableObjectType) => {
 
   return useQuery({
     queryKey: ["pendingShares", objectType, user?.uid],
-    queryFn: () => getPendingSharesApi(objectType, user!.uid),
+    queryFn: () => {
+      console.log("usePendingShares: Fetching pending shares for", objectType, "user:", user?.uid);
+      return getPendingSharesApi(objectType, user!.uid);
+    },
+    enabled: !!user?.uid,
   });
 };
 
@@ -52,7 +56,9 @@ export const useAcceptShare = () => {
     mutationFn: (shareId: string) => acceptObjectInvitationApi(shareId),
     onSuccess: () => {
       // Invalidate pending shares to remove the accepted one from the list
+      console.log("useAcceptShare: Invalidating pending shares and task lists");
       queryClient.invalidateQueries({ queryKey: ["pendingShares"] });
+      queryClient.invalidateQueries({ queryKey: ["taskLists"] });
       showToast("success", "Udostępnienie zaakceptowane.");
     },
     onError: (error) => {
@@ -70,6 +76,7 @@ export const useRejectShare = () => {
     mutationFn: (shareId: string) => rejectObjectInvitation(shareId),
     onSuccess: () => {
       // Invalidate pending shares to remove the rejected one from the list
+      console.log("useRejectShare: Invalidating pending shares");
       queryClient.invalidateQueries({ queryKey: ["pendingShares"] });
       showToast("success", "Udostępnienie odrzucone.");
     },

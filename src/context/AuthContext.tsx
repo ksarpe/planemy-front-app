@@ -8,7 +8,8 @@ import {
   updateProfile,
   AuthError,
 } from "firebase/auth";
-import { auth } from "../api/config";
+import { auth, db } from "../api/config";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import type { AuthContextType } from "@/data/Auth";
 import i18n from "@/i18n";
 
@@ -20,7 +21,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Check if user document exists, create if it doesn't
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        
+        if (!userDocSnap.exists()) {
+          console.log("Creating missing user document for:", user.uid);
+          await setDoc(userDocRef, {
+            id: user.uid,
+            email: user.email,
+            displayName: user.displayName || "",
+            createdAt: new Date().toISOString(),
+          });
+        }
+      }
+      
       setUser(user);
       setLoading(false);
     });
@@ -42,6 +59,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
       if (displayName && user) {
         await updateProfile(user, { displayName });
+      }
+      
+      // Create user document in Firestore using Firebase UID as document ID
+      if (user) {
+        await setDoc(doc(db, "users", user.uid), {
+          id: user.uid,
+          email: user.email,
+          displayName: displayName || user.displayName || "",
+          createdAt: new Date().toISOString(),
+        });
+        console.log("User document created for:", user.uid);
       }
     } catch (error) {
       const authError = error as AuthError;

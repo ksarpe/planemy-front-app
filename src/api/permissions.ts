@@ -25,6 +25,7 @@ export const shareObjectWithUserApi = async (
 
     const targetUser = users[0];
     console.log("Target user found:", targetUser);
+    console.log("shareObjectWithUserApi: Will create permission with user_id:", targetUser.id);
 
     // Verify object exists based on type
     //TODO: remove, jsut stick with ShareableObjectType
@@ -87,6 +88,7 @@ export const shareObjectWithUserApi = async (
  */
 export const getPendingSharesApi = async (objectType: ShareableObjectType, userId: string): Promise<Permission[]> => {
   try {
+    console.log("getPendingSharesApi: Searching for pending shares", { objectType, userId });
     const permissionsCollection = collection(db, PERMISSIONS_COLLECTION);
     const q = query(
       permissionsCollection,
@@ -97,6 +99,11 @@ export const getPendingSharesApi = async (objectType: ShareableObjectType, userI
     );
 
     const snapshot = await getDocs(q);
+    console.log("getPendingSharesApi: Found", snapshot.docs.length, "pending shares");
+    snapshot.docs.forEach((doc, index) => {
+      console.log(`getPendingSharesApi: Share ${index}:`, doc.id, doc.data());
+    });
+    
     return snapshot.docs.map(
       (doc) =>
         ({
@@ -325,28 +332,31 @@ export const getObjectSharedUsers = async (
     const usersPromises = userIds.map(async (userId) => {
       console.log("Fetching user data for:", userId);
 
-      // Query for user document where the 'id' field equals userId
-      const userQuery = query(usersCollection, where("id", "==", userId));
-      const userSnapshot = await getDocs(userQuery);
+      // Get user document directly by document ID (which is Firebase UID)
+      try {
+        const userDocRef = doc(usersCollection, userId);
+        const userDocSnap = await getDoc(userDocRef);
 
-      if (!userSnapshot.empty) {
-        const userDoc = userSnapshot.docs[0];
-        const userData = userDoc.data();
-        console.log("User data found:", userData);
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          console.log("User data found:", userData);
 
-        // Find the permission for this user
-        const permission = permissionsSnapshot.docs.find((doc) => doc.data().user_id === userId);
-        const result = {
-          id: userId,
-          email: userData.email,
-          displayName: userData.displayName,
-          permission: permission?.data().role as SharePermission,
-          status: permission?.data().status as "pending" | "accepted" | "rejected",
-        };
-        console.log("User result:", result);
-        return result;
-      } else {
-        console.log("User document not found for:", userId);
+          // Find the permission for this user
+          const permission = permissionsSnapshot.docs.find((doc) => doc.data().user_id === userId);
+          const result = {
+            id: userId,
+            email: userData.email,
+            displayName: userData.displayName,
+            permission: permission?.data().role as SharePermission,
+            status: permission?.data().status as "pending" | "accepted" | "rejected",
+          };
+          console.log("User result:", result);
+          return result;
+        } else {
+          console.log("User document not found for:", userId);
+        }
+      } catch (error) {
+        console.error("Error fetching user data for", userId, ":", error);
       }
       return null;
     });
@@ -435,11 +445,21 @@ const searchUsersByEmail = async (
     const q = query(usersCollection, where("email", "==", email));
     const snapshot = await getDocs(q);
 
-    return snapshot.docs.map((doc) => ({
-      id: doc.data().id,
-      email: doc.data().email,
-      displayName: doc.data().displayName,
-    }));
+    console.log("searchUsersByEmail: Found", snapshot.docs.length, "users for email", email);
+    
+    const results = snapshot.docs.map((doc) => {
+      const userData = doc.data();
+      console.log("searchUsersByEmail: User doc ID:", doc.id, "User data:", userData);
+      
+      return {
+        id: doc.id, // Use Firestore document ID (which is Firebase UID)
+        email: userData.email,
+        displayName: userData.displayName,
+      };
+    });
+    
+    console.log("searchUsersByEmail: Returning users:", results);
+    return results;
   } catch (error) {
     console.error("Error searching users:", error);
     return [];
