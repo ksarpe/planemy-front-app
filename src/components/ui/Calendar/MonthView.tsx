@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { useElementPosition } from "@/hooks/useElementPosition";
 import { useT } from "@/hooks/useT";
@@ -24,17 +24,15 @@ export default function MonthView() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showQuickCreator, setShowQuickCreator] = useState(false);
   const [elementPosition, setElementPosition] = useState({ x: 0, y: 0, width: 0, height: 0 });
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
   // Preview event state
   const [previewEvent, setPreviewEvent] = useState<Partial<EventInterface>>({});
-  const previewEventRef = useRef<HTMLDivElement>(null);
-
   // Use element position hook
   const { positionStyles } = useElementPosition({
     isOpen: showQuickCreator && !isMobile,
     elementPosition,
-    modalWidth: 384,
+    modalWidth: 320,
     modalHeight: 400,
     offset: 8,
   });
@@ -64,10 +62,10 @@ export default function MonthView() {
   // Mobile detection and responsive handling
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 1024);
     };
 
-    setIsMobile(window.innerWidth < 768);
+    setIsMobile(window.innerWidth < 1024);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -80,13 +78,17 @@ export default function MonthView() {
     if (isMobile) {
       setShowQuickCreator(true);
     } else {
-      // Set mouse position for useElementPosition hook
-      setTimeout(() => {
-        if (previewEventRef.current) {
-          const previewRect = previewEventRef.current.getBoundingClientRect();
-          setElementPosition({ x: previewRect.left, y: previewRect.top, width: previewRect.width, height: previewRect.height });
-        }
-      }, 50);
+      // Get position from the clicked day cell directly
+      const dayCell = event.currentTarget as HTMLDivElement;
+      const dayRect = dayCell.getBoundingClientRect();
+
+      setElementPosition({
+        x: dayRect.left,
+        y: dayRect.top,
+        width: dayRect.width,
+        height: dayRect.height,
+      });
+
       setShowQuickCreator(true);
     }
   };
@@ -149,7 +151,7 @@ export default function MonthView() {
     t("calendar.weekdays.short.thursday"),
     t("calendar.weekdays.short.friday"),
     t("calendar.weekdays.short.saturday"),
-    t("calendar.weekdays.short.sunday")
+    t("calendar.weekdays.short.sunday"),
   ];
 
   return (
@@ -200,7 +202,7 @@ export default function MonthView() {
                       const previewItem = dayEventsWithPreview.find((item) => "isPreview" in item && item.isPreview);
                       if (previewItem && "isPreview" in previewItem && previewItem.isPreview) {
                         return (
-                          <div ref={previewEventRef}>
+                          <div>
                             <PreviewEventBlockInline event={previewItem.event} className="w-full" showTime={false} />
                           </div>
                         );
@@ -273,7 +275,7 @@ export default function MonthView() {
         <>
           {isMobile ? (
             /* Mobile: Full screen modal */
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="fixed inset-0 backdrop-blur-sm bg-black/20 z-50 flex items-center justify-center p-4">
               <div className="bg-white rounded-lg max-w-sm w-full max-h-[90vh] overflow-y-auto">
                 <QuickEventCreator
                   selectedDate={selectedDate}

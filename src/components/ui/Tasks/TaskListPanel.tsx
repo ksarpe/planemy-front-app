@@ -7,6 +7,7 @@ import type { TaskListInterface } from "@/data/Tasks/interfaces";
 import { useDeleteTaskList, useUpdateTaskList } from "@/hooks/tasks/useTasksLists";
 import { useTasks } from "@/hooks/tasks/useTasks";
 import type { TaskListPanelProps } from "@/data/Tasks/Components/TaskComponentInterfaces";
+import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
 
 export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: TaskListPanelProps) {
   const { t } = useTranslation();
@@ -14,6 +15,9 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
   const deleteList = useDeleteTaskList();
   const updateList = useUpdateTaskList();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [shareListId, setShareListId] = useState<string | null>(null);
+  const [shareListName, setShareListName] = useState<string | null>(null);
   const [listToDelete, setListToDelete] = useState<TaskListInterface | null>(null);
 
   const [editingListId, setEditingListId] = useState<string | null>(null);
@@ -30,6 +34,12 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
     }
     setEditingListId(null);
     setEditName("");
+  };
+
+  const handleShareList = (listId: string, listName: string) => {
+    setShareListId(listId);
+    setShareListName(listName);
+    setIsShareModalOpen(true);
   };
 
   const handleCancelEdit = () => {
@@ -122,7 +132,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
                 <BasicDropdownItem icon={Edit2} onClick={() => handleStartEdit(list)}>
                   {t("tasks.panel.actions.editName")}
                 </BasicDropdownItem>
-                <BasicDropdownItem icon={Share2} onClick={() => console.log("Share list", list.id)}>
+                <BasicDropdownItem icon={Share2} onClick={() => handleShareList(list.id, list.name)}>
                   {t("tasks.panel.actions.share")}
                 </BasicDropdownItem>
                 {mainListId !== list.id && (
@@ -197,6 +207,19 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
         itemName={listToDelete?.name || ""}
         confirmButtonText={t("tasks.panel.deleteConfirmation.confirmButton")}
       />
+
+      {/* Share Task List Modal */}
+      {isShareModalOpen && shareListId && (
+        <ManageTaskListSharingModal
+          isOpen={isShareModalOpen}
+          onClose={() => {
+            setIsShareModalOpen(false);
+            setShareListId(null);
+          }}
+          listId={shareListId}
+          listName={shareListName || "Brak nazwy"}
+        />
+      )}
     </div>
   );
 }

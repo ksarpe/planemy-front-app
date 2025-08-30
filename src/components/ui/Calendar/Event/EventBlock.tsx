@@ -6,11 +6,11 @@ import EventEditModal from "./EventEditModal";
 import EventDetailsModal from "./EventDetailsModal";
 import type { EventBlockProps } from "@/data/Calendar/Components/CalendarComponentInterfaces";
 
-export default function EventBlock({ event, style, className = "", onClick, showTime = true }: EventBlockProps) {
+export default function EventBlock({ event, style, className = "", showTime = true }: EventBlockProps) {
   const { updateEvent } = useCalendarContext();
   const [isEditing, setIsEditing] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0, width: 0, height: 0 });
+  const [elementPosition, setElementPosition] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
   const editRef = useRef<HTMLDivElement>(null);
   const eventBlockRef = useRef<HTMLDivElement>(null);
@@ -34,20 +34,19 @@ export default function EventBlock({ event, style, className = "", onClick, show
     setIsEditing(false);
   };
 
-  const handleEventClick = (e: React.MouseEvent) => {
+  const handleEventBlockClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    // Zapisz pozycję kursora dla obu modali
-    setMousePosition({
-      x: e.clientX,
-      y: e.clientY,
-      width: eventBlockRef.current?.offsetWidth || 0,
-      height: eventBlockRef.current?.offsetHeight || 0,
-    });
-
-    if (onClick) {
-      onClick(e);
-    } else if (!isEditing) {
+    if (eventBlockRef.current) {
+      const eventBlockRect = eventBlockRef.current.getBoundingClientRect();
+      setElementPosition({
+        x: eventBlockRect.left,
+        y: eventBlockRect.top,
+        width: eventBlockRect.width,
+        height: eventBlockRect.height,
+      });
+    }
+    if (!isEditing) {
       setShowDetails(!showDetails);
     }
   };
@@ -94,7 +93,7 @@ export default function EventBlock({ event, style, className = "", onClick, show
         ref={eventBlockRef}
         className={`text-white rounded-md shadow-md hover:shadow-md transition-all cursor-pointer border-l-4 ${className}`}
         style={{ ...style, ...getEventColor(), borderLeftColor: getEventColor().backgroundColor }}
-        onClick={handleEventClick}>
+        onClick={handleEventBlockClick}>
         <div className="p-0.5 sm:p-1">
           <div className="text-[10px] sm:text-sm truncate flex items-center space-x-1">
             <span>{event.title}</span>
@@ -114,7 +113,7 @@ export default function EventBlock({ event, style, className = "", onClick, show
           event={event}
           onClose={() => setIsEditing(false)}
           onSave={handleSave}
-          elementPosition={mousePosition}
+          elementPosition={elementPosition}
         />
       )}
 
@@ -122,12 +121,12 @@ export default function EventBlock({ event, style, className = "", onClick, show
         <EventDetailsModal
           event={event}
           onClose={() => setShowDetails(false)}
-          onEdit={(newMousePosition) => {
-            setMousePosition(newMousePosition);
+          onEdit={() => {
+            setElementPosition(elementPosition);
             setShowDetails(false);
             setIsEditing(true);
           }}
-          elementPosition={mousePosition}
+          elementPosition={elementPosition}
         />
       )}
     </div>

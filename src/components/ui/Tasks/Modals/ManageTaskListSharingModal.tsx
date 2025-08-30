@@ -6,6 +6,7 @@ import { useToastContext } from "@/hooks/context/useToastContext";
 
 import type { ManageTaskListSharingModalProps } from "@/data/Tasks/interfaces";
 import type { SharePermission } from "@/data/Utils/types";
+import { createPortal } from "react-dom";
 
 export default function ManageTaskListSharingModal({
   isOpen,
@@ -50,8 +51,8 @@ export default function ManageTaskListSharingModal({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  const modalContent = (
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white  rounded-md shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 ">
           <div>
@@ -163,4 +164,6 @@ export default function ManageTaskListSharingModal({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }

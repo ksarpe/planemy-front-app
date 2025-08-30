@@ -17,14 +17,14 @@ export default function EventEditModal({ event, onClose, onSave, elementPosition
   const titleInputRef = useRef<HTMLInputElement>(null);
   
   // Sprawdź czy mobile
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
 
   // Mouse positioning hook - tylko dla desktop
   const { positionStyles } = useElementPosition({
     isOpen: true,
     elementPosition,
     modalWidth: 384, // max-w-96
-    modalHeight: 600, // większy dla edit modal
+    modalHeight: 376, // większy dla edit modal
   });
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function EventEditModal({ event, onClose, onSave, elementPosition
       updatedAt: new Date().toISOString(),
     };
 
-    await onSave(updatedEvent);
+    onSave(updatedEvent);
   };
 
   const handleCancel = (e: React.MouseEvent) => {
@@ -167,7 +167,7 @@ export default function EventEditModal({ event, onClose, onSave, elementPosition
   // Mobile version - fullscreen modal
   if (isMobile) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div className="bg-bg-alt rounded-lg max-w-sm w-full max-h-[90vh] overflow-y-auto">
           <div className="p-4 space-y-4" onClick={handleModalClick}>
             {/* Header */}

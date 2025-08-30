@@ -5,7 +5,7 @@ import type { EventInterface } from "../events";
 export interface EventDetailsModalProps {
   event: EventInterface;
   onClose: () => void;
-  onEdit: (elementPosition: { x: number; y: number; width: number; height: number }) => void;
+  onEdit: () => void;
   elementPosition: { x: number; y: number; width: number; height: number };
 }
 

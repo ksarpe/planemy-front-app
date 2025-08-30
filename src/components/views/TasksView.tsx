@@ -6,7 +6,6 @@ import { X } from "lucide-react";
 import {
   TaskViewHeader,
   CreateTaskListModal,
-  ManageTaskListSharingModal,
   TaskList,
   TaskStatistics,
   TaskAlerts,
@@ -28,17 +27,8 @@ export default function TasksView() {
   const tasks = tasksData ? tasksData : [];
 
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [shareListId, setShareListId] = useState<string | null>(null);
   const [filter, setFilter] = useState<TaskListFilter>("pending");
   const [showListsPanel, setShowListsPanel] = useState(false);
-
-  // Get tasks from current list using new hook
-
-  const handleShareList = (listId: string) => {
-    setShareListId(listId);
-    setIsShareModalOpen(true);
-  };
 
   const handleCreateTaskList = async (name: string) => {
     createTaskList(name);
@@ -113,7 +103,6 @@ export default function TasksView() {
         <div className="">
           {/* Header with Task Lists */}
           <TaskViewHeader
-            onShareListClick={handleShareList}
             onToggleLists={() => setShowListsPanel(!showListsPanel)}
             listsOpen={showListsPanel}
           />
@@ -146,18 +135,6 @@ export default function TasksView() {
           onSubmit={handleCreateTaskList}
           loading={loading}
         />
-        {/* Share Task List Modal */}
-        {isShareModalOpen && shareListId && currentTaskList && (
-          <ManageTaskListSharingModal
-            isOpen={isShareModalOpen}
-            onClose={() => {
-              setIsShareModalOpen(false);
-              setShareListId(null);
-            }}
-            listId={shareListId}
-            listName={currentTaskList.name}
-          />
-        )}
       </div>
     </div>
   );

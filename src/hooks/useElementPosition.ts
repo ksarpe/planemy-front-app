@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { UseElementPositionProps } from "@/data/Utils/interfaces";
 
 export type { ElementPosition } from "@/data/Utils/interfaces";
@@ -7,11 +7,10 @@ export function useElementPosition({
   isOpen,
   elementPosition,
   modalWidth = 320,
-  modalHeight = 200,
-  offset = 8,
+  modalHeight = 400,
+  offset = 4,
 }: UseElementPositionProps) {
-  // Inicjalizacja z obliczoną pozycją aby uniknąć przeskakiwania
-  const [position, setPosition] = useState<React.CSSProperties>(() => {
+  const calculatePosition = useCallback((): React.CSSProperties => {
     if (!isOpen) {
       return {};
     }
@@ -22,31 +21,23 @@ export function useElementPosition({
     let x = elementPosition.x;
     let y = elementPosition.y;
 
-    // Sprawdź czy modal zmieści się po prawej stronie kursora
-    if (x + modalWidth + offset > viewportWidth) {
-      // Przenieś na lewą stronę - wyrównaj prawą krawędź modala z lewą krawędzią elementu
-      x = elementPosition.x - modalWidth;
-      
-      // Jeśli modal wychodzi poza lewą krawędź ekranu, spróbuj wyrównać z lewą krawędzią elementu
-      if (x < offset) {
-        x = elementPosition.x;
-        // Jeśli nadal nie pasuje, użyj minimalnego offsetu
-        if (x + modalWidth > viewportWidth - offset) {
-          x = offset;
-        }
-      }
+    // If not fit on the left side
+    if (x + elementPosition.width + modalWidth + offset > viewportWidth) {
+      x = elementPosition.x - modalWidth - offset;
+      // keep right side
     } else {
-      // Zostaw po prawej stronie
       x = elementPosition.x + elementPosition.width + offset;
     }
 
-    // Sprawdź czy modal zmieści się poniżej kursora
-    if (y + modalHeight + offset > viewportHeight) {
-      y = elementPosition.y - modalHeight - offset;
+    //below check
+    if (y + modalHeight + elementPosition.height + offset > viewportHeight) {
+      y = elementPosition.y - modalHeight + elementPosition.height;
+    // keep below
     } else {
-      y = elementPosition.y + offset;
+      y = elementPosition.y;
     }
 
+    // Upewnij się że modal nie wyjdzie poza krawędzie viewport
     x = Math.max(offset, x);
     y = Math.max(offset, y);
 
@@ -58,61 +49,14 @@ export function useElementPosition({
       maxWidth: Math.min(modalWidth, viewportWidth - 2 * offset),
       maxHeight: Math.min(modalHeight, viewportHeight - 2 * offset),
     };
-  });
+  }, [isOpen, elementPosition, modalWidth, modalHeight, offset]);
+
+  // Inicjalizacja z obliczoną pozycją aby uniknąć przeskakiwania
+  const [position, setPosition] = useState<React.CSSProperties>(calculatePosition);
 
   useEffect(() => {
-    if (!isOpen) {
-      setPosition({});
-      return;
-    }
-
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-
-    let x = elementPosition.x;
-    let y = elementPosition.y;
-
-    // Sprawdź czy modal zmieści się po prawej stronie kursora
-    if (x + modalWidth + offset > viewportWidth) {
-      // Przenieś na lewą stronę - wyrównaj prawą krawędź modala z lewą krawędzią elementu
-      x = elementPosition.x - modalWidth;
-      
-      // Jeśli modal wychodzi poza lewą krawędź ekranu, spróbuj wyrównać z lewą krawędzią elementu
-      if (x < offset) {
-        x = elementPosition.x;
-        // Jeśli nadal nie pasuje, użyj minimalnego offsetu
-        if (x + modalWidth > viewportWidth - offset) {
-          x = offset;
-        }
-      }
-    } else {
-      // Zostaw po prawej stronie
-      x = elementPosition.x + elementPosition.width + offset;
-    }
-
-    // Sprawdź czy modal zmieści się poniżej kursora
-    if (y + modalHeight + offset > viewportHeight) {
-      // Przenieś powyżej kursora
-      y = elementPosition.y - modalHeight - offset;
-    } else {
-      // Zostaw poniżej kursora
-      y = elementPosition.y + offset;
-    }
-
-    // Upewnij się że modal nie wyjdzie poza lewą krawędź
-    x = Math.max(offset, x);
-    // Upewnij się że modal nie wyjdzie poza górną krawędź
-    y = Math.max(offset, y);
-
-    setPosition({
-      position: "fixed",
-      left: x,
-      top: y,
-      zIndex: 50,
-      maxWidth: Math.min(modalWidth, viewportWidth - 2 * offset),
-      maxHeight: Math.min(modalHeight, viewportHeight - 2 * offset),
-    });
-  }, [isOpen, elementPosition, modalWidth, modalHeight, offset]);
+    setPosition(calculatePosition());
+  }, [calculatePosition]);
 
   return {
     positionStyles: position,

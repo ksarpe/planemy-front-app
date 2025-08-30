@@ -122,7 +122,6 @@ export interface TaskStatisticsProps {
 }
 
 export interface TaskViewHeaderProps {
-  onShareListClick: (listId: string) => void;
   onToggleLists?: () => void;
   listsOpen?: boolean;
 }
