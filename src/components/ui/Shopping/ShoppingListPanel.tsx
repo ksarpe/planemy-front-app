@@ -196,10 +196,14 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                         )}
                         
                         {/* Add Labels Dropdown */}
-                        <BasicDropdownItem 
-                          icon={Tag}>
+                        <div onClick={(e) => e.stopPropagation()}>
                           <BasicDropdown
-                            trigger={<span>Etykiety</span>}
+                            trigger={
+                              <button className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors text-sm cursor-pointer text-gray-700 hover:bg-gray-50">
+                                <Tag size={16} />
+                                Etykiety
+                              </button>
+                            }
                             align="left"
                             width="w-64"
                             closeOnItemClick={true}
@@ -241,7 +245,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                               </BasicDropdownItem>
                             )}
                           </BasicDropdown>
-                        </BasicDropdownItem>
+                        </div>
                         <BasicDropdownItem icon={Trash2} variant="red" onClick={() => handleDeleteClick(list)}>
                           Usuń
                         </BasicDropdownItem>
