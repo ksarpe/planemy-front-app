@@ -316,7 +316,6 @@
       "title": "Have a problem or idea for improvement?",
       "description": "Use our feedback system to report bugs or suggest new features.",
       "clickHere": "Click this banner!"
-    },
     }
   },
   "tasks": {
@@ -330,7 +329,7 @@
       "default": "Default",
       "actions": {
         "editName": "Edit name",
-        "share": "Share", 
+        "share": "Share",
         "setAsDefault": "Set as default",
         "delete": "Delete"
       },
