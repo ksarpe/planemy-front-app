@@ -17,6 +17,11 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
+  // Temporarily bypass auth for development
+  if (process.env.NODE_ENV === 'development') {
+    return <>{children}</>;
+  }
+
   if (!user) {
     return <AuthContainer />;
   }
