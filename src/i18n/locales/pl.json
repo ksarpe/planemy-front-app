@@ -316,7 +316,7 @@
       "title": "Masz problem lub pomysł na ulepszenie?",
       "description": "Skorzystaj z naszego systemu feedbacku, aby zgłosić błędy lub zaproponować nowe funkcje.",
       "clickHere": "Kliknij na ten baner!"
-    }
+    },
     "seeWhatWeAreWorking": "Zobacz nad czym pracujemy i co zostało już wprowadzone do aplikacji."
   },
   "tasks": {
@@ -348,6 +348,7 @@
       "taskDeleted": "Zadanie zostało usunięte!",
       "allTasksUnchecked": "Odznaczono wszystkie zadania!"
     }
+  },
   "calendar": {
     "today": "Dzisiaj",
     "month": "Miesiąc",
@@ -377,6 +378,7 @@
       "november": "Listopad",
       "december": "Grudzień"
     }
+  },
   "auth": {
     "login": "Zaloguj się",
     "register": "Zarejestruj się",
@@ -403,6 +405,7 @@
       "networkRequestFailed": "Błąd połączenia z siecią.",
       "unknownError": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
     }
+  },
   "sidebar": {
     "dashboard": "Panel",
     "calendar": "Kalendarz",
