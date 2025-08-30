@@ -15,6 +15,7 @@ export const usePendingShares = (objectType: ShareableObjectType) => {
   return useQuery({
     queryKey: ["pendingShares", objectType, user?.uid],
     queryFn: () => getPendingSharesApi(objectType, user!.uid),
+    enabled: !!user?.uid,
   });
 };
 
@@ -53,6 +54,7 @@ export const useAcceptShare = () => {
     onSuccess: () => {
       // Invalidate pending shares to remove the accepted one from the list
       queryClient.invalidateQueries({ queryKey: ["pendingShares"] });
+      queryClient.invalidateQueries({ queryKey: ["taskLists"] });
       showToast("success", "Udostępnienie zaakceptowane.");
     },
     onError: (error) => {
