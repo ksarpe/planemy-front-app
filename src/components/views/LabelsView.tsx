@@ -3,8 +3,10 @@ import { LabelInterface } from "@/data/Utils/interfaces";
 import { useState } from "react";
 import LabelForm from "@/components/ui/Tags/LabelForm";
 import LabelsGrid from "@/components/ui/Tags/LabelsGrid";
+import { useT } from "@/hooks/useT";
 
 export default function LabelsView() {
+  const { t } = useT();
   const { labels, createLabel, updateLabel, deleteLabel, loading } = useLabelContext();
   const [isCreating, setIsCreating] = useState(false);
   const [editingLabel, setEditingLabel] = useState<LabelInterface | null>(null);
@@ -29,7 +31,7 @@ export default function LabelsView() {
       <div className="w-full rounded-md shadow-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg-alt  p-6">
         {/* Header */}
         <div className="flex justify-between items-start">
-          <h2 className="text-2xl font-semibold text-text ">Menedżer etykiet</h2>
+          <h2 className="text-2xl font-semibold text-text ">{t("labels.title")}</h2>
         </div>
 
         {/* Create New Label Form */}
@@ -55,7 +57,7 @@ export default function LabelsView() {
 
         {/* Labels Grid */}
         <div className="flex-1">
-          <h2 className="text-lg font-semibold mb-4 text-text ">Twoje etykiety</h2>
+          <h2 className="text-lg font-semibold mb-4 text-text ">{t("labels.yourLabels")}</h2>
 
           <LabelsGrid
             labels={labels}
