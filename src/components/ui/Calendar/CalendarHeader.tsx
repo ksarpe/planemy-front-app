@@ -1,17 +1,26 @@
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { ChevronLeft, ChevronRight, Grid3X3, AlignJustify } from "lucide-react";
 import { getVisibleMonthsInWeek } from "../../../utils/weeksHelper";
+import { useT } from "@/hooks/useT";
 
 export default function CalendarHeader() {
   const { currentDate, loadNext, loadPrev, goToday, setView, view } = useCalendarContext();
+  const { t } = useT();
   const visibleMonths = getVisibleMonthsInWeek(currentDate);
   const year = currentDate.getFullYear();
 
   const getDateDisplay = () => {
     if (view === "week" && visibleMonths.length > 1) {
-      return `${visibleMonths[0]} - ${visibleMonths[1]} ${year}`;
+      // Translate the month names
+      const translatedMonths = visibleMonths.map(monthName => {
+        const monthKey = monthName.toLowerCase();
+        return t(`calendar.months.${monthKey}`);
+      });
+      return `${translatedMonths[0]} - ${translatedMonths[1]} ${year}`;
     }
-    return `${currentDate.toLocaleString("en", { month: "long" })} ${year}`;
+    const monthKey = currentDate.toLocaleString("en", { month: "long" }).toLowerCase();
+    const translatedMonth = t(`calendar.months.${monthKey}`);
+    return `${translatedMonth} ${year}`;
   };
 
   return (
@@ -35,7 +44,7 @@ export default function CalendarHeader() {
         <button
           onClick={goToday}
           className="px-2 py-2 text-xs md:text-sm font-medium text-text-light  bg-white  border border-gray-300  rounded-md hover:bg-gray-50  transition-colors">
-          Today
+          {t("calendar.today")}
         </button>
       </div>
       {/* Right side - view controls */}
@@ -46,7 +55,7 @@ export default function CalendarHeader() {
             view === "month" ? "bg-white  text-text  shadow-md" : "text-text-light  hover:text-text "
           }`}>
           <Grid3X3 className="h-4 w-4" />
-          <span>Month</span>
+          <span>{t("calendar.month")}</span>
         </button>
         <button
           onClick={() => setView("week")}
@@ -54,7 +63,7 @@ export default function CalendarHeader() {
             view === "week" ? "bg-white  text-text  shadow-md" : "text-text-light  hover:text-text "
           }`}>
           <AlignJustify className="h-4 w-4" />
-          <span>Week</span>
+          <span>{t("calendar.week")}</span>
         </button>
       </div>
     </div>

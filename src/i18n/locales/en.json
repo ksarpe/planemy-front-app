@@ -59,7 +59,30 @@
       "title": "Sharing notifications",
       "description": "Information about shared lists"
     },
-    "noNewNotifications": "No new notifications or invitations"
+    "noNewNotifications": "No new notifications or invitations",
+    "view": {
+      "title": "Notifications",
+      "description": "Manage invitations and view announcements",
+      "loading": "Loading notifications and announcements...",
+      "new": "new",
+      "listInvitations": "List invitations",
+      "allUpToDate": "Everything is up to date!",
+      "noNewNotificationsOrInvitations": "No new notifications or invitations"
+    },
+    "sharing": {
+      "newSharing": "New sharing",
+      "hasBeenShared": "has been shared",
+      "permissions": "Permissions",
+      "read": "Read",
+      "edit": "Edit",
+      "accept": "Accept",
+      "reject": "Reject"
+    },
+    "objectTypes": {
+      "task_list": "Task list",
+      "shopping_list": "Shopping list",
+      "object": "Object"
+    }
   },
   "security": {
     "title": "Security",
@@ -100,7 +123,26 @@
     "inDays": "In {{count}} days",
     "urgent": "Urgent",
     "soon": "Soon",
-    "ok": "OK"
+    "ok": "OK",
+    "quickActions": "Quick Actions",
+    "addTask": "Add task",
+    "newEvent": "New event",
+    "shoppingList": "Shopping list",
+    "newPayment": "New payment",
+    "tasks": "Tasks",
+    "upcomingEvents": "Upcoming Events",
+    "nextEvent": "Next event",
+    "addEvent": "Add event",
+    "seeMore": "See {{count}} more...",
+    "seeAllInCalendar": "See all in calendar",
+    "noUpcomingEvents": "No upcoming events in the next two months",
+    "allBought": "All bought!",
+    "productsCount": "{{count}} products",
+    "allDone": "All done!",
+    "openTasks": "{{count}} open",
+    "listCreated": "Shopping list created!",
+    "listCreationFailed": "Failed to create shopping list",
+    "listName": "List {{date}}"
   },
   "payments": {
     "title": "Payments",
@@ -189,10 +231,92 @@
       }
     }
   },
+  "shopping": {
+    "title": "Shopping",
+    "loading": "Loading shopping lists...",
+    "loadingProducts": "Loading products...",
+    "tabs": {
+      "lists": "Lists",
+      "favorites": "Favorites"
+    },
+    "actions": {
+      "addProduct": "Add product",
+      "createNewList": "Create new list"
+    },
+    "emptyState": {
+      "selectList": "Select shopping list",
+      "openPanelToSelect": "Open lists panel to select or create new"
+    },
+    "stats": {
+      "toBuy": "To buy",
+      "bought": "Bought",
+      "value": "Value",
+      "currency": "USD"
+    },
+    "deleteProduct": {
+      "title": "Delete product",
+      "message": "Are you sure you want to delete product",
+      "confirmButton": "Delete product"
+    },
+    "categories": {
+      "fruitsAndVegetables": "Fruits and Vegetables",
+      "meatAndFish": "Meat and Fish", 
+      "dairy": "Dairy",
+      "bread": "Bread",
+      "beverages": "Beverages",
+      "sweets": "Sweets",
+      "chemistry": "Household Chemicals",
+      "cosmetics": "Cosmetics"
+    }
+  },
   "labels": {
-    "noLabels": "No labels"
+    "title": "Label Manager",
+    "yourLabels": "Your Labels",
+    "noLabels": "No labels",
+    "newLabel": "New label",
+    "createFirstLabel": "Create first label",
+    "startOrganizing": "Start organizing your tasks by creating the first label",
+    "form": {
+      "createTitle": "Create new label",
+      "editTitle": "Edit label",
+      "create": "Create",
+      "save": "Save",
+      "name": "Label name",
+      "namePlaceholder": "Enter label name...",
+      "description": "Description",
+      "descriptionOptional": "Description (optional)",
+      "descriptionPlaceholder": "Short label description...",
+      "color": "Label color"
+    },
+    "actions": {
+      "edit": "Edit label",
+      "delete": "Delete label",
+      "confirmDelete": "Are you sure you want to delete this label?"
+    }
   },
   "feedback": {
+    "title": "Feedback",
+    "subtitle": "Have a problem or suggestion? Write to us! Your feedback will help us improve the app.",
+    "sendFeedback": "Send feedback",
+    "yourMessage": "Your message *",
+    "messagePlaceholder": "Describe your problem, suggestion or opinion...",
+    "minimumCharacters": "Minimum 10 characters required",
+    "sending": "Sending...",
+    "roadmapTitle": "Roadmap & Changelog",
+    "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application.",
+    "noPublicFeedback": "No public feedback yet",
+    "featureImplemented": "This feature has been implemented in the app",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Planned",
+      "resolved": "Implemented", 
+      "unknown": "Unknown"
+    },
+    "banner": {
+      "title": "Have a problem or idea for improvement?",
+      "description": "Use our feedback system to report bugs or suggest new features.",
+      "clickHere": "Click this banner!"
+    }
     "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application."
   },
   "tasks": {
@@ -224,5 +348,69 @@
       "taskDeleted": "Task has been deleted!",
       "allTasksUnchecked": "All tasks unchecked!"
     }
+  "calendar": {
+    "today": "Today",
+    "month": "Month",
+    "week": "Week",
+    "weekdays": {
+      "short": {
+        "monday": "Mon",
+        "tuesday": "Tue", 
+        "wednesday": "Wed",
+        "thursday": "Thu",
+        "friday": "Fri",
+        "saturday": "Sat",
+        "sunday": "Sun"
+      }
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    }
+  "auth": {
+    "login": "Log in",
+    "register": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "loggingIn": "Logging in...",
+    "registering": "Signing up...",
+    "loginSuccess": "Successfully logged in!",
+    "registerSuccess": "Successfully registered!",
+    "operationError": "Operation error",
+    "fillAllFields": "Fill in all fields",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "errors": {
+      "userNotFound": "No user found with this email address.",
+      "wrongPassword": "Incorrect password.",
+      "emailAlreadyInUse": "This email address is already in use.",
+      "weakPassword": "Password is too weak.",
+      "invalidEmail": "Invalid email address.",
+      "userDisabled": "This account has been disabled.",
+      "tooManyRequests": "Too many failed login attempts. Please try again later.",
+      "networkRequestFailed": "Network connection error.",
+      "unknownError": "An unexpected error occurred. Please try again."
+    }
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "tasks": "Tasks",
+    "shopping": "Shopping",
+    "payments": "Payments",
+    "labels": "Labels",
+    "notifications": "Notifications",
+    "feedback": "Feedback"
   }
 }

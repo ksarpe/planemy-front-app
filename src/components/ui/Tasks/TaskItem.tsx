@@ -2,15 +2,17 @@ import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { useLabelContext } from "@/hooks/context/useLabelContext";
 import { useCompleteTask } from "@/hooks/tasks/useTasks";
 import { useTranslation } from "react-i18next";
-import { Calendar, AlertCircle, Clock, CheckCircle2, Tag, Trash } from "lucide-react";
+import { Calendar, AlertCircle, Clock, CheckCircle2, Tag, Trash, Plus } from "lucide-react";
 import type { TaskItemProps } from "@/data/Tasks/interfaces";
 import { ActionButton, BasicDropdown, BasicDropdownItem } from "../Common";
+import { useNavigate } from "react-router-dom";
 
 export default function TaskItem({ task }: TaskItemProps) {
   const { t } = useTranslation();
   const { mutate: completeTask } = useCompleteTask();
   const { clickedTask, setClickedTask, currentTaskList } = useTaskContext();
   const { labels, createLabelConnection, removeLabelConnection } = useLabelContext();
+  const navigate = useNavigate();
 
   const getDaysUntilDue = () => {
     if (!task.dueDate || task.dueDate === "") return null;
@@ -46,6 +48,11 @@ export default function TaskItem({ task }: TaskItemProps) {
     if (!currentTaskList) return;
     completeTask(task.id);
   };
+
+  const handleCreateLabel = () => {
+    navigate("/labels");
+  };
+
   return (
     <li
       style={{
@@ -145,23 +152,35 @@ export default function TaskItem({ task }: TaskItemProps) {
                 closeOnItemClick={true}
                 usePortal={true}>
                 {labels.length > 0 ? (
-                  labels.map((label) => (
-                    <BasicDropdownItem
-                      key={label.id}
-                      onClick={() => {
-                        createLabelConnection(task.id, "task", label.id);
-                        task.labels?.push(label); // Update local task labels
-                      }}>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: label.color }} />
-                        {label.name}
-                      </div>
+                  <>
+                    {labels.map((label) => (
+                      <BasicDropdownItem
+                        key={label.id}
+                        onClick={() => {
+                          createLabelConnection(task.id, "task", label.id);
+                          task.labels?.push(label); // Update local task labels
+                        }}>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: label.color }} />
+                          {label.name}
+                        </div>
+                      </BasicDropdownItem>
+                    ))}
+                    <BasicDropdownItem 
+                      icon={Plus} 
+                      onClick={handleCreateLabel}
+                      separator={true}
+                      variant="blue">
+                      Utwórz etykietę
                     </BasicDropdownItem>
-                  ))
+                  </>
                 ) : (
-                  // if no labels are available, show a message
-                  <BasicDropdownItem icon={Tag} onClick={() => {}}>
-                    Brak dostępnych tagów
+                  // if no labels are available, show create label button
+                  <BasicDropdownItem 
+                    icon={Plus} 
+                    onClick={handleCreateLabel}
+                    variant="blue">
+                    Utwórz etykietę
                   </BasicDropdownItem>
                 )}
               </BasicDropdown>

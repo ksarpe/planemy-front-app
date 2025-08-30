@@ -6,11 +6,13 @@ import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { useShoppingItemsQuery } from "@/hooks/shopping/useShoppingItems";
 import { useCreateShoppingList } from "@/hooks/shopping/useShoppingLists";
 import { useToastContext } from "@/hooks/context/useToastContext";
+import { useT } from "@/hooks/useT";
 import { ShoppingCart, ListTodo, ChevronRight, Plus, Calendar, DollarSign, Package } from "lucide-react";
 import { useState } from "react";
 
 export default function SummaryCards() {
   const navigate = useNavigate();
+  const { t } = useT();
   const { shoppingLists, currentList } = useShoppingContext();
   const { currentTaskList, currentTaskListId } = useTaskContext();
   const { mainListId, defaultShoppingListId } = usePreferencesContext();
@@ -34,12 +36,12 @@ export default function SummaryCards() {
 
     setIsCreatingList(true);
     try {
-      const listName = `Lista ${new Date().toLocaleDateString()}`;
+      const listName = t("dashboard.listName", { date: new Date().toLocaleDateString() });
       await createShoppingListMutation.mutateAsync({ name: listName });
-      showToast("success", "Lista zakupów została utworzona!");
+      showToast("success", t("dashboard.listCreated"));
       navigate("/shopping");
     } catch {
-      showToast("error", "Nie udało się utworzyć listy zakupów");
+      showToast("error", t("dashboard.listCreationFailed"));
     } finally {
       setIsCreatingList(false);
     }
@@ -48,7 +50,7 @@ export default function SummaryCards() {
   const quickActions = [
     {
       icon: Plus,
-      label: "Dodaj zadanie",
+      label: t("dashboard.addTask"),
       color: "blue",
       onClick: () => navigate("/tasks"),
       bgColor: "bg-blue-50 hover:bg-blue-100",
@@ -56,7 +58,7 @@ export default function SummaryCards() {
     },
     {
       icon: Calendar,
-      label: "Nowe wydarzenie",
+      label: t("dashboard.newEvent"),
       color: "green",
       onClick: () => navigate("/calendar"),
       bgColor: "bg-green-50 hover:bg-green-100",
@@ -64,7 +66,7 @@ export default function SummaryCards() {
     },
     {
       icon: Package,
-      label: "Lista zakupów",
+      label: t("dashboard.shoppingList"),
       color: "purple",
       onClick: handleCreateShoppingList,
       bgColor: "bg-purple-50 hover:bg-purple-100",
@@ -73,7 +75,7 @@ export default function SummaryCards() {
     },
     {
       icon: DollarSign,
-      label: "Nowa płatność",
+      label: t("dashboard.newPayment"),
       color: "yellow",
       onClick: () => navigate("/payments"),
       bgColor: "bg-yellow-50 hover:bg-yellow-100",
@@ -85,7 +87,7 @@ export default function SummaryCards() {
     <div className="space-y-4">
       {/* Quick Actions Section */}
       <div className="bg-bg-alt rounded-lg p-4 md:p-6 border border-gray-200">
-        <h2 className="text-lg font-semibold text-text mb-4">Szybkie akcje</h2>
+        <h2 className="text-lg font-semibold text-text mb-4">{t("dashboard.quickActions")}</h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {quickActions.map((action, index) => {
             const Icon = action.icon;
@@ -113,9 +115,9 @@ export default function SummaryCards() {
                 <ShoppingCart className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="font-medium text-text">Lista zakupów</p>
+                <p className="font-medium text-text">{t("dashboard.shoppingList")}</p>
                 <p className="text-sm text-gray-500">
-                  {shoppingPending === 0 ? "Wszystko kupione!" : `${shoppingPending} produktów`}
+                  {shoppingPending === 0 ? t("dashboard.allBought") : t("dashboard.productsCount", { count: shoppingPending })}
                 </p>
               </div>
             </div>
@@ -135,9 +137,9 @@ export default function SummaryCards() {
                 <ListTodo className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="font-medium text-text">Zadania</p>
+                <p className="font-medium text-text">{t("dashboard.tasks")}</p>
                 <p className="text-sm text-gray-500">
-                  {tasksPending === 0 ? "Wszystko zrobione!" : `${tasksPending} otwartych`}
+                  {tasksPending === 0 ? t("dashboard.allDone") : t("dashboard.openTasks", { count: tasksPending })}
                 </p>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus, Edit3 } from "lucide-react";
+import { useT } from "@/hooks/useT";
 
 const predefinedColors = [
   "#EF4444",
@@ -27,6 +28,7 @@ const predefinedColors = [
 import type { LabelFormProps } from "@/data/Utils/Components/UtilComponentInterfaces";
 
 export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, loading }: LabelFormProps) {
+  const { t } = useT();
   const [formData, setFormData] = useState({
     name: initialLabel?.name || "",
     color: initialLabel?.color || "#3B82F6",
@@ -59,8 +61,8 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
     onCancel();
   };
 
-  const title = mode === "create" ? "Utwórz nową etykietę" : "Edytuj etykietę";
-  const submitText = mode === "create" ? "Utwórz" : "Zapisz";
+  const title = mode === "create" ? t("labels.form.createTitle") : t("labels.form.editTitle");
+  const submitText = mode === "create" ? t("labels.form.create") : t("labels.form.save");
   const SubmitIcon = mode === "create" ? Plus : Edit3;
 
   return (
@@ -69,32 +71,32 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700  mb-2">Nazwa etykiety</label>
+          <label className="block text-sm font-medium text-gray-700  mb-2">{t("labels.form.name")}</label>
           <input
             type="text"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder={mode === "create" ? "Wprowadź nazwę etykiety..." : ""}
+            placeholder={mode === "create" ? t("labels.form.namePlaceholder") : ""}
             className="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-text  focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700  mb-2">
-            Opis {mode === "create" ? "(opcjonalny)" : ""}
+            {mode === "create" ? t("labels.form.descriptionOptional") : t("labels.form.description")}
           </label>
           <input
             type="text"
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            placeholder={mode === "create" ? "Krótki opis etykiety..." : ""}
+            placeholder={mode === "create" ? t("labels.form.descriptionPlaceholder") : ""}
             className="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-text  focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
       </div>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700  mb-2">Kolor etykiety</label>
+        <label className="block text-sm font-medium text-gray-700  mb-2">{t("labels.form.color")}</label>
         <div className="flex flex-wrap gap-2 mb-3">
           {predefinedColors.map((color) => (
             <button
@@ -126,7 +128,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
         <button
           onClick={handleCancel}
           className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors duration-200">
-          Anuluj
+          {t("common.cancel")}
         </button>
       </div>
     </div>

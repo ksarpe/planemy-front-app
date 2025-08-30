@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
 import { useCalendarContext } from "@/hooks/context/useCalendarContext";
 import { useElementPosition } from "@/hooks/useElementPosition";
+import { useT } from "@/hooks/useT";
 import {
   format,
   startOfMonth,
@@ -19,6 +20,7 @@ import { EventInterface } from "@/data/Calendar/events";
 
 export default function MonthView() {
   const { currentDate, events } = useCalendarContext();
+  const { t } = useT();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showQuickCreator, setShowQuickCreator] = useState(false);
   const [elementPosition, setElementPosition] = useState({ x: 0, y: 0, width: 0, height: 0 });
@@ -140,7 +142,15 @@ export default function MonthView() {
     return [previewItem, ...dayEvents];
   };
 
-  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const weekDays = [
+    t("calendar.weekdays.short.monday"),
+    t("calendar.weekdays.short.tuesday"),
+    t("calendar.weekdays.short.wednesday"),
+    t("calendar.weekdays.short.thursday"),
+    t("calendar.weekdays.short.friday"),
+    t("calendar.weekdays.short.saturday"),
+    t("calendar.weekdays.short.sunday")
+  ];
 
   return (
     <div className="h-full flex flex-col overflow-hidden">

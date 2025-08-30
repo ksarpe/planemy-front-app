@@ -2,7 +2,7 @@ import { usePaymentsContext } from "@/hooks/context/usePaymentsContext";
 import { usePayments } from "@/hooks/payments";
 import { useState } from "react";
 import { AddPaymentModal, PaymentSection, PaymentSummary, categorizePayments } from "@/components/ui/Payments";
-import { Plus, TrendingUp, DollarSign, AlertTriangle, Clock, Calendar } from "lucide-react";
+import { Plus, TrendingUp, DollarSign} from "lucide-react";
 import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
 import { useT } from "@/hooks/useT";
 
@@ -80,41 +80,40 @@ export default function Payments() {
               <PaymentSection
                 title={t("dashboard.urgent")}
                 payments={overduePayments}
-                icon={AlertTriangle}
                 emptyMessage={t("payments.noOverduePayments")}
                 expandedPaymentId={expandedPaymentId}
                 onToggleExpand={handleToggleExpand}
-                isImportant={true}
+                textColor="text-red-400 bg-red-100/80"
               />
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
                 {/* This Week */}
                 <PaymentSection
                   title={t("payments.thisWeek") + thisWeekTitle}
                   payments={upcomingThisWeek}
-                  icon={Clock}
                   emptyMessage={t("payments.noPaymentsThisWeek")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}
+                  textColor="text-yellow-600 bg-yellow-100/80"
                 />
 
                 {/* Next Week */}
                 <PaymentSection
                   title={t("payments.nextWeek") + nextWeekTitle}
                   payments={upcomingNextWeek}
-                  icon={Calendar}
                   emptyMessage={t("payments.noPaymentsNextWeek")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}
+                  textColor="text-blue-600 bg-blue-100/80"
                 />
 
                 {/* Remaining - Later */}
                 <PaymentSection
                   title={t("payments.inTheFuture")}
                   payments={remainingPayments}
-                  icon={Calendar}
                   emptyMessage={t("payments.noPaymentsInFuture")}
                   expandedPaymentId={expandedPaymentId}
                   onToggleExpand={handleToggleExpand}
+                  textColor="text-green-600 bg-green-100/80"
                 />
               </div>
             </>

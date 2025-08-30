@@ -4,19 +4,17 @@ import type { PaymentSectionProps } from "@/data/Payments/Components/PaymentComp
 export const PaymentSection = ({
   title,
   payments,
-  icon: Icon,
   emptyMessage,
   expandedPaymentId,
   onToggleExpand,
-  isImportant = false,
+  textColor,
 }: PaymentSectionProps) => {
   if (payments.length === 0 && !emptyMessage) return null;
 
   return (
-    <div className={`bg-bg rounded-lg p-4 shadow-md border border-bg-alt ${isImportant ? 'bg-negative/20' : ''} dark:bg-bg-dark dark:border-bg-alt-dark`}>
+    <div className={`bg-bg rounded-lg p-4 shadow-md border border-bg-alt`}>
       <div className="flex items-center gap-2 mb-3">
-        <Icon size={18} className="text-primary" />
-        <h3 className="font-medium text-text">{title}</h3>
+        <h3 className={`text-lg ${textColor} p-1 rounded-md shadow-sm`}>{title}</h3>
       </div>
 
       {payments.length === 0 ? (
