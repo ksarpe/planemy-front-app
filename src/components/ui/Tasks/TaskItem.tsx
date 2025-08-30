@@ -166,7 +166,7 @@ export default function TaskItem({ task }: TaskItemProps) {
                         </div>
                       </BasicDropdownItem>
                     ))}
-                    <BasicDropdownItem 
+                    <BasicDropdownItem
                       icon={Plus} 
                       onClick={handleCreateLabel}
                       separator={true}
