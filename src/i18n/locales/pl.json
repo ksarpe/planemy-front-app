@@ -126,6 +126,7 @@
     "ok": "OK",
     "quickActions": "Szybkie akcje",
     "addTask": "Dodaj zadanie",
+    "addTaskDesc": "Utwórz nowe zadanie natychmiast",
     "newEvent": "Nowe wydarzenie",
     "shoppingList": "Lista zakupów",
     "newPayment": "Nowa płatność",
@@ -133,6 +134,10 @@
     "upcomingEvents": "Nadchodzące wydarzenia",
     "nextEvent": "Następne wydarzenie",
     "addEvent": "Dodaj wydarzenie",
+    "addEventDesc": "Zaplanuj nowe wydarzenie szybko",
+    "shoppingListDesc": "Utwórz nową listę zakupów",
+    "newPaymentDesc": "Ustaw nowe przypomnienie o płatności",
+    "quickTaskTitle": "Szybkie dodawanie zadania",
     "seeMore": "Zobacz {{count}} więcej...",
     "seeAllInCalendar": "Zobacz wszystkie w kalendarzu",
     "noUpcomingEvents": "Brak nadchodzących wydarzeń w następnych dwóch miesiącach",
@@ -316,7 +321,6 @@
       "title": "Masz problem lub pomysł na ulepszenie?",
       "description": "Skorzystaj z naszego systemu feedbacku, aby zgłosić błędy lub zaproponować nowe funkcje.",
       "clickHere": "Kliknij na ten baner!"
-    },
     }
   },
   "tasks": {

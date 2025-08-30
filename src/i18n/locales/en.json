@@ -126,6 +126,7 @@
     "ok": "OK",
     "quickActions": "Quick Actions",
     "addTask": "Add task",
+    "addTaskDesc": "Create a new task instantly",
     "newEvent": "New event",
     "shoppingList": "Shopping list",
     "newPayment": "New payment",
@@ -133,6 +134,10 @@
     "upcomingEvents": "Upcoming Events",
     "nextEvent": "Next event",
     "addEvent": "Add event",
+    "addEventDesc": "Schedule a new event quickly",
+    "shoppingListDesc": "Create a new shopping list",
+    "newPaymentDesc": "Set up a new payment reminder",
+    "quickTaskTitle": "Quick Add Task",
     "seeMore": "See {{count}} more...",
     "seeAllInCalendar": "See all in calendar",
     "noUpcomingEvents": "No upcoming events in the next two months",
@@ -316,7 +321,6 @@
       "title": "Have a problem or idea for improvement?",
       "description": "Use our feedback system to report bugs or suggest new features.",
       "clickHere": "Click this banner!"
-    },
     }
   },
   "tasks": {
