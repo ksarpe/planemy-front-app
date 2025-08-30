@@ -4,12 +4,10 @@ import {
   doc,
   addDoc,
   updateDoc,
-  deleteDoc,
   query,
   where,
   onSnapshot,
   Timestamp,
-  getDocs,
 } from "firebase/firestore";
 import { db } from "./config";
 import { EventInterface, RecurrenceRule } from "@/data/Calendar/events";
@@ -72,37 +70,6 @@ export const updateEvent = async (eventId: string, updates: Partial<EventInterfa
     });
   } catch (error) {
     console.error("Error updating event:", error);
-    throw error;
-  }
-};
-
-// Delete an event
-export const deleteEvent = async (eventId: string): Promise<void> => {
-  try {
-    await deleteDoc(doc(db, "events", eventId));
-    console.log("Event deleted:", eventId);
-  } catch (error) {
-    console.error("Error deleting event:", error);
-    throw error;
-  }
-};
-
-// Delete recurring event series
-export const deleteRecurringSeries = async (originalEventId: string, userId: string): Promise<void> => {
-  try {
-    const eventsRef = collection(db, "events");
-    const q = query(eventsRef, where("userId", "==", userId), where("originalEventId", "==", originalEventId));
-
-    const snapshot = await getDocs(q);
-    const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
-
-    // Also delete the original event
-    await deleteDoc(doc(db, "events", originalEventId));
-    await Promise.all(deletePromises);
-
-    console.log("Recurring series deleted:", originalEventId);
-  } catch (error) {
-    console.error("Error deleting recurring series:", error);
     throw error;
   }
 };

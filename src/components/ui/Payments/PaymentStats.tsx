@@ -3,8 +3,6 @@ import { getDaysUntilPayment } from "@/api/payments";
 import { endOfWeek, startOfWeek, isWithinInterval, addWeeks, parseISO } from "date-fns";
 import type { CategorizedPayments } from "@/data/Payments/Components/PaymentComponentInterfaces";
 
-export { type CategorizedPayments } from "@/data/Payments/Components/PaymentComponentInterfaces";
-
 export const categorizePayments = (payments: PaymentInterface[]): CategorizedPayments => {
   const totalMonthlyAmount = payments.filter((p) => p.cycle === "monthly").reduce((sum, p) => sum + p.amount, 0);
 

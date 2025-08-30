@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@/api/payments";
 import { format } from "date-fns";
-import { EditableText } from "../Common/EditableText";
+import { EditableText } from "@/components/ui/Common/EditableText";
 import { useTranslation } from "react-i18next";
 import type { PaymentDetailsPanelProps } from "@/data/Payments/Components/PaymentComponentInterfaces";
 
