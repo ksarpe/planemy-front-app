@@ -260,7 +260,7 @@
     },
     "categories": {
       "fruitsAndVegetables": "Fruits and Vegetables",
-      "meatAndFish": "Meat and Fish", 
+      "meatAndFish": "Meat and Fish",
       "dairy": "Dairy",
       "bread": "Bread",
       "beverages": "Beverages",
@@ -309,7 +309,7 @@
     "status": {
       "pending": "Pending",
       "accepted": "Planned",
-      "resolved": "Implemented", 
+      "resolved": "Implemented",
       "unknown": "Unknown"
     },
     "banner": {
@@ -317,7 +317,7 @@
       "description": "Use our feedback system to report bugs or suggest new features.",
       "clickHere": "Click this banner!"
     },
-    "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application."
+    }
   },
   "tasks": {
     "loading": {
@@ -414,7 +414,7 @@
     "weekdays": {
       "short": {
         "monday": "Mon",
-        "tuesday": "Tue", 
+        "tuesday": "Tue",
         "wednesday": "Wed",
         "thursday": "Thu",
         "friday": "Fri",

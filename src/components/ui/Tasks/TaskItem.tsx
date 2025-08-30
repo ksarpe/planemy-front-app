@@ -170,8 +170,8 @@ export default function TaskItem({ task }: TaskItemProps) {
                       icon={Plus} 
                       onClick={handleCreateLabel}
                       separator={true}
-                      variant="blue">
                       {t("tasks.item.labels.create")}
+                      variant="green">
                     </BasicDropdownItem>
                   </>
                 ) : (
@@ -179,8 +179,8 @@ export default function TaskItem({ task }: TaskItemProps) {
                   <BasicDropdownItem 
                     icon={Plus} 
                     onClick={handleCreateLabel}
-                    variant="blue">
                     {t("tasks.item.labels.create")}
+                    variant="green">
                   </BasicDropdownItem>
                 )}
               </BasicDropdown>
