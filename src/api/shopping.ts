@@ -20,6 +20,7 @@ import {
   FavoriteProductInterface,
   ShoppingCategoryInterface,
 } from "@/data/Shopping";
+import { LabelInterface } from "@/data/Utils/interfaces";
 import { useAuthContext } from "../hooks/context/useAuthContext";
 import { useState, useEffect } from "react";
 
@@ -179,13 +180,64 @@ export const getUserShoppingLists = async (userId: string): Promise<ShoppingList
     const q = query(collection(db, "shoppingLists"), where("userId", "==", userId), orderBy("updatedAt", "desc"));
 
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(
+    const lists = querySnapshot.docs.map(
       (doc) =>
         ({
           id: doc.id,
           ...doc.data(),
         } as ShoppingListInterface),
     );
+
+    if (lists.length === 0) {
+      return lists.map((list) => ({ ...list, labels: [] }));
+    }
+
+    // --- Fetch labels for shopping lists similar to tasks ---
+    // Step 1: Get all list IDs
+    const listIds = lists.map((list) => list.id);
+
+    // Step 2: Fetch all label connections for these lists
+    const connectionsCollection = collection(db, "labelConnections");
+    const connectionsQuery = query(
+      connectionsCollection, 
+      where("objectId", "in", listIds),
+      where("objectType", "==", "shopping_list"),
+      where("userId", "==", userId)
+    );
+    const connectionsSnapshot = await getDocs(connectionsQuery);
+    const connections = connectionsSnapshot.docs.map((doc) => doc.data());
+
+    if (connections.length === 0) {
+      return lists.map((list) => ({ ...list, labels: [] }));
+    }
+
+    // Step 3: Get unique label IDs
+    const labelIds = [...new Set(connections.map((conn) => conn.labelId))];
+
+    // Step 4: Fetch full label data
+    const labelsCollection = collection(db, "labels");
+    const labelsQuery = query(labelsCollection, where("id", "in", labelIds));
+    const labelsSnapshot = await getDocs(labelsQuery);
+
+    // Create labels map for easy access
+    const labelsMap = new Map<string, LabelInterface>(
+      labelsSnapshot.docs.map((doc) => [doc.data().id, doc.data() as LabelInterface]),
+    );
+
+    // Step 5: Join everything together
+    return lists.map((list) => {
+      // Find connections for current list
+      const listConnections = connections.filter((conn) => conn.objectId === list.id);
+      // Get full label objects based on connections
+      const listLabels = listConnections
+        .map((conn) => labelsMap.get(conn.labelId))
+        .filter((label): label is LabelInterface => label !== undefined);
+
+      return {
+        ...list,
+        labels: listLabels,
+      };
+    });
   } catch (error) {
     console.error("Error getting shopping lists:", error);
     return [];

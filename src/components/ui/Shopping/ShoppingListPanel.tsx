@@ -1,13 +1,16 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDeleteShoppingList, useUpdateShoppingList } from "@/hooks/shopping/useShoppingLists";
 import { useShoppingListStats } from "@/hooks/shopping/useShoppingListStats";
-import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Check } from "lucide-react";
+import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Check, Tag, Trash } from "lucide-react";
 import type { ShoppingListPanelProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
 import type { ShoppingListInterface } from "@/data/Shopping";
 import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
+import { useLabelContext } from "@/hooks/context/useLabelContext";
 
 function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: ShoppingListPanelProps) {
+  const navigate = useNavigate();
   const deleteList = useDeleteShoppingList();
   const updateList = useUpdateShoppingList();
   const [editingListId, setEditingListId] = useState<string | null>(null);
@@ -16,6 +19,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
   const [listToDelete, setListToDelete] = useState<ShoppingListInterface | null>(null);
   // Using BasicDropdown with portal, so no local dropdown state needed
   const { defaultShoppingListId, updateSettings } = usePreferencesContext();
+  const { labels, createLabelConnection, removeLabelConnection } = useLabelContext();
 
   const handleStartEdit = (list: ShoppingListInterface) => {
     setEditingListId(list.id);
@@ -44,6 +48,10 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
   const handleDeleteClick = (list: ShoppingListInterface) => {
     setListToDelete(list);
     setShowDeleteConfirm(true);
+  };
+
+  const handleCreateLabel = () => {
+    navigate("/labels");
   };
 
   // Derive stats and actions from the hook (keeps Query Client inside hooks)
@@ -110,6 +118,36 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                       ) : (
                         <div>
                           <h4 className="font-medium text-sm truncate">{list.name}</h4>
+                          
+                          {/* Display labels */}
+                          {list.labels && list.labels.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {list.labels.map((label) => (
+                                <div
+                                  key={label.id}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="inline-flex items-center gap-1">
+                                  <BasicDropdown
+                                    trigger={
+                                      <div
+                                        className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full cursor-pointer"
+                                        style={{ backgroundColor: label.color + "20", color: label.color }}>
+                                        <Tag size={10} />
+                                        {label.name}
+                                      </div>
+                                    }
+                                    usePortal={true}>
+                                    <BasicDropdownItem
+                                      icon={Trash}
+                                      variant="red"
+                                      onClick={() => removeLabelConnection(list.id, "shopping_list", label.id)}>
+                                      Usuń etykietę
+                                    </BasicDropdownItem>
+                                  </BasicDropdown>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
 
@@ -156,6 +194,54 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                             <span className="flex items-center">Ustaw jako domyślną</span>
                           </BasicDropdownItem>
                         )}
+                        
+                        {/* Add Labels Dropdown */}
+                        <BasicDropdownItem 
+                          icon={Tag}>
+                          <BasicDropdown
+                            trigger={<span>Etykiety</span>}
+                            align="left"
+                            width="w-64"
+                            closeOnItemClick={true}
+                            usePortal={true}>
+                            
+                            {labels.length > 0 ? (
+                              <>
+                                {labels.map((label) => (
+                                  <BasicDropdownItem
+                                    key={label.id}
+                                    onClick={() => {
+                                      createLabelConnection(list.id, "shopping_list", label.id);
+                                      // Update local list labels if needed
+                                      if (!list.labels) list.labels = [];
+                                      if (!list.labels.some(l => l.id === label.id)) {
+                                        list.labels.push(label);
+                                      }
+                                    }}>
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: label.color }} />
+                                      {label.name}
+                                    </div>
+                                  </BasicDropdownItem>
+                                ))}
+                                <BasicDropdownItem 
+                                  icon={Plus} 
+                                  onClick={handleCreateLabel}
+                                  separator={true}
+                                  variant="blue">
+                                  Utwórz etykietę
+                                </BasicDropdownItem>
+                              </>
+                            ) : (
+                              <BasicDropdownItem 
+                                icon={Plus} 
+                                onClick={handleCreateLabel}
+                                variant="blue">
+                                Utwórz etykietę
+                              </BasicDropdownItem>
+                            )}
+                          </BasicDropdown>
+                        </BasicDropdownItem>
                         <BasicDropdownItem icon={Trash2} variant="red" onClick={() => handleDeleteClick(list)}>
                           Usuń
                         </BasicDropdownItem>
