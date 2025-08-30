@@ -1,9 +1,11 @@
 import { MoreVertical, Users, ArrowBigRightDash } from "lucide-react";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
+import { useTranslation } from "react-i18next";
 import { ActionButton } from "../Common";
 import type { TaskViewHeaderProps } from "@/data/Tasks/interfaces";
 
 export function TaskViewHeader({ onToggleLists, listsOpen }: TaskViewHeaderProps) {
+  const { t } = useTranslation();
   const { currentTaskList } = useTaskContext();
 
   if (!currentTaskList) return null;
@@ -32,7 +34,7 @@ export function TaskViewHeader({ onToggleLists, listsOpen }: TaskViewHeaderProps
             onClick={() => {}}
             icon={ArrowBigRightDash}
             iconSize={24}
-            text="Pomodoro"
+            text={t("tasks.header.pomodoro")}
             color="primary"
             size="lg"
           />
@@ -43,7 +45,7 @@ export function TaskViewHeader({ onToggleLists, listsOpen }: TaskViewHeaderProps
             icon={ArrowBigRightDash}
             justIcon={false}
             iconSize={24}
-            text="Pomodoro"
+            text={t("tasks.header.pomodoro")}
             color="primary"
             size="sm"
           />

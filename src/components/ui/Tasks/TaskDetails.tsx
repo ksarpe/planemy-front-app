@@ -1,12 +1,14 @@
 import EditableText from "@/components/ui/Utils/EditableText";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { useCompleteTask, useDeleteTask, useUpdateTask } from "@/hooks/tasks/useTasks";
+import { useTranslation } from "react-i18next";
 import { Calendar, CheckCircle2, Trash2, PanelRightClose, Trash, Tag } from "lucide-react";
 import { useState } from "react";
 import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
 import { useLabelContext } from "@/hooks/context/useLabelContext";
 
 export default function TaskDetails() {
+  const { t } = useTranslation();
   const { clickedTask, setClickedTask, currentTaskList } = useTaskContext();
   const { removeLabelConnection } = useLabelContext();
 
@@ -37,7 +39,7 @@ export default function TaskDetails() {
   };
 
   const formatDueDate = () => {
-    if (!clickedTask.dueDate || clickedTask.dueDate === "") return "Wybierz termin";
+    if (!clickedTask.dueDate || clickedTask.dueDate === "") return t("tasks.details.selectDueDate");
 
     const daysUntil = getDaysUntilDue()!;
     const dateStr = new Date(clickedTask.dueDate).toLocaleDateString("pl-PL");
@@ -45,13 +47,13 @@ export default function TaskDetails() {
     if (clickedTask.isCompleted) {
       return `${dateStr}`;
     } else if (daysUntil < 0) {
-      return `${dateStr} (${Math.abs(daysUntil)} dni temu)`;
+      return `${dateStr} (${t("tasks.dates.daysAgo", { count: Math.abs(daysUntil) })})`;
     } else if (daysUntil === 0) {
-      return `${dateStr} (dziś)`;
+      return `${dateStr} (${t("tasks.dates.today").toLowerCase()})`;
     } else if (daysUntil === 1) {
-      return `${dateStr} (jutro)`;
+      return `${dateStr} (${t("tasks.dates.tomorrow").toLowerCase()})`;
     } else {
-      return `${dateStr} (za ${daysUntil} dni)`;
+      return `${dateStr} (${t("tasks.dates.inDays", { count: daysUntil }).toLowerCase()})`;
     }
   };
 
@@ -158,7 +160,7 @@ export default function TaskDetails() {
             <EditableText
               value={clickedTask.description || ""}
               onSave={handleUpdateDescription}
-              placeholder="Dodaj opis zadania..."
+              placeholder={t("tasks.details.addDescription")}
             />
           </div>
 

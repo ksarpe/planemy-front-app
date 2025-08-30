@@ -319,6 +319,35 @@
     }
     "seeWhatWeAreWorking": "Zobacz nad czym pracujemy i co zostało już wprowadzone do aplikacji."
   },
+  "tasks": {
+    "loading": {
+      "lists": "Ładowanie list..."
+    },
+    "panel": {
+      "ariaLabel": "Panel list zadań",
+      "title": "Moje listy"
+    },
+    "header": {
+      "pomodoro": "Pomodoro"
+    },
+    "details": {
+      "addDescription": "Dodaj opis zadania...",
+      "selectDueDate": "Wybierz termin"
+    },
+    "dates": {
+      "today": "Dziś",
+      "tomorrow": "Jutro",
+      "yesterday": "Wczoraj",
+      "inDays": "Za {{count}} dni",
+      "daysAgo": "{{count}} dni temu"
+    },
+    "status": {
+      "completed": "Ukończone"
+    },
+    "messages": {
+      "taskDeleted": "Zadanie zostało usunięte!",
+      "allTasksUnchecked": "Odznaczono wszystkie zadania!"
+    }
   "calendar": {
     "today": "Dzisiaj",
     "month": "Miesiąc",
