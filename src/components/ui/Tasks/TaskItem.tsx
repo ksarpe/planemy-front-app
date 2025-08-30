@@ -129,8 +129,8 @@ export default function TaskItem({ task }: TaskItemProps) {
         {/* Status indicators */}
         <div className="flex flex-col items-end gap-3">
           {task.isCompleted && <span className="text-xs text-green-600  font-medium">{t("tasks.status.completed")}</span>}
-          {isOverdue() && <span className="text-xs text-red-600  font-medium">Przeterminowane</span>}
-          {isDueSoon() && <span className="text-xs text-yellow-600  font-medium">Pilne</span>}
+          {isOverdue() && <span className="text-xs text-red-600  font-medium">{t("tasks.item.overdue")}</span>}
+          {isDueSoon() && <span className="text-xs text-yellow-600  font-medium">{t("tasks.item.urgent")}</span>}
 
           {/* If task has no labels, show the button to add labels */}
           {task.labels?.length === 0 && !task.isCompleted ? (
@@ -171,7 +171,7 @@ export default function TaskItem({ task }: TaskItemProps) {
                       onClick={handleCreateLabel}
                       separator={true}
                       variant="blue">
-                      Utwórz etykietę
+                      {t("tasks.item.labels.create")}
                     </BasicDropdownItem>
                   </>
                 ) : (
@@ -180,7 +180,7 @@ export default function TaskItem({ task }: TaskItemProps) {
                     icon={Plus} 
                     onClick={handleCreateLabel}
                     variant="blue">
-                    Utwórz etykietę
+                    {t("tasks.item.labels.create")}
                   </BasicDropdownItem>
                 )}
               </BasicDropdown>
@@ -207,7 +207,7 @@ export default function TaskItem({ task }: TaskItemProps) {
                         icon={Trash}
                         variant="red"
                         onClick={() => removeLabelConnection(task.id, "task", label.id)}>
-                        Usuń etykietę
+                        {t("tasks.item.labels.remove")}
                       </BasicDropdownItem>
                     </BasicDropdown>
                   </div>

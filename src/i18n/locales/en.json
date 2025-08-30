@@ -321,18 +321,65 @@
   },
   "tasks": {
     "loading": {
-      "lists": "Loading lists..."
+      "lists": "Loading lists...",
+      "tasks": "Loading tasks..."
     },
     "panel": {
       "ariaLabel": "Task lists panel",
-      "title": "My lists"
+      "title": "My lists",
+      "default": "Default",
+      "actions": {
+        "editName": "Edit name",
+        "share": "Share", 
+        "setAsDefault": "Set as default",
+        "delete": "Delete"
+      },
+      "empty": {
+        "title": "No task lists",
+        "createFirst": "Create first list"
+      },
+      "deleteConfirmation": {
+        "title": "Delete task list",
+        "message": "Are you sure you want to delete the task list",
+        "confirmButton": "Delete list"
+      }
+    },
+    "list": {
+      "empty": {
+        "title": "No tasks",
+        "newTask": "New task"
+      }
+    },
+    "item": {
+      "overdue": "Overdue",
+      "urgent": "Urgent",
+      "labels": {
+        "create": "Create label",
+        "remove": "Remove label"
+      }
     },
     "header": {
       "pomodoro": "Pomodoro"
     },
     "details": {
       "addDescription": "Add task description...",
-      "selectDueDate": "Select date"
+      "selectDueDate": "Select date",
+      "titlePlaceholder": "Task title...",
+      "dateLabel": "Date",
+      "timeLabel": "Time",
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "removeDueDate": "Remove due date",
+        "markCompleted": "Mark as completed",
+        "markIncomplete": "Mark as incomplete",
+        "delete": "Delete task"
+      },
+      "deleteConfirmation": {
+        "title": "Delete task",
+        "message": "Are you sure you want to delete the task",
+        "confirmButton": "Delete task"
+      }
     },
     "dates": {
       "today": "Today",
@@ -347,6 +394,17 @@
     "messages": {
       "taskDeleted": "Task has been deleted!",
       "allTasksUnchecked": "All tasks unchecked!"
+    },
+    "empty": {
+      "noLists": {
+        "title": "No task lists",
+        "description": "Create your first task list to start organizing.",
+        "createButton": "Create first list"
+      },
+      "noListSelected": {
+        "title": "Select task list",
+        "description": "Select a list from the menu above to view tasks."
+      }
     }
   },
   "calendar": {
