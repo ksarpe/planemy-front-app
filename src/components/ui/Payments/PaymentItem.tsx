@@ -31,10 +31,10 @@ export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentIt
   };
 
   return (
-    <div className={`rounded-md shadow-md transition-all duration-200 bg-bg-alt/50 p-2`}>
+    <div className={`rounded-md shadow-md transition-all duration-200 bg-bg-alt/50`}>
       <div
         onClick={onToggle}
-        className="flex justify-between items-center md:p-4 cursor-pointer hover:bg-bg-hover rounded-md transition-colors">
+        className="flex justify-between items-center md:p-4 cursor-pointer hover:bg-bg-alt/80 rounded-md transition-colors">
         <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
           <div className="text-xl md:text-2xl flex-shrink-0">{getCategoryIcon(payment.category)}</div>
 

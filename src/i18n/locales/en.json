@@ -59,7 +59,30 @@
       "title": "Sharing notifications",
       "description": "Information about shared lists"
     },
-    "noNewNotifications": "No new notifications or invitations"
+    "noNewNotifications": "No new notifications or invitations",
+    "view": {
+      "title": "Notifications",
+      "description": "Manage invitations and view announcements",
+      "loading": "Loading notifications and announcements...",
+      "new": "new",
+      "listInvitations": "List invitations",
+      "allUpToDate": "Everything is up to date!",
+      "noNewNotificationsOrInvitations": "No new notifications or invitations"
+    },
+    "sharing": {
+      "newSharing": "New sharing",
+      "hasBeenShared": "has been shared",
+      "permissions": "Permissions",
+      "read": "Read",
+      "edit": "Edit",
+      "accept": "Accept",
+      "reject": "Reject"
+    },
+    "objectTypes": {
+      "task_list": "Task list",
+      "shopping_list": "Shopping list",
+      "object": "Object"
+    }
   },
   "security": {
     "title": "Security",
@@ -190,7 +213,29 @@
     }
   },
   "labels": {
-    "noLabels": "No labels"
+    "title": "Label Manager",
+    "yourLabels": "Your Labels",
+    "noLabels": "No labels",
+    "newLabel": "New label",
+    "createFirstLabel": "Create first label",
+    "startOrganizing": "Start organizing your tasks by creating the first label",
+    "form": {
+      "createTitle": "Create new label",
+      "editTitle": "Edit label",
+      "create": "Create",
+      "save": "Save",
+      "name": "Label name",
+      "namePlaceholder": "Enter label name...",
+      "description": "Description",
+      "descriptionOptional": "Description (optional)",
+      "descriptionPlaceholder": "Short label description...",
+      "color": "Label color"
+    },
+    "actions": {
+      "edit": "Edit label",
+      "delete": "Delete label",
+      "confirmDelete": "Are you sure you want to delete this label?"
+    }
   },
   "feedback": {
     "seeWhatWeAreWorking": "See what we are working on and what has already been introduced to the application."
@@ -221,5 +266,14 @@
       "networkRequestFailed": "Network connection error.",
       "unknownError": "An unexpected error occurred. Please try again."
     }
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "tasks": "Tasks",
+    "shopping": "Shopping",
+    "payments": "Payments",
+    "labels": "Labels",
+    "notifications": "Notifications",
+    "feedback": "Feedback"
   }
 }
