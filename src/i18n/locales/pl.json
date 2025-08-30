@@ -126,7 +126,7 @@
     "ok": "OK",
     "quickActions": "Szybkie akcje",
     "addTask": "Dodaj zadanie",
-    "newEvent": "Nowe wydarzenie", 
+    "newEvent": "Nowe wydarzenie",
     "shoppingList": "Lista zakupów",
     "newPayment": "Nowa płatność",
     "tasks": "Zadania",
@@ -260,7 +260,7 @@
     },
     "categories": {
       "fruitsAndVegetables": "Owoce i warzywa",
-      "meatAndFish": "Mięso i ryby", 
+      "meatAndFish": "Mięso i ryby",
       "dairy": "Nabiał",
       "bread": "Pieczywo",
       "beverages": "Napoje",
@@ -308,7 +308,7 @@
     "featureImplemented": "Ta funkcja została wprowadzona do aplikacji",
     "status": {
       "pending": "Oczekuje",
-      "accepted": "Planowane", 
+      "accepted": "Planowane",
       "resolved": "Wprowadzone",
       "unknown": "Nieznany"
     },
@@ -317,7 +317,6 @@
       "description": "Skorzystaj z naszego systemu feedbacku, aby zgłosić błędy lub zaproponować nowe funkcje.",
       "clickHere": "Kliknij na ten baner!"
     }
-    "seeWhatWeAreWorking": "Zobacz nad czym pracujemy i co zostało już wprowadzone do aplikacji."
   },
   "tasks": {
     "loading": {
@@ -348,6 +347,7 @@
       "taskDeleted": "Zadanie zostało usunięte!",
       "allTasksUnchecked": "Odznaczono wszystkie zadania!"
     }
+  },
   "calendar": {
     "today": "Dzisiaj",
     "month": "Miesiąc",
@@ -355,7 +355,7 @@
     "weekdays": {
       "short": {
         "monday": "Pon",
-        "tuesday": "Wt", 
+        "tuesday": "Wt",
         "wednesday": "Śr",
         "thursday": "Czw",
         "friday": "Pt",
@@ -377,6 +377,7 @@
       "november": "Listopad",
       "december": "Grudzień"
     }
+  },
   "auth": {
     "login": "Zaloguj się",
     "register": "Zarejestruj się",
@@ -403,6 +404,7 @@
       "networkRequestFailed": "Błąd połączenia z siecią.",
       "unknownError": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
     }
+  },
   "sidebar": {
     "dashboard": "Panel",
     "calendar": "Kalendarz",
@@ -411,6 +413,6 @@
     "payments": "Płatności",
     "labels": "Etykiety",
     "notifications": "Powiadomienia",
-    "feedback": "Feedback"
+    "feedback": "Opinie"
   }
 }
