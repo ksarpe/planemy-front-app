@@ -316,22 +316,70 @@
       "title": "Masz problem lub pomysł na ulepszenie?",
       "description": "Skorzystaj z naszego systemu feedbacku, aby zgłosić błędy lub zaproponować nowe funkcje.",
       "clickHere": "Kliknij na ten baner!"
+    },
     }
   },
   "tasks": {
     "loading": {
-      "lists": "Ładowanie list..."
+      "lists": "Ładowanie list...",
+      "tasks": "Ładowanie zadań..."
     },
     "panel": {
       "ariaLabel": "Panel list zadań",
-      "title": "Moje listy"
+      "title": "Moje listy",
+      "default": "Domyślna",
+      "actions": {
+        "editName": "Edytuj nazwę",
+        "share": "Udostępnij", 
+        "setAsDefault": "Ustaw jako domyślna",
+        "delete": "Usuń"
+      },
+      "empty": {
+        "title": "Brak list zadań",
+        "createFirst": "Utwórz pierwszą listę"
+      },
+      "deleteConfirmation": {
+        "title": "Usuń listę zadań",
+        "message": "Czy na pewno chcesz usunąć listę zadań",
+        "confirmButton": "Usuń listę"
+      }
+    },
+    "list": {
+      "empty": {
+        "title": "Brak zadań",
+        "newTask": "Nowe zadanie"
+      }
+    },
+    "item": {
+      "overdue": "Przeterminowane",
+      "urgent": "Pilne",
+      "labels": {
+        "create": "Utwórz etykietę",
+        "remove": "Usuń etykietę"
+      }
     },
     "header": {
       "pomodoro": "Pomodoro"
     },
     "details": {
       "addDescription": "Dodaj opis zadania...",
-      "selectDueDate": "Wybierz termin"
+      "selectDueDate": "Wybierz termin",
+      "titlePlaceholder": "Tytuł zadania...",
+      "dateLabel": "Data",
+      "timeLabel": "Godzina",
+      "actions": {
+        "cancel": "Anuluj",
+        "save": "Zapisz",
+        "removeDueDate": "Usuń termin",
+        "markCompleted": "Oznacz jako ukończone",
+        "markIncomplete": "Oznacz jako nieukończone",
+        "delete": "Usuń zadanie"
+      },
+      "deleteConfirmation": {
+        "title": "Usuń zadanie",
+        "message": "Czy na pewno chcesz usunąć zadanie",
+        "confirmButton": "Usuń zadanie"
+      }
     },
     "dates": {
       "today": "Dziś",
@@ -346,6 +394,17 @@
     "messages": {
       "taskDeleted": "Zadanie zostało usunięte!",
       "allTasksUnchecked": "Odznaczono wszystkie zadania!"
+    },
+    "empty": {
+      "noLists": {
+        "title": "Brak list zadań",
+        "description": "Utwórz swoją pierwszą listę zadań, aby rozpocząć organizację.",
+        "createButton": "Utwórz pierwszą listę"
+      },
+      "noListSelected": {
+        "title": "Wybierz listę zadań",
+        "description": "Wybierz listę z menu powyżej, aby wyświetlić zadania."
+      }
     }
   },
   "calendar": {

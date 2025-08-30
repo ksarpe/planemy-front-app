@@ -140,7 +140,7 @@ export default function TaskDetails() {
                     icon={Trash}
                     variant="red"
                     onClick={() => removeLabelConnection(clickedTask.id, "task", label.id)}>
-                    Usuń etykietę
+                    {t("tasks.item.labels.remove")}
                   </BasicDropdownItem>
                 </BasicDropdown>
               </div>
@@ -152,7 +152,7 @@ export default function TaskDetails() {
         <div className="flex-1 space-y-6">
           {/* Title */}
           <div>
-            <EditableText value={clickedTask.title} onSave={handleUpdateTitle} placeholder="Tytuł zadania..." />
+            <EditableText value={clickedTask.title} onSave={handleUpdateTitle} placeholder={t("tasks.details.titlePlaceholder")} />
           </div>
 
           {/* Description */}
@@ -181,7 +181,7 @@ export default function TaskDetails() {
                 {/* Data i godzina w jednym wierszu */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
-                    <label className="block text-xs font-medium text-gray-600 ">Data</label>
+                    <label className="block text-xs font-medium text-gray-600 ">{t("tasks.details.dateLabel")}</label>
                     <input
                       type="date"
                       value={tempDate}
@@ -197,7 +197,7 @@ export default function TaskDetails() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-xs font-medium text-gray-600 ">Godzina</label>
+                    <label className="block text-xs font-medium text-gray-600 ">{t("tasks.details.timeLabel")}</label>
                     <input
                       type="time"
                       value={tempTime}
@@ -218,17 +218,17 @@ export default function TaskDetails() {
                   <button
                     onClick={() => setIsEditingDate(false)}
                     className="flex-1 px-3 py-2 text-sm bg-gray-100  text-gray-700  rounded-md hover:bg-gray-200  transition-colors">
-                    Anuluj
+                    {t("tasks.details.actions.cancel")}
                   </button>
                   <button
                     onClick={updateDateFromTemp}
                     className="flex-1 px-3 py-2 text-sm bg-green-100  text-green-700  rounded-md hover:bg-green-200  transition-colors">
-                    Zapisz
+                    {t("tasks.details.actions.save")}
                   </button>
                   <button
                     onClick={handleRemoveDueDate}
                     className="flex-1 px-3 py-2 text-sm bg-red-100  text-red-700  rounded-md hover:bg-red-200  transition-colors">
-                    Usuń termin
+                    {t("tasks.details.actions.removeDueDate")}
                   </button>
                 </div>
               </div>
@@ -248,7 +248,7 @@ export default function TaskDetails() {
           : "bg-success text-white hover:bg-success-hover" // Stan: Do zrobienia (akcja główna)
       }`}>
             <CheckCircle2 size={18} />
-            {clickedTask.isCompleted ? "Oznacz jako nieukończone" : "Oznacz jako ukończone"}
+            {clickedTask.isCompleted ? t("tasks.details.actions.markIncomplete") : t("tasks.details.actions.markCompleted")}
           </button>
 
           {/* Delete */}
@@ -258,7 +258,7 @@ export default function TaskDetails() {
                bg-red-50 text-red-600 hover:bg-red-100
                  ">
             <Trash2 size={16} />
-            Usuń zadanie
+            {t("tasks.details.actions.delete")}
           </button>
         </div>
       </div>
@@ -267,10 +267,10 @@ export default function TaskDetails() {
         isOpen={showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(false)}
         onConfirm={handleDelete}
-        title="Usuń zadanie"
-        message="Czy na pewno chcesz usunąć zadanie"
+        title={t("tasks.details.deleteConfirmation.title")}
+        message={t("tasks.details.deleteConfirmation.message")}
         itemName={clickedTask.title}
-        confirmButtonText="Usuń zadanie"
+        confirmButtonText={t("tasks.details.deleteConfirmation.confirmButton")}
       />
     </div>
   );
