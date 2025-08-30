@@ -35,11 +35,11 @@ export default function Payments() {
 
   return (
     <div className="flex h-full overflow-auto scrollbar-hide p-2 md:p-4">
-      <div className="w-full flex flex-col gap-4 md:gap-6 p-4 md:p-6">
+      <div className="w-full flex flex-col gap-4 md:gap-6 px-2 py-4 md:p-6">
         {/* Header with Stats */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
           <div className="flex-1">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="flex flex-col md:grid md:grid-cols-4 gap-4">
               {/* Total Monthly */}
               <div className="bg-bg rounded-md p-3 md:p-4 shadow-md border border-bg-alt">
                 <div className="flex items-center gap-2 text-success mb-1">
@@ -48,6 +48,12 @@ export default function Payments() {
                 </div>
                 <div className="text-lg md:text-2xl font-bold text-text">{totalMonthlyAmount.toFixed(2)} PLN</div>
               </div>
+              
+              {/* Payment Summary - responsive positioning */}
+              <div className="md:col-span-2 flex md:justify-center md:items-center">
+                <PaymentSummary categorizedPayments={categorizedPayments} />
+              </div>
+              
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="flex items-center gap-2 p-2 bg-primary text-white rounded-md hover:opacity-90 transition-opacity w-full md:w-auto justify-center shadow-md">
@@ -57,9 +63,6 @@ export default function Payments() {
             </div>
           </div>
         </div>
-
-        {/* Quick Stats Summary */}
-        <PaymentSummary categorizedPayments={categorizedPayments} />
 
         {/* Categorized Payments List */}
         <div className="space-y-4">
