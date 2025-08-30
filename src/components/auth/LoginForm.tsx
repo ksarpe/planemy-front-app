@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useToastContext } from "@/hooks/context/useToastContext";
 import { useLogin, useRegister } from "@/hooks/auth/useAuth";
+import { useT } from "@/hooks/useT";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { showToast } = useToastContext();
+  const { t } = useT();
 
   // New API-based auth hooks
   const loginMutation = useLogin();
@@ -16,7 +18,7 @@ export const LoginForm = () => {
     e.preventDefault();
 
     if (!email || !password) {
-      showToast("error", "Wypełnij wszystkie pola");
+      showToast("error", t("auth.fillAllFields"));
       return;
     }
 
@@ -27,7 +29,7 @@ export const LoginForm = () => {
           username: email,
           password: password,
         });
-        showToast("success", "Pomyślnie zalogowano!");
+        showToast("success", t("auth.loginSuccess"));
         console.log("Login result:", result);
       } else {
         // Use new API register
@@ -35,13 +37,13 @@ export const LoginForm = () => {
           username: email,
           password: password,
         });
-        showToast("success", "Pomyślnie zarejestrowano!");
+        showToast("success", t("auth.registerSuccess"));
         console.log("Register result:", result);
         // After successful registration, switch to login mode
         setIsLoginMode(true);
       }
     } catch (error) {
-      showToast("error", error instanceof Error ? error.message : "Błąd operacji");
+      showToast("error", error instanceof Error ? error.message : t("auth.operationError"));
     }
   };
 
@@ -50,13 +52,13 @@ export const LoginForm = () => {
   return (
     <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-md mx-auto">
       <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-        {isLoginMode ? "Zaloguj się" : "Zarejestruj się"}
+        {isLoginMode ? t("auth.login") : t("auth.register")}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
+            {t("auth.email")}
           </label>
           <input
             type="email"
@@ -64,7 +66,7 @@ export const LoginForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Wprowadź swój email"
+            placeholder={t("auth.emailPlaceholder")}
             required
             autoComplete="email"
           />
@@ -72,7 +74,7 @@ export const LoginForm = () => {
 
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Hasło
+            {t("auth.password")}
           </label>
           <input
             type="password"
@@ -80,7 +82,7 @@ export const LoginForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Wprowadź swoje hasło"
+            placeholder={t("auth.passwordPlaceholder")}
             required
             autoComplete={isLoginMode ? "current-password" : "new-password"}
           />
@@ -92,20 +94,20 @@ export const LoginForm = () => {
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
           {isLoading
             ? isLoginMode
-              ? "Logowanie..."
-              : "Rejestrowanie..."
+              ? t("auth.loggingIn")
+              : t("auth.registering")
             : isLoginMode
-            ? "Zaloguj się"
-            : "Zarejestruj się"}
+            ? t("auth.login")
+            : t("auth.register")}
         </button>
       </form>
 
       <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600">{isLoginMode ? "Nie masz konta?" : "Masz już konto?"}</p>
+        <p className="text-sm text-gray-600">{isLoginMode ? t("auth.noAccount") : t("auth.hasAccount")}</p>
         <button
           onClick={() => setIsLoginMode(!isLoginMode)}
           className="mt-2 text-blue-600 hover:text-blue-800 font-medium transition-colors">
-          {isLoginMode ? "Zarejestruj się" : "Zaloguj się"}
+          {isLoginMode ? t("auth.register") : t("auth.login")}
         </button>
       </div>
     </div>

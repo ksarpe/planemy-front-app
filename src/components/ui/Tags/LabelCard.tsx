@@ -1,9 +1,12 @@
 import { Tag, Edit3, Trash2 } from "lucide-react";
 import type { LabelCardProps } from "@/data/Utils/Components/UtilComponentInterfaces";
+import { useT } from "@/hooks/useT";
 
 export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
+  const { t } = useT();
+  
   const handleDelete = () => {
-    if (window.confirm("Czy na pewno chcesz usunąć tę etykietę?")) {
+    if (window.confirm(t("labels.actions.confirmDelete"))) {
       onDelete(label.id);
     }
   };
@@ -19,13 +22,13 @@ export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
           <button
             onClick={() => onEdit(label)}
             className="p-1 text-gray-500 hover:text-blue-600 transition-colors duration-200"
-            title="Edytuj etykietę">
+            title={t("labels.actions.edit")}>
             <Edit3 size={14} />
           </button>
           <button
             onClick={handleDelete}
             className="p-1 text-gray-500 hover:text-red-600 transition-colors duration-200"
-            title="Usuń etykietę">
+            title={t("labels.actions.delete")}>
             <Trash2 size={14} />
           </button>
         </div>

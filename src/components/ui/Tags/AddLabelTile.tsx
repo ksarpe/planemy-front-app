@@ -1,7 +1,10 @@
 import { Plus } from "lucide-react";
 import type { AddLabelTileProps } from "@/data/Utils/Components/UtilComponentInterfaces";
+import { useT } from "@/hooks/useT";
 
 export default function AddLabelTile({ onClick, loading }: AddLabelTileProps) {
+  const { t } = useT();
+  
   return (
     <button
       onClick={onClick}
@@ -10,7 +13,7 @@ export default function AddLabelTile({ onClick, loading }: AddLabelTileProps) {
       <div className="flex items-center justify-center">
         <h3 className="font-medium text-gray-600  group-hover:text-primary transition-colors duration-200 flex items-center gap-2">
           <Plus size={16} />
-          Nowa etykieta
+          {t("labels.newLabel")}
         </h3>
       </div>
     </button>
