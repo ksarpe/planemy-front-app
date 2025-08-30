@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { Calendar, ListTodo, ShoppingCart, Tag, Bell, BookOpenCheck, Banknote, LayoutGrid } from "lucide-react";
 import type { SidebarNavProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
+import { useT } from "@/hooks/useT";
 
 export type { SidebarNavProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
 
@@ -12,17 +13,19 @@ export function SidebarNav({
   totalNotifications,
   collapsed = false,
 }: SidebarNavProps) {
+  const { t } = useT();
+  
   const mainItems = [
-    { to: "/dashboard", label: "Panel", Icon: LayoutGrid },
-    { to: "/calendar", label: "Kalendarz", Icon: Calendar },
-    { to: "/tasks", label: "Zadania", Icon: ListTodo },
-    { to: "/shopping", label: "Zakupy", Icon: ShoppingCart },
-    { to: "/payments", label: "Płatności", Icon: Banknote },
+    { to: "/dashboard", label: t("sidebar.dashboard"), Icon: LayoutGrid },
+    { to: "/calendar", label: t("sidebar.calendar"), Icon: Calendar },
+    { to: "/tasks", label: t("sidebar.tasks"), Icon: ListTodo },
+    { to: "/shopping", label: t("sidebar.shopping"), Icon: ShoppingCart },
+    { to: "/payments", label: t("sidebar.payments"), Icon: Banknote },
   ];
   const bottomItems = [
-    { to: "/labels", label: "Etykiety", Icon: Tag },
-    { to: "/notifications", label: "Powiadomienia", Icon: Bell, badge: totalNotifications },
-    { to: "/feedback", label: "Feedback", Icon: BookOpenCheck, special: true },
+    { to: "/labels", label: t("sidebar.labels"), Icon: Tag },
+    { to: "/notifications", label: t("sidebar.notifications"), Icon: Bell, badge: totalNotifications },
+    { to: "/feedback", label: t("sidebar.feedback"), Icon: BookOpenCheck, special: true },
   ];
 
   if (collapsed) {

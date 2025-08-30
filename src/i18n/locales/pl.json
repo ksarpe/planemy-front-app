@@ -194,5 +194,15 @@
   },
   "feedback": {
     "seeWhatWeAreWorking": "Zobacz nad czym pracujemy i co zostało już wprowadzone do aplikacji."
+  },
+  "sidebar": {
+    "dashboard": "Panel",
+    "calendar": "Kalendarz",
+    "tasks": "Zadania",
+    "shopping": "Zakupy",
+    "payments": "Płatności",
+    "labels": "Etykiety",
+    "notifications": "Powiadomienia",
+    "feedback": "Feedback"
   }
 }
