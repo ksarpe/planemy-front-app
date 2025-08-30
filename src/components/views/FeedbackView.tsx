@@ -32,13 +32,13 @@ export default function FeedbackView() {
   const getStatusText = (status: string) => {
     switch (status) {
       case "pending":
-        return "Oczekuje";
+        return t("feedback.status.pending");
       case "accepted":
-        return "Planowane";
+        return t("feedback.status.accepted");
       case "resolved":
-        return "Wprowadzone";
+        return t("feedback.status.resolved");
       default:
-        return "Nieznany";
+        return t("feedback.status.unknown");
     }
   };
 
@@ -56,9 +56,9 @@ export default function FeedbackView() {
   return (
     <div className="flex-1 p-6 max-w-4xl mx-auto overflow-auto scrollbar-hide">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary mb-2">Feedback</h1>
+        <h1 className="text-2xl font-bold text-text-primary mb-2">{t("feedback.title")}</h1>
         <p className="text-text-secondary">
-          Masz problem lub propozycję? Napisz do nas! Twoja opinia pomoże nam ulepszyć aplikację.
+          {t("feedback.subtitle")}
         </p>
       </div>
 
@@ -66,23 +66,23 @@ export default function FeedbackView() {
       <div className="bg-white rounded-lg shadow-md border border-border p-6 mb-8">
         <h2 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
           <MessageCircle className="w-5 h-5 text-orange-500" />
-          Wyślij feedback
+          {t("feedback.sendFeedback")}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="message" className="block text-sm font-medium text-text-primary mb-2">
-              Twoja wiadomość *
+              {t("feedback.yourMessage")}
             </label>
             <textarea
               id="message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Opisz swój problem, propozycję lub opinię..."
+              placeholder={t("feedback.messagePlaceholder")}
               className="w-full h-32 px-3 py-2 border border-border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               required
             />
-            <p className="text-xs text-text-secondary mt-1">Minimum 10 znaków wymagane</p>
+            <p className="text-xs text-text-secondary mt-1">{t("feedback.minimumCharacters")}</p>
           </div>
 
           <div className="flex justify-end">
@@ -93,12 +93,12 @@ export default function FeedbackView() {
               {isCreating ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Wysyłanie...
+                  {t("feedback.sending")}
                 </>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  Wyślij feedback
+                  {t("feedback.sendFeedback")}
                 </>
               )}
             </button>
@@ -110,9 +110,9 @@ export default function FeedbackView() {
       <div className="bg-white rounded-lg shadow-md border border-border p-6">
         <h2 className="text-lg font-semibold text-text-primary mb-2 flex items-center gap-2">
           <Users className="w-5 h-5 text-primary" />
-          Roadmap & Changelog
+          {t("feedback.roadmapTitle")}
         </h2>
-        <p className="text-text-secondary text-sm mb-6">{t("seeWhatWeAreWorking")}</p>
+        <p className="text-text-secondary text-sm mb-6">{t("feedback.seeWhatWeAreWorking")}</p>
 
         {isLoadingPublic ? (
           <div className="flex items-center justify-center py-8">
@@ -121,7 +121,7 @@ export default function FeedbackView() {
         ) : publicFeedbacks.length === 0 ? (
           <div className="text-center py-8 text-text-secondary">
             <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            <p>Nie ma jeszcze żadnych publicznych zgłoszeń</p>
+            <p>{t("feedback.noPublicFeedback")}</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -153,7 +153,7 @@ export default function FeedbackView() {
                 {feedback.status === "resolved" && (
                   <div className="mt-3 flex items-center gap-2 text-green-600">
                     <CheckCircle className="w-4 h-4" />
-                    <span className="text-xs font-medium">Ta funkcja została wprowadzona do aplikacji</span>
+                    <span className="text-xs font-medium">{t("feedback.featureImplemented")}</span>
                   </div>
                 )}
               </div>

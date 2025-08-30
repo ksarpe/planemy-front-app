@@ -123,7 +123,26 @@
     "inDays": "Za {{count}} dni",
     "urgent": "Pilne",
     "soon": "Wkrótce",
-    "ok": "OK"
+    "ok": "OK",
+    "quickActions": "Szybkie akcje",
+    "addTask": "Dodaj zadanie",
+    "newEvent": "Nowe wydarzenie", 
+    "shoppingList": "Lista zakupów",
+    "newPayment": "Nowa płatność",
+    "tasks": "Zadania",
+    "upcomingEvents": "Nadchodzące wydarzenia",
+    "nextEvent": "Następne wydarzenie",
+    "addEvent": "Dodaj wydarzenie",
+    "seeMore": "Zobacz {{count}} więcej...",
+    "seeAllInCalendar": "Zobacz wszystkie w kalendarzu",
+    "noUpcomingEvents": "Brak nadchodzących wydarzeń w następnych dwóch miesiącach",
+    "allBought": "Wszystko kupione!",
+    "productsCount": "{{count}} produktów",
+    "allDone": "Wszystko zrobione!",
+    "openTasks": "{{count}} otwartych",
+    "listCreated": "Lista zakupów została utworzona!",
+    "listCreationFailed": "Nie udało się utworzyć listy zakupów",
+    "listName": "Lista {{date}}"
   },
   "payments": {
     "title": "Płatności",
@@ -238,6 +257,28 @@
     }
   },
   "feedback": {
+    "title": "Feedback",
+    "subtitle": "Masz problem lub propozycję? Napisz do nas! Twoja opinia pomoże nam ulepszyć aplikację.",
+    "sendFeedback": "Wyślij feedback",
+    "yourMessage": "Twoja wiadomość *",
+    "messagePlaceholder": "Opisz swój problem, propozycję lub opinię...",
+    "minimumCharacters": "Minimum 10 znaków wymagane",
+    "sending": "Wysyłanie...",
+    "roadmapTitle": "Roadmap & Changelog",
+    "seeWhatWeAreWorking": "Zobacz nad czym pracujemy i co zostało już wprowadzone do aplikacji.",
+    "noPublicFeedback": "Nie ma jeszcze żadnych publicznych zgłoszeń",
+    "featureImplemented": "Ta funkcja została wprowadzona do aplikacji",
+    "status": {
+      "pending": "Oczekuje",
+      "accepted": "Planowane", 
+      "resolved": "Wprowadzone",
+      "unknown": "Nieznany"
+    },
+    "banner": {
+      "title": "Masz problem lub pomysł na ulepszenie?",
+      "description": "Skorzystaj z naszego systemu feedbacku, aby zgłosić błędy lub zaproponować nowe funkcje.",
+      "clickHere": "Kliknij na ten baner!"
+    }
     "seeWhatWeAreWorking": "Zobacz nad czym pracujemy i co zostało już wprowadzone do aplikacji."
   },
   "auth": {

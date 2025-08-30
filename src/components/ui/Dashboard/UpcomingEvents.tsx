@@ -3,10 +3,12 @@ import { format } from "date-fns";
 import { pl } from "date-fns/locale";
 import { useUpcomingEvents } from "@/hooks/events";
 import { useNavigate } from "react-router-dom";
+import { useT } from "@/hooks/useT";
 
 export default function UpcomingEvents() {
   const { groups, totalEvents, hasEvents, nextEvent } = useUpcomingEvents();
   const navigate = useNavigate();
+  const { t } = useT();
 
   if (!hasEvents) {
     return (
@@ -14,16 +16,16 @@ export default function UpcomingEvents() {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-text flex items-center">
             <Calendar className="h-5 w-5 mr-2 text-primary" />
-            Nadchodzące wydarzenia
+            {t("dashboard.upcomingEvents")}
           </h3>
         </div>
         <div className="text-center py-8">
           <Calendar className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500 text-sm">Brak nadchodzących wydarzeń w następnych dwóch miesiącach</p>
+          <p className="text-gray-500 text-sm">{t("dashboard.noUpcomingEvents")}</p>
           <button
             onClick={() => navigate("/calendar")}
             className="mt-3 text-primary hover:text-primary/80 text-sm font-medium">
-            Dodaj wydarzenie
+            {t("dashboard.addEvent")}
           </button>
         </div>
       </div>
@@ -35,7 +37,7 @@ export default function UpcomingEvents() {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-text flex items-center">
           <Calendar className="h-5 w-5 mr-2 text-primary" />
-          Nadchodzące wydarzenia
+          {t("dashboard.upcomingEvents")}
           <span className="ml-2 bg-primary/10 text-primary text-xs font-medium px-2 py-1 rounded-full">
             {totalEvents}
           </span>
@@ -52,7 +54,7 @@ export default function UpcomingEvents() {
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-4">
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-xs text-primary font-medium mb-1">Następne wydarzenie</p>
+              <p className="text-xs text-primary font-medium mb-1">{t("dashboard.nextEvent")}</p>
               <h4 className="font-semibold text-text mb-1">{nextEvent.title}</h4>
               <div className="flex items-center text-sm text-gray-600">
                 <Clock className="h-4 w-4 mr-1" />
@@ -102,7 +104,7 @@ export default function UpcomingEvents() {
                 <button
                   onClick={() => navigate("/calendar")}
                   className="w-full text-center py-2 text-sm text-primary hover:text-primary/80 font-medium">
-                  Zobacz {group.events.length - 3} więcej...
+                  {t("dashboard.seeMore", { count: group.events.length - 3 })}
                 </button>
               )}
             </div>
@@ -115,7 +117,7 @@ export default function UpcomingEvents() {
         <button
           onClick={() => navigate("/calendar")}
           className="w-full text-center py-2 text-sm text-primary hover:text-primary/80 font-medium">
-          Zobacz wszystkie w kalendarzu
+          {t("dashboard.seeAllInCalendar")}
         </button>
       </div>
     </div>
