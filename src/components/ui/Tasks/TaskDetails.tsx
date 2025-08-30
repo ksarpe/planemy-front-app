@@ -1,4 +1,4 @@
-import EditableText from "@/components/ui/Utils/EditableText";
+import { EditableText } from "@/components/ui/Common/EditableText";
 import { useTaskContext } from "@/hooks/context/useTaskContext";
 import { useCompleteTask, useDeleteTask, useUpdateTask } from "@/hooks/tasks/useTasks";
 import { useTranslation } from "react-i18next";
