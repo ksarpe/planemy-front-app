@@ -21,6 +21,7 @@ import PaymentsView from "@/components/views/PaymentsView";
 import LabelsView from "@/components/views/LabelsView";
 import NotificationsView from "@/components/views/NotificationsView";
 import FeedbackView from "@/components/views/FeedbackView";
+import DevelopmentView from "@/components/views/DevelopmentView";
 
 // context
 import Providers from "@/context/AllProviders";
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: "/profile", element: <ProfileView /> },
       { path: "/shopping", element: <ShoppingView /> },
       { path: "/payments", element: <PaymentsView /> },
+      { path: "/development", element: <DevelopmentView /> },
       { path: "/labels", element: <LabelsView /> },
       { path: "/notifications", element: <NotificationsView /> },
       { path: "/feedback", element: <FeedbackView /> },

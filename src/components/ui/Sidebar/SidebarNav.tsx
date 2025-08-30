@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Calendar, ListTodo, ShoppingCart, Tag, Bell, BookOpenCheck, Banknote, LayoutGrid } from "lucide-react";
+import { Calendar, ListTodo, ShoppingCart, Tag, Bell, BookOpenCheck, Banknote, LayoutGrid, TrendingUp } from "lucide-react";
 import type { SidebarNavProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
 import { useT } from "@/hooks/useT";
 
@@ -22,6 +22,9 @@ export function SidebarNav({
     { to: "/shopping", label: t("sidebar.shopping"), Icon: ShoppingCart },
     { to: "/payments", label: t("sidebar.payments"), Icon: Banknote },
   ];
+  const secondaryItems = [
+    { to: "/development", label: t("sidebar.development"), Icon: TrendingUp },
+  ];
   const bottomItems = [
     { to: "/labels", label: t("sidebar.labels"), Icon: Tag },
     { to: "/notifications", label: t("sidebar.notifications"), Icon: Bell, badge: totalNotifications },
@@ -33,6 +36,25 @@ export function SidebarNav({
       <nav className="flex flex-col h-full">
         <div className="flex flex-col items-center">
           {mainItems.map(({ to, Icon, label }) => (
+            <NavLink
+              key={to}
+              to={to}
+              title={label}
+              onClick={handleNavigate}
+              className={({ isActive }) =>
+                `relative w-16 h-16 flex flex-col items-center justify-center rounded-md transition-colors ${
+                  isActive ? "bg-bg-hover" : "hover:bg-bg-hover"
+                }`
+              }>
+              <Icon size={22} />
+              <span className="text-xs text-text-light mt-1">{label}</span>
+            </NavLink>
+          ))}
+          
+          {/* Separator */}
+          <div className="w-12 h-px bg-text-light/30 my-2" />
+          
+          {secondaryItems.map(({ to, Icon, label }) => (
             <NavLink
               key={to}
               to={to}
@@ -72,6 +94,24 @@ export function SidebarNav({
     <nav className="flex flex-col h-full justify-between">
       <div className="flex flex-col gap-0.5">
         {mainItems.map(({ to, Icon, label }) => (
+          <NavLink
+            key={to}
+            to={to}
+            onClick={handleNavigate}
+            className={({ isActive }) =>
+              `${linkPadding} py-1.5 rounded-md flex items-center gap-4 text-sm ${
+                isActive ? "bg-bg-hover font-bold" : "hover:bg-bg-hover"
+              }`
+            }>
+            <Icon size={iconSize} />
+            <span className={`text-sm transition-all duration-200 ${labelHiddenClass}`}>{label}</span>
+          </NavLink>
+        ))}
+        
+        {/* Separator */}
+        <div className="h-px bg-text-light/30 mx-2 my-2" />
+        
+        {secondaryItems.map(({ to, Icon, label }) => (
           <NavLink
             key={to}
             to={to}
