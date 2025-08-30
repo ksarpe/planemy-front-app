@@ -1,8 +1,10 @@
 import { MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useT } from "@/hooks/useT";
 
 export function FeedbackBanner() {
   const navigate = useNavigate();
+  const { t } = useT();
 
   return (
     <div
@@ -15,11 +17,11 @@ export function FeedbackBanner() {
           </div>
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-text mb-1">Masz problem lub pomysł na ulepszenie?</h3>
+          <h3 className="text-sm font-semibold text-text mb-1">{t("feedback.banner.title")}</h3>
           <p className="text-sm text-text">
-            Skorzystaj z naszego systemu feedbacku, aby zgłosić błędy lub zaproponować nowe funkcje.
+            {t("feedback.banner.description")}
           </p>
-          <p className="text-lg text-text">Kliknij na ten baner! </p>
+          <p className="text-lg text-text">{t("feedback.banner.clickHere")}</p>
         </div>
       </div>
     </div>

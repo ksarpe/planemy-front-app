@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../api/config";
 import type { AuthContextType } from "@/data/Auth";
+import i18n from "@/i18n";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export { AuthContext };
@@ -72,22 +73,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 const getAuthErrorMessage = (errorCode: string): string => {
   switch (errorCode) {
     case "auth/user-not-found":
-      return "Nie znaleziono użytkownika z tym adresem email.";
+      return i18n.t("auth.errors.userNotFound");
     case "auth/wrong-password":
-      return "Nieprawidłowe hasło.";
+      return i18n.t("auth.errors.wrongPassword");
     case "auth/email-already-in-use":
-      return "Ten adres email jest już używany.";
+      return i18n.t("auth.errors.emailAlreadyInUse");
     case "auth/weak-password":
-      return "Hasło jest zbyt słabe.";
+      return i18n.t("auth.errors.weakPassword");
     case "auth/invalid-email":
-      return "Nieprawidłowy adres email.";
+      return i18n.t("auth.errors.invalidEmail");
     case "auth/user-disabled":
-      return "To konto zostało wyłączone.";
+      return i18n.t("auth.errors.userDisabled");
     case "auth/too-many-requests":
-      return "Zbyt wiele nieudanych prób logowania. Spróbuj ponownie później.";
+      return i18n.t("auth.errors.tooManyRequests");
     case "auth/network-request-failed":
-      return "Błąd połączenia z siecią.";
+      return i18n.t("auth.errors.networkRequestFailed");
     default:
-      return "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";
+      return i18n.t("auth.errors.unknownError");
   }
 };

@@ -23,10 +23,9 @@ export interface PaymentDetailsPanelProps {
 export interface PaymentSectionProps {
   title: string;
   payments: PaymentInterface[];
-  icon: React.ComponentType<{ size?: number; className?: string }>;
   emptyMessage?: string;
   expandedPaymentId?: string | null;
-  isImportant?: boolean;
+  textColor: string;
   onToggleExpand?: (paymentId: string) => void;
 }
 
