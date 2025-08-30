@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, MoreVertical, Edit2, Trash2, Share2, Check, Users } from "lucide-react";
 import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
+import { useTranslation } from "react-i18next";
 import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
 import type { TaskListInterface } from "@/data/Tasks/interfaces";
 import { useDeleteTaskList, useUpdateTaskList } from "@/hooks/tasks/useTasksLists";
@@ -8,6 +9,7 @@ import { useTasks } from "@/hooks/tasks/useTasks";
 import type { TaskListPanelProps } from "@/data/Tasks/Components/TaskComponentInterfaces";
 
 export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: TaskListPanelProps) {
+  const { t } = useTranslation();
   const { mainListId, updateSettings } = usePreferencesContext();
   const deleteList = useDeleteTaskList();
   const updateList = useUpdateTaskList();
@@ -99,7 +101,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
                   {stats.completed}/{stats.total}
                 </span>
                 {mainListId === list.id && (
-                  <span className="flex items-center gap-1 text-primary font-medium">Domyślna</span>
+                  <span className="flex items-center gap-1 text-primary font-medium">{t("tasks.panel.default")}</span>
                 )}
               </div>
             </div>
@@ -118,18 +120,18 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
                 closeOnItemClick={true}
                 width="w-60">
                 <BasicDropdownItem icon={Edit2} onClick={() => handleStartEdit(list)}>
-                  Edytuj nazwę
+                  {t("tasks.panel.actions.editName")}
                 </BasicDropdownItem>
                 <BasicDropdownItem icon={Share2} onClick={() => console.log("Share list", list.id)}>
-                  Udostępnij
+                  {t("tasks.panel.actions.share")}
                 </BasicDropdownItem>
                 {mainListId !== list.id && (
                   <BasicDropdownItem icon={Check} onClick={() => handleSetAsDefault(list.id)}>
-                    Ustaw jako domyślna
+                    {t("tasks.panel.actions.setAsDefault")}
                   </BasicDropdownItem>
                 )}
                 <BasicDropdownItem icon={Trash2} variant="red" onClick={() => handleDeleteClick(list)}>
-                  Usuń
+                  {t("tasks.panel.actions.delete")}
                 </BasicDropdownItem>
               </BasicDropdown>
             </div>
@@ -154,7 +156,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
     <div className="p-4">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">Moje listy</h3>
+        <h3 className="text-lg font-semibold">{t("tasks.panel.title")}</h3>
         <button
           onClick={onAddList}
           className="p-2 bg-success text-white rounded-md hover:bg-success-hover transition-colors">
@@ -166,11 +168,11 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
         {lists.length === 0 ? (
           <div className="text-center py-8">
             <div className="text-gray-400 mb-2">📋</div>
-            <p className="text-sm text-gray-500 mb-3">Brak list zadań</p>
+            <p className="text-sm text-gray-500 mb-3">{t("tasks.panel.empty.title")}</p>
             <button
               onClick={onAddList}
               className="text-sm bg-primary text-white px-3 py-2 rounded-md hover:bg-primary-hover transition-colors">
-              Utwórz pierwszą listę
+              {t("tasks.panel.empty.createFirst")}
             </button>
           </div>
         ) : (
@@ -190,10 +192,10 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
             handleDeleteList(listToDelete.id);
           }
         }}
-        title="Usuń listę zadań"
-        message="Czy na pewno chcesz usunąć listę zadań"
+        title={t("tasks.panel.deleteConfirmation.title")}
+        message={t("tasks.panel.deleteConfirmation.message")}
         itemName={listToDelete?.name || ""}
-        confirmButtonText="Usuń listę"
+        confirmButtonText={t("tasks.panel.deleteConfirmation.confirmButton")}
       />
     </div>
   );
