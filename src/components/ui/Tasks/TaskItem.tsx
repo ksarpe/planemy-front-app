@@ -147,7 +147,7 @@ export default function TaskItem({ task }: TaskItemProps) {
                     size="xs"
                   />
                 }
-                align="right"
+                Xalign="right"
                 width="w-64"
                 closeOnItemClick={true}
                 usePortal={true}>
@@ -169,7 +169,6 @@ export default function TaskItem({ task }: TaskItemProps) {
                     <BasicDropdownItem
                       icon={Plus} 
                       onClick={handleCreateLabel}
-                      separator={true}
                       variant="green">
                       {t("tasks.item.labels.create")}
                     </BasicDropdownItem>

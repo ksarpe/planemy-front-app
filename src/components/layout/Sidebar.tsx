@@ -1,53 +1,23 @@
 import { useAuthContext } from "@/hooks/context/useAuthContext";
-import { useToastContext } from "@/hooks/context/useToastContext";
 import { usePendingShares } from "@/hooks/permissions/usePermissions";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { NavLink } from "react-router-dom";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { SidebarNav } from "../ui/Sidebar/SidebarNav";
 import { SidebarUserSection } from "../ui/Sidebar/SidebarUserSection";
+import { DarkModeToggle } from "../ui/Sidebar/DarkModeToggle";
+import { NavLink } from "react-router-dom";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import SidebarSettings from "../ui/Sidebar/SidebarSettings";
 
-// Sidebar with collapsible (icon-only) desktop mode. When collapsed:
-// - Width shrinks to 72px
-// - Logo hidden, only nav icons shown centered
-// - Bottom user section replaced by a circular avatar (click opens profile) + logout icon inside tooltip area
-// - Expand/collapse toggle is a vertical strip hoverable or a button overlay
 export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   const { user, logout } = useAuthContext();
-  const { showToast } = useToastContext();
-
-  // counts (lightweight; consider optimization later)
+  //TODO: counts (lightweight; consider optimization later)
   const { data: taskListShares = [] } = usePendingShares("task_list");
   const { data: shoppingListShares = [] } = usePendingShares("shopping_list");
+  // something for getting global notifications
   const totalNotifications = taskListShares.length + shoppingListShares.length;
 
   const handleLogout = async () => {
-    try {
-      await logout();
-      showToast("success", "Pomyślnie wylogowano!");
-      onClose?.();
-    } catch (e) {
-      showToast("error", e instanceof Error ? e.message : "Błąd podczas wylogowywania");
-    }
-  };
-  const handleNavigate = () => onClose?.();
-
-  // touch swipe (mobile)
-  const startRef = useRef<{ x: number; y: number } | null>(null);
-  const onTouchStart = (e: React.TouchEvent) => {
-    if (window.innerWidth >= 768) return;
-    const t = e.touches[0];
-    startRef.current = { x: t.clientX, y: t.clientY };
-  };
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (window.innerWidth >= 768) return;
-    const s = startRef.current;
-    if (!s) return;
-    const t = e.changedTouches[0];
-    const dx = t.clientX - s.x;
-    const dy = Math.abs(t.clientY - s.y);
-    if (dx < -60 && dy < 40) onClose?.();
-    startRef.current = null;
+    await logout();
   };
 
   const [collapsed, setCollapsed] = useState(false);
@@ -62,62 +32,53 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
     if (isOpen && window.innerWidth < 768) setCollapsed(false);
   }, [isOpen]);
 
-  const widthClasses = collapsed ? "w-[84px] min-w-[84px]" : "w-58 min-w-58";
-  const linkPadding = collapsed ? "px-3 justify-center" : "px-5";
-  const labelHidden = collapsed ? "opacity-0 pointer-events-none select-none w-0 overflow-hidden" : "opacity-100";
-  const iconSize = 24;
+  const widthClasses = collapsed ? "w-[84px]" : "w-58"; //
 
   return (
     <>
       {isOpen && <div className="fixed inset-0 bg-black/40 md:hidden z-40" onClick={onClose} aria-hidden="true" />}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 ${widthClasses} h-full transform transition-all duration-300 bg-bg-alt text-text border-r border-bg-hover md:static md:translate-x-0 md:flex flex flex-col justify-between p-2${
+        className={`p-4 fixed inset-y-0 left-0 z-50 ${widthClasses} h-full transform transition-all duration-300 bg-bg md:static flex flex-col justify-between p-2 ${
           isOpen ? " translate-x-0" : " -translate-x-full md:translate-x-0"
-        }`}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}>
-        {/* collapse toggle (desktop) */}
+        }`}>
+        {/* Collapse button */}
         <button
-          type="button"
           aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
-          className="hidden md:flex absolute -right-3 top-8 h-8 w-6 items-center justify-center rounded-md border border-bg-hover bg-bg-hover shadow-md hover:bg-primary transition-colors"
+          className="hidden md:flex absolute -right-3 top-8 h-8 w-6 items-center justify-center rounded-md bg-primary/60 cursor-pointer hover:bg-primary"
           onClick={() => setCollapsed((c) => !c)}>
-          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+          {collapsed ? <FiChevronRight size={16} /> : <FiChevronLeft size={16} />}
         </button>
 
-        {/* top section */}
-        <div className="flex flex-col gap-1 flex-1 overflow-hidden">
-          <NavLink
-            to="/"
-            className={`flex items-center justify-center mb-2 transition-all duration-300 ${
-              collapsed ? "h-16" : "h-28"
-            }`}
-            onClick={handleNavigate}>
-            <img
-              src={collapsed ? "minilogo.png" : "logo.png"}
-              alt="Planora logo"
-              className={` ${collapsed ? "h-10 w-10" : "h-20 w-45"}`}
-            />
-          </NavLink>
+        {/* LOGO */}
+        <NavLink to="/dashboard">
+          <img src={collapsed ? `/minilogo.png` : `/logo.png`} alt="Logo" className={collapsed ? `h-12` : `h-16`} />
+        </NavLink>
+
+        {/* NAVIGATION / PERSONAL / UTILS */}
+        <div className="flex flex-col gap-4 flex-1 overflow-hidden mt-8">
           <SidebarNav
-            handleNavigate={handleNavigate}
-            linkPadding={linkPadding}
-            labelHiddenClass={labelHidden}
-            iconSize={iconSize}
+            handleNavigate={onClose || (() => {})}
             totalNotifications={totalNotifications}
             collapsed={collapsed}
           />
         </div>
+        <div className="w-full h-px bg-text-muted/20 my-2" />
 
-        {/* bottom user section extracted */}
-        <div className="mt-2 pt-3">
-          <SidebarUserSection
-            collapsed={collapsed}
-            user={user}
-            handleNavigate={handleNavigate}
-            handleLogout={handleLogout}
-          />
+        {/* SETTINGS + DARK MODE */}
+        <div
+          className={`my-1 flex ${collapsed ? "justify-center flex-col gap-4 mt-4" : "justify-between"} items-center`}>
+          <SidebarSettings collapsed={collapsed} />
+          <DarkModeToggle collapsed={collapsed} />
         </div>
+        <div className="w-full h-px bg-text-muted/20 my-2" />
+
+        {/* USER INFO */}
+        <SidebarUserSection
+          collapsed={collapsed}
+          user={user!}
+          handleNavigate={onClose || (() => {})}
+          handleLogout={handleLogout}
+        />
       </aside>
     </>
   );

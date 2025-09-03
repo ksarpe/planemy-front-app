@@ -7,7 +7,60 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
-    "warning": "Warning"
+    "warning": "Warning",
+    "back": "Back",
+    "next": "Next",
+    "skip": "Skip",
+    "previous": "Previous"
+  },
+  "onboarding": {
+    "stepProgress": "Step {{current}} of {{total}}",
+    "getStarted": "Get Started!",
+    "goToStep": "Go to step {{step}}",
+    "completionSuccess": "Setup completed successfully!",
+    "completionError": "An error occurred during setup. Please try again.",
+    "welcome": {
+      "title": "Welcome to AI Planner!",
+      "subtitle": "Welcome to AI Planner!",
+      "description": "It will help you organize your day and increase productivity. Before we begin, let's configure your profile.",
+      "content": "It will help you organize your day and increase productivity. Before we begin, let's configure your profile."
+    },
+    "personalInfo": {
+      "title": "Personal Information",
+      "description": "Tell us a bit about yourself",
+      "nicknamePlaceholder": "e.g. Anna, Tom...",
+      "nicknameValid": "Looks good!",
+      "nicknameMinLength": "Minimum 2 characters"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "description": "Customize the app to your needs",
+      "subtitle": "Customize the app to your preferences",
+      "languageTitle": "Choose language",
+      "themeTitle": "Choose theme",
+      "lightTheme": "Light",
+      "lightThemeDesc": "Classic, easy on the eyes",
+      "darkTheme": "Dark",
+      "darkThemeDesc": "Elegant, saves battery"
+    },
+    "completion": {
+      "title": "All set!",
+      "description": "Your configuration is complete",
+      "message": "Thank you for setting up your profile. You can now fully enjoy AI Planner!",
+      "summary": "Your settings:",
+      "nickname": "Nickname",
+      "language": "Language",
+      "theme": "Theme",
+      "lightTheme": "Light",
+      "darkTheme": "Dark",
+      "complete": "Complete setup",
+      "finishing": "Finishing..."
+    },
+    "features": {
+      "calendar": "Calendar",
+      "tasks": "Tasks",
+      "planning": "Planning"
+    }
   },
   "languageAndRegion": {
     "title": "Language and Region",

@@ -104,7 +104,7 @@ export function ShoppingItemDisplay({
                 e.stopPropagation();
                 onEdit();
               }}
-              className=" text-text-light hover:text-primary-hover  cursor-pointer"
+              className=" text-text-light hover:text-text-muted  cursor-pointer"
               title="Edytuj">
               <Edit2 size={16} />
             </button>

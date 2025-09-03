@@ -27,19 +27,25 @@ export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: Extend
       <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
         {/* Do kupienia */}
         <div className="bg-white rounded-md p-2 shadow-md flex flex-col justify-evenly h-full">
-          <span className="text-xs sm:text-sm font-medium text-primary-hover whitespace-nowrap">{t("shopping.stats.toBuy")}</span>
+          <span className="text-xs sm:text-sm font-medium text-text-muted whitespace-nowrap">
+            {t("shopping.stats.toBuy")}
+          </span>
           <div className="text-lg sm:text-2xl font-bold text-text">{pending}</div>
         </div>
 
         {/* Kupione */}
         <div className="bg-white rounded-md p-2 shadow-md flex flex-col justify-evenly h-full">
-          <span className="text-xs sm:text-sm font-medium text-success whitespace-nowrap">{t("shopping.stats.bought")}</span>
+          <span className="text-xs sm:text-sm font-medium text-success whitespace-nowrap">
+            {t("shopping.stats.bought")}
+          </span>
           <div className="text-lg sm:text-2xl font-bold text-text">{completed}</div>
         </div>
 
         {/* Wartość */}
         <div className="bg-white rounded-md p-2 shadow-md flex flex-col justify-evenly h-full">
-          <span className="text-xs sm:text-sm font-medium text-purple-600 whitespace-nowrap">{t("shopping.stats.value")}</span>
+          <span className="text-xs sm:text-sm font-medium text-purple-600 whitespace-nowrap">
+            {t("shopping.stats.value")}
+          </span>
           <div className="text-lg sm:text-xl font-bold text-text flex items-end gap-1">
             {totalValue.toFixed(2)}
             <span className="text-xs">{t("shopping.stats.currency")}</span>

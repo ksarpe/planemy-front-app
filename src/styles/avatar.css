@@ -1,0 +1,19 @@
+
+.blueberry-animation {
+  width: 200px;
+  height: 200px;
+
+  background-image: url("/blueberry/idle/blueberry_wave.png");
+  background-repeat: no-repeat;
+
+  animation: wave-animation 1s steps(7) infinite;
+}
+
+@keyframes wave-animation {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -1400px 0; /* Użyj wartości (ilość_klatek * szerokość_klatki) */
+  }
+}

@@ -7,7 +7,54 @@
     "loading": "Ładowanie...",
     "error": "Błąd",
     "success": "Sukces",
-    "warning": "Ostrzeżenie"
+    "warning": "Ostrzeżenie",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "skip": "Pomiń",
+    "previous": "Wstecz"
+  },
+  "onboarding": {
+    "complete": "Zakończ!",
+    "stepProgress": "Krok {{current}} z {{total}}",
+    "getStarted": "Zacznijmy!",
+    "goToStep": "Przejdź do kroku {{step}}",
+    "completionSuccess": "Konfiguracja zakończona pomyślnie!",
+    "completionError": "Wystąpił błąd podczas konfiguracji. Spróbuj ponownie.",
+    "personalInfo": {
+      "title": "Nazwij swojego asystenta",
+      "description": "będzie on z Tobą przez cały czas.",
+      "nicknamePlaceholder": "np. Bob, Bruno, Twoje imię...",
+      "nicknameValid": "Ta nazwa jest OK!",
+      "nicknameMinLength": "Minimum 2 znaki"
+    },
+    "preferences": {
+      "title": "Teraz ustaw preferencje dotyczące kraju",
+      "description": "ułatwi to płynny start!",
+      "languageTitle": "Wybierz język",
+      "themeTitle": "Wybierz motyw",
+      "lightTheme": "Jasny",
+      "lightThemeDesc": "Klasyczny, przyjazny dla oczu",
+      "darkTheme": "Ciemny",
+      "darkThemeDesc": "Elegancki, oszczędza baterie"
+    },
+    "completion": {
+      "title": "Wszystko gotowe!",
+      "description": "Twoja konfiguracja została zakończona",
+      "message": "Dziękujemy za skonfigurowanie profilu. Możesz teraz w pełni korzystać z AI Planner!",
+      "summary": "Twoje ustawienia:",
+      "nickname": "Nick",
+      "language": "Język",
+      "theme": "Motyw",
+      "lightTheme": "Jasny",
+      "darkTheme": "Ciemny",
+      "complete": "Zakończ konfigurację",
+      "finishing": "Finalizuję..."
+    },
+    "features": {
+      "calendar": "Kalendarz",
+      "tasks": "Zadania",
+      "planning": "Planowanie"
+    }
   },
   "languageAndRegion": {
     "title": "Język i region",
@@ -261,7 +308,7 @@
     "deleteProduct": {
       "title": "Usuń produkt",
       "message": "Czy na pewno chcesz usunąć produkt",
-      "confirmButton": "Usuń produkt"
+      "confirmButton": "Usuń"
     },
     "categories": {
       "fruitsAndVegetables": "Owoce i warzywa",
@@ -334,7 +381,7 @@
       "default": "Domyślna",
       "actions": {
         "editName": "Edytuj nazwę",
-        "share": "Udostępnij", 
+        "share": "Udostępnij",
         "setAsDefault": "Ustaw jako domyślna",
         "delete": "Usuń"
       },

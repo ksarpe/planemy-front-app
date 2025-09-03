@@ -1,5 +1,4 @@
-import { createContext, useState, ReactNode, useEffect, useMemo, useRef } from "react";
-// Removed useTheme: dark mode is now controlled only by selected color theme
+import { createContext, useState, ReactNode, useEffect } from "react";
 import type { PreferencesContextProps } from "@/data/User/preferencesContext";
 import { useTranslation } from "react-i18next";
 
@@ -17,20 +16,37 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const { i18n } = useTranslation();
   const [mainListId, setMainListId] = useState<string | null>(null);
   const [defaultShoppingListId, setDefaultShoppingListId] = useState<string | null>(null);
-
-  // Color theme: 0 Cozy, 1 Sweet, 2 Business, 3 Dark Mode
-  const [colorTheme, _setColorTheme] = useState(0);
+  const [isDark, setIsDark] = useState(false);
 
   // Locale settings (read-only in context; update via dedicated hooks)
   const [language, setLanguage] = useState("pl");
   const [timezone, setTimezone] = useState("Europe/Warsaw");
 
-  // Debounce/suppress refs
-  const themeDebounceRef = useRef<number | null>(null);
-  const suppressNextThemePersistRef = useRef(false);
+  // Load dark mode from localStorage on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("app_theme");
+    const isDarkMode =
+      savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    setIsDark(isDarkMode);
+    updateHtmlClass(isDarkMode);
+  }, []);
 
-  // Derived dark mode from selected theme
-  const isDark = colorTheme === 3;
+  // Function to update HTML class
+  const updateHtmlClass = (dark: boolean) => {
+    if (dark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+
+  // Toggle dark mode
+  const toggleDark = () => {
+    const newIsDark = !isDark;
+    setIsDark(newIsDark);
+    localStorage.setItem("app_theme", newIsDark ? "dark" : "light");
+    updateHtmlClass(newIsDark);
+  };
 
   // Sync language with i18next
   useEffect(() => {
@@ -39,56 +55,12 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     }
   }, [language, i18n]);
 
-  /**
-   * setColorTheme
-   * Updates the selected color theme and remembers the last non-dark selection.
-   * Persists the new value to Firestore (debounced separately).
-   */
-  const setColorTheme = (index: number) => {
-    _setColorTheme(index);
-  };
-
-  /**
-   * setColorThemePreview
-   * Updates theme for live preview but prevents the next debounced persistence.
-   */
-  const setColorThemePreview = (index: number) => {
-    suppressNextThemePersistRef.current = true;
-    setColorTheme(index);
-  };
-
-  /**
-   * persistThemeDebounced
-   * Debounced persistence of colorThemeIndex to Firestore to avoid rapid writes.
-   */
-  useEffect(() => {
-    if (!user) return;
-    if (suppressNextThemePersistRef.current) {
-      // Skip this run and clear the flag
-      suppressNextThemePersistRef.current = false;
-      return;
-    }
-    if (themeDebounceRef.current) window.clearTimeout(themeDebounceRef.current);
-    themeDebounceRef.current = window.setTimeout(() => {
-      updateUserSettings(user.uid, { colorThemeIndex: colorTheme }).catch(() => {
-        // ignore persistence errors
-      });
-    }, 400);
-    return () => {
-      if (themeDebounceRef.current) window.clearTimeout(themeDebounceRef.current);
-    };
-  }, [colorTheme, user]);
-
   // Load persisted settings on mount (Firestore)
   useEffect(() => {
     const hydrate = async () => {
       if (!user) return;
       const settings = await getUserSettings(user.uid);
       if (settings) {
-        if (settings.colorThemeIndex !== undefined) {
-          const idx = settings.colorThemeIndex;
-          _setColorTheme(idx);
-        }
         if (settings.language) setLanguage(settings.language);
         if (settings.timezone) setTimezone(settings.timezone);
         if (settings.defaultTaskListId) setMainListId(settings.defaultTaskListId);
@@ -100,41 +72,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     };
     hydrate();
   }, [user]);
-
-  // Theme class names corresponding to color themes
-  const themeClassNames = useMemo(
-    () => [
-      "", // Cozy Room
-      "theme-sweet-factory",
-      "theme-productive-business",
-      "theme-dark-mode",
-    ],
-    [],
-  );
-
-  // Apply theme classes and Tailwind dark class
-  useEffect(() => {
-    const body = document.body;
-    const root = document.documentElement;
-
-    // Clear previous theme classes
-    themeClassNames.forEach((className) => {
-      if (className) body.classList.remove(className);
-    });
-
-    // Apply current theme class
-    if (themeClassNames[colorTheme]) {
-      const className = themeClassNames[colorTheme];
-      if (className) body.classList.add(className);
-    }
-
-    // Tailwind dark variant only for explicit Dark Mode theme
-    if (isDark) {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-  }, [colorTheme, isDark, themeClassNames]);
 
   /**
    * updateSettings
@@ -160,21 +97,9 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const suspendThemePersistence = () => {
-    suppressNextThemePersistRef.current = true;
-  };
-  const resumeThemePersistence = () => {
-    // no-op for now; persistence resumes automatically after one skip
-  };
-
   return (
     <PreferencesContext.Provider
       value={{
-        colorTheme,
-        setColorTheme,
-        setColorThemePreview,
-        suspendThemePersistence,
-        resumeThemePersistence,
         language,
         timezone,
         mainListId,
@@ -182,6 +107,8 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         defaultShoppingListId,
         setDefaultShoppingListId,
         updateSettings,
+        isDark,
+        toggleDark,
       }}>
       {children}
     </PreferencesContext.Provider>

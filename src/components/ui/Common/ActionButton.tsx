@@ -14,7 +14,7 @@ const colorStyles = {
   },
   primary: {
     base: "bg-primary border-primary text-white",
-    hover: "hover:bg-primary-hover hover:border-primary-hover",
+    hover: "hover:bg-text-muted hover:border-text-muted",
   },
   red: {
     base: "bg-red-600 border-red-700 text-white",

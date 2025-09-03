@@ -6,7 +6,8 @@ import { BasicDropdownItemVariantColor, ActionButtonColor, ActionButtonSize } fr
 export interface BasicDropdownProps {
   trigger: ReactNode;
   children: ReactNode;
-  align?: "left" | "right";
+  Xalign?: "left" | "right";
+  Yalign?: "top" | "bottom";
   width?: string;
   closeOnItemClick?: boolean;
   className?: string;

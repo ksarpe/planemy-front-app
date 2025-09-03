@@ -1,88 +1,93 @@
 import { NavLink } from "react-router-dom";
-import { Calendar, ListTodo, ShoppingCart, Tag, Bell, BookOpenCheck, Banknote, LayoutGrid, TrendingUp } from "lucide-react";
+import {
+  FiHome,
+  FiCalendar,
+  FiList,
+  FiShoppingBag,
+  FiDollarSign,
+  FiTrendingUp,
+  FiTag,
+  FiBookOpen,
+} from "react-icons/fi";
 import type { SidebarNavProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
 import { useT } from "@/hooks/useT";
 
 export type { SidebarNavProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
 
-export function SidebarNav({
-  handleNavigate,
-  linkPadding,
-  labelHiddenClass,
-  iconSize,
-  totalNotifications,
-  collapsed = false,
-}: SidebarNavProps) {
+export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProps) {
   const { t } = useT();
 
-  const mainItems = [
-    { to: "/dashboard", label: t("sidebar.dashboard"), Icon: LayoutGrid },
-    { to: "/calendar", label: t("sidebar.calendar"), Icon: Calendar },
-    { to: "/tasks", label: t("sidebar.tasks"), Icon: ListTodo },
-    { to: "/shopping", label: t("sidebar.shopping"), Icon: ShoppingCart },
-    { to: "/payments", label: t("sidebar.payments"), Icon: Banknote },
+  const navigationItems = [
+    { to: "/dashboard", label: t("sidebar.dashboard"), Icon: FiHome },
+    { to: "/calendar", label: t("sidebar.calendar"), Icon: FiCalendar },
+    { to: "/tasks", label: t("sidebar.tasks"), Icon: FiList },
+    { to: "/shopping", label: t("sidebar.shopping"), Icon: FiShoppingBag },
+    { to: "/payments", label: t("sidebar.payments"), Icon: FiDollarSign },
   ];
-  const secondaryItems = [
-    { to: "/development", label: t("sidebar.development"), Icon: TrendingUp },
-  ];
-  const bottomItems = [
-    { to: "/labels", label: t("sidebar.labels"), Icon: Tag },
-    { to: "/notifications", label: t("sidebar.notifications"), Icon: Bell, badge: totalNotifications },
-    { to: "/feedback", label: t("sidebar.feedback"), Icon: BookOpenCheck },
+  const personalItems = [{ to: "/development", label: t("sidebar.development"), Icon: FiTrendingUp }];
+  const utilsItems = [
+    { to: "/labels", label: t("sidebar.labels"), Icon: FiTag },
+    { to: "/feedback", label: t("sidebar.feedback"), Icon: FiBookOpen },
   ];
 
   if (collapsed) {
     return (
       <nav className="flex flex-col h-full">
         <div className="flex flex-col items-center">
-          {mainItems.map(({ to, Icon, label }) => (
+          {navigationItems.map(({ to, Icon, label }) => (
             <NavLink
               key={to}
               to={to}
               title={label}
               onClick={handleNavigate}
               className={({ isActive }) =>
-                `relative w-16 h-16 flex flex-col items-center justify-center rounded-md transition-colors ${
-                  isActive ? "bg-bg-hover" : "hover:bg-bg-hover"
+                `mb-0.5 relative w-12 h-12 flex flex-col items-center justify-center rounded-md transition-colors ${
+                  isActive ? "bg-bg-alt" : "hover:bg-bg-alt"
                 }`
               }>
-              <Icon size={22} />
-              <span className="text-xs text-text-light mt-1">{label}</span>
+              {({ isActive }) => (
+                <>
+                  <Icon size={24} className={isActive ? "text-text" : "text-text-muted"} />
+                </>
+              )}
             </NavLink>
           ))}
-          
-          {/* Separator */}
-          <div className="w-12 h-px bg-text-light/30 my-2" />
-          
-          {secondaryItems.map(({ to, Icon, label }) => (
+          {personalItems.map(({ to, Icon, label }) => (
             <NavLink
               key={to}
               to={to}
               title={label}
               onClick={handleNavigate}
               className={({ isActive }) =>
-                `relative w-16 h-16 flex flex-col items-center justify-center rounded-md transition-colors ${
-                  isActive ? "bg-bg-hover" : "hover:bg-bg-hover"
+                `mb-0.5 relative w-12 h-12 flex flex-col items-center justify-center rounded-md transition-colors ${
+                  isActive ? "bg-bg-alt" : "hover:bg-bg-alt"
                 }`
               }>
-              <Icon size={22} />
-              <span className="text-xs text-text-light mt-1">{label}</span>
+              {({ isActive }) => (
+                <>
+                  <Icon size={24} className={isActive ? "text-text" : "text-text-muted"} />
+                </>
+              )}
             </NavLink>
           ))}
         </div>
         <div className="mt-auto flex flex-col items-center">
-          {bottomItems.map(({ to, Icon, label }) => (
+          {utilsItems.map(({ to, Icon, label }) => (
             <NavLink
               key={to}
               to={to}
               title={label}
               onClick={handleNavigate}
               className={({ isActive }) =>
-                `relative w-14 h-14 flex items-center justify-center rounded-md transition-colors ${
-                  isActive ? "bg-bg-hover ring-1 ring-bg-hover" : "hover:bg-bg-hover"
+                `mb-0.5 relative w-12 h-12 flex items-center justify-center rounded-md transition-colors ${
+                  isActive ? "bg-bg-alt" : "hover:bg-bg-alt"
                 }`
               }>
-              <Icon size={22} />
+              {({ isActive }) => (
+                <>
+                  <Icon size={24} className={isActive ? "text-text" : "text-text-muted"} />
+                </>
+              )}
             </NavLink>
           ))}
         </div>
@@ -92,53 +97,63 @@ export function SidebarNav({
 
   return (
     <nav className="flex flex-col h-full justify-between">
-      <div className="flex flex-col gap-0.5">
-        {mainItems.map(({ to, Icon, label }) => (
+      <div className="flex flex-col">
+        <span className="text-xs font-bold text-text-muted">NAVIGATION</span>
+
+        {navigationItems.map(({ to, Icon, label }) => (
           <NavLink
             key={to}
             to={to}
             onClick={handleNavigate}
             className={({ isActive }) =>
-              `${linkPadding} py-1.5 rounded-md flex items-center gap-4 text-sm ${
-                isActive ? "bg-bg-hover font-bold" : "hover:bg-bg-hover"
-              }`
+              `p-2 mb-0.5 rounded-md flex items-center gap-4 text-sm ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
             }>
-            <Icon size={iconSize} />
-            <span className={`text-sm transition-all duration-200 ${labelHiddenClass}`}>{label}</span>
+            {({ isActive }) => (
+              <>
+                <Icon size={24} className={isActive ? "text-text" : "text-text-muted"} />
+                <span className={`text-sm ${isActive ? "text-text" : "text-text-muted"}`}>{label}</span>
+              </>
+            )}
           </NavLink>
         ))}
-        
-        {/* Separator */}
-        <div className="h-px bg-text-light/30 mx-2 my-2" />
-        
-        {secondaryItems.map(({ to, Icon, label }) => (
+        <span className="text-xs font-bold text-text-muted mt-8">PERSONAL</span>
+
+        {personalItems.map(({ to, Icon, label }) => (
           <NavLink
             key={to}
             to={to}
             onClick={handleNavigate}
             className={({ isActive }) =>
-              `${linkPadding} py-1.5 rounded-md flex items-center gap-4 text-sm ${
-                isActive ? "bg-bg-hover font-bold" : "hover:bg-bg-hover"
-              }`
+              `p-2 mb-0.5 rounded-md flex items-center gap-4 text-sm ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
             }>
-            <Icon size={iconSize} />
-            <span className={`text-sm transition-all duration-200 ${labelHiddenClass}`}>{label}</span>
+            {({ isActive }) => (
+              <>
+                <Icon size={24} className={isActive ? "text-text" : "text-text-muted"} />
+                <span className={`text-sm ${isActive ? "text-text" : "text-text-muted"}`}>{label}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </div>
-      <div className="flex flex-col gap-0.5">
-        {bottomItems.map(({ to, Icon, label }) => (
+      <div className="flex flex-col">
+        <span className="text-xs font-bold text-text-muted">UTILS</span>
+
+        {utilsItems.map(({ to, Icon, label }) => (
           <NavLink
             key={to}
             to={to}
             onClick={handleNavigate}
             className={({ isActive }) =>
-              `${linkPadding} py-2 rounded-md flex items-center gap-4 text-sm transition-colors ${
-                isActive ? "bg-bg-hover font-bold" : "hover:bg-bg-hover"
+              `p-2 mb-0.5 rounded-md flex items-center gap-4 text-sm transition-colors ${
+                isActive ? "bg-bg-alt" : "hover:bg-bg-alt"
               }`
             }>
-            <Icon size={20} />
-            <span className={`text-sm transition-all duration-200 ${labelHiddenClass}`}>{label}</span>
+            {({ isActive }) => (
+              <>
+                <Icon size={24} className={isActive ? "text-text" : "text-text-muted"} />
+                <span className={`text-sm ${isActive ? "text-text" : "text-text-muted"}`}>{label}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </div>

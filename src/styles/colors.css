@@ -1,0 +1,17 @@
+@theme {
+  --color-text: hsl(0, 0%, 0%);
+  --color-text-muted: hsl(0, 0%, 30%);
+  --color-bg: hsl(0, 0%, 100%);
+  --color-bg-alt: hsl(0, 0%, 96%);
+  --color-primary: hsl(173, 100%, 42%);
+}
+
+@layer theme {
+  .dark {
+    --color-text: hsl(0, 0%, 100%);
+    --color-text-muted: hsl(0, 0%, 70%);
+    --color-bg: hsl(0, 0%, 0%); /* nigth */
+    --color-bg-alt: hsl(0, 0%, 4%);
+    --color-primary: hsl(173, 100%, 58%);
+  }
+}

@@ -4,6 +4,9 @@ export interface UserProfile {
   displayName?: string;
   photoURL?: string;
   createdAt?: string;
+  isOnboarded?: boolean;
+  nickname?: string;
+  plan: string;
 }
 
 export interface UserSettings {
@@ -46,6 +49,42 @@ export interface NotificationSettings {
   tasks: boolean;
   events: boolean;
   sharing: boolean;
+}
+
+// Onboarding interfaces
+export interface OnboardingStep {
+  id: string;
+  title: string;
+  description: string;
+  component: React.ComponentType<OnboardingStepBaseProps>;
+  isRequired: boolean;
+}
+
+export interface OnboardingStepProps {
+  onNext: () => void;
+  onPrev: () => void;
+  onSkip?: () => void;
+  isFirst: boolean;
+  isLast: boolean;
+  currentStep: number;
+  totalSteps: number;
+  onboardingData?: OnboardingData;
+  updateOnboardingData?: (updates: Partial<OnboardingData>) => void;
+  isLoading?: boolean;
+}
+
+// Simplified step props without navigation (for centralized navigation)
+export interface OnboardingStepBaseProps {
+  onboardingData?: OnboardingData;
+  updateOnboardingData?: (updates: Partial<OnboardingData>) => void;
+}
+
+export interface OnboardingData {
+  nickname?: string;
+  language?: string;
+  theme?: "light" | "dark";
+  timezone?: string;
+  notifications?: Partial<NotificationSettings>;
 }
 
 export interface NotificationSettingsSectionProps {

@@ -125,7 +125,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
                     <MoreVertical size={14} />
                   </button>
                 }
-                align="right"
+                Xalign="right"
                 usePortal={true}
                 closeOnItemClick={true}
                 width="w-60">
@@ -181,7 +181,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
             <p className="text-sm text-gray-500 mb-3">{t("tasks.panel.empty.title")}</p>
             <button
               onClick={onAddList}
-              className="text-sm bg-primary text-white px-3 py-2 rounded-md hover:bg-primary-hover transition-colors">
+              className="text-sm bg-primary text-white px-3 py-2 rounded-md hover:bg-text-muted transition-colors">
               {t("tasks.panel.empty.createFirst")}
             </button>
           </div>

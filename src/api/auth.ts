@@ -1,6 +1,8 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./config";
+import { auth, db } from "./config";
 import type { LoginRequest, RegisterRequest, AuthResponse } from "@/data/Auth/interfaces";
+import { UserProfile } from "@/data/User/interfaces";
+import { doc, getDoc } from "firebase/firestore";
 
 export const loginUser = async (credentials: LoginRequest): Promise<AuthResponse> => {
   try {
@@ -63,5 +65,29 @@ export const registerUser = async (credentials: RegisterRequest): Promise<AuthRe
         username: credentials.username,
       },
     };
+  }
+};
+
+export const fetchUserProfile = async (userId: string): Promise<UserProfile> => {
+  try {
+    console.log(userId)
+    const userDoc = await getDoc(doc(db, "user_profile", userId));
+
+    if (!userDoc.exists()) {
+      throw new Error("User profile not found");
+    }
+
+    const userData = userDoc.data();
+    return {
+      id: userDoc.id,
+      username: userData.username,
+      email: userData.email,
+      createdAt: userData.createdAt,
+      updatedAt: userData.updatedAt,
+      plan: "free",
+    } as UserProfile;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    throw new Error(error instanceof Error ? error.message : "Failed to fetch user profile");
   }
 };

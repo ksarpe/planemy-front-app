@@ -1,17 +1,16 @@
 // Layout feature component interfaces
 
+import { User } from "firebase/auth";
+
 export interface SidebarUserSectionProps {
   collapsed: boolean;
-  user: { displayName?: string | null; email?: string | null } | null;
+  user: User | null;
   handleNavigate: () => void;
   handleLogout: () => void;
 }
 
 export interface SidebarNavProps {
   handleNavigate: () => void;
-  linkPadding: string;
-  labelHiddenClass: string;
-  iconSize: number;
   totalNotifications: number;
   collapsed?: boolean;
 }

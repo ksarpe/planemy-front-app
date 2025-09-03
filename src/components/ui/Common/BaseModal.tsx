@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
 import { X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { BaseModalProps } from "@/data/Common/interfaces";
 
 export default function BaseModal({
@@ -32,31 +33,63 @@ export default function BaseModal({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
   const modalContent = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Overlay/Background */}
-      <div className="fixed inset-0 bg-black/60 transition-opacity" onClick={onClose} aria-hidden="true" />
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="bg-black/60 backdrop-blur-sm p-8 fixed inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer">
+          <motion.div
+            initial={{ scale: 0, rotate: "12.5deg" }}
+            animate={{ scale: 1, rotate: "0deg" }}
+            exit={{ scale: 0, rotate: "0deg" }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20,
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className={`bg-bg  text-text  p-6 rounded-xl ${maxWidth} max-h-[90vh] overflow-y-auto shadow-2xl cursor-default relative`}>
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold">{title}</h3>
+              {showCloseButton && (
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={onClose}
+                  className="text-text/60  hover:text-text  transition-colors p-1 rounded-lg hover:bg-bg-alt ">
+                  <X size={20} />
+                </motion.button>
+              )}
+            </div>
 
-      {/* Modal Content */}
-      <div className={`relative bg-white rounded-lg shadow-xl ${maxWidth} max-h-[90vh] overflow-y-auto m-4`}>
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">{title}</h3>
-            {showCloseButton && (
-              <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
-                <X size={20} />
-              </button>
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="mb-4">
+              {children}
+            </motion.div>
+
+            {/* Actions */}
+            {actions && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="flex gap-2 justify-end border-t border-gray-200 pt-4">
+                {actions}
+              </motion.div>
             )}
-          </div>
-
-          <div className="mb-4">{children}</div>
-
-          {actions && <div className="flex gap-2 justify-end border-t border-gray-100 pt-4">{actions}</div>}
-        </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 
   // Render modal in a portal to ensure it's rendered at the top level

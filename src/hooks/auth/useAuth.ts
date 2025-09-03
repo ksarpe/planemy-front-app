@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import { loginUser, registerUser } from "@/api/auth";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { loginUser, registerUser, fetchUserProfile } from "@/api/auth";
 import type { LoginRequest, RegisterRequest } from "@/data/Auth/interfaces";
 
 export const useLogin = () => {
@@ -25,5 +25,12 @@ export const useRegister = () => {
     onError: (error) => {
       console.error("Registration failed:", error);
     },
+  });
+};
+
+export const useUserProfile = (userId: string) => {
+  return useQuery({
+    queryKey: ["userProfile", userId],
+    queryFn: () => fetchUserProfile(userId),
   });
 };

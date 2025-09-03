@@ -81,7 +81,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
             <p className="text-sm text-gray-500 mb-3">Brak list zakupów</p>
             <button
               onClick={onAddList}
-              className="text-sm bg-primary text-white px-3 py-2 rounded-md hover:bg-primary-hover transition-colors">
+              className="text-sm bg-primary text-white px-3 py-2 rounded-md hover:bg-text-muted transition-colors">
               Utwórz pierwszą listę
             </button>
           </div>
@@ -118,7 +118,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                       ) : (
                         <div>
                           <h4 className="font-medium text-sm truncate">{list.name}</h4>
-                          
+
                           {/* Display labels */}
                           {list.labels && list.labels.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-1">
@@ -170,7 +170,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                             <MoreVertical size={14} />
                           </button>
                         }
-                        align="right"
+                        Xalign="right"
                         usePortal={true}
                         closeOnItemClick={true}
                         width="w-60">
@@ -194,7 +194,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                             <span className="flex items-center">Ustaw jako domyślną</span>
                           </BasicDropdownItem>
                         )}
-                        
+
                         {/* Add Labels Dropdown */}
                         <div onClick={(e) => e.stopPropagation()}>
                           <BasicDropdown
@@ -204,11 +204,10 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                                 Etykiety
                               </button>
                             }
-                            align="left"
+                            Xalign="left"
                             width="w-64"
                             closeOnItemClick={true}
                             usePortal={true}>
-                            
                             {labels.length > 0 ? (
                               <>
                                 {labels.map((label) => (
@@ -218,7 +217,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                                       createLabelConnection(list.id, "shopping_list", label.id);
                                       // Update local list labels if needed
                                       if (!list.labels) list.labels = [];
-                                      if (!list.labels.some(l => l.id === label.id)) {
+                                      if (!list.labels.some((l) => l.id === label.id)) {
                                         list.labels.push(label);
                                       }
                                     }}>
@@ -228,8 +227,8 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                                     </div>
                                   </BasicDropdownItem>
                                 ))}
-                                <BasicDropdownItem 
-                                  icon={Plus} 
+                                <BasicDropdownItem
+                                  icon={Plus}
                                   onClick={handleCreateLabel}
                                   separator={true}
                                   variant="blue">
@@ -237,10 +236,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                                 </BasicDropdownItem>
                               </>
                             ) : (
-                              <BasicDropdownItem 
-                                icon={Plus} 
-                                onClick={handleCreateLabel}
-                                variant="blue">
+                              <BasicDropdownItem icon={Plus} onClick={handleCreateLabel} variant="blue">
                                 Utwórz etykietę
                               </BasicDropdownItem>
                             )}

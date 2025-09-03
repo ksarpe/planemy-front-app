@@ -1,120 +1,65 @@
+/* Import Google Fonts KEEP IT HERE BECAUSE CONFLICTS */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
 @import "tailwindcss";
-/* @custom-variant dark (&:where(.dark, .dark *)); */
+@import "@/styles/ai.css";
+@import "@/styles/avatar.css";
+@import "@/styles/colors.css";
 
 @layer base {
+  :root {
+    --font-base: 16px; /* Base font size */
+    --scale: 1.25; /* Typographic scale */
+  }
+
+  /* Global styles for the entire document */
   body {
-    font-family: "Circular", "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-      "Segoe UI Symbol", "Noto Color Emoji";
-    font-size: 16px;
-    font-weight: 600;
+    font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: var(--font-base);
+    font-weight: 400;
+    line-height: 1.5; /* Better, more readable line-height */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-}
 
-@theme {
-  /* 🎨 Default theme (Cozy Room) */
-  --color-text: #1e1e1e; /* nigth */
-  --color-text-light: #666666; /*  ciemniejszy szary */
-  --color-bg: #fdf6ec; /* jasny kremowy */
-  --color-bg-alt: #f4e3d3; /*  ciemniejszy kremowy */
-  --color-bg-hover: #e3cdbf; /* Coffee */
-  --color-primary: #a27b77; /* Peach accent */
-  --color-primary-hover: #8f6863; /* Slightly darker for hover state */
-
-  --color-success: #6a9e6f; /* brunswick  green #588157(maybe) */
-  --color-success-hover: #4e7c54; /* emerald-700 */
-  --color-negative: #e74c3c; /* red-600 */
-}
-/* 🍭 Sweet Factory Theme */
-.theme-sweet-factory {
-  --color-text: #ffffff;
-  --color-bg: #f5becd; /* fuchsia-50 */
-  --color-bg-alt: #d486a1; /* violet-50 */
-  --color-bg-hover: #6b2d5c; /* purple-400 */
-  --color-primary: #ec4899; /* pink-500 */
-  --color-success: #46acc2; /* violet-500 */
-  --color-success-hover: #378fa3; /* violet-600 */
-}
-
-/* 💼 Productive Business Theme */
-.theme-productive-business {
-  --color-text: #0f172a;
-  --color-bg: #e2e8f0; /* slate-50 */
-  --color-bg-alt: #cad8eb; /* slate-200 */
-  --color-bg-hover: #64748b; /* slate-500 */
-  --color-primary: #1e40af; /* blue-700 */
-  --color-success: #475569; /* slate-600 */
-  --color-success-hover: #334155; /* slate-700 */
-}
-
-/* 🌚 Dark Mode Theme */
-.theme-dark-mode {
-  --color-text: #f8fafc;
-  --color-bg: #0f172a; /* slate-900 */
-  --color-bg-alt: #1e293b; /* slate-800 */
-  --color-bg-hover: #374151; /* gray-700 */
-  --color-primary: #6b7280; /* gray-500 */
-  --color-success: #4b5563; /* gray-600 */
-  --color-success-hover: #374151; /* gray-700 */
-}
-
-/* AI Textbox Space Fade Animation */
-@keyframes space-fade {
-  0% {
-    background-position: 0% 50%;
+  /* Headings and their sizes */
+  h1 {
+    font-size: calc(var(--font-base) * var(--scale) * var(--scale) * var(--scale) * var(--scale));
+    font-weight: 700;
+    line-height: 1.2;
   }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
 
-.ai-textbox-animated {
-  position: relative;
-  width: 100%;
-  border-radius: 8px;
-  padding: 2px; /* Grubość ramki */
-  background: linear-gradient(
-    45deg,
-    #157a6e,
-    /* Różowy */ #754668,
-    /* Ciemny różowy */ #dcc5b2,
-    /* Fioletowy */ #c94277,
-    /* Jasny fioletowy */ #dcc5b2,
-    /* Różowy */ #754668,
-    /* Magenta */ #157a6e /* Powrót do różowego */
-  );
-  background-size: 300% 300%;
-  animation: space-fade 4s ease-in-out infinite;
-}
-
-.scrollbar-hide {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  &::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
+  h2 {
+    font-size: calc(var(--font-base) * var(--scale) * var(--scale) * var(--scale));
+    font-weight: 700;
+    line-height: 1.25;
   }
-}
 
-@media (min-width: 1024px) {
-  .scrollbar-hide {
-    scrollbar-width: thin; /* Firefox - thin scrollbar */
-    -ms-overflow-style: auto; /* Internet Explorer 10+ */
-    &::-webkit-scrollbar {
-      display: block; /* Safari and Chrome */
-      width: 8px; /* Szerokość scrollbara */
-    }
-    &::-webkit-scrollbar-track {
-      background: transparent; /* Przezroczyste tło ścieżki */
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.2); /* Przezroczysty thumb */
-      border-radius: 4px; /* Zaokrąglone rogi */
-      border: 1px solid transparent; /* Odstęp od krawędzi */
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: rgba(0, 0, 0, 0.3); /* Ciemniejszy przy hover */
-    }
+  h3 {
+    font-size: calc(var(--font-base) * var(--scale) * var(--scale));
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  h4 {
+    font-size: calc(var(--font-base) * var(--scale));
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  h5 {
+    font-size: var(--font-base);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  h6 {
+    font-size: calc(var(--font-base) / var(--scale));
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  a {
+    text-decoration: none;
   }
 }

@@ -2,7 +2,6 @@ import { usePreferencesContext } from "@/hooks/context/usePreferencesContext";
 import { useEffect, useRef, useState } from "react";
 import {
   PersonalInformationSection,
-  AppearanceThemeSection,
   NotificationSettingsSection,
   LanguageRegionSection,
   SecuritySection,
@@ -19,7 +18,7 @@ import { useT } from "@/hooks/useT";
 export default function ProfileView() {
   const { user } = useAuthContext();
   const { showToast } = useToastContext();
-  const { colorTheme, setColorTheme, setColorThemePreview, language, timezone, updateSettings } =
+  const { language, timezone, updateSettings } =
     usePreferencesContext();
   const { t } = useT();
 
@@ -73,16 +72,7 @@ export default function ProfileView() {
 
   // Stage locale changes locally; persist only when user presses Save.
   const [pendingLanguage, setPendingLanguage] = useState(language);
-  const [pendingTimezone, setPendingTimezone] = useState(timezone);
-
-  // Stage theme changes locally but preview immediately
-  const initialThemeRef = useRef(colorTheme);
-  const [pendingTheme, setPendingTheme] = useState(colorTheme);
-  const handleThemeSelect = (index: number) => {
-    setPendingTheme(index);
-    // live preview but do not persist until save
-    (setColorThemePreview ?? setColorTheme)(index);
-  };
+  const [pendingTimezone, setPendingTimezone] = useState(timezone);  
 
   const isLoading = !profileLoaded;
 
@@ -113,8 +103,7 @@ export default function ProfileView() {
     const keys = Object.keys(notifications) as (keyof NotificationSettings)[];
     const notifChanged = keys.some((k) => notifications[k] !== initialNotifications.current[k]);
     const localeChanged = pendingLanguage !== language || pendingTimezone !== timezone;
-    const themeChanged = pendingTheme !== initialThemeRef.current;
-    return userChanged || notifChanged || localeChanged || themeChanged;
+    return userChanged || notifChanged || localeChanged
   })();
 
   // Warn on browser/tab close when there are unsaved changes
@@ -144,7 +133,6 @@ export default function ProfileView() {
       const payload: Partial<UserSettings> = {};
       if (pendingLanguage !== language) payload.language = pendingLanguage;
       if (pendingTimezone !== timezone) payload.timezone = pendingTimezone;
-      if (pendingTheme !== initialThemeRef.current) payload.colorThemeIndex = pendingTheme;
 
       // Save settings
       if (Object.keys(payload).length) {
@@ -161,7 +149,6 @@ export default function ProfileView() {
       // Mark current values as initial
       initialUserInfo.current = userInfo;
       initialNotifications.current = notifications;
-      initialThemeRef.current = pendingTheme;
       setDirtyTick((v) => v + 1); // force re-render to recompute isDirty
       showToast("success", t("profile.changesSaved"));
     } catch (e) {
@@ -177,8 +164,6 @@ export default function ProfileView() {
     setNotifications(initialNotifications.current);
     setPendingLanguage(language);
     setPendingTimezone(timezone);
-    setPendingTheme(initialThemeRef.current);
-    setColorTheme(initialThemeRef.current); // revert preview
     setDirtyTick((v) => v + 1); // force re-render to recompute isDirty
     showToast("warning", t("profile.changesDiscarded"));
   };
@@ -208,9 +193,6 @@ export default function ProfileView() {
                     notifications={notifications}
                     handleNotificationChange={handleNotificationChange}
                   />
-                </div>
-                <div className="md:col-span-4">
-                  <AppearanceThemeSection selectedTheme={pendingTheme} setSelectedTheme={handleThemeSelect} />
                 </div>
 
                 {/* Row 2: Language/timezone in narrower column + wide notifications */}

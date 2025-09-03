@@ -158,7 +158,6 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2 }}
                     className="space-y-4">
-                    
                     {/* Quantity and Unit */}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -168,7 +167,9 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                           min="0.1"
                           step="0.1"
                           value={formData.quantity}
-                          onChange={(e) => setFormData((prev) => ({ ...prev, quantity: parseFloat(e.target.value) || 1 }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({ ...prev, quantity: parseFloat(e.target.value) || 1 }))
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
                           required
                           disabled={isSubmitting}
@@ -274,7 +275,7 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-text-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   disabled={isSubmitting}>
                   {isSubmitting ? "Dodaję..." : "Dodaj produkt"}
                 </button>

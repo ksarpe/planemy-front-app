@@ -81,7 +81,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
             <button
               type="submit"
               disabled={!formData.name.trim() || isSubmitting}
-              className="flex-1 flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+              className="flex-1 flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-text-muted disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
               {isSubmitting ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
               ) : (

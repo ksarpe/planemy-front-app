@@ -5,7 +5,8 @@ import { BasicDropdownProps, BasicDropdownItemProps } from "@/data/Common/interf
 export const BasicDropdown: React.FC<BasicDropdownProps> = ({
   trigger,
   children,
-  align = "right",
+  Xalign = "right",
+  Yalign = "bottom",
   width = "w-64",
   closeOnItemClick = true,
   className = "",
@@ -23,12 +24,19 @@ export const BasicDropdown: React.FC<BasicDropdownProps> = ({
       const triggerRect = triggerRef.current.getBoundingClientRect();
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+      const dropdownHeight = dropdownRef.current?.offsetHeight || 0;
+      const dropdownWidth = dropdownRef.current?.offsetWidth || 0;
 
-      const top = triggerRect.bottom + scrollTop + 8; // 8px gap
+      // Calculate vertical position
+      let top = triggerRect.bottom + scrollTop + 8; // 8px gap below
+      if (Yalign === "top") {
+        top = triggerRect.top + scrollTop - dropdownHeight - 8; // 8px gap above
+      }
+
+      // Calculate horizontal position
       let left = triggerRect.left + scrollLeft;
-
-      if (align === "right") {
-        left = triggerRect.right + scrollLeft - 256; // assuming w-64 = 256px
+      if (Xalign === "right") {
+        left = triggerRect.right + scrollLeft - dropdownWidth;
       }
 
       setPosition({ top, left });
@@ -70,7 +78,7 @@ export const BasicDropdown: React.FC<BasicDropdownProps> = ({
         window.removeEventListener("resize", handleScroll);
       }
     };
-  }, [isOpen, usePortal, align]);
+  }, [isOpen, usePortal, Xalign, Yalign]);
 
   const handleItemClick = () => {
     if (closeOnItemClick) {
@@ -95,15 +103,21 @@ export const BasicDropdown: React.FC<BasicDropdownProps> = ({
   const renderDropdown = () => {
     if (!isOpen) return null;
 
+    // Calculate positioning classes for non-portal mode
+    const getPositionClasses = () => {
+      if (usePortal) return "fixed";
+
+      const verticalClass = Yalign === "top" ? "bottom-full mb-2" : "top-full mt-2";
+      const horizontalClass = Xalign === "left" ? "left-0" : "right-0";
+
+      return `absolute ${verticalClass} ${horizontalClass}`;
+    };
+
     const dropdownContent = (
       <>
         <div
           ref={dropdownRef}
-          className={`${
-            usePortal ? "fixed" : "absolute top-full mt-2"
-          } ${width} bg-white  border border-gray-200  rounded-md shadow-lg z-50 ${
-            !usePortal && align === "left" ? "left-0" : !usePortal && align === "right" ? "right-0" : ""
-          }`}
+          className={`${getPositionClasses()} ${width} bg-white border border-gray-200 rounded-md shadow-lg z-50`}
           style={usePortal ? { top: position.top, left: position.left } : {}}>
           <div className="p-2">{childrenWithProps}</div>
         </div>
@@ -138,7 +152,6 @@ export const BasicDropdownItem: React.FC<BasicDropdownItemProps> = ({
   disabled = false,
   variant = "default",
   className = "",
-  separator = false,
 }) => {
   const variantStyles = {
     default: "text-gray-700  hover:bg-gray-50 ",
@@ -150,7 +163,7 @@ export const BasicDropdownItem: React.FC<BasicDropdownItemProps> = ({
 
   const baseClasses = `w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors text-sm ${
     disabled ? "opacity-50 cursor-not-allowed" : `cursor-pointer ${variantStyles[variant]}`
-  } ${separator ? "mt-2 border-t border-gray-100  pt-3" : ""} ${className}`;
+  }  ${className}`;
 
   return (
     <button onClick={disabled ? undefined : onClick} disabled={disabled} className={baseClasses}>
