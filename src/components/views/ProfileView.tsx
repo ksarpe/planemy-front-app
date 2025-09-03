@@ -174,7 +174,7 @@ export default function ProfileView() {
         <div className="p-6 pb-24">
           {isLoading ? (
             <div className="w-full min-h-[300px] flex items-center justify-center">
-              <Spinner text={t("profile.loadingProfile")} />
+              <Spinner/>
             </div>
           ) : (
             <>

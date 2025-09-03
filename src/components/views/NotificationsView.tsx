@@ -66,7 +66,7 @@ export default function NotificationsView() {
       <div className="flex h-full p-4 gap-4">
         <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto scrollbar-hide">
           <div className="flex items-center justify-center min-h-[400px]">
-            <Spinner text={t("notifications.view.loading")} />
+            <Spinner />
           </div>
         </div>
       </div>
@@ -131,7 +131,9 @@ export default function NotificationsView() {
                               {/* Header */}
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="text-lg">{getObjectTypeIcon(share.object_type)}</span>
-                                <span className="text-sm font-medium text-blue-600 ">{t("notifications.sharing.newSharing")}</span>
+                                <span className="text-sm font-medium text-blue-600 ">
+                                  {t("notifications.sharing.newSharing")}
+                                </span>
                               </div>
 
                               {/* Title */}
@@ -155,7 +157,12 @@ export default function NotificationsView() {
                                 </div>
                                 <div className="flex items-center gap-1">
                                   <UserCheck size={14} />
-                                  <span>{t("notifications.sharing.permissions")}: {share.role === "view" ? t("notifications.sharing.read") : t("notifications.sharing.edit")}</span>
+                                  <span>
+                                    {t("notifications.sharing.permissions")}:{" "}
+                                    {share.role === "view"
+                                      ? t("notifications.sharing.read")
+                                      : t("notifications.sharing.edit")}
+                                  </span>
                                 </div>
                               </div>
 

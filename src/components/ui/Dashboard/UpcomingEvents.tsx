@@ -12,7 +12,7 @@ export default function UpcomingEvents() {
 
   if (!hasEvents) {
     return (
-      <div className="bg-bg-alt rounded-lg p-6 border border-gray-200">
+      <div className="bg-bg rounded-md p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-text flex items-center">
             <Calendar className="h-5 w-5 mr-2 text-primary" />
@@ -33,25 +33,21 @@ export default function UpcomingEvents() {
   }
 
   return (
-    <div className="bg-bg-alt rounded-lg p-6 border border-gray-200">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-bg rounded-md p-4">
+      <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-text flex items-center">
-          <Calendar className="h-5 w-5 mr-2 text-primary" />
           {t("dashboard.upcomingEvents")}
-          <span className="ml-2 bg-primary/10 text-primary text-xs font-medium px-2 py-1 rounded-full">
+          <span className="ml-2 bg-primary-light text-primary text-sm font-bold px-2 py-1 rounded-full">
             {totalEvents}
           </span>
         </h3>
-        <button
-          onClick={() => navigate("/calendar")}
-          className="text-primary hover:text-primary/80 p-1 rounded-full hover:bg-primary/10 transition-colors">
-          <ChevronRight className="h-5 w-5" />
-        </button>
+        <p className="text-xs text-primary cursor-pointer " onClick={() => navigate("/calendar")}>Przejdź do kalendarza</p>
       </div>
+      <p className="text-sm text-text-muted mb-4">W kolejnych 2 miesiącach</p>
 
       {/* Next Event Highlight */}
       {nextEvent && (
-        <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-4">
+        <div className="bg-primary/5 border border-primary/20 rounded-md p-4 mb-4">
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-xs text-primary font-medium mb-1">{t("dashboard.nextEvent")}</p>
@@ -63,7 +59,7 @@ export default function UpcomingEvents() {
                   : format(new Date(nextEvent.start), "EEEE, d MMMM 'o' HH:mm", { locale: pl })}
               </div>
             </div>
-            <div className={`w-3 h-3 rounded-full`} style={{ backgroundColor: nextEvent.color || "#6b7280" }} />
+            <div className="w-3 h-3 rounded-full bg-primary" />
           </div>
         </div>
       )}
@@ -80,12 +76,11 @@ export default function UpcomingEvents() {
               {group.events.slice(0, 3).map((event) => (
                 <div
                   key={event.id}
-                  className="flex items-center justify-between p-3 bg-bg rounded-md hover:bg-bg-hover transition-colors cursor-pointer"
+                  className="flex items-center justify-between p-3 bg-bg-alt rounded-md hover:bg-bg-hover transition-colors cursor-pointer"
                   onClick={() => navigate("/calendar")}>
                   <div className="flex items-center flex-1">
                     <div
-                      className={`w-2 h-2 rounded-full mr-3 flex-shrink-0`}
-                      style={{ backgroundColor: event.color || "#6b7280" }}
+                      className="w-2 h-2 rounded-full mr-3 flex-shrink-0 bg-primary"
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-text truncate">{event.title}</p>
@@ -103,22 +98,13 @@ export default function UpcomingEvents() {
               {group.events.length > 3 && (
                 <button
                   onClick={() => navigate("/calendar")}
-                  className="w-full text-center py-2 text-sm text-primary hover:text-primary/80 font-medium">
+                  className="w-full text-start py-2 text-sm text-primary hover:text-primary/80 font-medium">
                   {t("dashboard.seeMore", { count: group.events.length - 3 })}
                 </button>
               )}
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Footer */}
-      <div className="mt-4 pt-4 border-t border-gray-200">
-        <button
-          onClick={() => navigate("/calendar")}
-          className="w-full text-center py-2 text-sm text-primary hover:text-primary/80 font-medium">
-          {t("dashboard.seeAllInCalendar")}
-        </button>
       </div>
     </div>
   );

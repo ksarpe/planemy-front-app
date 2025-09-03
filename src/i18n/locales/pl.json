@@ -365,9 +365,7 @@
       "unknown": "Nieznany"
     },
     "banner": {
-      "title": "Masz problem lub pomysł na ulepszenie?",
-      "description": "Skorzystaj z naszego systemu feedbacku, aby zgłosić błędy lub zaproponować nowe funkcje.",
-      "clickHere": "Kliknij na ten baner!"
+      "title": "Kliknij aby zgłosić błąd, zaproponować zmianę, lub po prostu podejrzeć nad czym pracujemy!"
     }
   },
   "tasks": {

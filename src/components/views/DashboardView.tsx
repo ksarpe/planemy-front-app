@@ -3,7 +3,9 @@ import { UpcomingPayments, FeedbackBanner, UpcomingEvents, SummaryCards } from "
 export default function DashboardView() {
   return (
     <div className="h-full overflow-auto scrollbar-hide">
-      <div className="p-4 space-y-4 bg-bg min-h-full">
+      <div className="p-4 space-y-4 bg-bg-alt min-h-full">
+        {/* Feedback Banner */}
+        <FeedbackBanner />
         {/* Quick Actions and Summary Cards */}
         <SummaryCards />
 
@@ -12,9 +14,6 @@ export default function DashboardView() {
           <UpcomingEvents />
           <UpcomingPayments />
         </div>
-
-        {/* Feedback Banner */}
-        <FeedbackBanner />
       </div>
     </div>
   );

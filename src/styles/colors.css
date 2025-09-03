@@ -4,6 +4,7 @@
   --color-bg: hsl(0, 0%, 100%);
   --color-bg-alt: hsl(0, 0%, 96%);
   --color-primary: hsl(173, 100%, 42%);
+  --color-primary-light: hsl(173, 80%, 90%);
 }
 
 @layer theme {
@@ -11,7 +12,8 @@
     --color-text: hsl(0, 0%, 100%);
     --color-text-muted: hsl(0, 0%, 70%);
     --color-bg: hsl(0, 0%, 0%); /* nigth */
-    --color-bg-alt: hsl(0, 0%, 4%);
+    --color-bg-alt: hsl(0, 0%, 10%);
     --color-primary: hsl(173, 100%, 58%);
+    --color-primary-light: hsl(0, 0%, 20%);
   }
 }
