@@ -1,6 +1,6 @@
 // src/components/ui/InlineAddInput.tsx
 import { useEffect, useRef } from "react";
-import type { InlineAddInputProps } from "@/data/Utils/Components/UtilComponentInterfaces";
+import type { InlineAddInputProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
 
 export default function InlineAddInput({
   onSubmit,

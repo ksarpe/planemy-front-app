@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import type { ShoppingFiltersProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
+import type { ShoppingFiltersProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
 
 export function ShoppingFilters({ searchQuery, onSearchChange }: ShoppingFiltersProps) {
   return (

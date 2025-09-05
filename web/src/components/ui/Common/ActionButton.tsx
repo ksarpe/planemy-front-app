@@ -1,6 +1,6 @@
 // ActionButton.tsx
 import { clsx } from "clsx";
-import { ActionButtonProps } from "@/data/Common/interfaces";
+import { ActionButtonProps } from "@shared/data/Common/interfaces";
 
 // ZMIANA: Bardziej zaawansowana struktura stylów dla pełnej kontroli
 const colorStyles = {

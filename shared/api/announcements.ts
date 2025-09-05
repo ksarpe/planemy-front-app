@@ -12,7 +12,7 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import type { Announcement, UserNotificationStatus } from "@/data/Utils/interfaces";
+import type { Announcement, UserNotificationStatus } from "../data/Utils/interfaces";
 
 const ANNOUNCEMENTS_COLLECTION = "announcements";
 const USER_NOTIFICATION_STATUS_COLLECTION = "user_notification_status";

@@ -1,7 +1,7 @@
 import { collection, doc, addDoc, query, where, getDocs, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
-import { db } from "@shared/api/config";
-import type { SharePermission, ShareableObjectType } from "@/data/Utils/types";
-import type { Permission } from "@/data/Utils/interfaces";
+import { db } from "../api/config";
+import type { SharePermission, ShareableObjectType } from "../data/Utils/types";
+import type { Permission } from "../data/Utils/interfaces";
 
 const PERMISSIONS_COLLECTION = "permissions";
 

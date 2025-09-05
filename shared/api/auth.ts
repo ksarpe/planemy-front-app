@@ -1,7 +1,7 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "./config";
-import type { LoginRequest, RegisterRequest, AuthResponse } from "@/data/Auth/interfaces";
-import { UserProfile } from "@/data/User/interfaces";
+import type { LoginRequest, RegisterRequest, AuthResponse } from "../data/Auth/interfaces";
+import { UserProfile } from "../data/User/interfaces";
 import { doc, getDoc } from "firebase/firestore";
 
 export const loginUser = async (credentials: LoginRequest): Promise<AuthResponse> => {

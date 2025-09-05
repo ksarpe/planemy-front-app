@@ -25,7 +25,7 @@ const predefinedColors = [
   "#1F2937",
 ];
 
-import type { LabelFormProps } from "@/data/Utils/Components/UtilComponentInterfaces";
+import type { LabelFormProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
 
 export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, loading }: LabelFormProps) {
   const { t } = useT();

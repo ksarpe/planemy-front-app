@@ -8,9 +8,9 @@ import {
   updateProfile,
   AuthError,
 } from "firebase/auth";
-import { auth } from "@shared/api/config";
-import type { AuthContextType } from "@/data/Auth";
-import i18n from "@/i18n";
+import { auth } from "../api/config";
+import type { AuthContextType } from "../data/Auth";
+import i18n from "../i18n";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export { AuthContext };

@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState, ReactNode, useMemo, useRef } from "react";
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
 import { useTaskLists } from "@shared/hooks/tasks/useTasksLists";
-import type { TaskInterface, TaskContextProps } from "@/data/Tasks/interfaces";
+import type { TaskInterface, TaskContextProps } from "@shared/data/Tasks/interfaces";
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
 export { TaskContext };

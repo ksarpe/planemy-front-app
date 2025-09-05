@@ -1,7 +1,7 @@
 import { Check, Edit2, Heart, Trash2 } from "lucide-react";
 import { CategoryEmoji } from "../Common/CategoryEmoji";
 import { QtyStepper } from "../Common/QtyStepper";
-import type { ShoppingItemDisplayProps } from "@/data/Shopping/UI/ShoppingItemInterfaces";
+import type { ShoppingItemDisplayProps } from "@shared/data/Shopping/UI/ShoppingItemInterfaces";
 
 export function ShoppingItemDisplay({
   item,

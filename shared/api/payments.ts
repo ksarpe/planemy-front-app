@@ -13,7 +13,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { useAuthContext } from "../hooks/context/useAuthContext";
-import type { Payment } from "@/data/Payments/interfaces";
+import type { Payment } from "../data/Payments/interfaces";
 
 export const useUserPayments = (): Payment[] => {
   const [payments, setPayments] = useState<Payment[]>([]);

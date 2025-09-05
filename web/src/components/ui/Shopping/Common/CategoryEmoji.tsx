@@ -1,4 +1,4 @@
-import type { CategoryEmojiProps } from "@/data/Shopping/UI/CommonInterfaces";
+import type { CategoryEmojiProps } from "@shared/data/Shopping/UI/CommonInterfaces";
 
 export function CategoryEmoji({ category }: CategoryEmojiProps) {
   const getCategoryEmoji = (category: string) => {

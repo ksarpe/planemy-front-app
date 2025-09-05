@@ -1,5 +1,5 @@
 import { createContext, ReactNode } from "react";
-import { LabelInterface, LabelContextType } from "@/data/Utils/interfaces";
+import { LabelInterface, LabelContextType } from "@shared/data/Utils/interfaces";
 import {
   useLabels,
   //useLabelConnections,

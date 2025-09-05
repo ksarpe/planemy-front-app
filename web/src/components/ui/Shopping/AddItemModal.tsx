@@ -3,7 +3,7 @@ import { X, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useShoppingContext } from "@shared/hooks/context/useShoppingContext";
 import { useAddShoppingItem } from "@shared/hooks/shopping/useShoppingItems";
-import type { AddItemModalProps } from "@/data/Shopping";
+import type { AddItemModalProps } from "@shared/data/Shopping";
 
 export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
   const { categories } = useShoppingContext();

@@ -1,5 +1,5 @@
 import { Globe } from "lucide-react";
-import type { LanguageRegionSectionProps } from "@/data/User";
+import type { LanguageRegionSectionProps } from "@shared/data/User";
 import { useT } from "@shared/hooks/useT";
 
 export default function LanguageRegionSection({

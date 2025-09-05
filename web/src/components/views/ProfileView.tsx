@@ -8,10 +8,10 @@ import {
   SaveBar,
 } from "@/components/ui/User";
 import { useBlocker } from "react-router-dom";
-import type { NotificationSettings, UserBasicInfo, UserSettings } from "@/data/User";
+import type { NotificationSettings, UserBasicInfo, UserSettings } from "@shared/data/User";
 import { upsertUserProfile, getUserProfile } from "@shared/api/user_profile";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { useToastContext } from "@shared/hooks/context/useToastContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 import Spinner from "@/components/ui/Utils/Spinner";
 import { useT } from "@shared/hooks/useT";
 

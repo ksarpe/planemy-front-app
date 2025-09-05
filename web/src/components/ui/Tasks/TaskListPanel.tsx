@@ -3,10 +3,10 @@ import { Plus, MoreVertical, Edit2, Trash2, Share2, Check, Users } from "lucide-
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
 import { useTranslation } from "react-i18next";
 import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
-import type { TaskListInterface } from "@/data/Tasks/interfaces";
+import type { TaskListInterface } from "@shared/data/Tasks/interfaces";
 import { useDeleteTaskList, useUpdateTaskList } from "@shared/hooks/tasks/useTasksLists";
 import { useTasks } from "@shared/hooks/tasks/useTasks";
-import type { TaskListPanelProps } from "@/data/Tasks/Components/TaskComponentInterfaces";
+import type { TaskListPanelProps } from "@shared/data/Tasks/Components/TaskComponentInterfaces";
 import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
 
 export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: TaskListPanelProps) {

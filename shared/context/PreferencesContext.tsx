@@ -1,17 +1,18 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
-import type { PreferencesContextProps } from "@/data/User/preferencesContext";
+import type { PreferencesContextProps } from "../data/User/preferencesContext";
 import { useTranslation } from "react-i18next";
 
-import { getUserSettings, updateUserSettings } from "@shared/api/user_settings";
-import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { UserSettings } from "@/data/User/interfaces";
-import { useToastContext } from "@shared/hooks/context/useToastContext";
+import { getUserSettings, updateUserSettings } from "../api/user_settings";
+import { useAuthContext } from "../hooks/context/useAuthContext";
+import { UserSettings } from "../data/User/interfaces";
+import { persistentStorage } from "@shared/lib/storage.native";
+//import { useToastContext } from "../hooks/context/useToastContext";
 
 const PreferencesContext = createContext<PreferencesContextProps | undefined>(undefined);
 export { PreferencesContext };
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const { user } = useAuthContext();
   const { i18n } = useTranslation();
   const [mainListId, setMainListId] = useState<string | null>(null);
@@ -24,11 +25,14 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 
   // Load dark mode from localStorage on mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem("app_theme");
-    const isDarkMode =
-      savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setIsDark(isDarkMode);
-    updateHtmlClass(isDarkMode);
+    const loadTheme = async () => {
+      const savedTheme = await persistentStorage.getItem("app_theme");
+      const isDarkMode =
+        savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      setIsDark(isDarkMode);
+      updateHtmlClass(isDarkMode);
+    };
+    loadTheme();
   }, []);
 
   // Function to update HTML class
@@ -44,7 +48,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const toggleDark = () => {
     const newIsDark = !isDark;
     setIsDark(newIsDark);
-    localStorage.setItem("app_theme", newIsDark ? "dark" : "light");
+    persistentStorage.setItem("app_theme", newIsDark ? "dark" : "light");
     updateHtmlClass(newIsDark);
   };
 
@@ -83,12 +87,12 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       await updateUserSettings(user.uid, settings);
       if (settings.defaultTaskListId !== undefined) {
         setMainListId(settings.defaultTaskListId);
-        showToast("success", "Domyślna lista zadań została zaktualizowana!");
+        // showToast("success", "Domyślna lista zadań została zaktualizowana!");
       }
       // Handle new shopping default list id
       if (settings.defaultShoppingListId !== undefined) {
         setDefaultShoppingListId(settings.defaultShoppingListId || null);
-        showToast("success", "Domyślna lista zakupów została zaktualizowana!");
+        //showToast("success", "Domyślna lista zakupów została zaktualizowana!");
       }
       if (settings.language) setLanguage(settings.language);
       if (settings.timezone) setTimezone(settings.timezone);

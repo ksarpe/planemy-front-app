@@ -1,5 +1,5 @@
 import PaymentItem from "./PaymentItem";
-import type { PaymentSectionProps } from "@/data/Payments/Components/PaymentComponentInterfaces";
+import type { PaymentSectionProps } from "@shared/data/Payments/Components/PaymentComponentInterfaces";
 
 export const PaymentSection = ({
   title,

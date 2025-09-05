@@ -6,8 +6,8 @@ import {
   rejectObjectInvitation,
 } from "@shared/api/permissions";
 import { useAuthContext } from "../context/useAuthContext";
-import { useToastContext } from "../context/useToastContext";
-import type { ShareableObjectType, SharePermission } from "@/data/Utils/types";
+import { useToastContext } from "@/hooks/context/useToastContext";
+import type { ShareableObjectType, SharePermission } from "@shared/data/Utils/types";
 
 export const usePendingShares = (objectType: ShareableObjectType) => {
   const { user } = useAuthContext();

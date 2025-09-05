@@ -1,5 +1,5 @@
 import { Plus, Minus } from "lucide-react";
-import type { QtyStepperProps } from "@/data/Shopping/UI/CommonInterfaces";
+import type { QtyStepperProps } from "@shared/data/Shopping/UI/CommonInterfaces";
 
 export function QtyStepper({ value, onDecrease, onIncrease, disabledDecrease = false, size = "sm" }: QtyStepperProps) {
   const sizeClasses = size === "sm" ? "h-6 w-6" : "h-7 w-7";

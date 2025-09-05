@@ -15,8 +15,8 @@ import {
 import { TaskListPanel } from "@/components/ui/Tasks/TaskListPanel";
 import Spinner from "../ui/Utils/Spinner";
 import { useTaskLists, useCreateTaskList } from "@shared/hooks/tasks/useTasksLists";
-import type { TaskListFilter } from "@/data/Tasks/types";
-import type { TaskListInterface } from "@/data/Tasks/interfaces";
+import type { TaskListFilter } from "@shared/data/Tasks/types";
+import type { TaskListInterface } from "@shared/data/Tasks/interfaces";
 
 export default function TasksView() {
   const { t } = useTranslation();

@@ -1,6 +1,6 @@
 import { AlertTriangle } from "lucide-react";
 import BaseModal from "./BaseModal";
-import { DeleteConfirmationModalProps } from "@/data/Common/interfaces";
+import { DeleteConfirmationModalProps } from "@shared/data/Common/interfaces";
 
 export default function DeleteConfirmationModal({
   isOpen,

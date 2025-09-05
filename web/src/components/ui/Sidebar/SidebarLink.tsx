@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import type { SidebarLinkProps } from "@/data/Layout";
+import type { SidebarLinkProps } from "@shared/data/Layout";
 
 export default function SidebarLink({ to, icon: Icon, label, onNavigate }: SidebarLinkProps) {
   // each navlink configuration, including default values + active/inactive styles

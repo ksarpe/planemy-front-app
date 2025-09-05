@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Calendar, Clock } from "lucide-react";
 import { useAddEvent } from "@shared/hooks/events";
 import { format } from "date-fns";
-import type { QuickEventCreatorProps } from "@/data/Calendar/Components/CalendarComponentInterfaces";
+import type { QuickEventCreatorProps } from "@shared/data/Calendar/Components/CalendarComponentInterfaces";
 
 export default function QuickEventCreator({
   selectedDate,

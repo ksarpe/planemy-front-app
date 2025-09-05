@@ -2,7 +2,7 @@ import { Package, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMemo } from "react";
 import { ShoppingItem } from "./ShoppingItem";
-import type { ShoppingItemsSectionProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
+import type { ShoppingItemsSectionProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
 
 export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: ShoppingItemsSectionProps) {
   // Keep incomplete items on top; completed at the bottom, preserving relative order

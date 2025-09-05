@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useCreateShoppingList } from "@shared/hooks/shopping/useShoppingLists";
 import { X } from "lucide-react";
-import type { AddListModalProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
+import type { AddListModalProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
 
 function AddListModal({ isOpen, onClose }: AddListModalProps) {
   const createList = useCreateShoppingList();

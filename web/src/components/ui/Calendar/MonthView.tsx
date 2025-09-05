@@ -16,7 +16,7 @@ import {
 import EventBlock from "./Event/EventBlock";
 import QuickEventCreator from "./QuickEventCreator";
 import PreviewEventBlockInline from "./PreviewEventBlockInline";
-import { EventInterface } from "@/data/Calendar/events";
+import { EventInterface } from "@shared/data/Calendar/events";
 
 export default function MonthView() {
   const { currentDate, events } = useCalendarContext();

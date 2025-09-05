@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { X, UserPlus } from "lucide-react";
 import { useShareObject } from "@shared/hooks/permissions/usePermissions";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { useToastContext } from "@shared/hooks/context/useToastContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 
-import type { ManageTaskListSharingModalProps } from "@/data/Tasks/interfaces";
-import type { SharePermission } from "@/data/Utils/types";
+import type { ManageTaskListSharingModalProps } from "@shared/data/Tasks/interfaces";
+import type { SharePermission } from "@shared/data/Utils/types";
 import { createPortal } from "react-dom";
 
 export default function ManageTaskListSharingModal({

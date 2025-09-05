@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { LabelContext } from "@/context/LabelContext";
+import { LabelContext } from "../../context/LabelContext";
 
 export const useLabelContext = () => {
   const context = useContext(LabelContext);

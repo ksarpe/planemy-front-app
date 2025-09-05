@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 //import { useT } from "@shared/hooks/useT";
-import type { OnboardingStepBaseProps } from "@/data/User/interfaces";
+import type { OnboardingStepBaseProps } from "@shared/data/User/interfaces";
 import ReactCountryFlag from "react-country-flag";
 
 export const PreferencesStep = ({ onboardingData, updateOnboardingData }: OnboardingStepBaseProps) => {

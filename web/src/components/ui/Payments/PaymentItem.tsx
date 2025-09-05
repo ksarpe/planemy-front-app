@@ -1,9 +1,9 @@
 import { ChevronDown, ChevronUp, Check, DollarSign, Calendar, AlertCircle } from "lucide-react";
-import { PaymentInterface } from "@/data/Payments/interfaces";
+import { PaymentInterface } from "@shared/data/Payments/interfaces";
 import { getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@shared/api/payments";
 import { PaymentDetailsPanel } from "./PaymentDetailsPanel";
 import { useTranslation } from "react-i18next";
-import type { PaymentItemProps } from "@/data/Payments/Components/PaymentComponentInterfaces";
+import type { PaymentItemProps } from "@shared/data/Payments/Components/PaymentComponentInterfaces";
 
 export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentItemProps) {
   const { t } = useTranslation();

@@ -1,5 +1,5 @@
 import { CheckCircle2, Clock, AlertTriangle } from "lucide-react";
-import { TaskStatisticsProps } from "@/data/Tasks/interfaces";
+import { TaskStatisticsProps } from "@shared/data/Tasks/interfaces";
 import StatisticCard from "./Stats/StatisticCard";
 
 export default function TaskStatistics({ tasks, onFilterChange, filter }: TaskStatisticsProps) {

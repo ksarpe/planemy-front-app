@@ -1,4 +1,4 @@
-import type { UserSettings } from "@/data/User/interfaces";
+import type { UserSettings } from "../data/User/interfaces";
 import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "./config";
 

@@ -1,6 +1,6 @@
 // src/components/ui/DropdownMenu.tsx
 import { useEffect, useRef } from "react";
-import type { DropdownMenuProps } from "@/data/Utils/Components/UtilComponentInterfaces";
+import type { DropdownMenuProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
 
 export default function DropdownMenu({ isOpen, onClose, children, className = "" }: DropdownMenuProps) {
   const ref = useRef<HTMLDivElement>(null);

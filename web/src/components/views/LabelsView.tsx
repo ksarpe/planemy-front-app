@@ -1,5 +1,5 @@
 import { useLabelContext } from "@shared/hooks/context/useLabelContext";
-import { LabelInterface } from "@/data/Utils/interfaces";
+import { LabelInterface } from "@shared/data/Utils/interfaces";
 import { useState } from "react";
 import LabelForm from "@/components/ui/Tags/LabelForm";
 import LabelsGrid from "@/components/ui/Tags/LabelsGrid";

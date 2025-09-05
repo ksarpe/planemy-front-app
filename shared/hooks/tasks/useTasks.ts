@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { useToastContext } from "@shared/hooks/context/useToastContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 import { useT } from "@shared/hooks/useT";
 import { clearCompletedTasks, uncheckAllTasks } from "@shared/api/tasks_lists";
 import { createTaskApi, updateTaskApi, removeTaskApi, completeTaskApi } from "@shared/api/tasks";
 import { fetchTasksForListApi } from "@shared/api/tasks";
-import type { TaskInterface } from "@/data/Tasks/interfaces";
+import type { TaskInterface } from "@shared/data/Tasks/interfaces";
 import { v4 as uuidv4 } from "uuid";
 
 export const useTasks = (listId: string | null) => {

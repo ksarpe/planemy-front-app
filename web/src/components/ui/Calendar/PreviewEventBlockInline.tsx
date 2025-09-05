@@ -1,5 +1,5 @@
 import { Clock } from "lucide-react";
-import type { PreviewEventBlockInlineProps } from "@/data/Calendar/Components/CalendarComponentInterfaces";
+import type { PreviewEventBlockInlineProps } from "@shared/data/Calendar/Components/CalendarComponentInterfaces";
 
 export default function PreviewEventBlockInline({
   event,

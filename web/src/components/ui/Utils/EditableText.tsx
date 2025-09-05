@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import type { EditableTextProps } from "@/data/Common/Components/CommonComponentInterfaces";
+import type { EditableTextProps } from "@shared/data/Common/Components/CommonComponentInterfaces";
 
 export default function EditableText({ value, onSave, className, placeholder }: EditableTextProps) {
   const [isEditing, setIsEditing] = useState(false);

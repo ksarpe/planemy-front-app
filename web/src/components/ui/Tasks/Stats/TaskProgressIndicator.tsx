@@ -1,4 +1,4 @@
-import type { TaskProgressIndicatorProps } from "@/data/Tasks/interfaces";
+import type { TaskProgressIndicatorProps } from "@shared/data/Tasks/interfaces";
 
 export default function TaskProgressIndicator({
   completedTasksLength,

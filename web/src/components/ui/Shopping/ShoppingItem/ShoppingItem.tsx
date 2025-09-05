@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { ShoppingItemInterface, ShoppingItemProps } from "@/data/Shopping";
+import type { ShoppingItemInterface, ShoppingItemProps } from "@shared/data/Shopping";
 import {
   useUpdateShoppingItem,
   useRemoveShoppingItem,

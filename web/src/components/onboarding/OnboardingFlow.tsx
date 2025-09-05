@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
 import { useCompleteOnboarding } from "@shared/hooks/onboarding/useOnboarding";
-import { useToastContext } from "@shared/hooks/context/useToastContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 import { useT } from "@shared/hooks/useT";
-import type { OnboardingData, OnboardingStep } from "@/data/User/interfaces";
+import type { OnboardingData, OnboardingStep } from "@shared/data/User/interfaces";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Import onboarding steps

@@ -1,6 +1,6 @@
 // src/components/ui/Utils/ConfirmationModal.tsx
 import { useEffect, useRef } from "react";
-import type { ConfirmationModalProps } from "@/data/Utils/Components/UtilComponentInterfaces";
+import type { ConfirmationModalProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
 
 export default function ConfirmationModal({
   isOpen,

@@ -1,6 +1,6 @@
 import { db, auth } from "./config";
 import { collection, addDoc, query, where, getDocs, serverTimestamp, Timestamp } from "firebase/firestore";
-import type { Feedback, CreateFeedbackData } from "@/data/User/interfaces";
+import type { Feedback, CreateFeedbackData } from "../data/User/interfaces";
 
 export const feedbackAPI = {
   // Create new feedback

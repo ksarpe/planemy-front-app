@@ -9,10 +9,10 @@ import {
   FiTag,
   FiBookOpen,
 } from "react-icons/fi";
-import type { SidebarNavProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
+import type { SidebarNavProps } from "@shared/data/Layout/Components/LayoutComponentInterfaces";
 import { useT } from "@shared/hooks/useT";
 
-export type { SidebarNavProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
+export type { SidebarNavProps } from "@shared/data/Layout/Components/LayoutComponentInterfaces";
 
 export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProps) {
   const { t } = useT();

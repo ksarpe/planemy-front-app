@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useT } from "@shared/hooks/useT";
-import type { OnboardingStepBaseProps } from "@/data/User/interfaces";
+import type { OnboardingStepBaseProps } from "@shared/data/User/interfaces";
 
 export const PersonalInfoStep = ({ onboardingData, updateOnboardingData }: OnboardingStepBaseProps) => {
   const { t } = useT();

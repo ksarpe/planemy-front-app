@@ -1,10 +1,10 @@
 import { ListTodo, List } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { EmptyStatesProps } from "@/data/Tasks/interfaces";
+import { EmptyStatesProps } from "@shared/data/Tasks/interfaces";
 
 export default function EmptyStates({ type, onCreateListClick }: EmptyStatesProps) {
   const { t } = useTranslation();
-  
+
   if (type === "no-lists") {
     return (
       <div className="text-center py-12">

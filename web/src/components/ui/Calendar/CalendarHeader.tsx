@@ -1,6 +1,6 @@
 import { useCalendarContext } from "@shared/hooks/context/useCalendarContext";
 import { ChevronLeft, ChevronRight, Grid3X3, AlignJustify } from "lucide-react";
-import { getVisibleMonthsInWeek } from "../../../utils/weeksHelper";
+import { getVisibleMonthsInWeek } from "../../../../../shared/utils/weeksHelper";
 import { useT } from "@shared/hooks/useT";
 
 export default function CalendarHeader() {

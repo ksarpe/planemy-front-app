@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addEvent } from "@shared/api/events";
-import { EventInterface } from "@/data/Calendar/events";
+import { EventInterface } from "@shared/data/Calendar/events";
 import { useAuthContext } from "../context/useAuthContext";
-import { useToastContext } from "../context/useToastContext";
+//import { useToastContext } from "@/hooks/context/useToastContext";
 
 export const useAddEvent = () => {
   const { user } = useAuthContext();
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   const addEventMutation = useMutation({
@@ -25,12 +25,12 @@ export const useAddEvent = () => {
     onSuccess: () => {
       // Invalidate events queries to refetch data
       queryClient.invalidateQueries({ queryKey: ["events"] });
-      showToast("success", "Event został pomyślnie utworzony!");
+      //showToast("success", "Event został pomyślnie utworzony!");
     },
     onError: (error) => {
       console.error("Error creating event:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to create event";
-      showToast("error", `Błąd podczas tworzenia eventu: ${errorMessage}`);
+      //showToast("error", `Błąd podczas tworzenia eventu: ${errorMessage}`);
     },
   });
 

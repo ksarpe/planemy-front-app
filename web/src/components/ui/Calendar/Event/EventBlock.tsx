@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { EventInterface } from "@/data/Calendar/events";
+import { EventInterface } from "@shared/data/Calendar/events";
 import { useCalendarContext } from "@shared/hooks/context/useCalendarContext";
 import { Clock } from "lucide-react";
 import EventEditModal from "./EventEditModal";
 import EventDetailsModal from "./EventDetailsModal";
-import type { EventBlockProps } from "@/data/Calendar/Components/CalendarComponentInterfaces";
+import type { EventBlockProps } from "@shared/data/Calendar/Components/CalendarComponentInterfaces";
 
 export default function EventBlock({ event, style, className = "", showTime = true }: EventBlockProps) {
   const { updateEvent } = useCalendarContext();

@@ -3,7 +3,7 @@ import { useLabelContext } from "@shared/hooks/context/useLabelContext";
 import { useCompleteTask } from "@shared/hooks/tasks/useTasks";
 import { useTranslation } from "react-i18next";
 import { Calendar, AlertCircle, Clock, CheckCircle2, Tag, Trash, Plus } from "lucide-react";
-import type { TaskItemProps } from "@/data/Tasks/interfaces";
+import type { TaskItemProps } from "@shared/data/Tasks/interfaces";
 import { ActionButton, BasicDropdown, BasicDropdownItem } from "../Common";
 import { useNavigate } from "react-router-dom";
 

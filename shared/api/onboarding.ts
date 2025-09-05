@@ -1,6 +1,6 @@
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./config";
-import type { UserProfile, OnboardingData } from "@/data/User/interfaces";
+import type { UserProfile, OnboardingData } from "../data/User/interfaces";
 
 /**
  * Firebase Onboarding API

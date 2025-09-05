@@ -19,8 +19,8 @@ import {
   ShoppingItemInterface,
   FavoriteProductInterface,
   ShoppingCategoryInterface,
-} from "@/data/Shopping";
-import { LabelInterface } from "@/data/Utils/interfaces";
+} from "../data/Shopping";
+import { LabelInterface } from "../data/Utils/interfaces";
 import { useAuthContext } from "../hooks/context/useAuthContext";
 import { useState, useEffect } from "react";
 

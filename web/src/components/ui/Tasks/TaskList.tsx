@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ActionButton } from "../Common";
 import Spinner from "../Utils/Spinner";
 import { useTranslation } from "react-i18next";
-import type { TaskListProps } from "@/data/Tasks/interfaces";
+import type { TaskListProps } from "@shared/data/Tasks/interfaces";
 
 export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
   const { t } = useTranslation();

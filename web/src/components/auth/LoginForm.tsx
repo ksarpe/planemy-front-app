@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useToastContext } from "@shared/hooks/context/useToastContext";
+import { useToastContext } from "@/hooks/context/useToastContext";
 import { useLogin, useRegister } from "@shared/hooks/auth/useAuth";
 import { useT } from "@shared/hooks/useT";
 

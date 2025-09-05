@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import type { StatisticCardProps } from "@/data/Tasks/interfaces";
+import type { StatisticCardProps } from "@shared/data/Tasks/interfaces";
 
 export default function StatisticCard({
   title,

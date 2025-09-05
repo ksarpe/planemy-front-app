@@ -1,6 +1,6 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDocs } from "firebase/firestore";
 import { db } from "./config";
-import { LabelInterface } from "@/data/Utils/interfaces";
+import { LabelInterface } from "../data/Utils/interfaces";
 import { v4 as uuidv4 } from "uuid";
 
 const LABELS_COLLECTION = "labels";

@@ -13,7 +13,7 @@ import { deleteAllTasksFromListApi } from "./tasks";
 import { deleteAllPermissionsForObject } from "./permissions";
 import { removeAllLabelConnectionsForTasksInList } from "./labels";
 
-import type { TaskListInterface } from "@/data/Tasks/interfaces";
+import type { TaskListInterface } from "../data/Tasks/interfaces";
 
 /**
  * Pobiera wszystkie listy zadań dla danego użytkownika (jednorazowo).

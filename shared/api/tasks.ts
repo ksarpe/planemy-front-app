@@ -1,8 +1,8 @@
-import { TaskInterface } from "@/data/Tasks/interfaces";
+import { TaskInterface } from "../data/Tasks/interfaces";
 import { db } from "./config";
 import { addDoc, collection, deleteDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
-import { LabelInterface } from "@/data/Utils/interfaces";
+import { LabelInterface } from "../data/Utils/interfaces";
 
 export const fetchTasksForListApi = async (listId: string): Promise<TaskInterface[]> => {
   if (!listId) return [];

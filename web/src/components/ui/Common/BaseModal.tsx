@@ -2,7 +2,7 @@ import { createPortal } from "react-dom";
 import { useEffect } from "react";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { BaseModalProps } from "@/data/Common/interfaces";
+import { BaseModalProps } from "@shared/data/Common/interfaces";
 
 export default function BaseModal({
   isOpen,

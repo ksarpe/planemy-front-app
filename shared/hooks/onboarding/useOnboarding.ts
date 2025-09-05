@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { checkOnboardingStatus, completeOnboarding, updateUserProfile } from "@shared/api/onboarding";
-import type { OnboardingData, UserProfile } from "@/data/User/interfaces";
+import type { OnboardingData, UserProfile } from "@shared/data/User/interfaces";
 
 // Hook to check onboarding status
 export const useOnboardingStatus = (userId: string | null) => {

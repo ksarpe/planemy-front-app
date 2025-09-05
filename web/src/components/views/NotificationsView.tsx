@@ -3,8 +3,8 @@ import { usePendingShares, useAcceptShare, useRejectShare } from "@shared/hooks/
 import { useAnnouncementsWithStatus } from "@shared/hooks/announcements/useAnnouncements";
 import { AnnouncementsList } from "@/components/ui/Announcements";
 import Spinner from "../ui/Utils/Spinner";
-import type { ShareableObjectType } from "@/data/Utils/types";
-import type { Permission } from "@/data/Utils/interfaces";
+import type { ShareableObjectType } from "@shared/data/Utils/types";
+import type { Permission } from "@shared/data/Utils/interfaces";
 import { useT } from "@shared/hooks/useT";
 
 export default function NotificationsView() {

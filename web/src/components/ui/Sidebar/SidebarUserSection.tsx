@@ -1,5 +1,5 @@
 import { FiLogOut } from "react-icons/fi";
-import type { SidebarUserSectionProps } from "@/data/Layout/Components/LayoutComponentInterfaces";
+import type { SidebarUserSectionProps } from "@shared/data/Layout/Components/LayoutComponentInterfaces";
 
 export function SidebarUserSection({ collapsed, user, handleNavigate, handleLogout }: SidebarUserSectionProps) {
   if (collapsed) {
@@ -24,7 +24,9 @@ export function SidebarUserSection({ collapsed, user, handleNavigate, handleLogo
             {(user?.displayName || user?.email || "U").charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-text truncate ">{user?.displayName || user?.email || "Użytkownik"}</p>
+            <p className="text-sm font-semibold text-text truncate ">
+              {user?.displayName || user?.email || "Użytkownik"}
+            </p>
             <p className="text-xs text-text truncate">{"Free plan"}</p>
           </div>
           <FiLogOut size={24} className="text-text-muted hover:text-red-400 cursor-pointer" onClick={handleLogout} />

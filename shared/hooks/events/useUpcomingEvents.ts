@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useEvents } from "@shared/api/events";
-import type { EventInterface } from "@/data/Calendar/events";
-import type { UpcomingEventGroup } from "@/data/Events";
+import type { EventInterface } from "@shared/data/Calendar/events";
+import type { UpcomingEventGroup } from "@shared/data/Events";
 import {
   startOfDay,
   isToday,

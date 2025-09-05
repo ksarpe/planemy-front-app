@@ -16,7 +16,7 @@ import { getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@shared/api/
 import { format } from "date-fns";
 import { EditableText } from "../Common/EditableText";
 import { useTranslation } from "react-i18next";
-import type { PaymentDetailsPanelProps } from "@/data/Payments/Components/PaymentComponentInterfaces";
+import type { PaymentDetailsPanelProps } from "@shared/data/Payments/Components/PaymentComponentInterfaces";
 
 export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
   const { t } = useTranslation();

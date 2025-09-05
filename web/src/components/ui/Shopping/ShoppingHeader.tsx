@@ -1,4 +1,4 @@
-import type { ExtendedShoppingHeaderProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
+import type { ExtendedShoppingHeaderProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
 import { MoreVertical } from "lucide-react";
 import { ShoppingProgress } from "./ShoppingProgress";
 import { useT } from "@shared/hooks/useT";

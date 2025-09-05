@@ -1,6 +1,15 @@
 import React from "react";
-import HomeScreen from "./src/screens/HomeScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import SimpleTabNavigator from "@/navigation/SimpleTabNavigator";
+
+import Providers from "@shared/context/AllProviders";
 
 export default function App() {
-  return <HomeScreen />;
+  return (
+    <Providers>
+      <NavigationContainer>
+        <SimpleTabNavigator />
+      </NavigationContainer>
+    </Providers>
+  );
 }

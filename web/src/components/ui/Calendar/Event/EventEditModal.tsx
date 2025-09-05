@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Check, Clock } from "lucide-react";
-import { EventInterface } from "@/data/Calendar/events";
+import { EventInterface } from "@shared/data/Calendar/events";
 import { useElementPosition } from "@shared/hooks/useElementPosition";
-import type { EventEditModalProps } from "@/data/Calendar/Components/CalendarComponentInterfaces";
+import type { EventEditModalProps } from "@shared/data/Calendar/Components/CalendarComponentInterfaces";
 
 export default function EventEditModal({ event, onClose, onSave, elementPosition }: EventEditModalProps) {
   const [editData, setEditData] = useState({

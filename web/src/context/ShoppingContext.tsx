@@ -1,4 +1,4 @@
-import type { ShoppingListInterface, ShoppingCategoryInterface, ShoppingContextType } from "@/data/Shopping";
+import type { ShoppingListInterface, ShoppingCategoryInterface, ShoppingContextType } from "@shared/data/Shopping";
 import { createContext, useEffect, useState } from "react";
 import { useShoppingLists, useFavoriteProducts, defaultCategories } from "@shared/api/shopping";
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";

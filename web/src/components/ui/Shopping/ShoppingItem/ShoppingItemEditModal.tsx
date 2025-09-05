@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingItemModalActions } from "./ShoppingItemModalActions";
-import type { ShoppingItemEditModalProps } from "@/data/Shopping/UI/ShoppingItemInterfaces";
+import type { ShoppingItemEditModalProps } from "@shared/data/Shopping/UI/ShoppingItemInterfaces";
 
 export function ShoppingItemEditModal({
   isOpen,

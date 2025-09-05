@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AlertCircle, Info, AlertTriangle, Wrench, Clock, Eye, ChevronDown, ChevronRight } from "lucide-react";
 import { useMarkAnnouncementAsRead } from "@shared/hooks/announcements/useAnnouncements";
-import type { AnnouncementCardProps } from "@/data/Utils/Components/UtilComponentInterfaces";
+import type { AnnouncementCardProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
 
 export default function AnnouncementCard({ announcement }: AnnouncementCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);

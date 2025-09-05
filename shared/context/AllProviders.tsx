@@ -1,8 +1,8 @@
 import { PropsWithChildren } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@/lib/queryClient";
+import { queryClient } from "../lib/queryClient";
 import { AuthProvider } from "./AuthContext";
-import { ToastProvider } from "./ToastContext";
+//import { ToastProvider } from "./ToastContext";
 import { PreferencesProvider } from "./PreferencesContext";
 import { LabelProvider } from "./LabelContext";
 import { ShoppingProvider } from "./ShoppingContext";
@@ -14,7 +14,7 @@ export default function Providers({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ToastProvider>
+        {/* <ToastProvider> */}
           <PreferencesProvider>
             <LabelProvider>
               <ShoppingProvider>
@@ -26,7 +26,7 @@ export default function Providers({ children }: PropsWithChildren) {
               </ShoppingProvider>
             </LabelProvider>
           </PreferencesProvider>
-        </ToastProvider>
+        {/* </ToastProvider> */}
       </AuthProvider>
     </QueryClientProvider>
   );

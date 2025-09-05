@@ -6,8 +6,8 @@ import {
   updatePayment as updatePaymentFirebase,
 } from "@shared/api/payments";
 import { useAuthContext } from "../context/useAuthContext";
-import { useToastContext } from "../context/useToastContext";
-import type { PaymentInterface } from "@/data/Payments/interfaces";
+import { useToastContext } from "@/hooks/context/useToastContext";
+import type { PaymentInterface } from "@shared/data/Payments/interfaces";
 
 export const usePayments = () => {
   const { user } = useAuthContext();

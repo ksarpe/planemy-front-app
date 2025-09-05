@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { useToastContext } from "@shared/hooks/context/useToastContext";
+//import { useToastContext } from "@shared/hooks/context/useToastContext";
 import {
   addShoppingItem,
   updateShoppingItem,
@@ -11,7 +11,7 @@ import {
   deleteFavoriteProduct,
   updateFavoriteProduct,
 } from "@shared/api/shopping";
-import type { ShoppingItemInterface, NewShoppingItem, FavoriteProductInterface } from "@/data/Shopping";
+import type { ShoppingItemInterface, NewShoppingItem, FavoriteProductInterface } from "@shared/data/Shopping";
 // useQuery already imported above
 
 export const useShoppingItemsQuery = (listId?: string) => {
@@ -25,7 +25,7 @@ export const useShoppingItemsQuery = (listId?: string) => {
 
 export const useAddShoppingItem = () => {
   const { user } = useAuthContext();
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -59,7 +59,7 @@ export const useAddShoppingItem = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Produkt został dodany");
+      //showToast("success", "Produkt został dodany");
     },
 
     onSettled: (_data, _err, vars) => {
@@ -70,7 +70,7 @@ export const useAddShoppingItem = () => {
 
 export const useUpdateShoppingItem = () => {
   const { user } = useAuthContext();
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -94,7 +94,7 @@ export const useUpdateShoppingItem = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Produkt zaktualizowany");
+      //showToast("success", "Produkt zaktualizowany");
     },
 
     onSettled: (_data, _err, vars) => {
@@ -105,7 +105,7 @@ export const useUpdateShoppingItem = () => {
 
 export const useRemoveShoppingItem = () => {
   const { user } = useAuthContext();
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -126,7 +126,7 @@ export const useRemoveShoppingItem = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Produkt został usunięty");
+      //showToast("success", "Produkt został usunięty");
     },
 
     onSettled: (_data, _err, vars) => {
@@ -179,7 +179,7 @@ export const useFavoriteProductsQuery = () => {
 
 export const useAddFavoriteProduct = () => {
   const { user } = useAuthContext();
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -207,7 +207,7 @@ export const useAddFavoriteProduct = () => {
       queryClient.setQueryData<FavoriteProductInterface[]>(ctx.key, ctx.previous);
     },
     onSuccess: () => {
-      showToast("success", "Produkt dodany do ulubionych");
+      //showToast("success", "Produkt dodany do ulubionych");
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["favoriteProducts"] });
@@ -216,7 +216,7 @@ export const useAddFavoriteProduct = () => {
 };
 
 export const useDeleteFavoriteProduct = () => {
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const { user } = useAuthContext();
   const queryClient = useQueryClient();
 
@@ -237,7 +237,7 @@ export const useDeleteFavoriteProduct = () => {
       queryClient.setQueryData<FavoriteProductInterface[]>(ctx.key, ctx.previous);
     },
     onSuccess: () => {
-      showToast("success", "Produkt usunięty z ulubionych");
+      //showToast("success", "Produkt usunięty z ulubionych");
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["favoriteProducts"] });
@@ -247,7 +247,7 @@ export const useDeleteFavoriteProduct = () => {
 
 export const useAddFavoriteToList = () => {
   const { user } = useAuthContext();
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -319,7 +319,7 @@ export const useAddFavoriteToList = () => {
       queryClient.setQueryData<FavoriteProductInterface[]>(ctx.favKey, ctx.prevFavs);
     },
     onSuccess: () => {
-      showToast("success", "Ulubiony produkt dodany do listy");
+      //showToast("success", "Ulubiony produkt dodany do listy");
     },
     onSettled: (_data, _err, vars) => {
       queryClient.invalidateQueries({ queryKey: ["shoppingItems", user!.uid, vars.listId] });

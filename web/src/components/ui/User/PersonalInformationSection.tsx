@@ -1,5 +1,5 @@
 import { User, Mail } from "lucide-react";
-import type { PersonalInformationSectionProps } from "@/data/User";
+import type { PersonalInformationSectionProps } from "@shared/data/User";
 import { useT } from "@shared/hooks/useT";
 
 export default function PersonalInformationSection({

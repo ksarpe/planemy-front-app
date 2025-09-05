@@ -1,5 +1,5 @@
 import { Heart, Trash2 } from "lucide-react";
-import type { ShoppingItemModalActionsProps } from "@/data/Shopping/UI/ShoppingItemInterfaces";
+import type { ShoppingItemModalActionsProps } from "@shared/data/Shopping/UI/ShoppingItemInterfaces";
 
 export function ShoppingItemModalActions({
   isFavorited,

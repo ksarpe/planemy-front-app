@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { FavoriteProductInterface, FavoriteProductsPanelProps } from "@/data/Shopping";
+import type { FavoriteProductInterface, FavoriteProductsPanelProps } from "@shared/data/Shopping";
 import { useAddFavoriteToList, useDeleteFavoriteProduct } from "@shared/hooks/shopping/useShoppingItems";
 import { Plus, Star, Trash2, Search, Package } from "lucide-react";
 

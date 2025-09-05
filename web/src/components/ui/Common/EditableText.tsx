@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Check, X, Edit3 } from "lucide-react";
-import type { EditableTextProps } from "@/data/Utils/Components/UtilComponentInterfaces";
+import type { EditableTextProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
 
 export const EditableText = ({
   value,

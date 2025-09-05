@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Plus, X, Check } from "lucide-react";
 import { useTaskContext } from "@shared/hooks/context/useTaskContext";
-import type { QuickAddTaskProps } from "@/data/Tasks/interfaces";
+import type { QuickAddTaskProps } from "@shared/data/Tasks/interfaces";
 import { useCreateTask } from "@shared/hooks/tasks/useTasks";
 
 export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {

@@ -1,7 +1,7 @@
 import { Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useT } from "@shared/hooks/useT";
-import type { SaveBarProps } from "@/data/User/Components/UserComponentInterfaces";
+import type { SaveBarProps } from "@shared/data/User/Components/UserComponentInterfaces";
 
 export default function SaveBar({ visible, onSave, onDiscard, ping = 0 }: SaveBarProps) {
   const [flash, setFlash] = useState(false);

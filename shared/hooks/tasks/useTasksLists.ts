@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { useToastContext } from "@shared/hooks/context/useToastContext";
+//import { useToastContext } from "@shared/hooks/context/useToastContext";
 import { useTaskContext } from "@shared/hooks/context/useTaskContext";
 import {
   fetchUserTaskListsApi,
@@ -8,7 +8,7 @@ import {
   deleteTaskListApi,
   updateTaskListApi,
 } from "@shared/api/tasks_lists";
-import type { TaskListInterface } from "@/data/Tasks/interfaces";
+import type { TaskListInterface } from "@shared/data/Tasks/interfaces";
 import { v4 as uuidv4 } from "uuid";
 
 // --- QUERIES ----
@@ -25,7 +25,7 @@ export const useTaskLists = () => {
 
 export const useCreateTaskList = () => {
   const { user } = useAuthContext();
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const { setCurrentTaskListId } = useTaskContext();
   const queryClient = useQueryClient();
 
@@ -57,7 +57,7 @@ export const useCreateTaskList = () => {
     },
 
     onSuccess: async (newId) => {
-      showToast("success", "Lista zadań została utworzona!");
+      //showToast("success", "Lista zadań została utworzona!");
       await queryClient.invalidateQueries({ queryKey: ["taskLists"] });
       setCurrentTaskListId(newId);
     },
@@ -66,7 +66,7 @@ export const useCreateTaskList = () => {
 
 export const useDeleteTaskList = () => {
   const { user } = useAuthContext();
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -96,7 +96,7 @@ export const useDeleteTaskList = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Lista zadań została usunięta wraz ze wszystkimi zadaniami i udostępnieniami!");
+      //showToast("success", "Lista zadań została usunięta wraz ze wszystkimi zadaniami i udostępnieniami!");
     },
 
     onSettled: () => {
@@ -109,7 +109,7 @@ export const useDeleteTaskList = () => {
 };
 
 export const useUpdateTaskList = () => {
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -138,7 +138,7 @@ export const useUpdateTaskList = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Lista zadań została zaktualizowana!");
+      //showToast("success", "Lista zadań została zaktualizowana!");
     },
 
     onSettled: () => {

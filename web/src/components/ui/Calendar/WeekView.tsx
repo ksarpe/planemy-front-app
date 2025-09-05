@@ -4,7 +4,7 @@ import { format, startOfWeek, endOfWeek, eachDayOfInterval, isToday, isSameDay }
 import { pl } from "date-fns/locale";
 import { useT } from "@shared/hooks/useT";
 import EventBlock from "./Event/EventBlock";
-import { EventInterface } from "@/data/Calendar/events";
+import { EventInterface } from "@shared/data/Calendar/events";
 
 export default function WeekView() {
   const { currentDate, events } = useCalendarContext();

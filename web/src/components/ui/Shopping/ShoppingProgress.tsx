@@ -1,4 +1,4 @@
-import type { ShoppingProgressProps } from "@/data/Shopping/Components/ShoppingComponentInterfaces";
+import type { ShoppingProgressProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
 
 export function ShoppingProgress({ total, completed }: ShoppingProgressProps) {
   if (total <= 0) return null;
