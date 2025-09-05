@@ -1,0 +1,21 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "Shared API and data interfaces for web and mobile apps",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "echo 'No build needed for shared package'",
+    "lint": "echo 'No linting configured for shared package'"
+  },
+  "dependencies": {
+    "firebase": "^12.0.0",
+    "@tanstack/react-query": "^5.74.4",
+    "date-fns": "^4.1.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.2",
+    "@types/react": "^19.0.10"
+  },
+  "private": true
+}
