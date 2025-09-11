@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addEvent } from "@shared/api/events";
 import { EventInterface } from "@shared/data/Calendar/events";
 import { useAuthContext } from "../context/useAuthContext";
-//import { useToastContext } from "@/hooks/context/useToastContext";
 
 export const useAddEvent = () => {
   const { user } = useAuthContext();
@@ -17,7 +16,7 @@ export const useAddEvent = () => {
 
       const eventWithUserId = {
         ...eventData,
-        userId: user.uid,
+        userId: user.id,
       };
 
       return await addEvent(eventWithUserId);

@@ -1,15 +1,19 @@
+//external
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { loginUser, registerUser, fetchUserProfile } from "@shared/api/auth";
-import type { LoginRequest, RegisterRequest } from "@/data/Auth/interfaces";
+//api,context
+import { loginUser, registerUser, logoutUser, validateUser } from "@shared/api/auth";
+//types
+import type { LoginRequest, RegisterRequest } from "@shared/data/Auth/interfaces";
+import { User } from "@shared/data/User";
+import { queryClient } from "@shared/lib/queryClient";
 
 export const useLogin = () => {
   return useMutation({
     mutationFn: (credentials: LoginRequest) => loginUser(credentials),
     onSuccess: (data) => {
       console.log("Login successful:", data);
-      // Here you can handle successful login (save token, redirect, etc.)
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error("Login failed:", error);
     },
   });
@@ -20,17 +24,30 @@ export const useRegister = () => {
     mutationFn: (credentials: RegisterRequest) => registerUser(credentials),
     onSuccess: (data) => {
       console.log("Registration successful:", data);
-      // Here you can handle successful registration (save token, redirect, etc.)
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error("Registration failed:", error);
     },
   });
 };
 
-export const useUserProfile = (userId: string) => {
-  return useQuery({
-    queryKey: ["userProfile", userId],
-    queryFn: () => fetchUserProfile(userId),
+export const useLogout = () => {
+  return useMutation({
+    mutationFn: () => logoutUser(),
+    onSuccess: () => {
+      console.log("Logout successful");
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+    },
+  });
+};
+
+export const useUserInfoQuery = () => {
+  return useQuery<User, unknown, User, string[]>({
+    queryKey: ["userInfo"],
+    queryFn: validateUser,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    retry: 0,
+    enabled: true,
   });
 };

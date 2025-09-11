@@ -19,14 +19,14 @@ const variants = {
 
 export default function Spinner() {
   return (
-    <div className="grid place-content-around px-4 py-24 bg-bg min-h-screen">
+    <div className="flex justify-center items-center h-screen w-full">
       <motion.div
         transition={{
           staggerChildren: 0.25,
         }}
         initial="initial"
         animate="animate"
-        className="flex gap-1">
+        className="flex gap-1 justify-center">
         <motion.div variants={variants} className="h-12 w-2 bg-primary" />
         <motion.div variants={variants} className="h-12 w-2 bg-primary" />
         <motion.div variants={variants} className="h-12 w-2 bg-primary" />

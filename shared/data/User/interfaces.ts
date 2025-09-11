@@ -1,14 +1,11 @@
-export interface UserProfile {
-  id: string;
+export interface User {
+  sub: string; // user id
+  updatedAt: string; // ISO date string
   email: string;
-  displayName?: string;
-  photoURL?: string;
-  createdAt?: string;
-  isOnboarded?: boolean;
-  nickname?: string;
-  plan: string;
+  username: string;
+  scopes: string[];
+  is_onboarded: boolean;
 }
-
 export interface UserSettings {
   id: string;
   userId: string;
@@ -19,28 +16,6 @@ export interface UserSettings {
   defaultTaskListId?: string;
   defaultShoppingListId?: string; // new: default shopping list
   colorThemeIndex?: number; // 0 Cozy, 1 Sweet, 2 Business, 3 Dark Mode
-}
-
-// UI: Profile / Appearance
-export interface ColorTheme {
-  name: string;
-  description: string;
-  colors: string[];
-}
-
-// Simplified user info
-export interface UserBasicInfo {
-  nickname: string;
-  email: string;
-}
-
-export interface ProfileHeaderProps {
-  userInfo: Pick<UserBasicInfo, "nickname" | "email">;
-}
-
-export interface PersonalInformationSectionProps {
-  userInfo: UserBasicInfo;
-  handleUserInfoChange: (field: keyof UserBasicInfo | string, value: string) => void;
 }
 
 export interface NotificationSettings {
@@ -75,8 +50,8 @@ export interface OnboardingStepProps {
 
 // Simplified step props without navigation (for centralized navigation)
 export interface OnboardingStepBaseProps {
-  onboardingData?: OnboardingData;
-  updateOnboardingData?: (updates: Partial<OnboardingData>) => void;
+  onboardingData: OnboardingData;
+  updateOnboardingData: (updates: Partial<OnboardingData>) => void;
 }
 
 export interface OnboardingData {
@@ -118,10 +93,3 @@ export interface CreateFeedbackData {
   message: string;
 }
 
-// User profile document interface (moved from src/api/user_profile.ts)
-export interface UserProfileDoc {
-  id: string;
-  userId: string;
-  nickname: string;
-  email: string;
-}

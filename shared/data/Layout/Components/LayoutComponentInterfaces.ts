@@ -4,9 +4,7 @@ import { User } from "firebase/auth";
 
 export interface SidebarUserSectionProps {
   collapsed: boolean;
-  user: User | null;
   handleNavigate: () => void;
-  handleLogout: () => void;
 }
 
 export interface SidebarNavProps {

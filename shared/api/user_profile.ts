@@ -1,33 +1,24 @@
-import { db } from "./config";
-import { collection, getDocs, query, updateDoc, where, setDoc, doc } from "firebase/firestore";
-import type { UserProfileDoc } from "../data/User/interfaces";
+// src/shared/api/user.ts
 
-export const getUserProfile = async (userId: string): Promise<UserProfileDoc | null> => {
-  const col = collection(db, "user_profile");
-  const q = query(col, where("userId", "==", userId));
-  const snap = await getDocs(q);
-  if (snap.empty) return null;
-  const d = snap.docs[0];
-  const data = d.data() as Omit<UserProfileDoc, "id">;
-  return { id: d.id, ...data };
-};
+import { APIError } from "@shared/data/Auth/interfaces";
+import type { User } from "@shared/data/User/interfaces";
 
-export const upsertUserProfile = async (userId: string, data: Partial<UserProfileDoc>): Promise<void> => {
-  const col = collection(db, "user_profile");
-  const q = query(col, where("userId", "==", userId));
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    // create new
-    const newRef = doc(col);
-    const payload: Omit<UserProfileDoc, "id"> = {
-      userId,
-      nickname: "",
-      email: "",
-      ...data,
-    } as Omit<UserProfileDoc, "id">;
-    await setDoc(newRef, payload);
-  } else {
-    const d = snap.docs[0];
-    await updateDoc(d.ref, data);
+export const updateUserProfile = async (data: Partial<User>): Promise<User> => {
+  const response = await fetch("http://localhost:8080/api/v1/user/profile", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new APIError("Failed to update user profile", response.status, errorBody);
   }
+
+  const updatedUserInfo = await response.json();
+  console.log("Updated user info:", updatedUserInfo);
+  return updatedUserInfo;
 };

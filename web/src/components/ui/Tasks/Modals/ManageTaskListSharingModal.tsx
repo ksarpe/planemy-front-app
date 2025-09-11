@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { X, UserPlus } from "lucide-react";
 import { useShareObject } from "@shared/hooks/permissions/usePermissions";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { useToastContext } from "@/hooks/context/useToastContext";
 
 import type { ManageTaskListSharingModalProps } from "@shared/data/Tasks/interfaces";
 import type { SharePermission } from "@shared/data/Utils/types";

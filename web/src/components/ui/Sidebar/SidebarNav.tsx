@@ -18,7 +18,7 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
   const { t } = useT();
 
   const navigationItems = [
-    { to: "/dashboard", label: t("sidebar.dashboard"), Icon: FiHome },
+    { to: "/", label: t("sidebar.dashboard"), Icon: FiHome },
     { to: "/calendar", label: t("sidebar.calendar"), Icon: FiCalendar },
     { to: "/tasks", label: t("sidebar.tasks"), Icon: FiList },
     { to: "/shopping", label: t("sidebar.shopping"), Icon: FiShoppingBag },

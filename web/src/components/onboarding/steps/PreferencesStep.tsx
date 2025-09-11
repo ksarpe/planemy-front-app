@@ -5,10 +5,10 @@ import ReactCountryFlag from "react-country-flag";
 
 export const PreferencesStep = ({ onboardingData, updateOnboardingData }: OnboardingStepBaseProps) => {
   //const { t } = useT();
-  const [language, setLanguage] = useState(onboardingData?.language || "pl");
+  const [language, setLanguage] = useState(onboardingData.language || "pl");
 
   useEffect(() => {
-    updateOnboardingData?.({ language });
+    updateOnboardingData({ language });
   }, [language, updateOnboardingData]);
 
   const languages = [
@@ -28,7 +28,7 @@ export const PreferencesStep = ({ onboardingData, updateOnboardingData }: Onboar
               className={`p-4 rounded-lg border-2 transition-all ${
                 language === lang.code
                   ? "border-primary bg-primary/5 text-primary"
-                  : "border-gray-200  bg-bg-alt  hover:border-primary/50"
+                  : "border-gray-200  bg-bg-alt  hover:border-primary/50 text-text"
               }`}>
               <div className="flex items-center space-x-3">
                 <ReactCountryFlag countryCode={lang.countryCode} svg style={{ width: "2em", height: "2em" }} />

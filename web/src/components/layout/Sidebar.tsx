@@ -1,5 +1,4 @@
-import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { usePendingShares } from "@shared/hooks/permissions/usePermissions";
+//import { usePendingShares } from "@shared/hooks/permissions/usePermissions";
 import { useState, useEffect } from "react";
 import { SidebarNav } from "../ui/Sidebar/SidebarNav";
 import { SidebarUserSection } from "../ui/Sidebar/SidebarUserSection";
@@ -9,17 +8,11 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import SidebarSettings from "../ui/Sidebar/SidebarSettings";
 
 export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
-  const { user, logout } = useAuthContext();
   //TODO: counts (lightweight; consider optimization later)
-  const { data: taskListShares = [] } = usePendingShares("task_list");
-  const { data: shoppingListShares = [] } = usePendingShares("shopping_list");
+  //const { data: taskListShares = [] } = usePendingShares("task_list");
+  //const { data: shoppingListShares = [] } = usePendingShares("shopping_list");
   // something for getting global notifications
-  const totalNotifications = taskListShares.length + shoppingListShares.length;
-
-  const handleLogout = async () => {
-    await logout();
-  };
-
+  //const totalNotifications = taskListShares.length + shoppingListShares.length;
   const [collapsed, setCollapsed] = useState(false);
   useEffect(() => {
     const stored = localStorage.getItem("app_sidebar_collapsed");
@@ -50,7 +43,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         </button>
 
         {/* LOGO */}
-        <NavLink to="/dashboard">
+        <NavLink to="/">
           <img src={collapsed ? `minilogo.png` : `logo.png`} alt="Logo" className={collapsed ? `h-12` : `h-16`} />
         </NavLink>
 
@@ -58,7 +51,8 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         <div className="flex flex-col gap-4 flex-1 overflow-hidden mt-8">
           <SidebarNav
             handleNavigate={onClose || (() => {})}
-            totalNotifications={totalNotifications}
+            //totalNotifications={totalNotifications}
+            totalNotifications={0}
             collapsed={collapsed}
           />
         </div>
@@ -75,9 +69,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         {/* USER INFO */}
         <SidebarUserSection
           collapsed={collapsed}
-          user={user!}
           handleNavigate={onClose || (() => {})}
-          handleLogout={handleLogout}
         />
       </aside>
     </>

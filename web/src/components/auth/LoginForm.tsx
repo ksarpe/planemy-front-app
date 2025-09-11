@@ -1,56 +1,57 @@
 import { useState } from "react";
-import { useToastContext } from "@/hooks/context/useToastContext";
+import { useToast } from "@shared/hooks/toasts/useToast";
 import { useLogin, useRegister } from "@shared/hooks/auth/useAuth";
 import { useT } from "@shared/hooks/useT";
+import { Toaster } from "sonner";
+import { APIError } from "@shared/data/Auth/interfaces";
+import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const { showToast } = useToastContext();
   const { t } = useT();
+  const { refetchUser } = useAuthContext();
 
-  // New API-based auth hooks
-  const loginMutation = useLogin();
-  const registerMutation = useRegister();
+  const { showSuccess, showError } = useToast();
+  const login = useLogin();
+  const register = useRegister();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email || !password) {
-      showToast("error", t("auth.fillAllFields"));
-      return;
-    }
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
     try {
       if (isLoginMode) {
-        // Use new API login
-        const result = await loginMutation.mutateAsync({
-          username: email,
-          password: password,
-        });
-        showToast("success", t("auth.loginSuccess"));
-        console.log("Login result:", result);
+        await login.mutateAsync({ username: email, password: password });
+        await refetchUser();
+        showSuccess("Logowanie udane");
       } else {
-        // Use new API register
-        const result = await registerMutation.mutateAsync({
-          username: email,
-          password: password,
-        });
-        showToast("success", t("auth.registerSuccess"));
-        console.log("Register result:", result);
-        // After successful registration, switch to login mode
+        await register.mutateAsync({ username: email, password: password });
+        showSuccess("Rejestracja udana");
         setIsLoginMode(true);
       }
     } catch (error) {
-      showToast("error", error instanceof Error ? error.message : t("auth.operationError"));
+      if (error instanceof APIError) {
+        if (error.status === 401) {
+          showError("Nieprawidłowa nazwa użytkownika lub hasło");
+        } else if (error.status === 409) {
+          showError("Użytkownik z tym adresem e-mail już istnieje");
+        } else if (error.body?.message) {
+          showError(error.body.message);
+        } else {
+          showError("Wystąpił nieznany błąd podczas uwierzytelniania");
+        }
+      } else {
+        showError("Błąd połączenia z siecią");
+      }
     }
   };
 
-  const isLoading = loginMutation.isPending || registerMutation.isPending;
+  const isLoading = login.isPending || register.isPending;
 
   return (
     <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-md mx-auto">
+      <Toaster position="bottom-center" richColors />
       <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
         {isLoginMode ? t("auth.login") : t("auth.register")}
       </h2>
@@ -65,7 +66,7 @@ export const LoginForm = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             placeholder={t("auth.emailPlaceholder")}
             required
             autoComplete="email"
@@ -81,7 +82,7 @@ export const LoginForm = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             placeholder={t("auth.passwordPlaceholder")}
             required
             autoComplete={isLoginMode ? "current-password" : "new-password"}
@@ -91,7 +92,7 @@ export const LoginForm = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+          className="w-full bg-primary text-black py-2 px-4 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
           {isLoading
             ? isLoginMode
               ? t("auth.loggingIn")

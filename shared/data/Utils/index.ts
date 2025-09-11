@@ -1,3 +1,3 @@
 export * from "./interfaces";
 export * from "./types";
-export * from "./toastContext";
+export * from "./toast";

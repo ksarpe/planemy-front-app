@@ -5,18 +5,14 @@ import type { OnboardingStepBaseProps } from "@shared/data/User/interfaces";
 
 export const PersonalInfoStep = ({ onboardingData, updateOnboardingData }: OnboardingStepBaseProps) => {
   const { t } = useT();
-  const [nickname, setNickname] = useState(onboardingData?.nickname || "");
-  const [isValid, setIsValid] = useState(false);
+  const [nickname, setNickname] = useState(onboardingData.nickname || "");
 
   useEffect(() => {
-    setIsValid(nickname.trim().length >= 2);
-  }, [nickname]);
+    updateOnboardingData({ nickname: nickname.trim() });
+  }, [nickname, updateOnboardingData]);
 
-  useEffect(() => {
-    if (isValid) {
-      updateOnboardingData?.({ nickname: nickname.trim() });
-    }
-  }, [nickname, isValid, updateOnboardingData]);
+  // Obliczamy isValid bezpośrednio w renderze
+  const isValid = nickname.trim().length > 1;
 
   // Animation variants
   const containerVariants = {
@@ -54,7 +50,7 @@ export const PersonalInfoStep = ({ onboardingData, updateOnboardingData }: Onboa
           />
           <div className="mt-2 flex justify-between items-center">
             <p className="text-sm text-text/60">
-              {nickname.length >= 2 ? (
+              {isValid ? (
                 <span className="text-green-600 flex items-center">
                   <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path

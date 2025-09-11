@@ -1,11 +1,9 @@
-import type { User } from "firebase/auth";
-// Authentication related interfaces
+import type { User } from "../User/interfaces";
+
 export interface AuthContextType {
-  user: User | null;
+  user: User | null; //TODO: replace with User type from backend
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, displayName?: string) => Promise<void>;
-  logout: () => Promise<void>;
+  refetchUser: () => Promise<unknown>;
 }
 
 // API request/response interfaces (moved from src/api/auth.ts)
@@ -31,4 +29,16 @@ export interface AuthResponse {
 // Component interfaces
 export interface ProtectedRouteProps {
   children: React.ReactNode;
+}
+
+export class APIError extends Error {
+  status: number;
+  body: any;
+
+  constructor(message: string, status: number, body: any) {
+    super(message);
+    this.name = "APIError";
+    this.status = status;
+    this.body = body;
+  }
 }

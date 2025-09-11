@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { useToastContext } from "@/hooks/context/useToastContext";
+
 import { getUserShoppingLists, addShoppingList, updateShoppingList, deleteShoppingList } from "@shared/api/shopping";
 import type { ShoppingListInterface } from "@shared/data/Shopping";
 

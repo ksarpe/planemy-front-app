@@ -19,7 +19,7 @@
 //       return;
 //     }
 
-//     const q = query(collection(db, LABEL_CONNECTIONS_COLLECTION), where("userId", "==", user.uid));
+//     const q = query(collection(db, LABEL_CONNECTIONS_COLLECTION), where("userId", "==", user.id));
 //     const unsubscribe = onSnapshot(q, (snapshot) => {
 //       const labelMap = new Map(labels.map((l) => [l.id, l]));
 //       const newMap = new Map<string, Map<string, LabelInterface[]>>();

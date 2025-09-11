@@ -2,31 +2,30 @@ import { PropsWithChildren } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../lib/queryClient";
 import { AuthProvider } from "./AuthContext";
-//import { ToastProvider } from "./ToastContext";
 import { PreferencesProvider } from "./PreferencesContext";
-import { LabelProvider } from "./LabelContext";
-import { ShoppingProvider } from "./ShoppingContext";
-import { CalendarProvider } from "./CalendarContext";
-import { TaskProvider } from "./TaskContext";
-import { PaymentsProvider } from "./PaymentsContext";
+// import { LabelProvider } from "./LabelContext";
+// import { ShoppingProvider } from "./ShoppingContext";
+// import { CalendarProvider } from "./CalendarContext";
+// import { TaskProvider } from "./TaskContext";
+// import { PaymentsProvider } from "./PaymentsContext";
 
 export default function Providers({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        {/* <ToastProvider> */}
-          <PreferencesProvider>
-            <LabelProvider>
+        <PreferencesProvider>
+          {/*  <LabelProvider>
               <ShoppingProvider>
                 <CalendarProvider>
-                  <TaskProvider>
-                    <PaymentsProvider>{children}</PaymentsProvider>
-                  </TaskProvider>
+                  <TaskProvider> 
+          <PaymentsProvider> */}
+          {children}
+          {/* </PaymentsProvider>
+          </TaskProvider>
                 </CalendarProvider>
               </ShoppingProvider>
-            </LabelProvider>
-          </PreferencesProvider>
-        {/* </ToastProvider> */}
+            </LabelProvider> */}
+        </PreferencesProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

@@ -15,6 +15,5 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     return <AuthContainer />;
   }
 
-  // Wrap authenticated content with onboarding guard
-  return <OnboardingGuard userId={user.uid}>{children}</OnboardingGuard>;
+  return <OnboardingGuard>{children}</OnboardingGuard>;
 };

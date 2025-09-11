@@ -1,8 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { useToastContext } from "@/hooks/context/useToastContext";
-import { useT } from "@shared/hooks/useT";
 import { clearCompletedTasks, uncheckAllTasks } from "@shared/api/tasks_lists";
 import { createTaskApi, updateTaskApi, removeTaskApi, completeTaskApi } from "@shared/api/tasks";
 import { fetchTasksForListApi } from "@shared/api/tasks";
@@ -44,7 +42,6 @@ export const useTasks = (listId: string | null) => {
 
 export const useCreateTask = () => {
   const { user } = useAuthContext();
-  const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -93,7 +90,6 @@ export const useCreateTask = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Zadanie zostało dodane!");
     },
 
     onSettled: (_data, _error, vars) => {
@@ -103,7 +99,6 @@ export const useCreateTask = () => {
 };
 
 export const useUpdateTask = () => {
-  const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -133,7 +128,6 @@ export const useUpdateTask = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Zadanie zostało zaktualizowane!");
     },
 
     onSettled: () => {
@@ -143,8 +137,6 @@ export const useUpdateTask = () => {
 };
 
 export const useDeleteTask = () => {
-  const { t } = useT();
-  const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -170,7 +162,6 @@ export const useDeleteTask = () => {
     },
 
     onSuccess: () => {
-      showToast("success", t("tasks.messages.taskDeleted"));
     },
 
     onSettled: () => {
@@ -180,7 +171,6 @@ export const useDeleteTask = () => {
 };
 
 export const useCompleteTask = () => {
-  const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -209,7 +199,6 @@ export const useCompleteTask = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Status zadania został zmieniony!");
     },
 
     onSettled: () => {
@@ -219,7 +208,6 @@ export const useCompleteTask = () => {
 };
 
 export const useClearCompletedTasks = () => {
-  const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -238,7 +226,6 @@ export const useClearCompletedTasks = () => {
     },
 
     onSuccess: () => {
-      showToast("success", "Usunięto wszystkie ukończone zadania!");
     },
 
     onSettled: (_d, _e, listId) => {
@@ -248,8 +235,6 @@ export const useClearCompletedTasks = () => {
 };
 
 export const useUncheckAllTasks = () => {
-  const { t } = useT();
-  const { showToast } = useToastContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -268,7 +253,6 @@ export const useUncheckAllTasks = () => {
     },
 
     onSuccess: () => {
-      showToast("success", t("tasks.messages.allTasksUnchecked"));
     },
 
     onSettled: (_d, _e, listId) => {

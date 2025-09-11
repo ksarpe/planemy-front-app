@@ -11,7 +11,7 @@ import { useBlocker } from "react-router-dom";
 import type { NotificationSettings, UserBasicInfo, UserSettings } from "@shared/data/User";
 import { upsertUserProfile, getUserProfile } from "@shared/api/user_profile";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-import { useToastContext } from "@/hooks/context/useToastContext";
+
 import Spinner from "@/components/ui/Utils/Spinner";
 import { useT } from "@shared/hooks/useT";
 
@@ -37,7 +37,7 @@ export default function ProfileView() {
     const load = async () => {
       if (!user) return;
       try {
-        const profile = await getUserProfile(user.uid);
+        const profile = await getUserProfile(user.id);
         const fallbackNickname = (user.displayName ?? "").toString();
         const fallbackEmail = (user.email ?? "").toString();
         const hydrated: UserBasicInfo = {
@@ -142,7 +142,7 @@ export default function ProfileView() {
         user &&
         (userInfo.nickname !== initialUserInfo.current.nickname || userInfo.email !== initialUserInfo.current.email)
       ) {
-        await upsertUserProfile(user.uid, { nickname: userInfo.nickname, email: userInfo.email });
+        await upsertUserProfile(user.id, { nickname: userInfo.nickname, email: userInfo.email });
       }
 
       // Mark current values as initial

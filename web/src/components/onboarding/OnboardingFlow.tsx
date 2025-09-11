@@ -1,31 +1,28 @@
-import { useState, useCallback, useEffect } from "react";
-import { useCompleteOnboarding } from "@shared/hooks/onboarding/useOnboarding";
-import { useToastContext } from "@/hooks/context/useToastContext";
+// src/components/onboarding/OnboardingFlow.tsx
+
+import { AnimatePresence, motion } from "framer-motion";
+import ReactCountryFlag from "react-country-flag";
+import { useCallback, useState, useEffect } from "react";
 import { useT } from "@shared/hooks/useT";
-import type { OnboardingData, OnboardingStep } from "@shared/data/User/interfaces";
-import { motion, AnimatePresence } from "framer-motion";
+import { useUpdateUserProfile } from "@shared/hooks/user/useUserProfile";
+import type { OnboardingData, OnboardingStep, User } from "@shared/data/User/interfaces";
+import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 
 // Import onboarding steps
 import { PersonalInfoStep } from "./steps/PersonalInfoStep";
 import { PreferencesStep } from "./steps/PreferencesStep";
 import { CompletionStep } from "./steps/CompletionStep";
-import ReactCountryFlag from "react-country-flag";
 
-interface OnboardingFlowProps {
-  userId: string;
-  onComplete: () => void;
-}
-
-export const OnboardingFlow = ({ userId, onComplete }: OnboardingFlowProps) => {
+export const OnboardingFlow = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [mascottName, setMascottName] = useState<string>("");
-  const [flag, setFlag] = useState<string>("");
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({});
-  const { showToast } = useToastContext();
   const { t } = useT();
-  const completeOnboardingMutation = useCompleteOnboarding();
+  const updateUser = useUpdateUserProfile();
+  const { user } = useAuthContext();
 
-  // Define onboarding steps
+  const mascottName = onboardingData.nickname && onboardingData.nickname.length > 1 ? onboardingData.nickname : "";
+  const flag = onboardingData.language === "pl" ? "PL" : "GB";
+
   const steps: OnboardingStep[] = [
     {
       id: "personal-info",
@@ -59,74 +56,59 @@ export const OnboardingFlow = ({ userId, onComplete }: OnboardingFlowProps) => {
     }
   }, [currentStepIndex, steps.length]);
 
-  const handlePrev = useCallback(() => {
+  const handlePrev = () => {
     if (currentStepIndex > 0) {
       setCurrentStepIndex((prev) => prev - 1);
     }
-  }, [currentStepIndex]);
+  };
 
-  const handleSkip = useCallback(() => {
+  const handleSkip = () => {
     if (!currentStep.isRequired) {
       handleNext();
     }
-  }, [currentStep.isRequired, handleNext]);
+  };
 
   const handleComplete = useCallback(async () => {
+    if (!user) {
+      return;
+    }
     try {
-      await completeOnboardingMutation.mutateAsync({
-        userId,
-        data: onboardingData,
-      });
-      showToast("success", t("onboarding.completionSuccess"));
-      onComplete();
+      const userUpdateData: Partial<User> = {
+        is_onboarded: true,
+      }
+      await updateUser.mutateAsync(userUpdateData);
     } catch (error) {
       console.error("Failed to complete onboarding:", error);
-      showToast("error", t("onboarding.completionError"));
     }
-  }, [userId, onboardingData, completeOnboardingMutation, showToast, t, onComplete]);
+  }, [user, updateUser]);
 
   const updateOnboardingData = useCallback((updates: Partial<OnboardingData>) => {
-    setOnboardingData((prev) => ({ ...prev, ...updates }));
-  }, []);
+        setOnboardingData((prev) => ({ ...prev, ...updates }));
+    }, []);
 
+  // Handle Enter key press
   useEffect(() => {
-    if (onboardingData.nickname && onboardingData.nickname.length >= 2) {
-      setMascottName(onboardingData.nickname);
-    } else if (onboardingData.nickname && onboardingData.nickname.length < 2) {
-      setMascottName("");
-    }
-  }, [onboardingData]);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        if (currentStepIndex === steps.length - 1) {
+          handleComplete();
+        } else {
+          handleNext();
+        }
+      }
+    };
 
-  useEffect(() => {
-    if (onboardingData.language) {
-      setFlag(onboardingData.language === "pl" ? "PL" : "GB");
-    }
-  }, [onboardingData.language]);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentStepIndex, steps.length, handleNext, handleComplete]);
 
-  // Animation variants for step transitions
   const variants = {
-    hidden: {
-      x: "100%",
-      opacity: 0,
-    },
-    visible: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-      },
-    },
-    exit: {
-      x: "-100%",
-      opacity: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-      },
-    },
+    hidden: { x: "100%", opacity: 0 },
+    visible: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 30 } },
+    exit: { x: "-100%", opacity: 0, transition: { type: "spring", stiffness: 300, damping: 30 } },
   };
 
   return (
@@ -136,13 +118,10 @@ export const OnboardingFlow = ({ userId, onComplete }: OnboardingFlowProps) => {
         <motion.div
           className="h-full bg-primary"
           initial={{ width: 0 }}
-          animate={{
-            width: `${((currentStepIndex + 1) / steps.length) * 100}%`,
-          }}
+          animate={{ width: `${((currentStepIndex + 1) / steps.length) * 100}%` }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         />
       </div>
-      {/* Header + content + buttons */}
       <div className="flex flex-col mt-20 justify-center items-center">
         {/* Animated Header */}
         <AnimatePresence mode="wait">
@@ -158,17 +137,10 @@ export const OnboardingFlow = ({ userId, onComplete }: OnboardingFlowProps) => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Animated Blueberry Character */}
+        {/* Animated Mascott */}
         <div>
           <div className="blueberry-animation relative">
-            {flag && (
-              <ReactCountryFlag
-                countryCode={flag}
-                svg
-                style={{ width: "3em", height: "3em" }}
-                className="absolute bottom-3 left-3"
-              />
-            )}
+            {flag && <ReactCountryFlag countryCode={flag} svg style={{ width: "3em", height: "3em" }} className="absolute bottom-3 left-3" />}
           </div>
           {mascottName.length > 1 && (
             <div className="text-center rounded-md border bg-blue-300 shadow-lg">{mascottName}</div>
@@ -192,43 +164,38 @@ export const OnboardingFlow = ({ userId, onComplete }: OnboardingFlowProps) => {
           {/* Navigation Buttons */}
           <AnimatePresence mode="wait">
             <motion.div
-              className="relative flex justify-between items-center mt-8 w-full max-w-2xl mx-auto"
+              className="relative flex justify-between items-center gap-4 mt-8 w-full"
               key={`step-${currentStepIndex}`}
               variants={variants}
               initial="hidden"
               animate="visible"
               exit="exit">
-              {/* Previous Button - only show if not first step */}
               {currentStepIndex > 0 ? (
                 <button
                   onClick={handlePrev}
-                  className="px-6 py-2 text-gray-600 dark:text-gray-400 bg-transparent rounded-md">
+                  className="py-2 bg-text-muted w-full text-black font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
                   {t("common.previous")}
                 </button>
               ) : (
-                <div></div> // Empty div to maintain layout
+                <div />
               )}
-
-              <div className="flex gap-3">
                 {!currentStep.isRequired && currentStepIndex < steps.length - 1 && (
                   <button
                     onClick={handleSkip}
-                    className="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-text dark:hover:text-text-dark transition-colors">
+                    className="py-2 bg-text-muted w-full text-black font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
                     {t("common.skip")}
                   </button>
                 )}
-
                 <button
                   onClick={currentStepIndex === steps.length - 1 ? handleComplete : handleNext}
-                  disabled={currentStepIndex === steps.length - 1 ? completeOnboardingMutation.isPending : false}
-                  className="px-8 py-2 bg-primary text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
+                  disabled={currentStepIndex === steps.length - 1 ? updateUser.isPending : false}
+                  className="py-2 bg-primary w-full text-black font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
                   {currentStepIndex === steps.length - 1
-                    ? completeOnboardingMutation.isPending
+                    ? updateUser.isPending
                       ? t("common.loading")
                       : t("onboarding.complete")
                     : t("common.next")}
                 </button>
-              </div>
             </motion.div>
           </AnimatePresence>
         </div>

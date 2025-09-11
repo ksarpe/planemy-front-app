@@ -6,7 +6,7 @@ import {
   updatePayment as updatePaymentFirebase,
 } from "@shared/api/payments";
 import { useAuthContext } from "../context/useAuthContext";
-import { useToastContext } from "@/hooks/context/useToastContext";
+
 import type { PaymentInterface } from "@shared/data/Payments/interfaces";
 
 export const usePayments = () => {
@@ -20,7 +20,7 @@ export const usePayments = () => {
         throw new Error("Musisz być zalogowany, aby dodać płatność");
       }
 
-      return await addPaymentToFirebase(paymentData, user.uid);
+      return await addPaymentToFirebase(paymentData, user.id);
     },
     onSuccess: () => {
       // Invalidate payments queries to refetch data

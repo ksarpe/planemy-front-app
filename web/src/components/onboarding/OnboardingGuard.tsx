@@ -1,44 +1,14 @@
-import { useEffect, useState } from "react";
-import { useOnboardingStatus } from "@shared/hooks/onboarding/useOnboarding";
-import { OnboardingFlow } from "./OnboardingFlow";
-import Spinner from "../ui/Utils/Spinner";
+import { useAuthContext } from "@shared/hooks/context/useAuthContext";
+import { OnboardingFlow } from "../onboarding/OnboardingFlow";
 
-interface OnboardingGuardProps {
-  userId: string;
-  children: React.ReactNode;
-}
+export const OnboardingGuard = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuthContext();
 
-export const OnboardingGuard = ({ userId, children }: OnboardingGuardProps) => {
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const { data: onboardingStatus, isLoading, error } = useOnboardingStatus(userId);
-
-  useEffect(() => {
-    if (!isLoading && !error && onboardingStatus) {
-      setShowOnboarding(!onboardingStatus.isOnboarded);
-    }
-  }, [onboardingStatus, isLoading, error]);
-
-  const handleOnboardingComplete = () => {
-    setShowOnboarding(false);
-  };
-
-  // Show loading state while checking onboarding status
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <Spinner />
-          <p className="mt-4 text-gray-600">Ładowanie...</p>
-        </div>
-      </div>
-    );
+  // Sprawdzamy, czy użytkownik jest zalogowany i czy nie przeszedł onboardingu
+  if (user && user.is_onboarded) {
+    return <OnboardingFlow />;
   }
 
-  // Show onboarding if user is not onboarded
-  if (showOnboarding) {
-    return <OnboardingFlow userId={userId} onComplete={handleOnboardingComplete} />;
-  }
-
-  // User is onboarded, show the app
+  // Jeśli użytkownik jest zalogowany i przeszedł onboarding, renderujemy właściwą zawartość
   return <>{children}</>;
 };
