@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus, Edit3 } from "lucide-react";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 const predefinedColors = [
   "#EF4444",

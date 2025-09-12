@@ -1,8 +1,8 @@
 import { CheckCircle2, Calendar, Package, Clock } from "lucide-react";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCreateShoppingList } from "@shared/hooks/shopping/useShoppingLists";
+import { useCreateShoppingList } from "@shared/hooks/shopping/useShopping";
 import { useTaskContext } from "@shared/hooks/context/useTaskContext";
 
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";

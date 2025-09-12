@@ -1,6 +1,6 @@
 // Shopping domain interfaces and shared UI props for the Shopping feature
 
-import type { LabelInterface } from "@/data/Utils/interfaces";
+import type { LabelInterface } from "@shared/data/Utils/interfaces";
 
 // Hook-specific types
 export interface ListStats {
@@ -14,7 +14,7 @@ export type NewShoppingItem = Omit<ShoppingItemInterface, "id" | "addedAt" | "li
 // Context type
 export interface ShoppingContextType {
   // Shopping Lists (no CRUD here anymore)
-  shoppingLists: ShoppingListInterface[];
+  data: ShoppingListInterface[] | undefined;
   currentList: ShoppingListInterface | null;
   setCurrentList: (list: ShoppingListInterface | null) => void;
 
@@ -22,13 +22,13 @@ export interface ShoppingContextType {
   // moved to hooks in '@shared/hooks/shopping'
 
   // Favorite Products
-  favoriteProducts: FavoriteProductInterface[];
+  //favoriteProducts: FavoriteProductInterface[];
 
   // Categories
-  categories: ShoppingCategoryInterface[];
+  //categories: ShoppingCategoryInterface[];
 
   // UI State
-  loading: boolean;
+  isLoading: boolean;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   selectedCategory: string | null;

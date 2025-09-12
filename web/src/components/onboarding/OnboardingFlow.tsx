@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import ReactCountryFlag from "react-country-flag";
 import { useCallback, useState, useEffect } from "react";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 import { useUpdateUserProfile } from "@shared/hooks/user/useUserProfile";
 import type { OnboardingData, OnboardingStep, User } from "@shared/data/User/interfaces";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
@@ -75,7 +75,7 @@ export const OnboardingFlow = () => {
     try {
       const userUpdateData: Partial<User> = {
         is_onboarded: true,
-      }
+      };
       await updateUser.mutateAsync(userUpdateData);
     } catch (error) {
       console.error("Failed to complete onboarding:", error);
@@ -83,8 +83,8 @@ export const OnboardingFlow = () => {
   }, [user, updateUser]);
 
   const updateOnboardingData = useCallback((updates: Partial<OnboardingData>) => {
-        setOnboardingData((prev) => ({ ...prev, ...updates }));
-    }, []);
+    setOnboardingData((prev) => ({ ...prev, ...updates }));
+  }, []);
 
   // Handle Enter key press
   useEffect(() => {
@@ -140,7 +140,14 @@ export const OnboardingFlow = () => {
         {/* Animated Mascott */}
         <div>
           <div className="blueberry-animation relative">
-            {flag && <ReactCountryFlag countryCode={flag} svg style={{ width: "3em", height: "3em" }} className="absolute bottom-3 left-3" />}
+            {flag && (
+              <ReactCountryFlag
+                countryCode={flag}
+                svg
+                style={{ width: "3em", height: "3em" }}
+                className="absolute bottom-3 left-3"
+              />
+            )}
           </div>
           {mascottName.length > 1 && (
             <div className="text-center rounded-md border bg-blue-300 shadow-lg">{mascottName}</div>
@@ -179,23 +186,23 @@ export const OnboardingFlow = () => {
               ) : (
                 <div />
               )}
-                {!currentStep.isRequired && currentStepIndex < steps.length - 1 && (
-                  <button
-                    onClick={handleSkip}
-                    className="py-2 bg-text-muted w-full text-black font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
-                    {t("common.skip")}
-                  </button>
-                )}
+              {!currentStep.isRequired && currentStepIndex < steps.length - 1 && (
                 <button
-                  onClick={currentStepIndex === steps.length - 1 ? handleComplete : handleNext}
-                  disabled={currentStepIndex === steps.length - 1 ? updateUser.isPending : false}
-                  className="py-2 bg-primary w-full text-black font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
-                  {currentStepIndex === steps.length - 1
-                    ? updateUser.isPending
-                      ? t("common.loading")
-                      : t("onboarding.complete")
-                    : t("common.next")}
+                  onClick={handleSkip}
+                  className="py-2 bg-text-muted w-full text-black font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
+                  {t("common.skip")}
                 </button>
+              )}
+              <button
+                onClick={currentStepIndex === steps.length - 1 ? handleComplete : handleNext}
+                disabled={currentStepIndex === steps.length - 1 ? updateUser.isPending : false}
+                className="py-2 bg-primary w-full text-black font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed">
+                {currentStepIndex === steps.length - 1
+                  ? updateUser.isPending
+                    ? t("common.loading")
+                    : t("onboarding.complete")
+                  : t("common.next")}
+              </button>
             </motion.div>
           </AnimatePresence>
         </div>

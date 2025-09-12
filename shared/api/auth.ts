@@ -63,6 +63,5 @@ export const validateUser = async (): Promise<User> => {
         throw new APIError(`User validation failed`, response.status, errorBody);
     }
     const data = await response.json();
-    console.log(data)
     return data;
 };

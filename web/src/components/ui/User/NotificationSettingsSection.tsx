@@ -1,6 +1,6 @@
 import { Bell } from "lucide-react";
 import type { NotificationSettingsSectionProps } from "@shared/data/User";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function NotificationSettingsSection({
   notifications,

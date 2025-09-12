@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDeleteShoppingList, useUpdateShoppingList } from "@shared/hooks/shopping/useShoppingLists";
-import { useShoppingListStats } from "@shared/hooks/shopping/useShoppingListStats";
+import { useDeleteShoppingList, useUpdateShoppingList } from "@shared/hooks/shopping/useShopping";
+import { useShoppingListStats } from "@shared/hooks/shopping/useShopping";
 import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Check, Tag, Trash } from "lucide-react";
 import type { ShoppingListPanelProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
 import type { ShoppingListInterface } from "@shared/data/Shopping";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Send, MessageCircle, Clock, CheckCircle, Users, Wrench } from "lucide-react";
 import { useFeedback } from "@shared/hooks/feedback/useFeedback";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function FeedbackView() {
   const [message, setMessage] = useState("");

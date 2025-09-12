@@ -17,7 +17,7 @@ src/i18n/
 Import and use the `useT` hook in any component:
 
 ```tsx
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 function MyComponent() {
   const { t } = useT();

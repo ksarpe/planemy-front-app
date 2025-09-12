@@ -1,4 +1,4 @@
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 import type { PaymentSummaryProps } from "@shared/data/Payments/Components/PaymentComponentInterfaces";
 
 export const PaymentSummary = ({ categorizedPayments }: PaymentSummaryProps) => {

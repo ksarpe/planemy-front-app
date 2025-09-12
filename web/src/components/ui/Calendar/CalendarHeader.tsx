@@ -1,7 +1,7 @@
 import { useCalendarContext } from "@shared/hooks/context/useCalendarContext";
 import { ChevronLeft, ChevronRight, Grid3X3, AlignJustify } from "lucide-react";
 import { getVisibleMonthsInWeek } from "../../../../../shared/utils/weeksHelper";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function CalendarHeader() {
   const { currentDate, loadNext, loadPrev, goToday, setView, view } = useCalendarContext();

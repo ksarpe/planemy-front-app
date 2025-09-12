@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useTasks } from "@shared/hooks/tasks/useTasks";
 import { useTaskContext } from "@shared/hooks/context/useTaskContext";
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
@@ -14,7 +13,7 @@ import {
 } from "@/components/ui/Tasks";
 import { TaskListPanel } from "@/components/ui/Tasks/TaskListPanel";
 import Spinner from "../ui/Utils/Spinner";
-import { useTaskLists, useCreateTaskList } from "@shared/hooks/tasks/useTasksLists";
+import { useTaskLists, useCreateTaskList, useTasks } from "@shared/hooks/tasks/useTasks";
 import type { TaskListFilter } from "@shared/data/Tasks/types";
 import type { TaskListInterface } from "@shared/data/Tasks/interfaces";
 

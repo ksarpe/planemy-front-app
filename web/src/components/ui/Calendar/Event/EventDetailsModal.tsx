@@ -1,5 +1,5 @@
 import { Edit2, Clock, X } from "lucide-react";
-import { useElementPosition } from "@shared/hooks/useElementPosition";
+import { useElementPosition } from "@shared/hooks/utils/useElementPosition";
 import type { EventDetailsModalProps } from "@shared/data/Calendar/Components/CalendarComponentInterfaces";
 
 export default function EventDetailsModal({ event, onClose, onEdit, elementPosition }: EventDetailsModalProps) {

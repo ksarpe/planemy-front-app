@@ -10,7 +10,7 @@ import {
   FiBookOpen,
 } from "react-icons/fi";
 import type { SidebarNavProps } from "@shared/data/Layout/Components/LayoutComponentInterfaces";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export type { SidebarNavProps } from "@shared/data/Layout/Components/LayoutComponentInterfaces";
 

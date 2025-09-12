@@ -1,6 +1,6 @@
 import { Tag, Edit3, Trash2 } from "lucide-react";
 import type { LabelCardProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   const { t } = useT();

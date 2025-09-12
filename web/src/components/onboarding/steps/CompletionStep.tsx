@@ -1,4 +1,4 @@
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 import type { OnboardingStepBaseProps } from "@shared/data/User/interfaces";
 
 export const CompletionStep = ({ onboardingData }: OnboardingStepBaseProps) => {

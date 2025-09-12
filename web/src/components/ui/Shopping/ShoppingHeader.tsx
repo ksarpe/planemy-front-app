@@ -1,7 +1,7 @@
 import type { ExtendedShoppingHeaderProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
 import { MoreVertical } from "lucide-react";
 import { ShoppingProgress } from "./ShoppingProgress";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: ExtendedShoppingHeaderProps) {
   const { t } = useT();

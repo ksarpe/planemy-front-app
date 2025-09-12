@@ -1,2 +1,1 @@
-export { useAddEvent } from "./useAddEvent";
-export { useUpcomingEvents } from "./useUpcomingEvents";
+export { useEvents, useCreateEvent, useUpdateEvent, useDeleteEvent } from "./useEvents";

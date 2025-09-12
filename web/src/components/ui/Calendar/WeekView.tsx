@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useCalendarContext } from "@shared/hooks/context/useCalendarContext";
 import { format, startOfWeek, endOfWeek, eachDayOfInterval, isToday, isSameDay } from "date-fns";
 import { pl } from "date-fns/locale";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 import EventBlock from "./Event/EventBlock";
 import { EventInterface } from "@shared/data/Calendar/events";
 

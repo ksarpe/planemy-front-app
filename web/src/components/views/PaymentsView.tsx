@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AddPaymentModal, PaymentSection, PaymentSummary, categorizePayments } from "@/components/ui/Payments";
 import { Plus, TrendingUp, DollarSign } from "lucide-react";
 import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function Payments() {
   const { payments } = usePaymentsContext();

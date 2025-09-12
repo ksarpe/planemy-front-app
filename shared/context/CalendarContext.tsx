@@ -1,8 +1,6 @@
-import type { CalendarClickContent, EventInterface } from "../data/Calendar/events";
+import type { CalendarClickContent } from "../data/Calendar/events";
 import type { CalendarContextProps } from "../data/Calendar/context";
-import { useEvents, updateEvent as firebaseUpdateEvent } from "../api/events";
-import { getDateKey } from "../utils/helpers";
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useState } from "react";
 
 const CalendarContext = createContext<CalendarContextProps | undefined>(undefined);
 export { CalendarContext };
@@ -13,9 +11,6 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
   const [calendarClickContent, setCalendarClickContent] = useState<CalendarClickContent | null>(null);
   const [modalPosition, setActualModalPosition] = useState<{ top: number; left: number } | null>(null);
   const [view, setView] = useState<"month" | "week">("month");
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  const events = useEvents();
 
   const setModalPosition = (position: { top: number; left: number } | null) => {
     if (!position) {
@@ -35,54 +30,6 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
     }
     setActualModalPosition(position);
   };
-
-  useEffect(() => {
-    if (Array.isArray(events) && events.length >= 0) {
-      setIsInitialized(true);
-    }
-  }, [events]);
-
-  const updateEvent = async (updatedEvent: EventInterface) => {
-    try {
-      await firebaseUpdateEvent(updatedEvent.id, updatedEvent);
-      // Firebase will trigger a real-time update through useEvents hook
-    } catch (error) {
-      console.error("Failed to update event:", error);
-    }
-  };
-
-  const { hourlyEvents, dailyEvents } = useMemo(() => {
-    const hourly: Record<string, EventInterface[]> = {};
-    const daily: Record<string, EventInterface[]> = {};
-
-    const stripTime = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-    events.forEach((event: EventInterface) => {
-      const start = new Date(event.start);
-      const end = new Date(event.end);
-      const startKey = getDateKey(start);
-
-      if (event.allDay) {
-        daily[startKey] ||= [];
-        daily[startKey].push(event);
-      } else {
-        // If event spans multiple days, also add to daily events
-        const startDay = stripTime(start).getTime();
-        const endDay = stripTime(end).getTime();
-        //TODO: for now it changes evnet to all-day if it spans multiple days to keep it correctly in weekly view
-        if (startDay !== endDay) {
-          event.allDay = true;
-          daily[startKey] ||= [];
-          daily[startKey].push(event);
-        } else {
-          hourly[startKey] ||= [];
-          hourly[startKey].push(event);
-        }
-      }
-    });
-
-    return { hourlyEvents: hourly, dailyEvents: daily };
-  }, [events]);
 
   const loadNext = () => {
     if (view === "month") {
@@ -119,12 +66,6 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
         goToday,
         view,
         setView,
-        isInitialized,
-        setIsInitialized,
-        events: events,
-        updateEvent,
-        hourlyEvents,
-        dailyEvents,
         calendarClickContent,
         setCalendarClickContent,
         modalPosition,

@@ -1,26 +1,27 @@
 import { createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import type { PaymentInterface } from "../data/Payments/interfaces";
-import type { PaymentsContextProps } from "../data/Payments/context";
-import { useUserPayments } from "@shared/api/payments";
+import type { PaymentInterface } from "@shared/data/Payments/interfaces";
+import type { PaymentsContextProps } from "@shared/data/Payments/context";
+import { usePayments } from "@shared/hooks/payments";
 
 const PaymentsContext = createContext<PaymentsContextProps | undefined>(undefined);
 export { PaymentsContext };
 
 export const PaymentsProvider = ({ children }: { children: ReactNode }) => {
-  const initialPayments = useUserPayments();
+  const { data, isLoading } = usePayments();
   const [payments, setPayments] = useState<PaymentInterface[]>([]);
 
   useEffect(() => {
-    if (initialPayments) {
-      setPayments(initialPayments);
+    if (data) {
+      setPayments(data);
     }
-  }, [initialPayments]);
+  }, [data]);
 
   return (
     <PaymentsContext.Provider
       value={{
         payments,
+        isLoading,
       }}>
       {children}
     </PaymentsContext.Provider>

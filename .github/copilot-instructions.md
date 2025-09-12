@@ -315,7 +315,7 @@ export default function Component({ ...props }: ComponentProps) {
 ## File Path Aliases
 
 - Use `@/` for imports from `src/` directory
-- Examples: `@/data/types`, `@shared/hooks/useTheme`, `@/components/ui/Calendar`
+- Examples: `@/data/types`, `@shared/hooks/utils/useTheme`, `@/components/ui/Calendar`
 
 ## Important Notes
 

@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { useToast } from "@shared/hooks/toasts/useToast";
 import { useLogin, useRegister } from "@shared/hooks/auth/useAuth";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 import { Toaster } from "sonner";
 import { APIError } from "@shared/data/Auth/interfaces";
-import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { t } = useT();
-  const { refetchUser } = useAuthContext();
 
   const { showSuccess, showError } = useToast();
   const login = useLogin();
@@ -23,7 +21,6 @@ export const LoginForm = () => {
     try {
       if (isLoginMode) {
         await login.mutateAsync({ username: email, password: password });
-        await refetchUser();
         showSuccess("Logowanie udane");
       } else {
         await register.mutateAsync({ username: email, password: password });

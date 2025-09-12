@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { X, Calendar, Clock } from "lucide-react";
-import { useAddEvent } from "@shared/hooks/events";
+import { useCreateEvent } from "@shared/hooks/events";
 import { format } from "date-fns";
 import type { QuickEventCreatorProps } from "@shared/data/Calendar/Components/CalendarComponentInterfaces";
 
@@ -10,7 +10,7 @@ export default function QuickEventCreator({
   onPreviewChange,
   className = "",
 }: QuickEventCreatorProps) {
-  const { addEvent, isLoading: isCreating } = useAddEvent();
+  const { mutateAsync: createEvent, isPending: isCreating } = useCreateEvent();
 
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(
@@ -102,7 +102,7 @@ export default function QuickEventCreator({
         visibility: "private" as const,
       };
 
-      await addEvent(newEvent);
+      await createEvent(newEvent);
       onClose?.();
     } catch (error) {
       console.error("Error creating event:", error);

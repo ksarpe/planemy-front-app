@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCreateShoppingList } from "@shared/hooks/shopping/useShoppingLists";
+import { useCreateShoppingList } from "@shared/hooks/shopping/useShopping";
 import { X } from "lucide-react";
 import type { AddListModalProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
 

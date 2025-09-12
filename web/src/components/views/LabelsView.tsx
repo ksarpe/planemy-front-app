@@ -3,7 +3,7 @@ import { LabelInterface } from "@shared/data/Utils/interfaces";
 import { useState } from "react";
 import LabelForm from "@/components/ui/Tags/LabelForm";
 import LabelsGrid from "@/components/ui/Tags/LabelsGrid";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function LabelsView() {
   const { t } = useT();

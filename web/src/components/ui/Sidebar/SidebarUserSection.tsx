@@ -2,13 +2,21 @@ import { FiLogOut } from "react-icons/fi";
 import type { SidebarUserSectionProps } from "@shared/data/Layout/Components/LayoutComponentInterfaces";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 import { useLogout } from "@shared/hooks/auth/useAuth";
+import { useToast } from "@shared/hooks/toasts/useToast";
 
 export function SidebarUserSection({ collapsed, handleNavigate }: SidebarUserSectionProps) {
   const { user } = useAuthContext();
   const logout = useLogout();
+  const { showSuccess, showError } = useToast();
 
   const handleLogout = () => {
-    logout.mutate();
+    try {
+      logout.mutate();
+      showSuccess('Pomyślnie wylogowano');
+    } catch (error) {
+      console.error("Error during logout:", error);
+      showError('Błąd podczas wylogowywania');
+    }
   };
 
   if (collapsed) {

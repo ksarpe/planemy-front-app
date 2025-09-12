@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useCalendarContext } from "@shared/hooks/context/useCalendarContext";
-import { useElementPosition } from "@shared/hooks/useElementPosition";
-import { useT } from "@shared/hooks/useT";
+import { useElementPosition } from "@shared/hooks/utils/useElementPosition";
+import { useT } from "@shared/hooks/utils/useT";
 import {
   format,
   startOfMonth,

@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import { ShoppingItemDisplay } from "./ShoppingItemDisplay";
 import { ShoppingItemEditModal } from "./ShoppingItemEditModal";
 import { DeleteConfirmationModal } from "@/components/ui/Common";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 function ShoppingItem({ item, listId }: ShoppingItemProps) {
   const { t } = useT();

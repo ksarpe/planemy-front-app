@@ -3,15 +3,15 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 //api,context
 import { loginUser, registerUser, logoutUser, validateUser } from "@shared/api/auth";
 //types
-import type { LoginRequest, RegisterRequest } from "@shared/data/Auth/interfaces";
+import { type LoginRequest, type RegisterRequest } from "@shared/data/Auth/interfaces";
 import { User } from "@shared/data/User";
 import { queryClient } from "@shared/lib/queryClient";
 
 export const useLogin = () => {
   return useMutation({
     mutationFn: (credentials: LoginRequest) => loginUser(credentials),
-    onSuccess: (data) => {
-      console.log("Login successful:", data);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
     },
     onError: (error: unknown) => {
       console.error("Login failed:", error);
@@ -35,8 +35,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: () => logoutUser(),
     onSuccess: () => {
-      console.log("Logout successful");
-      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+      queryClient.setQueryData(["userInfo"], null);
     },
   });
 };

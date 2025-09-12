@@ -1,0 +1,71 @@
+import { APIError } from "@shared/data/Auth";
+import { type Payment } from "@shared/data/Payments/interfaces";
+
+export const getPayments = async (): Promise<Payment[]> => {
+  const response = await fetch("http://localhost:8080/api/v1/bills", {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new APIError(`Getting payments failed`, response.status, errorBody);
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const addPayment = async (paymentData: Partial<Payment>): Promise<Partial<Payment>> => {
+  const response = await fetch("http://localhost:8080/api/v1/bills", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(paymentData),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new APIError(`Adding payment failed`, response.status, errorBody);
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const updatePayment = async (paymentId: string, paymentData: Partial<Payment>): Promise<Partial<Payment>> => {
+    if (!paymentId) {
+        throw new Error("Payment ID is required for update");
+    }
+  const response = await fetch(`http://localhost:8080/api/v1/bills/${paymentId}`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(paymentData),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new APIError(`Updating payment failed`, response.status, errorBody);
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const deletePayment = async (paymentId: string): Promise<void> => {
+    if (!paymentId) {
+        throw new Error("Payment ID is required for deletion");
+    }
+
+  const response = await fetch(`http://localhost:8080/api/v1/bills/${paymentId}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new APIError(`Deleting payment failed`, response.status, errorBody);
+  }
+};

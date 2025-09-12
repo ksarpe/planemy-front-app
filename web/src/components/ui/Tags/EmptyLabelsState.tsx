@@ -1,6 +1,6 @@
 import { Tag, Plus } from "lucide-react";
 import type { EmptyLabelsStateProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function EmptyLabelsState({ onCreateFirst }: EmptyLabelsStateProps) {
   const { t } = useT();

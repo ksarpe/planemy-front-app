@@ -1,5 +1,5 @@
 import { TrendingUp, Target, BookOpen, Lightbulb } from "lucide-react";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function DevelopmentView() {
   const { t } = useT();

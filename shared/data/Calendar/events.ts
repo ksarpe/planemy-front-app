@@ -55,6 +55,13 @@ export interface EventInterface {
   updatedAt: string;
 }
 
+export interface EventResponse {
+  items: EventInterface[];
+  limit: number;
+  offset: number;
+  total: number;
+}
+
 export interface CalendarClickContent {
   type: "event" | "date" | "date-range";
   data: EventInterface | Date | null;

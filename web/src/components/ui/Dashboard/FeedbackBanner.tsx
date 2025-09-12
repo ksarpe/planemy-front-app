@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export function FeedbackBanner() {
   const navigate = useNavigate();

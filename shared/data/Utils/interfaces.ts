@@ -90,7 +90,7 @@ export interface LabelContextType {
   refreshLabels: () => void;
 }
 
-// Element positioning interfaces (moved from src/hooks/useElementPosition.ts)
+// Element positioning interfaces (moved from src/hooks/utils/useElementPosition.ts)
 export interface ElementPosition {
   x: number;
   y: number;

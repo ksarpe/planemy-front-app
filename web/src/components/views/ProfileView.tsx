@@ -13,7 +13,7 @@ import { upsertUserProfile, getUserProfile } from "@shared/api/user_profile";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 
 import Spinner from "@/components/ui/Utils/Spinner";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function ProfileView() {
   const { user } = useAuthContext();

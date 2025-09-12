@@ -9,7 +9,7 @@ import { FavoriteProductsPanel } from "../ui/Shopping/FavoriteProductsPanel";
 import { ShoppingHeader } from "../ui/Shopping/ShoppingHeader";
 import { ShoppingFilters } from "../ui/Shopping/ShoppingFilters";
 import { ShoppingItemsSection } from "../ui/Shopping/ShoppingItem/ShoppingItemsSection";
-import { useT } from "@shared/hooks/useT";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function ShoppingView() {
   const { t } = useT();
