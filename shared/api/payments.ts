@@ -1,7 +1,7 @@
 import { APIError } from "@shared/data/Auth";
-import { type Payment } from "@shared/data/Payments/interfaces";
+import { type Payment, type PaymentResponse } from "@shared/data/Payments/interfaces";
 
-export const getPayments = async (): Promise<Payment[]> => {
+export const getPayments = async (): Promise<PaymentResponse> => {
   const response = await fetch("http://localhost:8080/api/v1/bills", {
     method: "GET",
     credentials: "include",
@@ -34,9 +34,9 @@ export const addPayment = async (paymentData: Partial<Payment>): Promise<Partial
 };
 
 export const updatePayment = async (paymentId: string, paymentData: Partial<Payment>): Promise<Partial<Payment>> => {
-    if (!paymentId) {
-        throw new Error("Payment ID is required for update");
-    }
+  if (!paymentId) {
+    throw new Error("Payment ID is required for update");
+  }
   const response = await fetch(`http://localhost:8080/api/v1/bills/${paymentId}`, {
     method: "PUT",
     credentials: "include",
@@ -55,9 +55,9 @@ export const updatePayment = async (paymentId: string, paymentData: Partial<Paym
 };
 
 export const deletePayment = async (paymentId: string): Promise<void> => {
-    if (!paymentId) {
-        throw new Error("Payment ID is required for deletion");
-    }
+  if (!paymentId) {
+    throw new Error("Payment ID is required for deletion");
+  }
 
   const response = await fetch(`http://localhost:8080/api/v1/bills/${paymentId}`, {
     method: "DELETE",

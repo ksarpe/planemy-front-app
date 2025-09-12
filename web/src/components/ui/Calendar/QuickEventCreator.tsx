@@ -3,6 +3,7 @@ import { X, Calendar, Clock } from "lucide-react";
 import { useCreateEvent } from "@shared/hooks/events";
 import { format } from "date-fns";
 import type { QuickEventCreatorProps } from "@shared/data/Calendar/Components/CalendarComponentInterfaces";
+import { EventInterface } from "@shared/data/Calendar/events";
 
 export default function QuickEventCreator({
   selectedDate,
@@ -89,17 +90,10 @@ export default function QuickEventCreator({
         end.setHours(endHour, endMinute, 0, 0);
       }
 
-      const newEvent = {
+      const newEvent: Partial<EventInterface> = {
         title: title.trim(),
-        start: start.toISOString(),
-        end: end.toISOString(),
-        allDay,
-        category: "Personal" as const,
-        displayType: "block" as const,
-        color: "#3b82f6",
-        isRecurring: false,
-        isPrivate: false,
-        visibility: "private" as const,
+        starts_at: start.toISOString(),
+        ends_at: end.toISOString(),
       };
 
       await createEvent(newEvent);

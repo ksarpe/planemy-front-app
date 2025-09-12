@@ -5,9 +5,12 @@ import { pl } from "date-fns/locale";
 import { useT } from "@shared/hooks/utils/useT";
 import EventBlock from "./Event/EventBlock";
 import { EventInterface } from "@shared/data/Calendar/events";
+import { useEvents } from "@shared/hooks/events/useEvents";
 
 export default function WeekView() {
-  const { currentDate, events } = useCalendarContext();
+  const { data } = useEvents();
+  const events = data?.items || [];
+  const { currentDate } = useCalendarContext();
   const { currentLanguage } = useT();
 
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 }); // Monday start
@@ -31,12 +34,12 @@ export default function WeekView() {
 
   const getEventsForDay = (day: Date): EventInterface[] => {
     return events.filter((event) => {
-      const eventStart = new Date(event.start);
-      const eventEnd = new Date(event.end);
+      const eventStart = new Date(event.starts_at);
+      const eventEnd = new Date(event.ends_at);
 
-      if (event.allDay) {
-        return isSameDay(eventStart, day);
-      }
+      // if (event.allDay) {
+      //   return isSameDay(eventStart, day);
+      // }
 
       // Check if the day falls within the event's time range
       const dayStart = new Date(day);
@@ -49,12 +52,12 @@ export default function WeekView() {
   };
 
   const getEventPosition = (event: EventInterface) => {
-    const eventStart = new Date(event.start);
-    const eventEnd = new Date(event.end);
+    const eventStart = new Date(event.starts_at);
+    const eventEnd = new Date(event.ends_at);
 
-    if (event.allDay) {
-      return { top: 0, height: 40 };
-    }
+    // if (event.allDay) {
+    //   return { top: 0, height: 40 };
+    // }
 
     // Calculate position based on time
     const startHour = eventStart.getHours();
@@ -131,7 +134,7 @@ export default function WeekView() {
                   ))}
 
                   {/* All-day events */}
-                  <div className="absolute top-0 left-0 right-0 z-10 p-1 bg-white border-b border-gray-200">
+                  {/* <div className="absolute top-0 left-0 right-0 z-10 p-1 bg-white border-b border-gray-200">
                     {dayEvents
                       .filter((event) => event.allDay)
                       .slice(0, 2)
@@ -140,12 +143,12 @@ export default function WeekView() {
                           <EventBlock event={event} className="w-full" />
                         </div>
                       ))}
-                  </div>
+                  </div> */}
 
                   {/* Timed events */}
                   <div className="absolute inset-0 top-16 p-1">
                     {dayEvents
-                      .filter((event) => !event.allDay)
+                      // .filter((event) => !event.allDay)
                       .map((event) => {
                         const position = getEventPosition(event);
 

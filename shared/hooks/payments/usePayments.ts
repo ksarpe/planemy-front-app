@@ -2,10 +2,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "@shared/lib/queryClient";
 import { addPayment, updatePayment, deletePayment, getPayments } from "@shared/api/payments";
 
-import type { Payment } from "@shared/data/Payments/interfaces";
+import type { Payment, PaymentResponse } from "@shared/data/Payments/interfaces";
 
 export function usePayments() {
-  return useQuery<Payment[], unknown, Payment[], string[]>({
+  return useQuery<PaymentResponse, unknown, PaymentResponse, string[]>({
     queryKey: ["payments"],
     queryFn: getPayments,
     staleTime: 5 * 60 * 1000,

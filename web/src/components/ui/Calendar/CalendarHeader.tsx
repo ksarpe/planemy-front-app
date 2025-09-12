@@ -25,7 +25,7 @@ export default function CalendarHeader() {
 
   return (
     // Main container
-    <div className="flex items-center justify-between px-8 py-2 md:py-4 border-b border-gray-200  bg-bg ">
+    <div className="flex items-center rounded-md justify-between px-8 py-2 md:py-4 border-b border-gray-200  bg-bg ">
       {/* Left side - navigation */}
       <div className="flex gap-2 items-center">
         <button

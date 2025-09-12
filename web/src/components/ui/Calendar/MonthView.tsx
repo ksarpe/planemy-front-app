@@ -17,12 +17,17 @@ import EventBlock from "./Event/EventBlock";
 import QuickEventCreator from "./QuickEventCreator";
 import PreviewEventBlockInline from "./PreviewEventBlockInline";
 import { EventInterface } from "@shared/data/Calendar/events";
+import { useEvents } from "@shared/hooks/events";
+import Spinner from "../Utils/Spinner";
 
 export default function MonthView() {
-  const { currentDate, events } = useCalendarContext();
+  const { data, isLoading } = useEvents();
+  const events = data?.items || [];
+  const { currentDate } = useCalendarContext();
   const { t } = useT();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showQuickCreator, setShowQuickCreator] = useState(false);
+
   const [elementPosition, setElementPosition] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
@@ -108,22 +113,20 @@ export default function MonthView() {
 
   const getEventsForDay = (day: Date): EventInterface[] => {
     const dayEvents = events.filter((event) => {
-      const eventStart = new Date(event.start);
-      const eventEnd = new Date(event.end);
+      const eventStart = new Date(event.starts_at);
+      const eventEnd = new Date(event.ends_at);
 
-      if (event.allDay) {
-        return isSameDay(eventStart, day);
-      }
+      // if (event.allDay) {
+      //   return isSameDay(eventStart, day);
+      // }
 
       // Check if the day falls within the event's time range
       const dayStart = new Date(day);
       dayStart.setHours(0, 0, 0, 0);
       const dayEnd = new Date(day);
       dayEnd.setHours(23, 59, 59, 999);
-
       return eventStart <= dayEnd && eventEnd >= dayStart;
     });
-
     return dayEvents;
   };
 
@@ -153,6 +156,10 @@ export default function MonthView() {
     t("calendar.weekdays.short.saturday"),
     t("calendar.weekdays.short.sunday"),
   ];
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="h-full flex flex-col overflow-hidden">

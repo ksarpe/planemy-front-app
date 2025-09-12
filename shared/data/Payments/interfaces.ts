@@ -18,5 +18,12 @@ export interface PaymentInterface {
   updatedAt?: Date;
 }
 
+export interface PaymentResponse {
+  items: PaymentInterface[];
+  limit: number;
+  offset: number;
+  total: number;
+}
+
 // Legacy Payment interface (moved from src/api/payments.ts, now consolidated with PaymentInterface above)
 export type Payment = PaymentInterface;

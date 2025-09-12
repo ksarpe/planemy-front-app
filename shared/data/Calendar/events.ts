@@ -35,24 +35,29 @@ export interface RecurrenceRule {
 }
 
 export interface EventInterface {
-  id: string; // Firebase compatible string ID
+  id: string;
   title: string;
-  description?: string;
-  category: EventCategory;
-  start: string;
-  end: string;
-  allDay: boolean;
-  color: string; // tailwind class or hex
-  isRecurring: boolean;
-  recurrence?: RecurrenceRule;
-  originalEventId?: string;
-  location?: string;
-  attendees?: string[];
-  isPrivate: boolean;
-  visibility: "public" | "private" | "shared";
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
+  description: string;
+  starts_at: string; // ISO date string
+  ends_at: string; // ISO date string
+  // id: string; // Firebase compatible string ID
+  // title: string;
+  // description?: string;
+  // category: EventCategory;
+  // start: string;
+  // end: string;
+  // allDay: boolean;
+  // color: string; // tailwind class or hex
+  // isRecurring: boolean;
+  // recurrence?: RecurrenceRule;
+  // originalEventId?: string;
+  // location?: string;
+  // attendees?: string[];
+  // isPrivate: boolean;
+  // visibility: "public" | "private" | "shared";
+  // userId: string;
+  // createdAt: string;
+  // updatedAt: string;
 }
 
 export interface EventResponse {

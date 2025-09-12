@@ -24,12 +24,13 @@ export const addEvent = async (eventData: Partial<EventInterface>): Promise<Part
     },
     body: JSON.stringify(eventData),
   });
-
+  console.log(eventData);
   if (!response.ok) {
     const errorBody = await response.json();
     throw new APIError(`Adding event failed`, response.status, errorBody);
   }
   const data = await response.json();
+  console.log("Added event:", data);
   return data;
 };
 
