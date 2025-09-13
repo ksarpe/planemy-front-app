@@ -1,2 +1,15 @@
-export * from "./useLabels";
-export * from "./useLabelConnections";
+export {
+  useLabels,
+  useLabel,
+  useCreateLabel,
+  useUpdateLabel,
+  useDeleteLabel,
+  useLabelConnections,
+  useCreateLabelConnection,
+  useDeleteLabelConnection,
+  useDeleteLabelConnectionByParams,
+  useDeleteAllLabelConnectionsForObject,
+  useAddLabelToObject,
+  useRemoveLabelFromObject,
+  useLabelsForObject,
+} from "./useLabels";

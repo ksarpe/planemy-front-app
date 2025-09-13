@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { CreateTaskListModalProps } from "@shared/data/Tasks/interfaces";
+import { useCreateTaskList } from "@shared/hooks/tasks/useTasks";
 
-export default function CreateTaskListModal({ isOpen, onClose, onSubmit, loading }: CreateTaskListModalProps) {
+export default function CreateTaskListModal({ isOpen, onClose }: CreateTaskListModalProps) {
+  const { mutate: createTaskList, isPending: isCreating } = useCreateTaskList();
   const [listName, setListName] = useState("");
 
   // Handle Escape key
@@ -21,7 +23,7 @@ export default function CreateTaskListModal({ isOpen, onClose, onSubmit, loading
     e.preventDefault();
     if (!listName.trim()) return;
 
-    await onSubmit(listName.trim());
+    createTaskList(listName.trim());
     setListName("");
     onClose();
   };
@@ -58,7 +60,7 @@ export default function CreateTaskListModal({ isOpen, onClose, onSubmit, loading
             </button>
             <button
               type="submit"
-              disabled={!listName.trim() || loading}
+              disabled={!listName.trim() || isCreating}
               className="px-4 py-2 bg-primary  text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50">
               Utwórz
             </button>

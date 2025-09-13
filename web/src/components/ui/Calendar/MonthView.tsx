@@ -185,17 +185,17 @@ export default function MonthView() {
                 <div
                   key={dayIndex}
                   className={`relative border-r border-gray-200 last:border-r-0 h-full ${
-                    !isCurrentMonth ? "bg-gray-50" : "bg-white"
-                  } hover:bg-gray-50 transition-colors flex flex-col cursor-pointer`}
+                    !isCurrentMonth ? "bg-bg-alt" : "bg-bg"
+                  } hover:bg-bg-alt transition-colors flex flex-col cursor-pointer`}
                   onClick={(e) => handleDayClick(day, e)}>
                   {/* Day number */}
                   <div className="text-center flex-shrink-0">
                     <div
                       className={`inline-flex items-center justify-center w-8 h-8 text-xs sm:text-sm font-medium rounded-full ${
                         isDayToday
-                          ? "bg-primary text-white"
+                          ? "bg-primary text-text"
                           : isCurrentMonth
-                          ? "text-gray-900 hover:bg-blue-50"
+                          ? "text-text hover:bg-blue-50"
                           : "text-gray-400"
                       }`}>
                       {format(day, "d")}
@@ -260,7 +260,7 @@ export default function MonthView() {
                   <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
                     <div className="absolute top-2 right-2">
                       <button
-                        className="w-6 h-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-xs flex items-center justify-center pointer-events-auto"
+                        className="w-6 h-6 bg-blue-600 hover:bg-blue-700 text-text rounded-full text-xs flex items-center justify-center pointer-events-auto"
                         title="Add event"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -283,7 +283,7 @@ export default function MonthView() {
           {isMobile ? (
             /* Mobile: Full screen modal */
             <div className="fixed inset-0 backdrop-blur-sm bg-black/20 z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-lg max-w-sm w-full max-h-[90vh] overflow-y-auto">
+              <div className="bg-bg rounded-lg max-w-sm w-full max-h-[90vh] overflow-y-auto">
                 <QuickEventCreator
                   selectedDate={selectedDate}
                   onClose={closeQuickCreator}
@@ -296,7 +296,7 @@ export default function MonthView() {
             positionStyles.left !== undefined &&
             positionStyles.top !== undefined && (
               <div
-                className="bg-white rounded-lg shadow-xl border border-gray-200 max-w-sm transition-opacity duration-150 opacity-100"
+                className="bg-bg rounded-lg shadow-xl border border-gray-200 max-w-sm transition-opacity duration-150 opacity-100"
                 style={positionStyles}>
                 <QuickEventCreator
                   selectedDate={selectedDate}

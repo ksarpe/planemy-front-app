@@ -1,12 +1,12 @@
 import { MoreVertical, Users, ArrowBigRightDash } from "lucide-react";
-import { useTaskContext } from "@shared/hooks/context/useTaskContext";
+import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "../Common";
 import type { TaskViewHeaderProps } from "@shared/data/Tasks/interfaces";
 
 export function TaskViewHeader({ onToggleLists, listsOpen }: TaskViewHeaderProps) {
   const { t } = useTranslation();
-  const { currentTaskList } = useTaskContext();
+  const { currentTaskList } = useTaskViewContext();
 
   if (!currentTaskList) return null;
 

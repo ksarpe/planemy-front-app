@@ -1,26 +1,25 @@
 import EditableText from "@/components/ui/Utils/EditableText";
-import { useTaskContext } from "@shared/hooks/context/useTaskContext";
-import { useCompleteTask, useDeleteTask, useUpdateTask } from "@shared/hooks/tasks/useTasks";
+import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
+import { useDeleteTask, useUpdateTask } from "@shared/hooks/tasks/useTasks";
 import { useTranslation } from "react-i18next";
 import { Calendar, CheckCircle2, Trash2, PanelRightClose, Trash, Tag } from "lucide-react";
 import { useState } from "react";
 import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
-import { useLabelContext } from "@shared/hooks/context/useLabelContext";
+import { useDeleteLabelConnection } from "@shared/hooks/labels/useLabels";
 
 export default function TaskDetails() {
   const { t } = useTranslation();
-  const { clickedTask, setClickedTask, currentTaskList } = useTaskContext();
-  const { removeLabelConnection } = useLabelContext();
+  const { clickedTask, setClickedTask, currentTaskListId } = useTaskViewContext();
 
   const { mutate: updateTask } = useUpdateTask();
-  const { mutate: toggleTaskComplete } = useCompleteTask();
   const { mutate: removeTask } = useDeleteTask();
+  const { mutate: removeLabelConnection } = useDeleteLabelConnection();
   const [isEditingDate, setIsEditingDate] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // wether the delete confirmation modal is open
   const [tempDate, setTempDate] = useState("");
   const [tempTime, setTempTime] = useState("");
 
-  if (!clickedTask || !currentTaskList) return;
+  if (!clickedTask || !currentTaskListId) return;
 
   const isOverdue = () => {
     if (clickedTask.isCompleted || !clickedTask.dueDate || clickedTask.dueDate === "") return false;
@@ -58,22 +57,22 @@ export default function TaskDetails() {
   };
 
   const handleUpdateTitle = async (newTitle: string) => {
-    updateTask({ taskId: clickedTask.id, updates: { title: newTitle } });
+    updateTask({ id: clickedTask.id, data: { title: newTitle } });
   };
 
   const handleUpdateDescription = async (newDescription: string) => {
-    updateTask({ taskId: clickedTask.id, updates: { description: newDescription } });
+    updateTask({ id: clickedTask.id, data: { description: newDescription } });
   };
 
   const handleUpdateDueDate = async (newDueDate: string) => {
-    updateTask({ taskId: clickedTask.id, updates: { dueDate: newDueDate } });
+    updateTask({ id: clickedTask.id, data: { dueDate: newDueDate } });
     // Aktualizuj lokalny stan zadania
     setClickedTask({ ...clickedTask, dueDate: newDueDate });
     setIsEditingDate(false);
   };
 
   const handleRemoveDueDate = async () => {
-    updateTask({ taskId: clickedTask.id, updates: { dueDate: "" } });
+    updateTask({ id: clickedTask.id, data: { dueDate: "" } });
     // Aktualizuj lokalny stan zadania
     setClickedTask({ ...clickedTask, dueDate: "" });
     setIsEditingDate(false);
@@ -101,7 +100,7 @@ export default function TaskDetails() {
   };
 
   const handleToggleComplete = async () => {
-    toggleTaskComplete(clickedTask.id);
+    updateTask({ id: clickedTask.id, data: { isCompleted: !clickedTask.isCompleted } });
     setClickedTask(null);
   };
 
@@ -139,7 +138,7 @@ export default function TaskDetails() {
                   <BasicDropdownItem
                     icon={Trash}
                     variant="red"
-                    onClick={() => removeLabelConnection(clickedTask.id, "task", label.id)}>
+                    onClick={() => removeLabelConnection(clickedTask.id)}>
                     {t("tasks.item.labels.remove")}
                   </BasicDropdownItem>
                 </BasicDropdown>

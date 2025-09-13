@@ -12,7 +12,7 @@ import {
   getTaskList,
 } from "@shared/api/tasks";
 
-import type { TaskInterface, TaskListInterface } from "@shared/data/Tasks/interfaces";
+import type { TaskInterface, TaskListInterface, TaskListsResponse } from "@shared/data/Tasks/interfaces";
 
 export function useTasks(taskListId: string) {
   return useQuery<TaskInterface[], unknown, TaskInterface[], string[]>({
@@ -55,7 +55,7 @@ export function useDeleteTask() {
 }
 
 export function useTaskLists() {
-  return useQuery<TaskListInterface[], unknown, TaskListInterface[], string[]>({
+  return useQuery<TaskListsResponse, unknown, TaskListsResponse, string[]>({
     queryKey: ["taskLists"],
     queryFn: getTaskLists,
     staleTime: 5 * 60 * 1000,
@@ -75,7 +75,7 @@ export function useTaskList(taskListId: string) {
 
 export function useCreateTaskList() {
   return useMutation({
-    mutationFn: (listData: Partial<TaskListInterface>) => addTaskList(listData),
+    mutationFn: (listData: string) => addTaskList(listData), //TODO: type to Partial? or always just name string
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["taskLists"] });
     },

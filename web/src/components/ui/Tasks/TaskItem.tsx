@@ -1,4 +1,4 @@
-import { useTaskContext } from "@shared/hooks/context/useTaskContext";
+import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
 import { useLabelContext } from "@shared/hooks/context/useLabelContext";
 import { useCompleteTask } from "@shared/hooks/tasks/useTasks";
 import { useTranslation } from "react-i18next";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 export default function TaskItem({ task }: TaskItemProps) {
   const { t } = useTranslation();
   const { mutate: completeTask } = useCompleteTask();
-  const { clickedTask, setClickedTask, currentTaskList } = useTaskContext();
+  const { clickedTask, setClickedTask, currentTaskList } = useTaskViewContext();
   const { labels, createLabelConnection, removeLabelConnection } = useLabelContext();
   const navigate = useNavigate();
 

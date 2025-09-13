@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { Plus, MoreVertical, Edit2, Trash2, Share2, Check, Users } from "lucide-react";
+import { Plus, MoreVertical, Edit2, Trash2, Share2, Users } from "lucide-react";
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
 import { useTranslation } from "react-i18next";
 import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
 import type { TaskListInterface } from "@shared/data/Tasks/interfaces";
-import { useDeleteTaskList, useUpdateTaskList } from "@shared/hooks/tasks/useTasksLists";
+import { useDeleteTaskList, useUpdateTaskList } from "@shared/hooks/tasks/useTasks";
 import { useTasks } from "@shared/hooks/tasks/useTasks";
 import type { TaskListPanelProps } from "@shared/data/Tasks/Components/TaskComponentInterfaces";
 import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
 
 export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: TaskListPanelProps) {
   const { t } = useTranslation();
-  const { mainListId, updateSettings } = usePreferencesContext();
+  const { defaultTaskListId } = usePreferencesContext();
   const deleteList = useDeleteTaskList();
   const updateList = useUpdateTaskList();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -30,7 +30,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
 
   const handleSaveEdit = async (listId: string) => {
     if (editName.trim()) {
-      await updateList.mutateAsync({ listId, updates: { name: editName.trim() } });
+      await updateList.mutateAsync({ id: listId, data: { name: editName.trim() } });
     }
     setEditingListId(null);
     setEditName("");
@@ -49,7 +49,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
 
   const handleDeleteList = async (listId: string) => {
     setShowDeleteConfirm(false);
-    await deleteList.mutateAsync(listId);
+    deleteList.mutate(listId);
     setListToDelete(null);
   };
 
@@ -58,9 +58,9 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
     setShowDeleteConfirm(true);
   };
 
-  const handleSetAsDefault = async (listId: string) => {
-    updateSettings({ defaultTaskListId: listId });
-  };
+  // const handleSetAsDefault = async (listId: string) => {
+  //   updateSettings({ defaultTaskListId: listId });
+  // };
 
   // Komponent dla każdej listy zadań
   const TaskListItem = ({ list }: { list: TaskListInterface }) => {
@@ -110,7 +110,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
                 <span className={`${stats.completed === stats.total && stats.total > 0 ? "text-success" : ""}`}>
                   {stats.completed}/{stats.total}
                 </span>
-                {mainListId === list.id && (
+                {defaultTaskListId === list.id && (
                   <span className="flex items-center gap-1 text-primary font-medium">{t("tasks.panel.default")}</span>
                 )}
               </div>
@@ -135,10 +135,11 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
                 <BasicDropdownItem icon={Share2} onClick={() => handleShareList(list.id, list.name)}>
                   {t("tasks.panel.actions.share")}
                 </BasicDropdownItem>
-                {mainListId !== list.id && (
-                  <BasicDropdownItem icon={Check} onClick={() => handleSetAsDefault(list.id)}>
-                    {t("tasks.panel.actions.setAsDefault")}
-                  </BasicDropdownItem>
+                {defaultTaskListId !== list.id && (
+                  <></>
+                  // <BasicDropdownItem icon={Check} onClick={() => handleSetAsDefault(list.id)}>
+                  //   {t("tasks.panel.actions.setAsDefault")}
+                  // </BasicDropdownItem>
                 )}
                 <BasicDropdownItem icon={Trash2} variant="red" onClick={() => handleDeleteClick(list)}>
                   {t("tasks.panel.actions.delete")}

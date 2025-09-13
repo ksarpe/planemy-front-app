@@ -60,9 +60,9 @@ export default function UpcomingEvents() {
                   <h4 className="font-semibold text-text dark:text-text-dark mb-1">{nextEvent.title}</h4>
                   <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                     <Clock className="h-4 w-4 mr-1" />
-                    {nextEvent.allDay
+                    {/* {nextEvent.allDay
                       ? format(new Date(nextEvent.start), "EEEE, d MMMM", { locale: pl })
-                      : format(new Date(nextEvent.start), "EEEE, d MMMM 'o' HH:mm", { locale: pl })}
+                      : format(new Date(nextEvent.start), "EEEE, d MMMM 'o' HH:mm", { locale: pl })} */}
                   </div>
                 </div>
                 <div className="w-3 h-3 rounded-full bg-primary" />
@@ -88,11 +88,11 @@ export default function UpcomingEvents() {
                         <div className="w-2 h-2 rounded-full mr-3 flex-shrink-0 bg-primary" />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-text dark:text-text-dark truncate">{event.title}</p>
-                          {!event.allDay && (
+                          {/* {!event.allDay && (
                             <p className="text-xs text-gray-500 dark:text-gray-400">
                               {format(new Date(event.start), "HH:mm")} - {format(new Date(event.end), "HH:mm")}
                             </p>
-                          )}
+                          )} */}
                           {event.description && (
                             <p className="text-xs text-gray-400 dark:text-gray-500 truncate mt-1">
                               {event.description}

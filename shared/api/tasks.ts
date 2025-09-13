@@ -1,5 +1,5 @@
 import { APIError } from "@shared/data/Auth";
-import { type TaskInterface, type TaskListInterface } from "@shared/data/Tasks/interfaces";
+import { TaskListsResponse, type TaskInterface, type TaskListInterface } from "@shared/data/Tasks/interfaces";
 
 export const getTasks = async (taskListId: string): Promise<TaskInterface[]> => {
   const response = await fetch(`http://localhost:8080/api/v1/tasks?listId=${taskListId}`, {
@@ -70,8 +70,8 @@ export const deleteTask = async (taskId: string): Promise<void> => {
   }
 };
 
-export const getTaskLists = async (): Promise<TaskListInterface[]> => {
-  return [];
+export const getTaskLists = async (): Promise<TaskListsResponse> => {
+  return { items: [], limit: 0, offset: 0, total: 0 };
   const response = await fetch("http://localhost:8080/api/v1/task-lists", {
     method: "GET",
     credentials: "include",
@@ -103,7 +103,8 @@ export const getTaskList = async (listId: string): Promise<TaskListInterface | u
   return data;
 };
 
-export const addTaskList = async (listData: Partial<TaskListInterface>): Promise<Partial<TaskListInterface>> => {
+//TODO: listData just string or extend it to Partial?
+export const addTaskList = async (listData: string): Promise<Partial<TaskListInterface>> => {
   const response = await fetch("http://localhost:8080/api/v1/task-lists", {
     method: "POST",
     credentials: "include",

@@ -6,12 +6,16 @@ import { loginUser, registerUser, logoutUser, validateUser } from "@shared/api/a
 import { type LoginRequest, type RegisterRequest } from "@shared/data/Auth/interfaces";
 import { User } from "@shared/data/User";
 import { queryClient } from "@shared/lib/queryClient";
+import { useNavigate } from "react-router";
 
 export const useLogin = () => {
+  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: (credentials: LoginRequest) => loginUser(credentials),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+      queryClient.invalidateQueries();
+      navigate("/");
     },
     onError: (error: unknown) => {
       console.error("Login failed:", error);
@@ -35,7 +39,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: () => logoutUser(),
     onSuccess: () => {
-      queryClient.setQueryData(["userInfo"], null);
+      queryClient.resetQueries();
     },
   });
 };

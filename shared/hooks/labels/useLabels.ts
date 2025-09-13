@@ -1,53 +1,154 @@
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import { useAuthContext } from "@shared/hooks/context/useAuthContext";
-// //import { useToastContext } from "@shared/hooks/context/useToastContext";
-// import {
-//   createLabel,
-//   updateLabel,
-//   deleteLabel,
-//   getUserLabels,
-//   bulkDeleteLabels,
-//   createLabelConnectionFirebase,
-//   removeLabelConnectionFirebase,
-//   removeAllLabelConnectionsForObject,
-// } from "@shared/api/labels";
-// import type { LabelInterface } from "@shared/data/Utils/interfaces";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { queryClient } from "../../lib/queryClient";
+import {
+  addLabel,
+  updateLabel,
+  deleteLabel,
+  getLabels,
+  getLabel,
+  addLabelConnection,
+  deleteLabelConnection,
+  deleteLabelConnectionByParams,
+  deleteAllLabelConnectionsForObject,
+  getLabelConnections,
+} from "../../api/labels";
 
-// // Hook do pobierania wszystkich etykiet użytkownika
-// export const useLabels = () => {
-//   const { user } = useAuthContext();
+import type { LabelInterface, LabelConnection } from "../../data/Utils/interfaces";
 
-//   return useQuery({
-//     queryKey: ["labels", user?.uid],
-//     queryFn: () => getUserLabels(user!.uid),
-//     enabled: !!user, // Etykiety pobieramy tylko gdy user jest zalogowany
-//   });
-// };
+// Labels hooks
+export function useLabels() {
+  return useQuery<LabelInterface[], unknown, LabelInterface[], string[]>({
+    queryKey: ["labels"],
+    queryFn: getLabels,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+}
 
-// // --- MUTATIONS dla etykiet ---
+export function useLabel(labelId: string) {
+  return useQuery<LabelInterface | undefined, unknown, LabelInterface | undefined, (string | undefined)[]>({
+    queryKey: ["labels", labelId],
+    queryFn: () => getLabel(labelId),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    enabled: !!labelId,
+  });
+}
 
-// export const useCreateLabel = () => {
-//   const { user } = useAuthContext();
-//   //const { showToast } = useToastContext();
-//   const queryClient = useQueryClient();
+export function useCreateLabel() {
+  return useMutation({
+    mutationFn: (labelData: Partial<LabelInterface>) => addLabel(labelData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["labels"] });
+    },
+  });
+}
 
-//   return useMutation({
-//     mutationFn: ({ name, color, description }: { name: string; color: string; description?: string }) =>
-//       createLabel(name, color, user!.uid, description),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ["labels"] });
-//       //showToast("success", "Etykieta została dodana!");
-//     },
-//     onError: (error) => {
-//       console.error("Error creating label:", error);
-//       //showToast("error", "Błąd podczas dodawania etykiety");
-//     },
-//   });
-// };
+export function useUpdateLabel() {
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<LabelInterface> }) => updateLabel(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["labels"] });
+    },
+    onError: (error: unknown) => {
+      return error;
+    },
+  });
+}
 
-// export const useUpdateLabel = () => {
-//   //const { showToast } = useToastContext();
-//   const queryClient = useQueryClient();
+export function useDeleteLabel() {
+  return useMutation({
+    mutationFn: (labelId: string) => deleteLabel(labelId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["labels"] });
+      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+    },
+  });
+}
+
+// Label Connections hooks
+export function useLabelConnections(objectId?: string, objectType?: string) {
+  return useQuery<LabelConnection[], unknown, LabelConnection[], (string | undefined)[]>({
+    queryKey: ["label-connections", objectId, objectType],
+    queryFn: () => getLabelConnections(objectId, objectType),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useCreateLabelConnection() {
+  return useMutation({
+    mutationFn: (connectionData: Partial<LabelConnection>) => addLabelConnection(connectionData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+    },
+  });
+}
+
+export function useDeleteLabelConnection() {
+  return useMutation({
+    mutationFn: (connectionId: string) => deleteLabelConnection(connectionId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+    },
+  });
+}
+
+export function useDeleteLabelConnectionByParams() {
+  return useMutation({
+    mutationFn: ({ objectId, objectType, labelId }: { objectId: string; objectType: string; labelId: string }) =>
+      deleteLabelConnectionByParams(objectId, objectType, labelId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+    },
+  });
+}
+
+export function useDeleteAllLabelConnectionsForObject() {
+  return useMutation({
+    mutationFn: ({ objectId, objectType }: { objectId: string; objectType: string }) =>
+      deleteAllLabelConnectionsForObject(objectId, objectType),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+    },
+  });
+}
+
+// Convenience hooks for common operations
+export function useAddLabelToObject() {
+  return useMutation({
+    mutationFn: ({ objectId, objectType, labelId }: { objectId: string; objectType: string; labelId: string }) =>
+      addLabelConnection({
+        objectId,
+        objectType,
+        labelId,
+        createdAt: new Date().toISOString(),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+    },
+  });
+}
+
+export function useRemoveLabelFromObject() {
+  return useMutation({
+    mutationFn: ({ objectId, objectType, labelId }: { objectId: string; objectType: string; labelId: string }) =>
+      deleteLabelConnectionByParams(objectId, objectType, labelId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+    },
+  });
+}
+
+export function useLabelsForObject(objectId: string, objectType: string) {
+  return useQuery<LabelConnection[], unknown, LabelConnection[], (string | undefined)[]>({
+    queryKey: ["label-connections", objectId, objectType],
+    queryFn: () => getLabelConnections(objectId, objectType),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    enabled: !!(objectId && objectType),
+  });
+}
 
 //   return useMutation({
 //     mutationFn: ({ labelId, updates }: { labelId: string; updates: Partial<LabelInterface> }) =>

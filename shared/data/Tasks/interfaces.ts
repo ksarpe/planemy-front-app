@@ -1,6 +1,6 @@
 import type { TaskListFilter, SharedUserStatus, EmptyListType } from "./types";
-import type { SharePermission } from "@/data/Utils/types";
-import type { LabelInterface } from "@/data/Utils/interfaces";
+import type { SharePermission } from "@shared/data/Utils/types";
+import type { LabelInterface } from "@shared/data/Utils/interfaces";
 import { LucideIcon } from "lucide-react";
 
 export interface TaskInterface {
@@ -32,6 +32,13 @@ export interface TaskListInterface {
   totalTasks?: number;
 }
 
+export interface TaskListsResponse {
+  items: TaskListInterface[];
+  limit: number;
+  offset: number;
+  total: number;
+}
+
 // export interface QuickTaskInterface {
 //   id: number;
 //   title: string;
@@ -46,23 +53,10 @@ export interface SharedTaskList {
   acceptedAt?: string;
 }
 
-export interface TaskContextProps {
-  // Task Lists
-  taskLists: TaskListInterface[];
-  currentTaskList: TaskListInterface | null;
-  currentTaskListId: string | null;
-  setCurrentTaskListId: (listId: string | null) => void;
-
-  clickedTask: TaskInterface | null;
-  setClickedTask: (task: TaskInterface | null) => void;
-}
-
 //Create
 export interface CreateTaskListModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (name: string) => Promise<void>;
-  loading: boolean;
 }
 export interface QuickAddTaskProps {
   //quick add
