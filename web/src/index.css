@@ -5,6 +5,9 @@
 @import "@/styles/ai.css";
 @import "@/styles/avatar.css";
 @import "@/styles/colors.css";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 @layer base {
   :root {

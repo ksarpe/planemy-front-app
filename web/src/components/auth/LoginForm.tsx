@@ -4,6 +4,8 @@ import { useLogin, useRegister } from "@shared/hooks/auth/useAuth";
 import { useT } from "@shared/hooks/utils/useT";
 import { Toaster } from "sonner";
 import { APIError } from "@shared/data/Auth/interfaces";
+import { LoaderCircleIcon } from "lucide-react";
+import { Button } from "../ui/shadcn/button";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -25,7 +27,6 @@ export const LoginForm = () => {
       } else {
         await register.mutateAsync({ username: email, password: password });
         showSuccess("Rejestracja udana");
-        setIsLoginMode(true);
       }
     } catch (error) {
       if (error instanceof APIError) {
@@ -47,9 +48,12 @@ export const LoginForm = () => {
   const isLoading = login.isPending || register.isPending;
 
   return (
-    <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-md mx-auto">
+    <div className="bg-white p-8 rounded-md w-full max-w-md mx-auto">
       <Toaster position="bottom-center" richColors />
-      <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+      <h1 className="text-2xl font-semibold">
+        Your Life asisstant
+      </h1>
+      <h2 className="text-xl font-normal text-left mb-6 text-text-muted-more">
         {isLoginMode ? t("auth.login") : t("auth.register")}
       </h2>
 
@@ -86,25 +90,33 @@ export const LoginForm = () => {
           />
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-primary text-black py-2 px-4 rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-          {isLoading
-            ? isLoginMode
-              ? t("auth.loggingIn")
-              : t("auth.registering")
-            : isLoginMode
-            ? t("auth.login")
-            : t("auth.register")}
-        </button>
+          data-loading={isLoading || undefined}
+          className="w-full text-black py-2 px-4 rounded-md hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors group relative">
+          <span className="group-data-loading:text-transparent">
+            {isLoading
+              ? isLoginMode
+                ? t("auth.loggingIn")
+                : t("auth.registering")
+              : isLoginMode
+              ? t("auth.login")
+              : t("auth.register")}
+          </span>
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <LoaderCircleIcon className="animate-spin" size={16} aria-hidden="true" />
+            </div>
+          )}
+        </Button>
       </form>
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">{isLoginMode ? t("auth.noAccount") : t("auth.hasAccount")}</p>
         <button
           onClick={() => setIsLoginMode(!isLoginMode)}
-          className="mt-2 text-blue-600 hover:text-blue-800 font-medium transition-colors">
+          className="text-lg mt-2 text-primary hover:text-primary/80 cursor-pointer font-medium transition-colors">
           {isLoginMode ? t("auth.register") : t("auth.login")}
         </button>
       </div>

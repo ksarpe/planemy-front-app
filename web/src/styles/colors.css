@@ -1,9 +1,10 @@
 @theme {
   --color-text: hsl(0, 0%, 0%);
   --color-text-muted: hsl(0, 0%, 30%);
+  --color-text-muted-more: hsl(0, 0%, 50%);
   --color-bg: hsl(0, 0%, 100%);
   --color-bg-alt: hsl(0, 0%, 96%);
-  --color-primary: hsl(173, 100%, 42%);
+  --color-primary: hsl(186, 100%, 39%);
   --color-primary-light: hsl(173, 80%, 90%);
 }
 
@@ -13,7 +14,7 @@
     --color-text-muted: hsl(0, 0%, 70%);
     --color-bg: hsl(0, 0%, 0%); /* nigth */
     --color-bg-alt: hsl(0, 0%, 10%);
-    --color-primary: hsl(173, 100%, 58%);
+    --color-primary: hsl(186, 100%, 39%);
     --color-primary-light: hsl(0, 0%, 20%);
   }
 }
