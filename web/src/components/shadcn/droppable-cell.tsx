@@ -1,6 +1,6 @@
 import { useDroppable } from "@dnd-kit/core";
 
-import { useCalendarDnd } from "@/components/shadcn/calendar-dnd-context";
+import { useCalendarDnd } from "@/components/shadcn/Calendar/calendar-dnd-context";
 import { cn } from "@/lib/shadcn/utils";
 
 interface DroppableCellProps {

@@ -16,10 +16,10 @@ import { toast } from "sonner";
 
 import { addHoursToDate } from "@/components/shadcn/utils";
 import { AgendaDaysToShow } from "@/components/shadcn/constants";
-import { AgendaView } from "@/components/shadcn/agenda-view";
-import { CalendarDndProvider } from "@/components/shadcn/calendar-dnd-context";
-import { DayView } from "@/components/shadcn/day-view";
-import { EventDialog } from "@/components/shadcn/event-dialog";
+import { AgendaView } from "@/components/shadcn/Calendar/agenda-view";
+import { CalendarDndProvider } from "@/components/shadcn/Calendar/calendar-dnd-context";
+import { DayView } from "@/components/shadcn/Calendar/day-view";
+import { EventDialog } from "@/components/shadcn/Calendar/event-dialog";
 import { EventGap, EventHeight, WeekCellsHeight } from "@/components/shadcn/constants";
 import { MonthView } from "@/components/shadcn/month-view";
 import { WeekView } from "@/components/shadcn/week-view";
@@ -246,12 +246,14 @@ export function EventCalendar({
 
   return (
     <div
-      className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1"
+      className="flex flex-col border-bg-alt border has-data-[slot=month-view]:flex-1"
       style={
         {
           "--event-height": `${EventHeight}px`,
           "--event-gap": `${EventGap}px`,
           "--week-cells-height": `${WeekCellsHeight}px`,
+          backgroundColor: "var(--color-bg)",
+          color: "var(--color-text)",
         } as React.CSSProperties
       }>
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>

@@ -3,7 +3,7 @@ import { RiCalendarEventLine } from "@remixicon/react";
 import { addDays, format, isToday } from "date-fns";
 
 import { AgendaDaysToShow } from "@/components/shadcn/constants";
-import { EventItem } from "@/components/shadcn/event-item";
+import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import { getAgendaEventsForDay } from "@/components/shadcn/utils";
 import type { CalendarEvent } from "@/components/shadcn/types";
 
@@ -30,12 +30,14 @@ export function AgendaView({ currentDate, events, onEventSelect }: AgendaViewPro
   const hasEvents = days.some((day) => getAgendaEventsForDay(events, day).length > 0);
 
   return (
-    <div className="border-border/70 border-t px-4">
+    <div className="border-t px-4" style={{ borderColor: "var(--color-text-muted-more)" }}>
       {!hasEvents ? (
         <div className="flex min-h-[70svh] flex-col items-center justify-center py-16 text-center">
-          <RiCalendarEventLine size={32} className="text-muted-foreground/50 mb-2" />
-          <h3 className="text-lg font-medium">No events found</h3>
-          <p className="text-muted-foreground">There are no events scheduled for this time period.</p>
+          <RiCalendarEventLine size={32} className="mb-2" style={{ color: "var(--color-text-muted-more)" }} />
+          <h3 className="text-lg font-medium" style={{ color: "var(--color-text)" }}>
+            No events found
+          </h3>
+          <p style={{ color: "var(--color-text-muted)" }}>There are no events scheduled for this time period.</p>
         </div>
       ) : (
         days.map((day) => {
@@ -44,9 +46,13 @@ export function AgendaView({ currentDate, events, onEventSelect }: AgendaViewPro
           if (dayEvents.length === 0) return null;
 
           return (
-            <div key={day.toString()} className="border-border/70 relative my-12 border-t">
+            <div
+              key={day.toString()}
+              className="relative my-12 border-t"
+              style={{ borderColor: "var(--color-text-muted-more)" }}>
               <span
-                className="bg-background absolute -top-3 left-0 flex h-6 items-center pe-4 text-[10px] uppercase data-today:font-medium sm:pe-4 sm:text-xs"
+                className="absolute -top-3 left-0 flex h-6 items-center pe-4 text-[10px] uppercase data-today:font-medium sm:pe-4 sm:text-xs"
+                style={{ backgroundColor: "var(--color-bg)", color: "var(--color-text)" }}
                 data-today={isToday(day) || undefined}>
                 {format(day, "d MMM, EEEE")}
               </span>

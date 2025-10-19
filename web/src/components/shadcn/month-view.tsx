@@ -14,10 +14,10 @@ import {
   startOfWeek,
 } from "date-fns";
 
-import { DraggableEvent } from "@/components/shadcn/draggable-event";
+import { DraggableEvent } from "@/components/shadcn/Calendar/draggable-event";
 import { DroppableCell } from "@/components/shadcn/droppable-cell";
 import { EventGap, EventHeight } from "@/components/shadcn/constants";
-import { EventItem } from "@/components/shadcn/event-item";
+import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import { getAllEventsForDay, getEventsForDay, getSpanningEventsForDay, sortEvents } from "@/components/shadcn/utils";
 import { useEventVisibility } from "@/components/shadcn/use-event-visibility";
 import { type CalendarEvent } from "@/components/shadcn/types";
@@ -80,9 +80,9 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
 
   return (
     <div data-slot="month-view" className="contents">
-      <div className="border-border/70 grid grid-cols-7 border-b">
+      <div className="grid grid-cols-7 border-b border-bg-alt">
         {weekdays.map((day) => (
-          <div key={day} className="text-muted-foreground/70 py-2 text-center text-sm">
+          <div key={day} className="py-2 text-center text-sm text-text-muted">
             {day}
           </div>
         ))}
@@ -108,7 +108,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
               return (
                 <div
                   key={day.toString()}
-                  className="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0"
+                  className="group border-r border-b border-bg-alt last:border-r-0  data-outside-cell:text-text-muted-more"
                   data-today={isToday(day) || undefined}
                   data-outside-cell={!isCurrentMonth || undefined}>
                   <DroppableCell
@@ -119,7 +119,13 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                       startTime.setHours(DefaultStartHour, 0, 0);
                       onEventCreate(startTime);
                     }}>
-                    <div className="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+                    <div className={`mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm ${
+                      isToday(day) 
+                        ? 'text-primary font-bold' 
+                        : isCurrentMonth 
+                          ? 'text-text' 
+                          : 'text-text-muted-more'
+                    }`}>
                       {format(day, "d")}
                     </div>
                     <div

@@ -4,7 +4,6 @@ import { queryClient } from "../lib/queryClient";
 import { AuthProvider } from "./AuthContext";
 import { PreferencesProvider } from "./PreferencesContext";
 import { ShoppingProvider } from "./ShoppingContext";
-import { CalendarProvider } from "./CalendarContext";
 import { PaymentsProvider } from "./PaymentsContext";
 
 export default function Providers({ children }: PropsWithChildren) {
@@ -13,9 +12,7 @@ export default function Providers({ children }: PropsWithChildren) {
       <AuthProvider>
         <PreferencesProvider>
           <ShoppingProvider>
-            <CalendarProvider>
               <PaymentsProvider>{children}</PaymentsProvider>
-            </CalendarProvider>
           </ShoppingProvider>
         </PreferencesProvider>
       </AuthProvider>

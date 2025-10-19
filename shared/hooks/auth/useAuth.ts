@@ -12,7 +12,14 @@ export const useLogin = () => {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: (credentials: LoginRequest) => loginUser(credentials),
+    mutationFn: (credentials: LoginRequest) =>
+      new Promise((resolve, reject) => {
+        setTimeout(() => {
+          loginUser(credentials)
+            .then(resolve)
+            .catch(reject);
+        }, 2000);
+      }),// TIMEOUT and promise TO REMOVE
     onSuccess: () => {
       queryClient.invalidateQueries();
       navigate("/");
@@ -24,10 +31,14 @@ export const useLogin = () => {
 };
 
 export const useRegister = () => {
+  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: (credentials: RegisterRequest) => registerUser(credentials),
     onSuccess: (data) => {
       console.log("Registration successful:", data);
+        queryClient.invalidateQueries();
+      navigate("/");
     },
     onError: (error: unknown) => {
       console.error("Registration failed:", error);

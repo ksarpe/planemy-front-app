@@ -5,4 +5,6 @@ export interface PreferencesContextProps {
   setDefaultShoppingListId: (listId: string | null) => void;
   isDark: boolean;
   toggleDark: () => void;
+  language: "en" | "pl" | "de";
+  setLanguage: (language: "en" | "pl" | "de") => void;
 }

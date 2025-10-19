@@ -20,27 +20,53 @@ export const LoginForm = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    // Basic validation
+    if (!email.trim() || !password.trim()) {
+      showError(t("auth.fillAllFields"));
+      return;
+    }
+
     try {
       if (isLoginMode) {
         await login.mutateAsync({ username: email, password: password });
-        showSuccess("Logowanie udane");
+        showSuccess(t("auth.loginSuccess"));
       } else {
         await register.mutateAsync({ username: email, password: password });
-        showSuccess("Rejestracja udana");
+        showSuccess(t("auth.registerSuccess"));
       }
     } catch (error) {
       if (error instanceof APIError) {
-        if (error.status === 401) {
-          showError("Nieprawidłowa nazwa użytkownika lub hasło");
-        } else if (error.status === 409) {
-          showError("Użytkownik z tym adresem e-mail już istnieje");
-        } else if (error.body?.message) {
-          showError(error.body.message);
-        } else {
-          showError("Wystąpił nieznany błąd podczas uwierzytelniania");
+        // Map API error codes to i18n messages
+        switch (error.status) {
+          case 401:
+            showError(t("auth.errors.wrongPassword"));
+            break;
+          case 404:
+            showError(t("auth.errors.userNotFound"));
+            break;
+          case 409:
+            showError(t("auth.errors.emailAlreadyInUse"));
+            break;
+          case 400:
+            if (error.body?.message?.includes("password")) {
+              showError(t("auth.errors.weakPassword"));
+            } else if (error.body?.message?.includes("email")) {
+              showError(t("auth.errors.invalidEmail"));
+            } else {
+              showError(error.body?.message || t("auth.errors.unknownError"));
+            }
+            break;
+          case 403:
+            showError(t("auth.errors.userDisabled"));
+            break;
+          case 429:
+            showError(t("auth.errors.tooManyRequests"));
+            break;
+          default:
+            showError(error.body?.message || t("auth.errors.unknownError"));
         }
       } else {
-        showError("Błąd połączenia z siecią");
+        showError(t("auth.errors.networkRequestFailed"));
       }
     }
   };
@@ -48,18 +74,16 @@ export const LoginForm = () => {
   const isLoading = login.isPending || register.isPending;
 
   return (
-    <div className="bg-white p-8 rounded-md w-full max-w-md mx-auto">
+    <div className="p-8 rounded-md w-full max-w-md mx-auto bg-bg">
       <Toaster position="bottom-center" richColors />
-      <h1 className="text-2xl font-semibold">
-        Your Life asisstant
-      </h1>
-      <h2 className="text-xl font-normal text-left mb-6 text-text-muted-more">
+      <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Your Life Assistant</h1>
+      <h2 className="text-xl font-normal text-left mb-6 text-gray-600 dark:text-gray-300">
         {isLoginMode ? t("auth.login") : t("auth.register")}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {t("auth.email")}
           </label>
           <input
@@ -67,7 +91,7 @@ export const LoginForm = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             placeholder={t("auth.emailPlaceholder")}
             required
             autoComplete="email"
@@ -75,7 +99,7 @@ export const LoginForm = () => {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {t("auth.password")}
           </label>
           <input
@@ -83,7 +107,7 @@ export const LoginForm = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             placeholder={t("auth.passwordPlaceholder")}
             required
             autoComplete={isLoginMode ? "current-password" : "new-password"}
@@ -113,7 +137,9 @@ export const LoginForm = () => {
       </form>
 
       <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600">{isLoginMode ? t("auth.noAccount") : t("auth.hasAccount")}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          {isLoginMode ? t("auth.noAccount") : t("auth.hasAccount")}
+        </p>
         <button
           onClick={() => setIsLoginMode(!isLoginMode)}
           className="text-lg mt-2 text-primary hover:text-primary/80 cursor-pointer font-medium transition-colors">

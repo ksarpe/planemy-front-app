@@ -1,326 +1,166 @@
-# AI Planner App - GitHub Copilot Instructions
+# AI Planner Codebase Guide
 
-## Project Overview
+## Architecture Overview
 
-AI Planner App is a comprehensive personal productivity application built with React, TypeScript, and Firebase. It combines calendar management, task tracking, shopping lists, and payment reminders in a unified interface.
+This is a **monorepo workspace** with three platform targets sharing common business logic:
 
-## Tech Stack
+- `web/` - Vite + React 19 + TailwindCSS 4 web app
+- `mobile/` - Expo/React Native mobile app
+- `shared/` - Platform-agnostic business logic (APIs, hooks, contexts, data types)
 
-- **Frontend**: React 19, TypeScript, Vite
-- **Styling**: Tailwind CSS with custom CSS variables
-- **Backend**: Firebase (Auth, Firestore) (But moving to go backend with postgresql)
-- **State Management**: React Context + TanStack Query
-- **Icons**: Lucide React
-- **Date Handling**: date-fns
-- **Testing**: MSW (Mock Service Worker) for API mocking
+**Key principle**: All business logic lives in `shared/`. Platform-specific code only handles rendering and platform APIs.
 
-## Architecture Patterns
+## Critical Workflows
 
-### Current Data Layer Structure
+### Development Commands (from root)
 
-```
-src/data/
-├── Auth/         # Authentication interfaces
-├── Calendar/     # Event and calendar types
-├── Events/       # Hook-specific event interfaces
-├── Layout/       # UI component interfaces
-├── Payments/     # Payment-related types
-├── Shopping/     # Shopping list interfaces
-├── Tasks/        # Task management types
-├── User/         # User profile types
-└── Utils/        # Shared utilities
+```bash
+npm run dev:web      # Start web dev server (Vite on :5173)
+npm run dev:mobile   # Start Expo dev server
+npm run android      # Run Android emulator
+npm run ios          # Run iOS simulator
+npm run build:web    # Production build
 ```
 
-### Component Organization
+### Module Resolution
 
-- **Views**: Page-level components in `src/components/views/`
-- **UI Components**: Reusable components in `src/components/ui/` (organized by domain)
-- **Layout**: Layout components in `src/components/layout/`
-- **Hooks**: Custom hooks in `src/hooks/` (organized by domain)
-- **Context**: Global state in `src/context/`
+Both platforms use path aliases to import from `shared/`:
 
-### API Integration
+- **Web**: Vite alias `@shared` → `../shared` (see `web/vite.config.ts`)
+- **Mobile**: Babel module-resolver `@shared` → `../shared` (see `mobile/babel.config.js`)
+- Local imports use `@/` prefix (e.g., `@/components`)
 
-- Use TanStack Query for all API calls
-- Custom hooks pattern: `useEvents`, `useTasks`, `useShoppingLists`, etc.
+## Shared Package Structure
 
-## Styling Guidelines
+### Data Layer (`shared/data/`)
 
-### Design System
+- Each domain has `interfaces.ts` (types) and `types.ts` (enums/unions)
+- Export pattern: `index.ts` re-exports all interfaces/types
+- Component interfaces in nested `Components/` folders
+- Example: `@shared/data/Tasks/interfaces` for TaskInterface
 
-Use ONLY CSS variables from `src/index.css`:
+### API Layer (`shared/api/`)
 
-### Tailwind Classes
+- Pure fetch functions, one file per domain (e.g., `auth.ts`, `tasks.ts`)
+- **Always** use `credentials: "include"` for cookie-based session management
+- Backend URL: `http://localhost:8080/api/v1/*` (hardcoded, no env vars yet)
+- Error handling via custom `APIError` class
 
-- Backgrounds: `bg-bg`, `bg-bg-alt`, `dark:bg-bg-dark`, `dark:bg-bg-alt-dark`
-- Text: `text-text`, `dark:text-text-dark`, `text-primary`
-- Hover: `bg-bg-hover`, `dark:bg-bg-hover-dark`
-- Always include dark mode variants for proper theme switching
+### Hooks Layer (`shared/hooks/`)
 
-### Responsive Design
+- React Query wrappers around API functions
+- Pattern: `useTasks()` for queries, `useCreateTask()` for mutations
+- Mutations auto-invalidate queries via `queryClient.invalidateQueries()`
+- Context hooks in `hooks/context/` (e.g., `useTaskViewContext()`)
 
-- Mobile-first approach with conditional rendering for significant mobile/desktop differences
-- Use `useTheme` hook for theme detection: `const { isDark, toggleTheme } = useTheme();`
-- Standard breakpoints: `md:`, `lg:`, `xl:`
+### Context Layer (`shared/context/`)
 
-## Component Patterns
+- Global state providers: `AuthContext`, `PreferencesContext`, `ShoppingContext`, `PaymentsContext`, `TaskViewContext`
+- All wrapped in `AllProviders.tsx` component
+- Consumed via custom hooks in `shared/hooks/context/`
 
-### Modal Components
+### i18n (`shared/i18n/`)
+
+- i18next with 3 locales: `en`, `pl` (primary), `de`
+- Initialized in `shared/i18n/index.ts`, imported in `web/src/main.tsx`
+- Use `useT()` hook from `@shared/hooks/utils/useT` (wraps react-i18next)
+
+### Storage Abstraction (`shared/lib/`)
+
+- Unified async storage API with platform-specific implementations:
+  - `storage.web.ts` → wraps localStorage
+  - `storage.native.ts` → wraps AsyncStorage
+- Import as `persistentStorage` to work cross-platform
+
+## Web-Specific Patterns
+
+### Routing
+
+- React Router 7 with route protection via `<ProtectedRoute>`
+- Lazy-loaded views except `MainLayout` (used everywhere)
+- Routes defined in `web/src/main.tsx`
+
+### UI Components
+
+- Radix UI + TailwindCSS 4 for primitives
+- Custom components in `web/src/components/ui/` organized by domain
+- Import shared types: `import type { TaskItemProps } from "@shared/data/Tasks/interfaces"`
+
+- colors fetched from colors.css file.
+- in className for background use bg-[value from colors.css] for example bg-primary, or bg-bg. DON'T use dark:. It is handled automatically based on system preference.
+
+### State Management
+
+- React Query for server state (queries/mutations)
+- Context for cross-component state (auth, preferences)
+- No Redux/Zustand - keep it simple
+
+## Mobile-Specific Patterns
+
+### Navigation
+
+- React Navigation bottom tabs (see `mobile/src/navigation/SimpleTabNavigator.tsx`)
+- Screens in `mobile/src/screens/`
+
+### Firebase
+
+- Firebase config in `mobile/src/config/firebase.ts`
+- Web uses same Firebase SDK (v12.0.0) via `shared/` imports
+
+## Development Conventions
+
+### TypeScript
+
+- Strict mode enabled in all packages
+- Use `interface` for component props, `type` for unions/intersections
+- Component prop types should be defined in `shared/data/*/Components/` for reusability
+
+### React Patterns
+
+- React 19 throughout (new JSX transform, no need for `import React`)
+- Prefer function components with hooks
+- Use `PropsWithChildren` for wrapper components
+
+### Import Order Convention
 
 ```tsx
-// Use conditional rendering for mobile vs desktop
-{
-  isMobile ? (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50">
-      <div className="fixed inset-x-4 top-20 bottom-4 bg-bg dark:bg-bg-dark rounded-lg">
-        {/* Mobile fullscreen content */}
-      </div>
-    </div>
-  ) : (
-    <div className="fixed z-50" style={positionStyles}>
-      {/* Desktop positioned modal */}
-    </div>
-  );
-}
+// 1. React/external libraries
+import { useState } from "react";
+// 2. Shared imports
+import { useTasks } from "@shared/hooks/tasks/useTasks";
+import type { TaskInterface } from "@shared/data/Tasks/interfaces";
+// 3. Local imports
+import TaskItem from "@/components/ui/Tasks/TaskItem";
 ```
 
-### Event Components
-
-- Events use `EventInterface` from `@/data/types`
-- Current EventColor type: `"bg-red-500" | "bg-blue-400" | "bg-yellow-500" | "bg-green-500"`
-- Always include time formatting with date-fns
-- Event properties: `id`, `title`, `category`, `start`, `end`, `allDay`, `classNames`, `color`
-
-### Form Patterns
+### Mutation Pattern
 
 ```tsx
-// Standard form structure with dark mode support
-<div className="space-y-4">
-  <input
-    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary bg-bg dark:bg-bg-dark text-text dark:text-text-dark"
-    // ... props
-  />
-</div>
+const { mutate: updateTask } = useUpdateTask();
+// ... in handler:
+updateTask({ id: task.id, data: { title: newTitle } });
 ```
 
-## State Management Rules
+## Integration Points
 
-### Context Usage
+- **Backend**: Go-based API (see `aiplanner-documentation/Backend/README.md`)
+- **Auth**: Cookie-based sessions, all API calls include credentials
+- **Query Invalidation**: Mutations auto-invalidate related queries for cache consistency
+- **i18n**: Centralized translations, fallback to Polish
 
-- Use contexts only for truly global state
-- Avoid business logic in contexts, keep only necessary state and actions, no "add" "remove" etc.
-- Example contexts: `PreferencesContext`, `CalendarContext`, `TaskContext`, `ShoppingContext`, `PaymentsContext`, `ToastContext`
+## Things to Avoid
 
-### TanStack Query
+- Don't create API functions without `credentials: "include"`
+- Don't bypass `shared/` for business logic - keep it reusable
+- Don't hardcode strings - use i18n keys (see `shared/i18n/locales/*.json`)
+- Don't access localStorage/AsyncStorage directly - use `persistentStorage` abstraction
+- Don't create separate data types for web/mobile - put them in `shared/data/`
 
-- All API calls use TanStack Query hooks
-- Custom hooks pattern: `src/hooks/api/useEvents.ts`, `src/hooks/api/useTasks.ts`
-- Proper error handling and loading states
-- Set appropriate `staleTime` for data freshness
+## Key Files Reference
 
-### Local State
-
-- Use `useState` for component-specific state
-- Use `useCallback` for event handlers to prevent re-renders
-- Use `useMemo` for expensive calculations
-
-## Naming Conventions
-
-### Files and Components
-
-- PascalCase for components: `QuickEventCreator.tsx`, `MainLayout.tsx`
-- camelCase for hooks: `useEvents.ts`, `useTheme.tsx`
-- camelCase for utilities: `dateUtils.ts`
-- Views end with `View`: `CalendarView.tsx`, `DashboardView.tsx`
-
-### Props and Variables
-
-- Descriptive names: `selectedDate`, `isLoading`, `onEventCreate`
-- Boolean props start with `is`, `has`, `can`: `isOpen`, `hasEvents`, `isInitialized`
-- Event handlers start with `handle`: `handleDayClick`, `handleSubmit`
-- Context props often end with `Context`: `CalendarClickContent`
-
-## Calendar-Specific Guidelines
-
-### Event Positioning
-
-- Use preview events for better UX during creation
-- Position modals relative to event blocks, not cursor
-- Implement smart positioning to avoid viewport overflow
-
-### Date Handling
-
-```tsx
-import { format, startOfDay, endOfDay } from "date-fns";
-
-// Always use date-fns for date operations
-const formattedDate = format(date, "yyyy-MM-dd");
-const dayStart = startOfDay(selectedDate);
-```
-
-### Event Colors
-
-```tsx
-// Current EventColor implementation uses Tailwind classes
-export type EventColor = "bg-red-500" | "bg-blue-400" | "bg-yellow-500" | "bg-green-500";
-
-// Map colors appropriately in components
-const getEventColorClass = (color: EventColor | string) => {
-  // Handle both EventColor enum and custom color strings
-  return color;
-};
-```
-
-## Performance Guidelines
-
-### Re-render Prevention
-
-- Use `useCallback` for event handlers passed to children
-- Use `useMemo` for expensive calculations
-- Avoid creating objects in render: use CSS classes instead of inline styles
-
-### Optimization Patterns
-
-```tsx
-// Good - stable reference
-const handleClick = useCallback(
-  (id: string) => {
-    // handler logic
-  },
-  [dependency],
-);
-
-// Good - memoized calculation
-const sortedEvents = useMemo(() => events.sort((a, b) => compareAsc(new Date(a.start), new Date(b.start))), [events]);
-```
-
-## Error Handling
-
-### API Errors
-
-- Use TanStack Query's error handling
-- Display user-friendly error messages
-- Implement proper loading states with skeletons/spinners
-
-### Auth Errors
-
-- Use Firebase error handling
-- Polish error messages for better UX
-- Handle auth state properly
-
-## Data Types Reference
-
-### Key Interfaces
-
-```tsx
-export interface EventInterface {
-  id: number;
-  title: string;
-  category: EventCategory;
-  start: string; // ISO date string
-  end: string; // ISO date string
-  allDay: boolean;
-  classNames: string;
-  color: string;
-  colSpan?: number;
-}
-
-export interface TaskInterface {
-  id: number;
-  title: string;
-  description: string;
-  dueDate: string; // ISO date string
-  completed: boolean;
-}
-
-export interface PaymentInterface {
-  id: number;
-  name: string;
-  amount: number;
-  cycle: "monthly" | "yearly";
-  nextPayment: string; // ISO date string
-  isActive: boolean;
-  isPaid: boolean;
-}
-
-export interface ShoppingListInterface {
-  id: number;
-  name: string;
-  items: ShoppingItemInterface[];
-  type: string;
-}
-```
-
-## Testing Guidelines
-
-- Test responsive behavior for mobile/desktop
-- Focus on user interactions and API integrations
-
-## Development Workflow
-
-### Hook Creation
-
-```tsx
-export const useFeatureName = () => {
-  return useQuery({
-    queryKey: ["feature", ...deps],
-    queryFn: async () => {
-      const res = await fetch("/api/endpoint");
-      if (!res.ok) throw new Error("Failed to fetch");
-      return res.json();
-    },
-    staleTime: 5000, // Set appropriate staleness
-  });
-};
-```
-
-### Component Structure
-
-```tsx
-interface ComponentProps {
-  // Props interface with descriptive names
-}
-
-export default function Component({ ...props }: ComponentProps) {
-  // 1. Hooks (useState, useEffect, custom hooks)
-  // 2. Event handlers (useCallback)
-  // 3. Computed values (useMemo)
-  // 4. Render logic
-
-  return <div className="component-container bg-bg dark:bg-bg-dark">{/* Always include dark mode classes */}</div>;
-}
-```
-
-## Code Quality Rules
-
-- Always use TypeScript interfaces from `src/data/types.ts`
-- Prefer function components over class components
-- Use proper semantic HTML elements
-- Include proper accessibility attributes where needed
-- Keep components focused and single-responsibility
-- Always handle loading and error states in API calls
-- Use the scrollbar-hide CSS class for custom scrollbars
-
-## When Adding New Features
-
-1. Add interfaces to `src/data/types.ts`
-2. Create API functions with proper error handling
-3. Create custom hooks using TanStack Query in `src/hooks/api/`
-4. Build UI components following design system in `src/components/ui/`
-5. Add proper TypeScript types throughout
-6. Test mobile and desktop experiences
-7. Ensure dark mode compatibility
-8. Add MSW handlers for development if needed
-
-## File Path Aliases
-
-- Use `@/` for imports from `src/` directory
-- Examples: `@/data/types`, `@shared/hooks/utils/useTheme`, `@/components/ui/Calendar`
-
-## Important Notes
-
-- Remove StrictMode for production to avoid double logging
-- MSW is configured for development environment only
-- Project uses React Router for navigation with nested routes under MainLayout
-- All contexts are properly typed and use error boundaries
-- Theme switching is handled globally via PreferencesContext
+- `shared/context/AllProviders.tsx` - Provider composition pattern
+- `shared/hooks/tasks/useTasks.ts` - React Query hook pattern example
+- `shared/api/auth.ts` - API fetch pattern with error handling
+- `web/src/main.tsx` - Web app entry point and routing
+- `mobile/App.tsx` - Mobile app entry point
+- `shared/i18n/index.ts` - i18n configuration

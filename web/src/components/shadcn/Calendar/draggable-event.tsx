@@ -4,8 +4,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { differenceInDays } from "date-fns";
 
 import { type CalendarEvent } from "@/components/shadcn/types";
-import { EventItem } from "@/components/shadcn/event-item";
-import { useCalendarDnd } from "@/components/shadcn/calendar-dnd-context";
+import { EventItem } from "@/components/shadcn/Calendar/event-item";
+import { useCalendarDnd } from "@/components/shadcn/Calendar/calendar-dnd-context";
 
 interface DraggableEventProps {
   event: CalendarEvent;

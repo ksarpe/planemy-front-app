@@ -14,7 +14,7 @@ import {
 } from "@dnd-kit/core";
 import { addMinutes, differenceInMinutes } from "date-fns";
 
-import { EventItem } from "@/components/shadcn/event-item";
+import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import type { CalendarEvent } from "@/components/shadcn/types";
 
 // Define the context type

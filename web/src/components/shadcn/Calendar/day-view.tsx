@@ -11,9 +11,9 @@ import {
   startOfDay,
 } from "date-fns";
 
-import { DraggableEvent } from "@/components/shadcn/draggable-event";
+import { DraggableEvent } from "@/components/shadcn/Calendar/draggable-event";
 import { DroppableCell } from "@/components/shadcn/droppable-cell";
-import { EventItem } from "@/components/shadcn/event-item";
+import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import { isMultiDayEvent } from "@/components/shadcn/utils";
 import { useCurrentTimeIndicator } from "@/components/shadcn/use-current-time-indicator";
 import { WeekCellsHeight } from "@/components/shadcn/constants";
@@ -172,14 +172,20 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
   return (
     <div data-slot="day-view" className="contents">
       {showAllDaySection && (
-        <div className="border-border/70 bg-muted/50 border-t">
+        <div
+          className="border-t"
+          style={{ borderColor: "var(--color-text-muted-more)", backgroundColor: "var(--color-bg-alt)" }}>
           <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]">
             <div className="relative">
-              <span className="text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs">
+              <span
+                className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs"
+                style={{ color: "var(--color-text-muted)" }}>
                 All day
               </span>
             </div>
-            <div className="border-border/70 relative border-r p-1 last:border-r-0">
+            <div
+              className="relative border-r p-1 last:border-r-0"
+              style={{ borderColor: "var(--color-text-muted-more)" }}>
               {allDayEvents.map((event) => {
                 const eventStart = new Date(event.start);
                 const eventEnd = new Date(event.end);
@@ -204,14 +210,19 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         </div>
       )}
 
-      <div className="border-border/70 grid flex-1 grid-cols-[3rem_1fr] overflow-hidden border-t sm:grid-cols-[4rem_1fr]">
+      <div
+        className="grid flex-1 grid-cols-[3rem_1fr] overflow-hidden border-t sm:grid-cols-[4rem_1fr]"
+        style={{ borderColor: "var(--color-text-muted-more)" }}>
         <div>
           {hours.map((hour, index) => (
             <div
               key={hour.toString()}
-              className="border-border/70 relative h-[var(--week-cells-height)] border-b last:border-b-0">
+              className="relative h-[var(--week-cells-height)] border-b last:border-b-0"
+              style={{ borderColor: "var(--color-text-muted-more)" }}>
               {index > 0 && (
-                <span className="bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs">
+                <span
+                  className="absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs"
+                  style={{ backgroundColor: "var(--color-bg)", color: "var(--color-text-muted)" }}>
                   {format(hour, "h a")}
                 </span>
               )}
@@ -250,8 +261,10 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
               className="pointer-events-none absolute right-0 left-0 z-20"
               style={{ top: `${currentTimePosition}%` }}>
               <div className="relative flex items-center">
-                <div className="bg-primary absolute -left-1 h-2 w-2 rounded-full"></div>
-                <div className="bg-primary h-[2px] w-full"></div>
+                <div
+                  className="absolute -left-1 h-2 w-2 rounded-full"
+                  style={{ backgroundColor: "var(--color-primary)" }}></div>
+                <div className="h-[2px] w-full" style={{ backgroundColor: "var(--color-primary)" }}></div>
               </div>
             </div>
           )}
@@ -262,7 +275,8 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
             return (
               <div
                 key={hour.toString()}
-                className="border-border/70 relative h-[var(--week-cells-height)] border-b last:border-b-0">
+                className="relative h-[var(--week-cells-height)] border-b last:border-b-0"
+                style={{ borderColor: "var(--color-text-muted-more)" }}>
                 {/* Quarter-hour intervals */}
                 {[0, 1, 2, 3].map((quarter) => {
                   const quarterHourTime = hourValue + quarter * 0.25;

@@ -95,7 +95,7 @@ function EventWrapper({
     <button
       className={cn(
         // Base styles using theme colors
-        "focus-visible:ring-primary/50 flex size-full overflow-hidden px-1 text-left font-medium transition outline-none select-none focus-visible:ring-[3px]",
+        "flex size-full overflow-hidden px-1 text-left font-medium transition outline-none select-none focus-visible:ring-[3px]",
         // Dragging state
         isDragging && "cursor-grabbing shadow-lg scale-105 z-50",
         // Past event state
@@ -106,6 +106,12 @@ function EventWrapper({
         getBorderRadiusClasses(isFirstDay, isLastDay),
         className,
       )}
+      style={
+        {
+          color: "var(--color-text)",
+          "--tw-ring-color": "var(--color-primary)",
+        } as React.CSSProperties
+      }
       data-dragging={isDragging || undefined}
       data-past-event={isEventInPast || undefined}
       onClick={onClick}
@@ -270,10 +276,17 @@ export function EventItem({
   return (
     <button
       className={cn(
-        "focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col gap-1 rounded p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
+        "flex w-full flex-col gap-1 rounded p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
         getEventColorClasses(event.color),
         className,
       )}
+      style={
+        {
+          color: "var(--color-text)",
+          "--tw-ring-color": "var(--color-primary)",
+          borderColor: "var(--color-primary)",
+        } as React.CSSProperties
+      }
       data-past-event={isPast(new Date(event.end)) || undefined}
       onClick={onClick}
       onMouseDown={onMouseDown}

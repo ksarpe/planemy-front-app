@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { EventCalendar } from "@/components/shadcn/event-calendar";
+import { EventCalendar } from "@/components/shadcn/Calendar/event-calendar";
 import type { CalendarEvent } from "@/components/shadcn/types";
 import { useEvents, useCreateEvent, useUpdateEvent, useDeleteEvent } from "@shared/hooks/events";
 import type { EventInterface } from "@shared/data/Calendar/events";

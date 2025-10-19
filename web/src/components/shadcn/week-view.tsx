@@ -16,9 +16,9 @@ import {
   startOfWeek,
 } from "date-fns";
 
-import { DraggableEvent } from "@/components/shadcn/draggable-event";
+import { DraggableEvent } from "@/components/shadcn/Calendar/draggable-event";
 import { DroppableCell } from "@/components/shadcn/droppable-cell";
-import { EventItem } from "@/components/shadcn/event-item";
+import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import { isMultiDayEvent } from "@/components/shadcn/utils";
 import { useCurrentTimeIndicator } from "@/components/shadcn/use-current-time-indicator";
 import { WeekCellsHeight } from "@/components/shadcn/constants";
@@ -192,14 +192,14 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
 
   return (
     <div data-slot="week-view" className="flex h-full flex-col">
-      <div className="bg-background/80 border-border/70 sticky top-0 z-30 grid grid-cols-8 border-b backdrop-blur-md">
-        <div className="text-muted-foreground/70 py-2 text-center text-sm">
+      <div className="sticky top-0 z-30 grid grid-cols-8 border-b border-bg-alt backdrop-blur-md bg-bg">
+        <div className="py-2 text-center text-sm text-text-muted">
           <span className="max-[479px]:sr-only">{format(new Date(), "O")}</span>
         </div>
         {days.map((day) => (
           <div
             key={day.toString()}
-            className="data-today:text-foreground text-muted-foreground/70 py-2 text-center text-sm data-today:font-medium"
+            className={`py-2 text-center text-sm data-today:font-medium ${isToday(day) ? "text-primary" : "text-text"}`}
             data-today={isToday(day) || undefined}>
             <span className="sm:hidden" aria-hidden="true">
               {format(day, "E")[0]} {format(day, "d")}
@@ -210,10 +210,10 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
       </div>
 
       {showAllDaySection && (
-        <div className="border-border/70 bg-muted/50 border-b">
+        <div className="border-b border-bg-alt bg-bg-alt">
           <div className="grid grid-cols-8">
-            <div className="border-border/70 relative border-r">
-              <span className="text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs">
+            <div className="relative border-r border-bg-alt">
+              <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-text-muted sm:pe-4 sm:text-xs">
                 All day
               </span>
             </div>
@@ -227,7 +227,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               return (
                 <div
                   key={day.toString()}
-                  className="border-border/70 relative border-r p-1 last:border-r-0"
+                  className="relative border-r border-bg-alt p-1 last:border-r-0"
                   data-today={isToday(day) || undefined}>
                   {dayAllDayEvents.map((event) => {
                     const eventStart = new Date(event.start);
@@ -262,13 +262,13 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
       )}
 
       <div className="grid flex-1 grid-cols-8 overflow-hidden">
-        <div className="border-border/70 grid auto-cols-fr border-r">
+        <div className="border-bg-alt grid auto-cols-fr border-r">
           {hours.map((hour, index) => (
             <div
               key={hour.toString()}
-              className="border-border/70 relative min-h-[var(--week-cells-height)] border-b last:border-b-0">
+              className="border-bg-alt relative min-h-[var(--week-cells-height)] border-b last:border-b-0">
               {index > 0 && (
-                <span className="bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs">
+                <span className="absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs bg-bg text-text-muted">
                   {format(hour, "h a")}
                 </span>
               )}
@@ -279,7 +279,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         {days.map((day, dayIndex) => (
           <div
             key={day.toString()}
-            className="border-border/70 relative grid auto-cols-fr border-r last:border-r-0"
+            className="border-bg-alt relative grid auto-cols-fr border-r last:border-r-0"
             data-today={isToday(day) || undefined}>
             {/* Positioned events */}
             {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => (
@@ -322,7 +322,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               return (
                 <div
                   key={hour.toString()}
-                  className="border-border/70 relative min-h-[var(--week-cells-height)] border-b last:border-b-0">
+                  className="border-bg-alt relative min-h-[var(--week-cells-height)] border-b last:border-b-0">
                   {/* Quarter-hour intervals */}
                   {[0, 1, 2, 3].map((quarter) => {
                     const quarterHourTime = hourValue + quarter * 0.25;

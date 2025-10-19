@@ -1,7 +1,7 @@
 import React from "react";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import { EventItem } from "@/components/shadcn/event-item";
+import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import type { CalendarEvent, EventColor } from "@/components/shadcn/types";
 import type { EventInterface } from "@shared/data/Calendar/events";
 

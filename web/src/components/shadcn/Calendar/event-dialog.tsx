@@ -201,14 +201,14 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-bg text-text border-text-muted-more">
         <DialogHeader>
-          <DialogTitle>{event?.id ? "Edit Event" : "Create Event"}</DialogTitle>
+          <DialogTitle className="text-text">{event?.id ? "Edit Event" : "Create Event"}</DialogTitle>
           <DialogDescription className="sr-only">
             {event?.id ? "Edit the details of this event" : "Add a new event to your calendar"}
           </DialogDescription>
         </DialogHeader>
-        {error && <div className="bg-destructive/15 text-destructive rounded-md px-3 py-2 text-sm">{error}</div>}
+        {error && <div className="rounded-md px-3 py-2 text-sm bg-primary-light text-primary">{error}</div>}
         <div className="grid gap-4 py-4">
           <div className="*:not-first:mt-1.5">
             <Label htmlFor="title">Title</Label>
@@ -229,16 +229,16 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                     id="start-date"
                     variant={"outline"}
                     className={cn(
-                      "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
-                      !startDate && "text-muted-foreground",
+                      "group w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px] bg-bg border-text-muted-more",
+                      !startDate ? "text-text-muted" : "text-text",
                     )}>
-                    <span className={cn("truncate", !startDate && "text-muted-foreground")}>
+                    <span className={cn("truncate", !startDate ? "text-text-muted" : "text-text")}>
                       {startDate ? format(startDate, "PPP") : "Pick a date"}
                     </span>
-                    <RiCalendarLine size={16} className="text-muted-foreground/80 shrink-0" aria-hidden="true" />
+                    <RiCalendarLine size={16} className="shrink-0 text-text-muted" aria-hidden="true" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-2" align="start">
+                <PopoverContent className="w-auto p-2 bg-bg border-text-muted-more" align="start">
                   <Calendar
                     mode="single"
                     selected={startDate}
@@ -287,16 +287,16 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
                     id="end-date"
                     variant={"outline"}
                     className={cn(
-                      "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
-                      !endDate && "text-muted-foreground",
+                      "group w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px] bg-bg border-text-muted-more",
+                      !endDate ? "text-text-muted" : "text-text",
                     )}>
-                    <span className={cn("truncate", !endDate && "text-muted-foreground")}>
+                    <span className={cn("truncate", !endDate ? "text-text-muted" : "text-text")}>
                       {endDate ? format(endDate, "PPP") : "Pick a date"}
                     </span>
-                    <RiCalendarLine size={16} className="text-muted-foreground/80 shrink-0" aria-hidden="true" />
+                    <RiCalendarLine size={16} className="shrink-0 text-text-muted" aria-hidden="true" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-2" align="start">
+                <PopoverContent className="w-auto p-2 bg-bg border-text-muted-more" align="start">
                   <Calendar
                     mode="single"
                     selected={endDate}
@@ -343,7 +343,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             <Input id="location" value={location} onChange={(e) => setLocation(e.target.value)} />
           </div>
           <fieldset className="space-y-4">
-            <legend className="text-foreground text-sm leading-none font-medium">Etiquette</legend>
+            <legend className="text-sm leading-none font-medium text-text">Etiquette</legend>
             <RadioGroup
               className="flex gap-1.5"
               defaultValue={colorOptions[0]?.value}
@@ -361,7 +361,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
             </RadioGroup>
           </fieldset>
         </div>
-        <DialogFooter className="flex-row sm:justify-between">
+        <DialogFooter className="flex-row sm:justify-between bg-bg border-t-text-muted-more">
           {event?.id && (
             <Button variant="outline" size="icon" onClick={handleDelete} aria-label="Delete event">
               <RiDeleteBinLine size={16} aria-hidden="true" />

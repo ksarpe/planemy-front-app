@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { format, isSameDay } from "date-fns";
 import { XIcon } from "lucide-react";
 
-import { EventItem } from "@/components/shadcn/event-item";
+import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import type { CalendarEvent } from "@/components/shadcn/types";
 
 interface EventsPopupProps {
@@ -76,21 +76,34 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
   return (
     <div
       ref={popupRef}
-      className="bg-background absolute z-50 max-h-96 w-80 overflow-auto rounded-md border shadow-lg"
+      className="absolute z-50 max-h-96 w-80 overflow-auto rounded-md border shadow-lg"
       style={{
         top: `${adjustedPosition.top}px`,
         left: `${adjustedPosition.left}px`,
+        backgroundColor: "var(--color-bg)",
+        borderColor: "var(--color-text-muted-more)",
+        color: "var(--color-text)",
       }}>
-      <div className="bg-background sticky top-0 flex items-center justify-between border-b p-3">
-        <h3 className="font-medium">{format(date, "d MMMM yyyy")}</h3>
-        <button onClick={onClose} className="hover:bg-muted rounded-full p-1" aria-label="Close">
-          <XIcon className="h-4 w-4" />
+      <div
+        className="sticky top-0 flex items-center justify-between border-b p-3"
+        style={{ backgroundColor: "var(--color-bg)", borderColor: "var(--color-text-muted-more)" }}>
+        <h3 className="font-medium" style={{ color: "var(--color-text)" }}>
+          {format(date, "d MMMM yyyy")}
+        </h3>
+        <button
+          onClick={onClose}
+          className="rounded-full p-1"
+          style={{ backgroundColor: "transparent" }}
+          aria-label="Close">
+          <XIcon className="h-4 w-4" style={{ color: "var(--color-text)" }} />
         </button>
       </div>
 
       <div className="space-y-2 p-3">
         {events.length === 0 ? (
-          <div className="text-muted-foreground py-2 text-sm">No events</div>
+          <div className="py-2 text-sm" style={{ color: "var(--color-text-muted)" }}>
+            No events
+          </div>
         ) : (
           events.map((event) => {
             const eventStart = new Date(event.start);
