@@ -35,7 +35,7 @@ export function DroppableCell({ id, date, time, children, className, onClick }: 
     <div
       ref={setNodeRef}
       onClick={onClick}
-      className={cn("data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1", className)}
+      className={cn("data-dragging:bg-bg-alt flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1", className)}
       title={formattedTime ? `${formattedTime}` : undefined}
       data-dragging={isOver && activeEvent ? true : undefined}>
       {children}

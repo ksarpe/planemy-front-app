@@ -15,11 +15,11 @@ import {
 } from "date-fns";
 
 import { DraggableEvent } from "@/components/shadcn/Calendar/draggable-event";
-import { DroppableCell } from "@/components/shadcn/droppable-cell";
+import { DroppableCell } from "@/components/shadcn/Calendar/droppable-cell";
 import { EventGap, EventHeight } from "@/components/shadcn/constants";
 import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import { getAllEventsForDay, getEventsForDay, getSpanningEventsForDay, sortEvents } from "@/components/shadcn/utils";
-import { useEventVisibility } from "@/components/shadcn/use-event-visibility";
+import { useEventVisibility } from "@/components/shadcn/Calendar/use-event-visibility";
 import { type CalendarEvent } from "@/components/shadcn/types";
 import { DefaultStartHour } from "@/components/shadcn/constants";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/shadcn/popover";
@@ -119,13 +119,10 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                       startTime.setHours(DefaultStartHour, 0, 0);
                       onEventCreate(startTime);
                     }}>
-                    <div className={`mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm ${
-                      isToday(day) 
-                        ? 'text-primary font-bold' 
-                        : isCurrentMonth 
-                          ? 'text-text' 
-                          : 'text-text-muted-more'
-                    }`}>
+                    <div
+                      className={`mt-1 inline-flex items-center justify-start pl-2 rounded-full text-sm ${
+                        isToday(day) ? "text-primary bg-bg-alt font-bold" : isCurrentMonth ? "text-text" : "text-text-muted-more"
+                      }`}>
                       {format(day, "d")}
                     </div>
                     <div

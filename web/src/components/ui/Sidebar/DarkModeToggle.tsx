@@ -10,7 +10,7 @@ interface DarkModeToggleProps {
 }
 
 export function DarkModeToggle({ collapsed = false }: DarkModeToggleProps) {
-  const { isDark, toggleDark } = usePreferencesContext();
+const { isDark, toggleDark } = usePreferencesContext();
 
   if (collapsed) {
     return (
@@ -36,7 +36,7 @@ export function DarkModeToggle({ collapsed = false }: DarkModeToggleProps) {
         <motion.span
           layout
           transition={{ type: "spring", damping: 15, stiffness: 250 }}
-          className="h-full w-1/2 rounded-md bg-gradient-to-r from-primary to-primary-hover"
+          className={`h-full w-1/2 rounded-md bg-gradient-to-r ${isDark ? "from-primary to-bg-alt" : "from-bg-alt to-primary"}`}
         />
       </div>
     </div>

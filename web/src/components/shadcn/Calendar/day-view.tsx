@@ -12,10 +12,10 @@ import {
 } from "date-fns";
 
 import { DraggableEvent } from "@/components/shadcn/Calendar/draggable-event";
-import { DroppableCell } from "@/components/shadcn/droppable-cell";
+import { DroppableCell } from "@/components/shadcn/Calendar/droppable-cell";
 import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import { isMultiDayEvent } from "@/components/shadcn/utils";
-import { useCurrentTimeIndicator } from "@/components/shadcn/use-current-time-indicator";
+import { useCurrentTimeIndicator } from "@/components/shadcn/Calendar/use-current-time-indicator";
 import { WeekCellsHeight } from "@/components/shadcn/constants";
 import type { CalendarEvent } from "@/components/shadcn/types";
 import { EndHour, StartHour } from "@/components/shadcn/constants";

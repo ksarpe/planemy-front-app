@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { RiCalendarCheckLine } from "@remixicon/react";
 import {
   addDays,
   addMonths,
@@ -21,8 +20,8 @@ import { CalendarDndProvider } from "@/components/shadcn/Calendar/calendar-dnd-c
 import { DayView } from "@/components/shadcn/Calendar/day-view";
 import { EventDialog } from "@/components/shadcn/Calendar/event-dialog";
 import { EventGap, EventHeight, WeekCellsHeight } from "@/components/shadcn/constants";
-import { MonthView } from "@/components/shadcn/month-view";
-import { WeekView } from "@/components/shadcn/week-view";
+import { MonthView } from "@/components/shadcn/Calendar/month-view";
+import { WeekView } from "@/components/shadcn/Calendar/week-view";
 import type { CalendarEvent, CalendarView } from "@/components/shadcn/types";
 import { cn } from "@/lib/shadcn/utils";
 import { Button } from "@/components/ui/shadcn/button";
@@ -246,7 +245,7 @@ export function EventCalendar({
 
   return (
     <div
-      className="flex flex-col border-bg-alt border has-data-[slot=month-view]:flex-1"
+      className="flex flex-col border-bg-alt border-l has-data-[slot=month-view]:flex-1"
       style={
         {
           "--event-height": `${EventHeight}px`,
@@ -258,25 +257,24 @@ export function EventCalendar({
       }>
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
         <div className={cn("flex items-center justify-between p-2 sm:p-4", className)}>
-          <div className="flex items-center gap-1 sm:gap-4">
-            <Button variant="outline" className="max-[479px]:aspect-square max-[479px]:p-0!" onClick={handleToday}>
-              <RiCalendarCheckLine className="min-[480px]:hidden" size={16} aria-hidden="true" />
-              <span className="max-[479px]:sr-only">Today</span>
-            </Button>
+          {/* LEFT SIDE */}
+          <div className="flex items-center gap-1 sm:gap-2">
             <div className="flex items-center sm:gap-2">
-              <Button variant="ghost" size="icon" onClick={handlePrevious} aria-label="Previous">
+              <Button variant="default" size="icon" onClick={handlePrevious} aria-label="Previous">
                 <ChevronLeftIcon size={16} aria-hidden="true" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={handleNext} aria-label="Next">
+              <Button onClick={handleToday}>Today</Button>
+              <Button variant="default" size="icon" onClick={handleNext} aria-label="Next">
                 <ChevronRightIcon size={16} aria-hidden="true" />
               </Button>
             </div>
             <h2 className="text-sm font-semibold sm:text-lg md:text-xl">{viewTitle}</h2>
           </div>
+          {/* RIGHT SIDE */}
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-1.5 max-[479px]:h-8">
+                <Button variant="default" className="gap-1.5 max-[479px]:h-8">
                   <span>
                     <span className="min-[480px]:hidden" aria-hidden="true">
                       {view.charAt(0).toUpperCase()}
@@ -301,9 +299,7 @@ export function EventCalendar({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button
-              className="max-[479px]:aspect-square max-[479px]:p-0!"
-              size="sm"
+            <Button variant="primary"
               onClick={() => {
                 setSelectedEvent(null); // Ensure we're creating a new event
                 setIsEventDialogOpen(true);

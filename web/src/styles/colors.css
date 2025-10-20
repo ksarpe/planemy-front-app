@@ -12,9 +12,9 @@
   .dark {
     --color-text: hsl(0, 0%, 100%);
     --color-text-muted: hsl(0, 0%, 70%);
-    --color-bg: hsl(0, 0%, 0%); /* nigth */
-    --color-bg-alt: hsl(0, 0%, 10%);
-    --color-primary: hsl(186, 100%, 39%);
+    --color-bg: hsl(0, 0%, 10%); /* nigth */
+    --color-bg-alt: hsl(0, 0%, 13%);
+    --color-primary: hsl(186, 100%, 28%);
     --color-primary-light: hsl(0, 0%, 20%);
   }
 }
