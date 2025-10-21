@@ -42,7 +42,7 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
               onClick={handleNavigate}
               className={({ isActive }) =>
                 `mb-0.5 relative w-12 h-12 flex flex-col items-center justify-center rounded-md transition-colors ${
-                  isActive ? "bg-bg-alt" : "hover:bg-bg-alt"
+                  isActive ? "bg-bg" : "hover:bg-bg"
                 }`
               }>
               {({ isActive }) => (
@@ -60,7 +60,7 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
               onClick={handleNavigate}
               className={({ isActive }) =>
                 `mb-0.5 relative w-12 h-12 flex flex-col items-center justify-center rounded-md transition-colors ${
-                  isActive ? "bg-bg-alt" : "hover:bg-bg-alt"
+                  isActive ? "bg-bg" : "hover:bg-bg"
                 }`
               }>
               {({ isActive }) => (
@@ -80,7 +80,7 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
               onClick={handleNavigate}
               className={({ isActive }) =>
                 `mb-0.5 relative w-12 h-12 flex items-center justify-center rounded-md transition-colors ${
-                  isActive ? "bg-bg-alt" : "hover:bg-bg-alt"
+                  isActive ? "bg-bg" : "hover:bg-bg"
                 }`
               }>
               {({ isActive }) => (
@@ -106,7 +106,7 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
             to={to}
             onClick={handleNavigate}
             className={({ isActive }) =>
-              `p-2 mb-0.5 rounded-md flex items-center gap-4 text-sm ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
+              `p-2 mb-0.5 rounded-md flex items-center gap-4 text-sm ${isActive ? "bg-bg" : "hover:bg-bg"}`
             }>
             {({ isActive }) => (
               <>
@@ -124,7 +124,7 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
             to={to}
             onClick={handleNavigate}
             className={({ isActive }) =>
-              `p-2 mb-0.5 rounded-md flex items-center gap-4 text-sm ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
+              `p-2 mb-0.5 rounded-md flex items-center gap-4 text-sm ${isActive ? "bg-bg" : "hover:bg-bg"}`
             }>
             {({ isActive }) => (
               <>
@@ -145,7 +145,7 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
             onClick={handleNavigate}
             className={({ isActive }) =>
               `p-2 mb-0.5 rounded-md flex items-center gap-4 text-sm transition-colors ${
-                isActive ? "bg-bg-alt" : "hover:bg-bg-alt"
+                isActive ? "bg-bg" : "hover:bg-bg"
               }`
             }>
             {({ isActive }) => (

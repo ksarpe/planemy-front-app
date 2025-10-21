@@ -256,7 +256,7 @@ export function EventCalendar({
         } as React.CSSProperties
       }>
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
-        <div className={cn("flex items-center justify-between p-2 sm:p-4", className)}>
+        <div className={cn("flex items-center justify-between p-2 sm:p-4 bg-bg-alt", className)}>
           {/* LEFT SIDE */}
           <div className="flex items-center gap-1 sm:gap-2">
             <div className="flex items-center sm:gap-2">
@@ -311,7 +311,7 @@ export function EventCalendar({
           </div>
         </div>
 
-        <div className="flex flex-1 min-h-0 flex-col">
+        <div className="flex flex-1 min-h-0 flex-col bg-bg-alt">
           {view === "month" && (
             <MonthView
               currentDate={currentDate}

@@ -4,7 +4,7 @@ import { SidebarNav } from "../ui/Sidebar/SidebarNav";
 import { SidebarUserSection } from "../ui/Sidebar/SidebarUserSection";
 import { DarkModeToggle } from "../ui/Sidebar/DarkModeToggle";
 import { NavLink } from "react-router-dom";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import SidebarSettings from "../ui/Sidebar/SidebarSettings";
 
 export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
@@ -31,17 +31,9 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
     <>
       {isOpen && <div className="fixed inset-0 bg-black/40 md:hidden z-40" onClick={onClose} aria-hidden="true" />}
       <aside
-        className={`p-4 fixed inset-y-0 left-0 z-50 ${widthClasses} h-full transform transition-all duration-300 bg-bg md:static flex flex-col justify-between p-2 ${
+        className={`p-4 fixed inset-y-0 left-0 z-50 ${widthClasses} h-full transform transition-all duration-300 bg-bg-alt md:static flex flex-col justify-between p-2 ${
           isOpen ? " translate-x-0" : " -translate-x-full md:translate-x-0"
         }`}>
-        {/* Collapse button */}
-        <button
-          aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
-          className="hidden md:flex absolute -right-2 top-8 items-center justify-center rounded-md cursor-pointer text-primary"
-          onClick={() => setCollapsed((c) => !c)}>
-          {collapsed ? <FiChevronRight size={24} /> : <FiChevronLeft size={24} />}
-        </button>
-
         {/* LOGO */}
         <NavLink to="/">
           <img src={collapsed ? `minilogo.png` : `logo.png`} alt="Logo" className={collapsed ? `h-12` : `h-16`} />
@@ -67,10 +59,20 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         <div className="w-full h-px bg-text-muted/20 my-2" />
 
         {/* USER INFO */}
-        <SidebarUserSection
-          collapsed={collapsed}
-          handleNavigate={onClose || (() => {})}
-        />
+        <SidebarUserSection collapsed={collapsed} handleNavigate={onClose || (() => {})} />
+
+        <div className="w-full h-px bg-text-muted/20 my-2" />
+        {/* Collapse button */}
+        <button
+          aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
+          className={`hidden md:flex items-center rounded-md cursor-pointer text-primary ${
+            collapsed ? "justify-center" : "justify-end"
+          }`}
+          onClick={() => setCollapsed((c) => !c)}>
+          <span className="hover:bg-bg rounded-md px-1 transition-colors">
+            {collapsed ? <FiChevronsRight size={24} /> : <FiChevronsLeft size={24} />}
+          </span>
+        </button>
       </aside>
     </>
   );

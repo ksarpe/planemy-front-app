@@ -10,7 +10,7 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
     return (
       <BasicDropdown
         trigger={
-          <span className="font-bold text-xl cursor-pointer p-2 rounded-md text-text hover:text-primary hover:bg-bg-alt">
+          <span className="font-bold text-xl cursor-pointer p-2 rounded-md text-text hover:text-primary hover:bg-bg">
             ...
           </span>
         }
@@ -35,7 +35,7 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
         to="/notifications"
         className={({ isActive }) =>
           `rounded-md p-2
-              text-lg ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
+              text-lg ${isActive ? "bg-bg" : "hover:bg-bg"}`
         }>
         {({ isActive }) => (
           <>
@@ -47,7 +47,7 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
         to="/settings"
         className={({ isActive }) =>
           `rounded-md p-2
-              text-lg ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
+              text-lg ${isActive ? "bg-bg" : "hover:bg-bg"}`
         }>
         {({ isActive }) => (
           <>
@@ -59,7 +59,7 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
         to="/help"
         className={({ isActive }) =>
           `rounded-md p-2
-              text-lg ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
+              text-lg ${isActive ? "bg-bg" : "hover:bg-bg"}`
         }>
         {({ isActive }) => (
           <>

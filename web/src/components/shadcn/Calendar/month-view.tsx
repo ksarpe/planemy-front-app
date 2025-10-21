@@ -36,11 +36,11 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
   const days = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
     const monthEnd = endOfMonth(monthStart);
-    
+
     // Start 3 months before, end 3 months after
     const extendedStart = addDays(monthStart, -90);
     const extendedEnd = addDays(monthEnd, 90);
-    
+
     const calendarStart = startOfWeek(extendedStart, { weekStartsOn: 0 });
     const calendarEnd = endOfWeek(extendedEnd, { weekStartsOn: 0 });
 
@@ -49,7 +49,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
 
   const weekdays = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => {
-      const date = addDays(startOfWeek(new Date()), i);
+      const date = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), i);
       return format(date, "EEE");
     });
   }, []);
@@ -72,9 +72,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
   // Calculate initial offset to show current month
   const initialWeekOffset = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
-    const weekOfCurrentMonth = weeks.findIndex(week => 
-      week.some(day => day && isSameDay(day, monthStart))
-    );
+    const weekOfCurrentMonth = weeks.findIndex((week) => week.some((day) => day && isSameDay(day, monthStart)));
     return Math.max(0, weekOfCurrentMonth);
   }, [currentDate, weeks]);
 
@@ -93,7 +91,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
   const [weekOffset, setWeekOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const lastWheelTime = useRef(0);
-  
+
   // How many weeks to display at once
   const VISIBLE_WEEKS = 5;
 
@@ -113,7 +111,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      
+
       const now = Date.now();
       // Throttle wheel events to prevent too rapid scrolling
       if (now - lastWheelTime.current < 300) return;
@@ -131,37 +129,34 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
       });
     };
 
-    container.addEventListener('wheel', handleWheel, { passive: false });
+    container.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
-      container.removeEventListener('wheel', handleWheel);
+      container.removeEventListener("wheel", handleWheel);
     };
   }, [weeks.length]);
-  
+
   // Get visible weeks based on offset
   const visibleWeeks = useMemo(() => {
     return weeks.slice(weekOffset, weekOffset + VISIBLE_WEEKS);
   }, [weeks, weekOffset, VISIBLE_WEEKS]);
 
   return (
+    //contents view to allow grid structure (children elements are direct child of parent of month-view)
     <div data-slot="month-view" className="contents">
-      <div className="grid grid-cols-7 border-b border-bg-alt">
+      {/* ROW WITH WEEKDAYS NAMES */}
+      <div className="grid grid-cols-7 border-b border-bg-alt rounded-tl-xl bg-bg">
         {weekdays.map((day) => (
           <div key={day} className="py-2 text-center text-sm text-text-muted">
             {day}
           </div>
         ))}
       </div>
-      <div 
-        ref={containerRef}
-        className="grid flex-1 auto-rows-fr min-h-0"
-      >
+      {/* CALENDAR */}
+      <div ref={containerRef} className="grid flex-1 bg-bg">
         {visibleWeeks.map((week, weekIndex) => (
-          <div 
-            key={`week-${weekOffset + weekIndex}`} 
-            className="grid grid-cols-7 [&:last-child>*]:border-b-0"
-            data-week-index={weekOffset + weekIndex}
-          >
+          // Each week row
+          <div key={`week-${weekOffset + weekIndex}`} className="grid grid-cols-7 [&:last-child>*]:border-b-0">
             {week.map((day, dayIndex) => {
               if (!day) return null; // Skip if day is undefined
 
@@ -178,11 +173,8 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
               const remainingCount = hasMore ? allDayEvents.length - visibleCount : 0;
 
               return (
-                <div
-                  key={day.toString()}
-                  className="group border-r border-b border-bg-alt last:border-r-0  data-outside-cell:text-text-muted-more"
-                  data-today={isToday(day) || undefined}
-                  data-outside-cell={!isCurrentMonth || undefined}>
+                //Actual DAY CELL
+                <div key={day.toString()} className="border-r border-b border-bg-alt last:border-r-0">
                   <DroppableCell
                     id={cellId}
                     date={day}
