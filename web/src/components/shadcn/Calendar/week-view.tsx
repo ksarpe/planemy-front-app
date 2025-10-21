@@ -192,9 +192,9 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
 
   return (
     <div data-slot="week-view" className="flex h-full flex-col">
-      <div className="sticky top-0 z-30 grid grid-cols-8 border-b border-bg-alt backdrop-blur-md bg-bg">
+      <div className="sticky top-0 z-30 grid grid-cols-[3.5rem_repeat(7,1fr)] border-b border-bg-alt backdrop-blur-md bg-bg">
         <div className="py-2 text-center text-sm text-text-muted">
-          <span className="max-[479px]:sr-only">{format(new Date(), "O")}</span>
+          <span className="max-[479px]:sr-only text-xs">{format(new Date(), "O")}</span>
         </div>
         {days.map((day) => (
           <div
@@ -211,7 +211,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
 
       {showAllDaySection && (
         <div className="border-b border-bg-alt bg-bg-alt">
-          <div className="grid grid-cols-8">
+          <div className="grid grid-cols-[3.5rem_repeat(7,1fr)]">
             <div className="relative border-r border-bg-alt">
               <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-text-muted sm:pe-4 sm:text-xs">
                 All day
@@ -261,7 +261,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         </div>
       )}
 
-      <div className="grid flex-1 grid-cols-8 overflow-hidden">
+      <div className="grid flex-1 min-h-0 grid-cols-[3.5rem_repeat(7,1fr)] overflow-y-auto">
         <div className="border-bg-alt grid auto-cols-fr border-r">
           {hours.map((hour, index) => (
             <div

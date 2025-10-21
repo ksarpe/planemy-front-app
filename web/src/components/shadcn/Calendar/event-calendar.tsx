@@ -245,7 +245,7 @@ export function EventCalendar({
 
   return (
     <div
-      className="flex flex-col border-bg-alt border-l has-data-[slot=month-view]:flex-1"
+      className="flex h-full flex-col border-bg-alt border-l has-data-[slot=month-view]:flex-1"
       style={
         {
           "--event-height": `${EventHeight}px`,
@@ -299,7 +299,8 @@ export function EventCalendar({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button variant="primary"
+            <Button
+              variant="primary"
               onClick={() => {
                 setSelectedEvent(null); // Ensure we're creating a new event
                 setIsEventDialogOpen(true);
@@ -310,7 +311,7 @@ export function EventCalendar({
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 min-h-0 flex-col">
           {view === "month" && (
             <MonthView
               currentDate={currentDate}

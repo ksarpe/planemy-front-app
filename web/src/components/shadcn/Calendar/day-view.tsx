@@ -211,7 +211,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
       )}
 
       <div
-        className="grid flex-1 grid-cols-[3rem_1fr] overflow-hidden border-t sm:grid-cols-[4rem_1fr]"
+        className="grid flex-1 min-h-0 grid-cols-[3rem_1fr] overflow-y-auto border-t sm:grid-cols-[4rem_1fr]"
         style={{ borderColor: "var(--color-text-muted-more)" }}>
         <div>
           {hours.map((hour, index) => (

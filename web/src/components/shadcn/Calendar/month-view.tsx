@@ -120,8 +120,9 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                       onEventCreate(startTime);
                     }}>
                     <div
-                      className={`mt-1 inline-flex items-center justify-start pl-2 rounded-full text-sm ${
-                        isToday(day) ? "text-primary bg-bg-alt font-bold" : isCurrentMonth ? "text-text" : "text-text-muted-more"
+                      className={`mt-1 flex size-6 items-center justify-center ml-1 rounded-full text-sm ${
+                        //TODAY & CURRENT/NOT MONTH STYLING
+                        isToday(day) ? "bg-primary font-bold text-white" : isCurrentMonth ? "text-text" : "text-text-muted-more"
                       }`}>
                       {format(day, "d")}
                     </div>
