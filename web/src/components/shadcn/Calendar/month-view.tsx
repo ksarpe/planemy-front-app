@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import {
   addDays,
   eachDayOfInterval,
@@ -32,11 +32,17 @@ interface MonthViewProps {
 }
 
 export function MonthView({ currentDate, events, onEventSelect, onEventCreate }: MonthViewProps) {
+  // Generate extended date range - 3 months before and after current month
   const days = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
     const monthEnd = endOfMonth(monthStart);
-    const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
-    const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
+    
+    // Start 3 months before, end 3 months after
+    const extendedStart = addDays(monthStart, -90);
+    const extendedEnd = addDays(monthEnd, 90);
+    
+    const calendarStart = startOfWeek(extendedStart, { weekStartsOn: 0 });
+    const calendarEnd = endOfWeek(extendedEnd, { weekStartsOn: 0 });
 
     return eachDayOfInterval({ start: calendarStart, end: calendarEnd });
   }, [currentDate]);
@@ -63,20 +69,79 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
     return result;
   }, [days]);
 
+  // Calculate initial offset to show current month
+  const initialWeekOffset = useMemo(() => {
+    const monthStart = startOfMonth(currentDate);
+    const weekOfCurrentMonth = weeks.findIndex(week => 
+      week.some(day => day && isSameDay(day, monthStart))
+    );
+    return Math.max(0, weekOfCurrentMonth);
+  }, [currentDate, weeks]);
+
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation();
     onEventSelect(event);
   };
 
+  // State to track if mounted and which weeks to show
   const [isMounted, setIsMounted] = useState(false);
   const { contentRef, getVisibleEventCount } = useEventVisibility({
     eventHeight: EventHeight,
     eventGap: EventGap,
   });
 
+  const [weekOffset, setWeekOffset] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const lastWheelTime = useRef(0);
+  
+  // How many weeks to display at once
+  const VISIBLE_WEEKS = 5;
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Set initial offset to show current month when component mounts or month changes
+  useEffect(() => {
+    setWeekOffset(initialWeekOffset);
+  }, [initialWeekOffset]);
+
+  // Wheel event handler for week-by-week scrolling
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      
+      const now = Date.now();
+      // Throttle wheel events to prevent too rapid scrolling
+      if (now - lastWheelTime.current < 300) return;
+      lastWheelTime.current = now;
+
+      const scrollDown = e.deltaY > 0;
+      const maxOffset = weeks.length - VISIBLE_WEEKS;
+
+      setWeekOffset((prev) => {
+        if (scrollDown) {
+          return Math.min(prev + 1, maxOffset);
+        } else {
+          return Math.max(prev - 1, 0);
+        }
+      });
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, [weeks.length]);
+  
+  // Get visible weeks based on offset
+  const visibleWeeks = useMemo(() => {
+    return weeks.slice(weekOffset, weekOffset + VISIBLE_WEEKS);
+  }, [weeks, weekOffset, VISIBLE_WEEKS]);
 
   return (
     <div data-slot="month-view" className="contents">
@@ -87,9 +152,16 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
           </div>
         ))}
       </div>
-      <div className="grid flex-1 auto-rows-fr">
-        {weeks.map((week, weekIndex) => (
-          <div key={`week-${weekIndex}`} className="grid grid-cols-7 [&:last-child>*]:border-b-0">
+      <div 
+        ref={containerRef}
+        className="grid flex-1 auto-rows-fr min-h-0"
+      >
+        {visibleWeeks.map((week, weekIndex) => (
+          <div 
+            key={`week-${weekOffset + weekIndex}`} 
+            className="grid grid-cols-7 [&:last-child>*]:border-b-0"
+            data-week-index={weekOffset + weekIndex}
+          >
             {week.map((day, dayIndex) => {
               if (!day) return null; // Skip if day is undefined
 
@@ -122,7 +194,11 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                     <div
                       className={`mt-1 flex size-6 items-center justify-center ml-1 rounded-full text-sm ${
                         //TODAY & CURRENT/NOT MONTH STYLING
-                        isToday(day) ? "bg-primary font-bold text-white" : isCurrentMonth ? "text-text" : "text-text-muted-more"
+                        isToday(day)
+                          ? "bg-primary font-bold text-white"
+                          : isCurrentMonth
+                          ? "text-text"
+                          : "text-text-muted-more"
                       }`}>
                       {format(day, "d")}
                     </div>

@@ -37,9 +37,9 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         {/* Collapse button */}
         <button
           aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
-          className="hidden md:flex absolute -right-2 top-8 h-8 w-6 items-center justify-center rounded-md bg-primary/40 cursor-pointer hover:bg-primary"
+          className="hidden md:flex absolute -right-2 top-8 items-center justify-center rounded-md cursor-pointer text-primary"
           onClick={() => setCollapsed((c) => !c)}>
-          {collapsed ? <FiChevronRight size={16} /> : <FiChevronLeft size={16} />}
+          {collapsed ? <FiChevronRight size={24} /> : <FiChevronLeft size={24} />}
         </button>
 
         {/* LOGO */}

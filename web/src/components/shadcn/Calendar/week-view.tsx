@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import {
   addHours,
   areIntervalsOverlapping,
@@ -190,6 +190,19 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
   const showAllDaySection = allDayEvents.length > 0;
   const { currentTimePosition, currentTimeVisible } = useCurrentTimeIndicator(currentDate, "week");
 
+  // Ref for the scrollable container
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to 8 AM on mount and when currentDate changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      // Calculate scroll position: 8 AM means 8 hours from StartHour (0)
+      const targetHour = 8;
+      const scrollPosition = (targetHour - StartHour) * WeekCellsHeight;
+      scrollContainerRef.current.scrollTop = scrollPosition;
+    }
+  }, [currentDate]);
+
   return (
     <div data-slot="week-view" className="flex h-full flex-col">
       <div className="sticky top-0 z-30 grid grid-cols-[3.5rem_repeat(7,1fr)] border-b border-bg-alt backdrop-blur-md bg-bg">
@@ -261,7 +274,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         </div>
       )}
 
-      <div className="grid flex-1 min-h-0 grid-cols-[3.5rem_repeat(7,1fr)] overflow-y-auto">
+      <div ref={scrollContainerRef} className="grid flex-1 min-h-0 grid-cols-[3.5rem_repeat(7,1fr)] overflow-y-auto">
         <div className="border-bg-alt grid auto-cols-fr border-r">
           {hours.map((hour, index) => (
             <div

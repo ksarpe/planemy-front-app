@@ -35,7 +35,7 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
         to="/notifications"
         className={({ isActive }) =>
           `rounded-md p-2
-              text-sm ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
+              text-lg ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
         }>
         {({ isActive }) => (
           <>
@@ -47,7 +47,7 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
         to="/settings"
         className={({ isActive }) =>
           `rounded-md p-2
-              text-sm ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
+              text-lg ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
         }>
         {({ isActive }) => (
           <>
@@ -59,7 +59,7 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
         to="/help"
         className={({ isActive }) =>
           `rounded-md p-2
-              text-sm ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
+              text-lg ${isActive ? "bg-bg-alt" : "hover:bg-bg-alt"}`
         }>
         {({ isActive }) => (
           <>
