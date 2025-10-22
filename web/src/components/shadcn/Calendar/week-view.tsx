@@ -197,7 +197,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
   useEffect(() => {
     if (scrollContainerRef.current) {
       // Calculate scroll position: 8 AM means 8 hours from StartHour (0)
-      const targetHour = 8;
+      const targetHour = 7.5;
       const scrollPosition = (targetHour - StartHour) * WeekCellsHeight;
       scrollContainerRef.current.scrollTop = scrollPosition;
     }
@@ -205,7 +205,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
 
   return (
     <div data-slot="week-view" className="flex h-full flex-col">
-      <div className="sticky top-0 z-30 grid grid-cols-[3.5rem_repeat(7,1fr)] border-b border-bg-alt backdrop-blur-md bg-bg">
+      <div className="sticky top-0 z-30 grid grid-cols-[3.5rem_repeat(7,1fr)] border-b border-bg-alt backdrop-blur-md bg-bg rounded-tl-xl">
         <div className="py-2 text-center text-sm text-text-muted">
           <span className="max-[479px]:sr-only text-xs">{format(new Date(), "O")}</span>
         </div>
@@ -223,7 +223,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
       </div>
 
       {showAllDaySection && (
-        <div className="border-b border-bg-alt bg-bg-alt">
+        <div className="border-b border-bg-alt bg-bg">
           <div className="grid grid-cols-[3.5rem_repeat(7,1fr)]">
             <div className="relative border-r border-bg-alt">
               <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] text-text-muted sm:pe-4 sm:text-xs">
@@ -275,24 +275,25 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
       )}
 
       <div ref={scrollContainerRef} className="grid flex-1 min-h-0 grid-cols-[3.5rem_repeat(7,1fr)] overflow-y-auto">
-        <div className="border-bg-alt grid auto-cols-fr border-r">
+        {/* Time column */}
+        <div className="border-bg-alt grid auto-cols-fr border-r bg-bg">
           {hours.map((hour, index) => (
             <div
               key={hour.toString()}
-              className="border-bg-alt relative min-h-[var(--week-cells-height)] border-b last:border-b-0">
+              className="border-bg-alt relative min-h-[var(--week-cells-height)]  flex items-center justify-center">
               {index > 0 && (
-                <span className="absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs bg-bg text-text-muted">
-                  {format(hour, "h a")}
-                </span>
+          <span className="absolute left-1/2 -translate-x-1/2 truncate -top-2 flex items-center justify-center text-[10px] sm:text-xs bg-bg text-text-muted">
+            {format(hour, "h a")}
+          </span>
               )}
             </div>
           ))}
         </div>
-
+        {/* Day columns */}
         {days.map((day, dayIndex) => (
           <div
             key={day.toString()}
-            className="border-bg-alt relative grid auto-cols-fr border-r last:border-r-0"
+            className="border-bg-alt relative grid auto-cols-fr border-r last:border-r-0 bg-bg"
             data-today={isToday(day) || undefined}>
             {/* Positioned events */}
             {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => (

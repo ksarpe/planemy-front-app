@@ -192,7 +192,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                 All day
               </span>
             </div>
-            <div className="relative border-r border-bg-alt p-1 last:border-r-0">
+            <div className="relative border-r border-bg-alt p-1 last:border-r-0 ">
               {allDayEvents.map((event) => {
                 const eventStart = new Date(event.start);
                 const eventEnd = new Date(event.end);
@@ -217,7 +217,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         </div>
       )}
 
-      <div ref={scrollContainerRef} className="grid flex-1 min-h-0 grid-cols-[3rem_1fr] overflow-y-auto border-t border-bg-alt sm:grid-cols-[4rem_1fr]">
+      <div ref={scrollContainerRef} className="grid flex-1 min-h-0 grid-cols-[3rem_1fr] overflow-y-auto border-t border-bg-alt sm:grid-cols-[4rem_1fr] bg-bg rounded-tl-xl">
         <div>
           {hours.map((hour, index) => (
             <div
