@@ -4,7 +4,7 @@ import { SidebarNav } from "../ui/Sidebar/SidebarNav";
 import { SidebarUserSection } from "../ui/Sidebar/SidebarUserSection";
 import { DarkModeToggle } from "../ui/Sidebar/DarkModeToggle";
 import { NavLink } from "react-router-dom";
-import { FiChevronLeft, FiChevronRight, FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
+import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import SidebarSettings from "../ui/Sidebar/SidebarSettings";
 
 export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
@@ -50,11 +50,9 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         </div>
         <div className="w-full h-px bg-text-muted/20 my-2" />
 
-        {/* SETTINGS + DARK MODE */}
-        <div
-          className={`my-1 flex ${collapsed ? "justify-center flex-col gap-4 mt-4" : "justify-between"} items-center`}>
+        {/* SETTINGS */}
+        <div>
           <SidebarSettings collapsed={collapsed} />
-          <DarkModeToggle collapsed={collapsed} />
         </div>
         <div className="w-full h-px bg-text-muted/20 my-2" />
 
@@ -62,17 +60,21 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         <SidebarUserSection collapsed={collapsed} handleNavigate={onClose || (() => {})} />
 
         <div className="w-full h-px bg-text-muted/20 my-2" />
-        {/* Collapse button */}
-        <button
-          aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
-          className={`hidden md:flex items-center rounded-md cursor-pointer text-primary ${
-            collapsed ? "justify-center" : "justify-end"
-          }`}
-          onClick={() => setCollapsed((c) => !c)}>
-          <span className="hover:bg-bg rounded-md px-1 transition-colors">
-            {collapsed ? <FiChevronsRight size={24} /> : <FiChevronsLeft size={24} />}
-          </span>
-        </button>
+        {/* Collapse button + Dark Mode */}
+        <div
+          className={`hidden md:flex ${
+            collapsed ? "flex-col items-center gap-3" : "flex-row items-center justify-between"
+          }`}>
+          <DarkModeToggle collapsed={collapsed} />
+          <button
+            aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
+            className="flex items-center rounded-md cursor-pointer text-primary"
+            onClick={() => setCollapsed((c) => !c)}>
+            <span className="hover:bg-bg rounded-md px-1 transition-colors">
+              {collapsed ? <FiChevronsRight size={24} /> : <FiChevronsLeft size={24} />}
+            </span>
+          </button>
+        </div>
       </aside>
     </>
   );

@@ -18,7 +18,7 @@ import { AgendaDaysToShow } from "@/components/shadcn/constants";
 import { AgendaView } from "@/components/shadcn/Calendar/agenda-view";
 import { CalendarDndProvider } from "@/components/shadcn/Calendar/calendar-dnd-context";
 import { DayView } from "@/components/shadcn/Calendar/day-view";
-import { EventDialog } from "@/components/shadcn/Calendar/event-dialog";
+import { EventPanel } from "@/components/shadcn/Calendar/event-panel";
 import { EventGap, EventHeight, WeekCellsHeight } from "@/components/shadcn/constants";
 import { MonthView } from "@/components/shadcn/Calendar/month-view";
 import { WeekView } from "@/components/shadcn/Calendar/week-view";
@@ -52,7 +52,7 @@ export function EventCalendar({
 }: EventCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<CalendarView>(initialView);
-  const [isEventDialogOpen, setIsEventDialogOpen] = useState(false);
+  const [isEventPanelOpen, setIsEventPanelOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
 
   // Add keyboard shortcuts for view switching
@@ -61,7 +61,7 @@ export function EventCalendar({
       // Skip if user is typing in an input, textarea or contentEditable element
       // or if the event dialog is open
       if (
-        isEventDialogOpen ||
+        isEventPanelOpen ||
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement ||
         (e.target instanceof HTMLElement && e.target.isContentEditable)
@@ -90,7 +90,7 @@ export function EventCalendar({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isEventDialogOpen]);
+  }, [isEventPanelOpen]);
 
   const handlePrevious = () => {
     if (view === "month") {
@@ -125,7 +125,7 @@ export function EventCalendar({
   const handleEventSelect = (event: CalendarEvent) => {
     console.log("Event selected:", event); // Debug log
     setSelectedEvent(event);
-    setIsEventDialogOpen(true);
+    setIsEventPanelOpen(true);
   };
 
   const handleEventCreate = (startTime: Date) => {
@@ -154,7 +154,7 @@ export function EventCalendar({
       allDay: false,
     };
     setSelectedEvent(newEvent);
-    setIsEventDialogOpen(true);
+    setIsEventPanelOpen(true);
   };
 
   const handleEventSave = (event: CalendarEvent) => {
@@ -176,14 +176,14 @@ export function EventCalendar({
         position: "bottom-left",
       });
     }
-    setIsEventDialogOpen(false);
+    setIsEventPanelOpen(false);
     setSelectedEvent(null);
   };
 
   const handleEventDelete = (eventId: string) => {
     const deletedEvent = events.find((e) => e.id === eventId);
     onEventDelete?.(eventId);
-    setIsEventDialogOpen(false);
+    setIsEventPanelOpen(false);
     setSelectedEvent(null);
 
     // Show toast notification when an event is deleted
@@ -303,7 +303,7 @@ export function EventCalendar({
               variant="primary"
               onClick={() => {
                 setSelectedEvent(null); // Ensure we're creating a new event
-                setIsEventDialogOpen(true);
+                setIsEventPanelOpen(true);
               }}>
               <PlusIcon className="opacity-60 sm:-ms-1" size={16} aria-hidden="true" />
               <span className="max-sm:sr-only">New event</span>
@@ -341,11 +341,11 @@ export function EventCalendar({
           )}
         </div>
 
-        <EventDialog
+        <EventPanel
           event={selectedEvent}
-          isOpen={isEventDialogOpen}
+          isOpen={isEventPanelOpen}
           onClose={() => {
-            setIsEventDialogOpen(false);
+            setIsEventPanelOpen(false);
             setSelectedEvent(null);
           }}
           onSave={handleEventSave}
