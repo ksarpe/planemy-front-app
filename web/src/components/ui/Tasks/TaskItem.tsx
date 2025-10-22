@@ -1,18 +1,14 @@
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
-import { useLabelContext } from "@shared/hooks/context/useLabelContext";
-import { useCompleteTask } from "@shared/hooks/tasks/useTasks";
+import { useUpdateTask } from "@shared/hooks/tasks/useTasks";
 import { useTranslation } from "react-i18next";
-import { Calendar, AlertCircle, Clock, CheckCircle2, Tag, Trash, Plus } from "lucide-react";
+import { Calendar, AlertCircle, Clock, CheckCircle2 } from "lucide-react";
 import type { TaskItemProps } from "@shared/data/Tasks/interfaces";
-import { ActionButton, BasicDropdown, BasicDropdownItem } from "../Common";
-import { useNavigate } from "react-router-dom";
 
 export default function TaskItem({ task }: TaskItemProps) {
   const { t } = useTranslation();
-  const { mutate: completeTask } = useCompleteTask();
-  const { clickedTask, setClickedTask, currentTaskList } = useTaskViewContext();
-  const { labels, createLabelConnection, removeLabelConnection } = useLabelContext();
-  const navigate = useNavigate();
+  const { mutate: updateTask } = useUpdateTask();
+  const { clickedTask, setClickedTask } = useTaskViewContext();
+  //const { labels, createLabelConnection, removeLabelConnection } = useLabelContext();
 
   const getDaysUntilDue = () => {
     if (!task.dueDate || task.dueDate === "") return null;
@@ -45,12 +41,7 @@ export default function TaskItem({ task }: TaskItemProps) {
   };
 
   const handleToggleComplete = async () => {
-    if (!currentTaskList) return;
-    completeTask(task.id);
-  };
-
-  const handleCreateLabel = () => {
-    navigate("/labels");
+    updateTask({ id: task.id, data: { isCompleted: !task.isCompleted } });
   };
 
   return (
@@ -135,81 +126,6 @@ export default function TaskItem({ task }: TaskItemProps) {
           {isDueSoon() && <span className="text-xs text-yellow-600  font-medium">{t("tasks.item.urgent")}</span>}
 
           {/* If task has no labels, show the button to add labels */}
-          {task.labels?.length === 0 && !task.isCompleted ? (
-            <div onClick={(e) => e.stopPropagation()}>
-              <BasicDropdown
-                trigger={
-                  <ActionButton
-                    onClick={() => {}}
-                    icon={Tag}
-                    iconSize={16}
-                    justIcon={true}
-                    text=""
-                    color="white"
-                    size="xs"
-                  />
-                }
-                Xalign="right"
-                width="w-64"
-                closeOnItemClick={true}
-                usePortal={true}>
-                {labels.length > 0 ? (
-                  <>
-                    {labels.map((label) => (
-                      <BasicDropdownItem
-                        key={label.id}
-                        onClick={() => {
-                          createLabelConnection(task.id, "task", label.id);
-                          task.labels?.push(label); // Update local task labels
-                        }}>
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: label.color }} />
-                          {label.name}
-                        </div>
-                      </BasicDropdownItem>
-                    ))}
-                    <BasicDropdownItem icon={Plus} onClick={handleCreateLabel} variant="green">
-                      {t("tasks.item.labels.create")}
-                    </BasicDropdownItem>
-                  </>
-                ) : (
-                  // if no labels are available, show create label button
-                  <BasicDropdownItem icon={Plus} onClick={handleCreateLabel} variant="green">
-                    {t("tasks.item.labels.create")}
-                  </BasicDropdownItem>
-                )}
-              </BasicDropdown>
-            </div>
-          ) : (
-            !task.isCompleted && (
-              // If task has some labels, show them (for now we can only have one label per task)
-              <div>
-                {/* even though there is a map, we cannot add more labels  (frontend purposes) */}
-                {task.labels?.map((label) => (
-                  <div onClick={(e) => e.stopPropagation()} key={label.id}>
-                    <BasicDropdown
-                      trigger={
-                        <div
-                          key={label.id}
-                          className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full cursor-pointer"
-                          style={{ backgroundColor: label.color + "20", color: label.color }}>
-                          <Tag size={12} />
-                          {label.name}
-                        </div>
-                      }
-                      usePortal={true}>
-                      <BasicDropdownItem
-                        icon={Trash}
-                        variant="red"
-                        onClick={() => removeLabelConnection(task.id, "task", label.id)}>
-                        {t("tasks.item.labels.remove")}
-                      </BasicDropdownItem>
-                    </BasicDropdown>
-                  </div>
-                ))}
-              </div>
-            )
-          )}
         </div>
       </div>
     </li>

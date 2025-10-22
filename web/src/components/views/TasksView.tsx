@@ -22,10 +22,10 @@ export default function TasksView() {
   const { defaultTaskListId } = usePreferencesContext();
   const { data: taskLists, isLoading: areListsLoading } = useTaskLists();
   const [currentTaskListId, setCurrentTaskListId] = useState<string | null>(null);
-  const { data: tasksData, isLoading: tasksLoading } = useTasks(currentTaskListId);
+  const { data: tasksData, isLoading: tasksLoading } = useTasks(currentTaskListId!);
   const { t } = useTranslation();
 
-  const [clickedTask, setClickedTask] = useState<TaskInterface | null>(null);
+  const [clickedTask] = useState<TaskInterface | null>(null);
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [filter, setFilter] = useState<TaskListFilter>("pending");
   const [showListsPanel, setShowListsPanel] = useState(false);
@@ -47,7 +47,8 @@ export default function TasksView() {
     setIsCreateListModalOpen(true);
   };
 
-  if (areListsLoading || !currentTaskListId) {
+  if (areListsLoading) {
+    console.log(areListsLoading, currentTaskListId);
     return (
       <div className="flex flex-col items-center justify-center h-full">
         <Spinner />
@@ -60,7 +61,7 @@ export default function TasksView() {
 
   return (
     <TaskViewProvider>
-      <div className="relative h-full flex flex-col">
+      <div className="relative h-full flex flex-col bg-bg">
         {/* Task Lists Panel Overlay */}
         <div
           className={`fixed inset-0 z-40 transition-opacity duration-300 ${
