@@ -41,8 +41,8 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
     const extendedStart = addDays(monthStart, -90);
     const extendedEnd = addDays(monthEnd, 90);
 
-    const calendarStart = startOfWeek(extendedStart, { weekStartsOn: 0 });
-    const calendarEnd = endOfWeek(extendedEnd, { weekStartsOn: 0 });
+    const calendarStart = startOfWeek(extendedStart, { weekStartsOn: 1 });
+    const calendarEnd = endOfWeek(extendedEnd, { weekStartsOn: 1 });
 
     return eachDayOfInterval({ start: calendarStart, end: calendarEnd });
   }, [currentDate]);
