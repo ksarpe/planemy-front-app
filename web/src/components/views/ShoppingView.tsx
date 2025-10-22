@@ -45,7 +45,7 @@ export default function ShoppingView() {
   const totalValue = listItems.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
 
   const getTabButtonClass = (tab: typeof activeTab) => {
-    return `px-4 py-2 rounded-md font-medium transition-colors ${
+    return `px-4 py-2 rounded-lg font-medium transition-colors ${
       activeTab === tab ? "bg-primary text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
     }`;
   };
@@ -93,7 +93,7 @@ export default function ShoppingView() {
           </div>
           <button
             onClick={() => setShowListsPanel(false)}
-            className="inline px-2 rounded-md hover:text-negative cursor-pointer">
+            className="inline px-2 rounded-lg hover:text-negative cursor-pointer">
             <X size={22} />
           </button>
         </div>
@@ -115,7 +115,7 @@ export default function ShoppingView() {
       </div>
 
       {/* Main content card (adds left padding when drawer open on desktop) */}
-      <div className="rounded-md flex-1 p-4 space-y-4 md:relative">
+      <div className="rounded-lg flex-1 p-4 space-y-4 md:relative">
         {currentList ? (
           <>
             <ShoppingHeader
@@ -130,7 +130,7 @@ export default function ShoppingView() {
                 {/* Add Product Button - Primary action */}
                 <button
                   onClick={() => setIsAddItemModalOpen(true)}
-                  className="w-full md:w-auto flex items-center justify-center gap-2 bg-success text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
+                  className="w-full md:w-auto flex items-center justify-center gap-2 bg-success text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
                   <Plus size={18} />
                   {t("shopping.actions.addProduct")}
                 </button>
@@ -157,7 +157,7 @@ export default function ShoppingView() {
               <p className="text-gray-400 mb-4">{t("shopping.emptyState.openPanelToSelect")}</p>
               <button
                 onClick={() => setIsAddListModalOpen(true)}
-                className="bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
                 {t("shopping.actions.createNewList")}
               </button>
             </div>

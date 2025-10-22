@@ -83,7 +83,7 @@ export default function TasksView() {
             <span className="text-lg px-2">{t("tasks.panel.title")}</span>
             <button
               onClick={() => setShowListsPanel(false)}
-              className="px-2 hover:text-negative cursor-pointer rounded-md hover:bg-bg-hover">
+              className="px-2 hover:text-negative cursor-pointer rounded-lg hover:bg-bg-hover">
               <X size={22} />
             </button>
           </div>

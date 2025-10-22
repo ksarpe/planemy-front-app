@@ -22,7 +22,7 @@ export default function LanguageRegionSection({
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary">
+            className="w-full px-3 py-2 border border-gray-300  rounded-lg bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary">
             <option value="pl">{t("languageAndRegion.polish")}</option>
             <option value="en">{t("languageAndRegion.english")}</option>
           </select>
@@ -32,7 +32,7 @@ export default function LanguageRegionSection({
           <select
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary">
+            className="w-full px-3 py-2 border border-gray-300  rounded-lg bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary">
             <option value="Europe/Warsaw">{t("languageAndRegion.timezones.warsaw")}</option>
             <option value="Europe/London">{t("languageAndRegion.timezones.london")}</option>
             <option value="Europe/Berlin">{t("languageAndRegion.timezones.berlin")}</option>

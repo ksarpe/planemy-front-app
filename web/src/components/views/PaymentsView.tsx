@@ -41,7 +41,7 @@ export default function Payments() {
           <div className="flex-1">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {/* Total Monthly */}
-              <div className="bg-bg rounded-md p-3 md:p-4 shadow-md border border-bg-alt">
+              <div className="bg-bg rounded-lg p-3 md:p-4 shadow-md border border-bg-alt">
                 <div className="flex items-center gap-2 text-success mb-1">
                   <TrendingUp size={18} />
                   <span className="text-xs md:text-sm font-medium">{t("payments.monthlyExpenses")}</span>
@@ -50,7 +50,7 @@ export default function Payments() {
               </div>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 p-2 bg-primary text-white rounded-md hover:opacity-90 transition-opacity w-full md:w-auto justify-center shadow-md">
+                className="flex items-center gap-2 p-2 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity w-full md:w-auto justify-center shadow-md">
                 <Plus size={18} />
                 <span className="text-sm md:text-base">{t("payments.addPayment")}</span>
               </button>
@@ -70,7 +70,7 @@ export default function Payments() {
               <p className="text-sm md:text-base text-text-light mb-4">{t("payments.addFirstPayment")}</p>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-primary text-text px-4 py-2 rounded-md hover:opacity-90 transition-opacity text-sm md:text-base shadow-md">
+                className="bg-primary text-text px-4 py-2 rounded-lg hover:opacity-90 transition-opacity text-sm md:text-base shadow-md">
                 {t("payments.addPayment")}
               </button>
             </div>

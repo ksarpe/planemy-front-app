@@ -17,7 +17,7 @@ export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: Extend
           <button
             type="button"
             onClick={onToggleLists}
-            className="px-2 py-2 rounded-md bg-bg-hover border border-bg-hover hover:bg-primary transition-colors text-xs sm:text-sm cursor-pointer">
+            className="px-2 py-2 rounded-lg bg-bg-hover border border-bg-hover hover:bg-primary transition-colors text-xs sm:text-sm cursor-pointer">
             <MoreVertical size={14} />
           </button>
         )}
@@ -26,7 +26,7 @@ export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: Extend
       {/* Statistics Cards + progress */}
       <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
         {/* Do kupienia */}
-        <div className="bg-white rounded-md p-2 shadow-md flex flex-col justify-evenly h-full">
+        <div className="bg-white rounded-lg p-2 shadow-md flex flex-col justify-evenly h-full">
           <span className="text-xs sm:text-sm font-medium text-text-muted whitespace-nowrap">
             {t("shopping.stats.toBuy")}
           </span>
@@ -34,7 +34,7 @@ export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: Extend
         </div>
 
         {/* Kupione */}
-        <div className="bg-white rounded-md p-2 shadow-md flex flex-col justify-evenly h-full">
+        <div className="bg-white rounded-lg p-2 shadow-md flex flex-col justify-evenly h-full">
           <span className="text-xs sm:text-sm font-medium text-success whitespace-nowrap">
             {t("shopping.stats.bought")}
           </span>
@@ -42,7 +42,7 @@ export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: Extend
         </div>
 
         {/* Wartość */}
-        <div className="bg-white rounded-md p-2 shadow-md flex flex-col justify-evenly h-full">
+        <div className="bg-white rounded-lg p-2 shadow-md flex flex-col justify-evenly h-full">
           <span className="text-xs sm:text-sm font-medium text-purple-600 whitespace-nowrap">
             {t("shopping.stats.value")}
           </span>

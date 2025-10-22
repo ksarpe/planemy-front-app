@@ -13,7 +13,7 @@ export default function EmptyStates({ type, onCreateListClick }: EmptyStatesProp
         <p className="text-gray-500  mb-4">{t("tasks.empty.noLists.description")}</p>
         <button
           onClick={onCreateListClick}
-          className="bg-primary  text-white px-6 py-2 rounded-md hover:opacity-90 transition-opacity">
+          className="bg-primary  text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity">
           {t("tasks.empty.noLists.createButton")}
         </button>
       </div>

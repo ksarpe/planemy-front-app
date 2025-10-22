@@ -76,7 +76,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
     return (
       <div
         key={list.id}
-        className={`p-3 rounded-md border transition-all cursor-pointer ${
+        className={`p-3 rounded-lg border transition-all cursor-pointer ${
           isSelected ? "border-primary bg-bg-hover " : "border-primary hover:bg-bg-hover "
         }`}
         onClick={() => !isEditing && onSelectList(list)}>
@@ -170,7 +170,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
         <h3 className="text-lg font-semibold">{t("tasks.panel.title")}</h3>
         <button
           onClick={onAddList}
-          className="p-2 bg-success text-white rounded-md hover:bg-success-hover transition-colors">
+          className="p-2 bg-success text-white rounded-lg hover:bg-success-hover transition-colors">
           <Plus size={16} />
         </button>
       </div>
@@ -182,7 +182,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
             <p className="text-sm text-gray-500 mb-3">{t("tasks.panel.empty.title")}</p>
             <button
               onClick={onAddList}
-              className="text-sm bg-primary text-white px-3 py-2 rounded-md hover:bg-text-muted transition-colors">
+              className="text-sm bg-primary text-white px-3 py-2 rounded-lg hover:bg-text-muted transition-colors">
               {t("tasks.panel.empty.createFirst")}
             </button>
           </div>

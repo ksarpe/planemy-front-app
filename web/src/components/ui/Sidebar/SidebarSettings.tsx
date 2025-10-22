@@ -8,21 +8,21 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
         <NavLink
           to="/notifications"
           className={({ isActive }) =>
-            `rounded-md p-2 flex items-center justify-center w-full ${isActive ? "bg-bg" : "hover:bg-bg"}`
+            `rounded-lg p-2 flex items-center justify-center w-full ${isActive ? "bg-bg" : "hover:bg-bg"}`
           }>
           {({ isActive }) => <FiBell size={20} className={isActive ? "text-text" : "text-text-muted"} />}
         </NavLink>
         <NavLink
           to="/settings"
           className={({ isActive }) =>
-            `rounded-md p-2 flex items-center justify-center w-full ${isActive ? "bg-bg" : "hover:bg-bg"}`
+            `rounded-lg p-2 flex items-center justify-center w-full ${isActive ? "bg-bg" : "hover:bg-bg"}`
           }>
           {({ isActive }) => <FiSettings size={20} className={isActive ? "text-text" : "text-text-muted"} />}
         </NavLink>
         <NavLink
           to="/help"
           className={({ isActive }) =>
-            `rounded-md p-2 flex items-center justify-center w-full ${isActive ? "bg-bg" : "hover:bg-bg"}`
+            `rounded-lg p-2 flex items-center justify-center w-full ${isActive ? "bg-bg" : "hover:bg-bg"}`
           }>
           {({ isActive }) => <FiHelpCircle size={20} className={isActive ? "text-text" : "text-text-muted"} />}
         </NavLink>
@@ -35,7 +35,7 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
       <NavLink
         to="/notifications"
         className={({ isActive }) =>
-          `rounded-md p-2
+          `rounded-lg p-2
               text-lg ${isActive ? "bg-bg" : "hover:bg-bg"}`
         }>
         {({ isActive }) => (
@@ -47,7 +47,7 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
       <NavLink
         to="/settings"
         className={({ isActive }) =>
-          `rounded-md p-2
+          `rounded-lg p-2
               text-lg ${isActive ? "bg-bg" : "hover:bg-bg"}`
         }>
         {({ isActive }) => (
@@ -59,7 +59,7 @@ export default function SidebarSettings({ collapsed }: { collapsed: boolean }) {
       <NavLink
         to="/help"
         className={({ isActive }) =>
-          `rounded-md p-2
+          `rounded-lg p-2
               text-lg ${isActive ? "bg-bg" : "hover:bg-bg"}`
         }>
         {({ isActive }) => (

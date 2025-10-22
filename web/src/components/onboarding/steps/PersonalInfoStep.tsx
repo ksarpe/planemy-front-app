@@ -43,7 +43,7 @@ export const PersonalInfoStep = ({ onboardingData, updateOnboardingData }: Onboa
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             placeholder={t("onboarding.personalInfo.nicknamePlaceholder", "np. Anna, Tomek...")}
-            className="w-full px-4 py-3 border border-gray-300 rounded-md  bg-bg text-text placeholder-text/50 text-lg"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg  bg-bg text-text placeholder-text/50 text-lg"
             maxLength={50}
             autoComplete="given-name"
             autoFocus

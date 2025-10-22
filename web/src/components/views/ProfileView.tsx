@@ -169,7 +169,7 @@ export default function ProfileView() {
 
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto scrollbar-hide">
+      <div className="w-full bg-bg-alt  rounded-lg shadow-md overflow-auto scrollbar-hide">
         <div className="p-6 pb-24">
           {isLoading ? (
             <div className="w-full min-h-[300px] flex items-center justify-center">

@@ -23,7 +23,7 @@ export default function SummaryCards() {
       <div className="grid grid-cols-2 gap-4">
         {/* Shopping Summary */}
         <div
-          className="bg-bg rounded-md p-4 flex items-center justify-between cursor-pointer"
+          className="bg-bg rounded-lg p-4 flex items-center justify-between cursor-pointer"
           onClick={() => navigate("/shopping")}>
           <div className="flex flex-col gap-2">
             <p className="text-text-muted text-xs">LISTA ZAKUPÓW</p>
@@ -45,14 +45,14 @@ export default function SummaryCards() {
               )}
             </div>
           </div>
-          <button className="text-primary p-2 cursor-pointer rounded-md hover:bg-bg-alt">
+          <button className="text-primary p-2 cursor-pointer rounded-lg hover:bg-bg-alt">
             <FiChevronRight className="h-6 w-6" />
           </button>
         </div>
 
         {/* Task summary */}
         <div
-          className="bg-bg rounded-md p-4 flex items-center justify-between cursor-pointer"
+          className="bg-bg rounded-lg p-4 flex items-center justify-between cursor-pointer"
           onClick={() => navigate("/tasks")}>
           <div className="flex flex-col gap-2">
             <p className="text-text-muted text-xs">LISTA ZADAŃ</p>
@@ -72,7 +72,7 @@ export default function SummaryCards() {
               )}
             </div>
           </div>
-          <button className="text-primary p-2 cursor-pointer rounded-md hover:bg-bg-alt">
+          <button className="text-primary p-2 cursor-pointer rounded-lg hover:bg-bg-alt">
             <FiChevronRight className="h-6 w-6" />
           </button>
         </div>

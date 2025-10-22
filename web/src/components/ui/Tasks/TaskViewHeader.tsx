@@ -23,7 +23,7 @@ export function TaskViewHeader({ onToggleLists, listsOpen }: TaskViewHeaderProps
             <button
               type="button"
               onClick={onToggleLists}
-              className="px-2 py-2 rounded-md bg-bg-hover border border-bg-hover hover:bg-primary hover:text-white transition-colors cursor-pointer">
+              className="px-2 py-2 rounded-lg bg-bg-hover border border-bg-hover hover:bg-primary hover:text-white transition-colors cursor-pointer">
               <MoreVertical size={16} />
             </button>
           )}

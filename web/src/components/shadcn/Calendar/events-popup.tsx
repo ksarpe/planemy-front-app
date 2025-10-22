@@ -76,7 +76,7 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
   return (
     <div
       ref={popupRef}
-      className="absolute z-50 max-h-96 w-80 overflow-auto rounded-md border shadow-lg"
+      className="absolute z-50 max-h-96 w-80 overflow-auto rounded-lg border shadow-lg"
       style={{
         top: `${adjustedPosition.top}px`,
         left: `${adjustedPosition.left}px`,

@@ -28,7 +28,7 @@ export default function LabelsView() {
 
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full rounded-md shadow-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg-alt  p-6">
+      <div className="w-full rounded-lg shadow-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg-alt  p-6">
         {/* Header */}
         <div className="flex justify-between items-start">
           <h2 className="text-2xl font-semibold text-text ">{t("labels.title")}</h2>

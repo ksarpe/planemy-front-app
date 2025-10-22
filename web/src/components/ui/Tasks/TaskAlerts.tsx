@@ -25,7 +25,7 @@ export default function TaskAlerts({ tasks }: TaskAlertsProps) {
     <>
       {/* Overdue tasks alert */}
       {overdueTasks.length > 0 && (
-        <div className="bg-red-50  border border-red-200  rounded-md p-4">
+        <div className="bg-red-50  border border-red-200  rounded-lg p-4">
           <h3 className="text-red-800  font-medium mb-2 flex items-center gap-2">
             <AlertTriangle size={18} className="animate-pulse" />
             Na liście znajdują się zadania, które są przeterminowane!
@@ -35,7 +35,7 @@ export default function TaskAlerts({ tasks }: TaskAlertsProps) {
 
       {/* Due soon tasks alert */}
       {dueSoonTasks.length > 0 && (
-        <div className="bg-yellow-50  border border-yellow-200  rounded-md p-4">
+        <div className="bg-yellow-50  border border-yellow-200  rounded-lg p-4">
           <h3 className="text-yellow-800  font-medium flex items-center gap-2">
             <Calendar size={18} />
             Na liście znajdują się zadania, które wkrótce się kończą!

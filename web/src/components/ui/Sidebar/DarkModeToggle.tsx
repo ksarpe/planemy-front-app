@@ -10,13 +10,13 @@ interface DarkModeToggleProps {
 }
 
 export function DarkModeToggle({ collapsed = false }: DarkModeToggleProps) {
-const { isDark, toggleDark } = usePreferencesContext();
+  const { isDark, toggleDark } = usePreferencesContext();
 
   if (collapsed) {
     return (
       <button
         onClick={toggleDark}
-        className="w-10 h-10 rounded-md cursor-pointer bg-bg-hover hover:bg-primary/10 flex items-center justify-center text-text hover:text-primary transition-all duration-200"
+        className="w-10 h-10 rounded-lg cursor-pointer bg-bg-hover hover:bg-primary/10 flex items-center justify-center text-text hover:text-primary transition-all duration-200"
         title={isDark ? "Przełącz na tryb jasny" : "Przełącz na tryb ciemny"}
         aria-label={isDark ? "Przełącz na tryb jasny" : "Przełącz na tryb ciemny"}>
         {isDark ? <FiSun size={20} /> : <FiMoon size={20} />}
@@ -25,7 +25,7 @@ const { isDark, toggleDark } = usePreferencesContext();
   }
 
   return (
-    <div className="relative flex w-fit items-center rounded-md bg-bg-alt overflow-hidden">
+    <div className="relative flex w-fit items-center rounded-lg bg-bg-alt overflow-hidden">
       <button className={`${TOGGLE_CLASSES} ${isDark ? "text-white" : "text-text-muted"}`} onClick={() => toggleDark()}>
         <FiMoon className="relative z-10 text-sm" />
       </button>
@@ -36,7 +36,9 @@ const { isDark, toggleDark } = usePreferencesContext();
         <motion.span
           layout
           transition={{ type: "spring", damping: 15, stiffness: 250 }}
-          className={`h-full w-1/2 rounded-md bg-gradient-to-r ${isDark ? "from-primary to-bg-alt" : "from-bg-alt to-primary"}`}
+          className={`h-full w-1/2 rounded-lg bg-gradient-to-r ${
+            isDark ? "from-primary to-bg-alt" : "from-bg-alt to-primary"
+          }`}
         />
       </div>
     </div>

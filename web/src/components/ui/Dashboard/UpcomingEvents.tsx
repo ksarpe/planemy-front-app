@@ -15,7 +15,7 @@ export default function UpcomingEvents() {
   const groups = data?.groups || [];
 
   return (
-    <div className="bg-bg dark:bg-bg-dark rounded-md p-4">
+    <div className="bg-bg dark:bg-bg-dark rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-text dark:text-text-dark flex items-center">
           <Calendar className="h-5 w-5 mr-2 text-primary" />
@@ -53,7 +53,7 @@ export default function UpcomingEvents() {
 
           {/* Next Event Highlight */}
           {nextEvent && (
-            <div className="bg-primary/5 border border-primary/20 rounded-md p-4 mb-4">
+            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-4">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <p className="text-xs text-primary font-medium mb-1">{t("dashboard.nextEvent")}</p>
@@ -82,7 +82,7 @@ export default function UpcomingEvents() {
                   {group.events.slice(0, 3).map((event) => (
                     <div
                       key={event.id}
-                      className="flex items-center justify-between p-3 bg-bg-alt dark:bg-bg-alt-dark rounded-md hover:bg-bg-hover dark:hover:bg-bg-hover-dark transition-colors cursor-pointer"
+                      className="flex items-center justify-between p-3 bg-bg-alt dark:bg-bg-alt-dark rounded-lg hover:bg-bg-hover dark:hover:bg-bg-hover-dark transition-colors cursor-pointer"
                       onClick={() => navigate("/calendar")}>
                       <div className="flex items-center flex-1">
                         <div className="w-2 h-2 rounded-full mr-3 flex-shrink-0 bg-primary" />

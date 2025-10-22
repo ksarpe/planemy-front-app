@@ -68,9 +68,9 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
           <DarkModeToggle collapsed={collapsed} />
           <button
             aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
-            className="flex items-center rounded-md cursor-pointer text-primary"
+            className="flex items-center rounded-lg cursor-pointer text-primary"
             onClick={() => setCollapsed((c) => !c)}>
-            <span className="hover:bg-bg rounded-md px-1 transition-colors">
+            <span className="hover:bg-bg rounded-lg px-1 transition-colors">
               {collapsed ? <FiChevronsRight size={24} /> : <FiChevronsLeft size={24} />}
             </span>
           </button>

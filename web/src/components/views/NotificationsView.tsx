@@ -64,7 +64,7 @@ export default function NotificationsView() {
   if (isLoading) {
     return (
       <div className="flex h-full p-4 gap-4">
-        <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto scrollbar-hide">
+        <div className="w-full bg-bg-alt  rounded-lg shadow-md overflow-auto scrollbar-hide">
           <div className="flex items-center justify-center min-h-[400px]">
             <Spinner />
           </div>
@@ -75,7 +75,7 @@ export default function NotificationsView() {
 
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full bg-bg-alt  rounded-md shadow-md overflow-auto scrollbar-hide">
+      <div className="w-full bg-bg-alt  rounded-lg shadow-md overflow-auto scrollbar-hide">
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
@@ -170,14 +170,14 @@ export default function NotificationsView() {
                               <div className="flex gap-3">
                                 <button
                                   onClick={() => handleAccept(share.id!)}
-                                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                                   <Check size={16} />
                                   {t("notifications.sharing.accept")}
                                 </button>
 
                                 <button
                                   onClick={() => handleReject(share.id!)}
-                                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                   <X size={16} />
                                   {t("notifications.sharing.reject")}
                                 </button>

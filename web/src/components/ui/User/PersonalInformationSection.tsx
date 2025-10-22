@@ -21,7 +21,7 @@ export default function PersonalInformationSection({
             type="text"
             value={userInfo.nickname}
             onChange={(e) => handleUserInfoChange("nickname", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary"
+            className="w-full px-3 py-2 border border-gray-300  rounded-lg bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder={t("personalInformation.nicknamePlaceholder")}
           />
         </div>
@@ -34,7 +34,7 @@ export default function PersonalInformationSection({
             type="email"
             value={userInfo.email}
             onChange={(e) => handleUserInfoChange("email", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300  rounded-md bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary"
+            className="w-full px-3 py-2 border border-gray-300  rounded-lg bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary"
           />
         </div>
       </div>

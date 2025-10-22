@@ -63,7 +63,7 @@ export default function ActionButton({
         onClick={onClick}
         disabled={disabled}
         className={clsx(
-          "flex items-center flex-col justify-center rounded-md w-full cursor-pointer",
+          "flex items-center flex-col justify-center rounded-lg w-full cursor-pointer",
           styles.base,
           styles.hover,
           iconSizeClasses[size],
@@ -81,7 +81,7 @@ export default function ActionButton({
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        "flex items-center justify-center gap-2 rounded-md font-semibold shadow-md",
+        "flex items-center justify-center gap-2 rounded-lg font-semibold shadow-md",
         " hover:shadow-lg",
         styles.base,
         styles.hover,

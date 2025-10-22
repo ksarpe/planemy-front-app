@@ -74,7 +74,7 @@ export const LoginForm = () => {
   const isLoading = login.isPending || register.isPending;
 
   return (
-    <div className="p-8 rounded-md w-full max-w-md mx-auto bg-bg">
+    <div className="p-8 rounded-lg w-full max-w-md mx-auto bg-bg">
       <Toaster position="bottom-center" richColors />
       <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Your Life Assistant</h1>
       <h2 className="text-xl font-normal text-left mb-6 text-gray-600 dark:text-gray-300">
@@ -91,7 +91,7 @@ export const LoginForm = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             placeholder={t("auth.emailPlaceholder")}
             required
             autoComplete="email"
@@ -107,7 +107,7 @@ export const LoginForm = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             placeholder={t("auth.passwordPlaceholder")}
             required
             autoComplete={isLoginMode ? "current-password" : "new-password"}
@@ -118,7 +118,7 @@ export const LoginForm = () => {
           type="submit"
           disabled={isLoading}
           data-loading={isLoading || undefined}
-          className="w-full text-black py-2 px-4 rounded-md hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors group relative">
+          className="w-full text-black py-2 px-4 rounded-lg hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors group relative">
           <span className="group-data-loading:text-transparent">
             {isLoading
               ? isLoginMode

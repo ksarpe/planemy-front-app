@@ -117,7 +117,7 @@ export const BasicDropdown: React.FC<BasicDropdownProps> = ({
       <>
         <div
           ref={dropdownRef}
-          className={`${getPositionClasses()} ${width} bg-white border border-gray-200 rounded-md shadow-lg z-50`}
+          className={`${getPositionClasses()} ${width} bg-white border border-gray-200 rounded-lg shadow-lg z-50`}
           style={usePortal ? { top: position.top, left: position.left } : {}}>
           <div className="p-2">{childrenWithProps}</div>
         </div>
@@ -161,7 +161,7 @@ export const BasicDropdownItem: React.FC<BasicDropdownItemProps> = ({
     green: "text-green-700  hover:bg-green-50 ",
   };
 
-  const baseClasses = `w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors text-sm ${
+  const baseClasses = `w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors text-sm ${
     disabled ? "opacity-50 cursor-not-allowed" : `cursor-pointer ${variantStyles[variant]}`
   }  ${className}`;
 

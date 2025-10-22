@@ -12,7 +12,7 @@ export default function EmptyLabelsState({ onCreateFirst }: EmptyLabelsStateProp
       <p className="text-gray-500  mb-4">{t("labels.startOrganizing")}</p>
       <button
         onClick={onCreateFirst}
-        className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-md transition-colors duration-200 mx-auto">
+        className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg transition-colors duration-200 mx-auto">
         <Plus size={18} />
         {t("labels.createFirstLabel")}
       </button>

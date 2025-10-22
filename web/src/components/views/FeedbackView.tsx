@@ -77,7 +77,7 @@ export default function FeedbackView() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={t("feedback.messagePlaceholder")}
-              className="w-full h-32 px-3 py-2 border border-border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full h-32 px-3 py-2 border border-border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               required
             />
             <p className="text-xs text-text-secondary mt-1">{t("feedback.minimumCharacters")}</p>
@@ -87,7 +87,7 @@ export default function FeedbackView() {
             <button
               type="submit"
               disabled={isCreating || message.trim().length < 10}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
               {isCreating ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

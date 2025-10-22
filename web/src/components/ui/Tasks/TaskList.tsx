@@ -72,7 +72,7 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
           ) : (
             <button
               onClick={() => setShowQuickAdd(true)}
-              className="w-full flex items-center justify-center gap-2 border-l-4 border-success  bg-success  text-white px-4 py-3 rounded-md hover:bg-success-hover  cursor-pointer">
+              className="w-full flex items-center justify-center gap-2 border-l-4 border-success  bg-success  text-white px-4 py-3 rounded-lg hover:bg-success-hover  cursor-pointer">
               <Plus size={18} />
               <span className="text-sm">{t("tasks.list.empty.newTask")}</span>
             </button>

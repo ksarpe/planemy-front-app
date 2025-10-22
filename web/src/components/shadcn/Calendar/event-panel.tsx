@@ -12,7 +12,6 @@ import { Calendar as CalendarRAC } from "@/components/ui/shadcn/calendar-rac";
 import { DateInput } from "@/components/ui/shadcn/datefield-rac";
 import { Input } from "@/components/ui/shadcn/input";
 import { Label } from "@/components/ui/shadcn/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/shadcn/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/shadcn/select";
 import { Textarea } from "@/components/ui/shadcn/textarea";
 import { Calendar } from "lucide-react";
@@ -120,15 +119,6 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
     return options;
   }, []);
 
-  const colorOptions = [
-    { value: "sky", label: "Sky", bgClass: "bg-sky-500", borderClass: "border-sky-500" },
-    { value: "pink", label: "Pink", bgClass: "bg-pink-500", borderClass: "border-pink-500" },
-    { value: "green", label: "Green", bgClass: "bg-green-500", borderClass: "border-green-500" },
-    { value: "purple", label: "Purple", bgClass: "bg-purple-500", borderClass: "border-purple-500" },
-    { value: "orange", label: "Orange", bgClass: "bg-orange-500", borderClass: "border-orange-500" },
-    { value: "yellow", label: "Yellow", bgClass: "bg-yellow-500", borderClass: "border-yellow-500" },
-  ];
-
   const handleSave = () => {
     if (!title.trim()) {
       setError("Title is required");
@@ -195,7 +185,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
           <h2 className="text-xl font-semibold text-text">{event?.id ? "Edit Event" : "Create Event"}</h2>
           <button
             onClick={onClose}
-            className="text-text-muted hover:text-text hover:bg-bg-alt rounded-md p-2 transition-colors"
+            className="text-text-muted hover:text-text hover:bg-bg-alt rounded-lg p-2 transition-colors"
             aria-label="Close panel">
             <RiCloseLine size={24} />
           </button>
@@ -203,7 +193,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
 
         {/* Content - Scrollable */}
         <div className="flex-1 overflow-y-auto p-6">
-          {error && <div className="rounded-md px-3 py-2 text-sm bg-primary-light text-primary mb-4">{error}</div>}
+          {error && <div className="rounded-lg px-3 py-2 text-sm bg-primary-light text-primary mb-4">{error}</div>}
 
           <div className="space-y-6">
             {/* Title */}
@@ -252,13 +242,13 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                         }
                       }}
                       className="group flex flex-col gap-1">
-                      <Group className="flex w-full items-center rounded-md border border-text-muted-more bg-bg hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                      <Group className="flex w-full items-center rounded-lg border border-text-muted-more bg-bg hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
                         <DateInput className="flex flex-1 text-text" unstyled />
                         <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                           <Calendar size={16} />
                         </AriaButton>
                       </Group>
-                      <AriaPopover className="rounded-md border border-text-muted-more bg-bg p-2 shadow-lg">
+                      <AriaPopover className="rounded-lg border border-text-muted-more bg-bg p-2 shadow-lg">
                         <Dialog className="outline-none">
                           <CalendarRAC />
                         </Dialog>
@@ -282,13 +272,13 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                       }}
                       minValue={startDate ? parseDate(format(startDate, "yyyy-MM-dd")) : undefined}
                       className="group flex flex-col gap-1">
-                      <Group className="flex w-full items-center rounded-md border border-text-muted-more hover:border-white bg-bg px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                      <Group className="flex w-full items-center rounded-lg border border-text-muted-more hover:border-white bg-bg px-3 py-2 text-xs transition-colors focus-within:border-ring">
                         <DateInput className="flex flex-1 text-text" unstyled />
                         <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                           <Calendar size={16} />
                         </AriaButton>
                       </Group>
-                      <AriaPopover className="rounded-md border border-text-muted-more bg-bg p-2 shadow-lg">
+                      <AriaPopover className="rounded-lg border border-text-muted-more bg-bg p-2 shadow-lg">
                         <Dialog className="outline-none">
                           <CalendarRAC />
                         </Dialog>
@@ -347,20 +337,9 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
               <Label htmlFor="all-day">All day</Label>
             </div>
             {/* Color */}
-            <fieldset className="space-y-3">
-              <legend className="text-sm font-medium text-text">Color Label</legend>
-              <RadioGroup className="flex gap-2" value={color} onValueChange={(value: EventColor) => setColor(value)}>
-                {colorOptions.map((colorOption) => (
-                  <RadioGroupItem
-                    key={colorOption.value}
-                    id={`color-${colorOption.value}`}
-                    value={colorOption.value}
-                    aria-label={colorOption.label}
-                    className={cn("size-8 shadow-none", colorOption.bgClass, colorOption.borderClass)}
-                  />
-                ))}
-              </RadioGroup>
-            </fieldset>
+            <Button variant="default" onClick={() => {}}>
+              + Add label
+            </Button>
           </div>
         </div>
 

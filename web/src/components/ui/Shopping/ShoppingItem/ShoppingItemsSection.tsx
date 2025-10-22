@@ -23,7 +23,7 @@ export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: S
           {!isFiltered && (
             <button
               onClick={onAddItem}
-              className="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
+              className="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
               <Plus size={18} />
               Dodaj produkt
             </button>

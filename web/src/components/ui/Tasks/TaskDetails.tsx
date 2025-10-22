@@ -135,10 +135,7 @@ export default function TaskDetails() {
                     </div>
                   }
                   usePortal={true}>
-                  <BasicDropdownItem
-                    icon={Trash}
-                    variant="red"
-                    onClick={() => removeLabelConnection(clickedTask.id)}>
+                  <BasicDropdownItem icon={Trash} variant="red" onClick={() => removeLabelConnection(clickedTask.id)}>
                     {t("tasks.item.labels.remove")}
                   </BasicDropdownItem>
                 </BasicDropdown>
@@ -172,7 +169,7 @@ export default function TaskDetails() {
             {!isEditingDate ? (
               <button
                 onClick={startEditingDate}
-                className="w-full flex items-center justify-between bg-gray-50  rounded-md p-3 hover:bg-gray-100  transition-colors cursor-pointer">
+                className="w-full flex items-center justify-between bg-gray-50  rounded-lg p-3 hover:bg-gray-100  transition-colors cursor-pointer">
                 <p
                   className={`text-sm ${isOverdue() && !clickedTask.isCompleted ? "text-red-700 " : "text-gray-700 "}`}>
                   {formatDueDate()}
@@ -180,7 +177,7 @@ export default function TaskDetails() {
                 <Calendar size={16} className="text-primary " />
               </button>
             ) : (
-              <div className="space-y-3 bg-white  border border-gray-200  rounded-md p-4">
+              <div className="space-y-3 bg-white  border border-gray-200  rounded-lg p-4">
                 {/* Data i godzina w jednym wierszu */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
@@ -195,7 +192,7 @@ export default function TaskDetails() {
                           updateDateFromTemp();
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300    rounded-md"
+                      className="w-full px-3 py-2 border border-gray-300    rounded-lg"
                     />
                   </div>
 
@@ -211,7 +208,7 @@ export default function TaskDetails() {
                           updateDateFromTemp();
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300    rounded-md"
+                      className="w-full px-3 py-2 border border-gray-300    rounded-lg"
                     />
                   </div>
                 </div>
@@ -220,17 +217,17 @@ export default function TaskDetails() {
                 <div className="flex gap-2 pt-2">
                   <button
                     onClick={() => setIsEditingDate(false)}
-                    className="flex-1 px-3 py-2 text-sm bg-gray-100  text-gray-700  rounded-md hover:bg-gray-200  transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-gray-100  text-gray-700  rounded-lg hover:bg-gray-200  transition-colors">
                     {t("tasks.details.actions.cancel")}
                   </button>
                   <button
                     onClick={updateDateFromTemp}
-                    className="flex-1 px-3 py-2 text-sm bg-green-100  text-green-700  rounded-md hover:bg-green-200  transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-green-100  text-green-700  rounded-lg hover:bg-green-200  transition-colors">
                     {t("tasks.details.actions.save")}
                   </button>
                   <button
                     onClick={handleRemoveDueDate}
-                    className="flex-1 px-3 py-2 text-sm bg-red-100  text-red-700  rounded-md hover:bg-red-200  transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-red-100  text-red-700  rounded-lg hover:bg-red-200  transition-colors">
                     {t("tasks.details.actions.removeDueDate")}
                   </button>
                 </div>

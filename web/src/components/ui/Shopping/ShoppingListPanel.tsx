@@ -68,7 +68,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
       <div className="flex items-center mb-4">
         <button
           onClick={onAddList}
-          className="p-2 bg-success text-white rounded-md hover:bg-success-hover transition-colors">
+          className="p-2 bg-success text-white rounded-lg hover:bg-success-hover transition-colors">
           <Plus size={16} />
         </button>
       </div>
@@ -81,7 +81,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
             <p className="text-sm text-gray-500 mb-3">Brak list zakupów</p>
             <button
               onClick={onAddList}
-              className="text-sm bg-primary text-white px-3 py-2 rounded-md hover:bg-text-muted transition-colors">
+              className="text-sm bg-primary text-white px-3 py-2 rounded-lg hover:bg-text-muted transition-colors">
               Utwórz pierwszą listę
             </button>
           </div>
@@ -94,7 +94,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
             return (
               <div
                 key={list.id}
-                className={`p-3 rounded-md border transition-all cursor-pointer ${
+                className={`p-3 rounded-lg border transition-all cursor-pointer ${
                   isSelected ? "border-primary bg-bg-hover " : "border-primary hover:bg-bg-hover "
                 }`}
                 onClick={() => !isEditing && onSelectList(list)}>
@@ -199,7 +199,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                         <div onClick={(e) => e.stopPropagation()}>
                           <BasicDropdown
                             trigger={
-                              <button className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-md transition-colors text-sm cursor-pointer text-gray-700 hover:bg-gray-50">
+                              <button className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors text-sm cursor-pointer text-gray-700 hover:bg-gray-50">
                                 <Tag size={16} />
                                 Etykiety
                               </button>

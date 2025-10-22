@@ -11,7 +11,7 @@ export function ShoppingFilters({ searchQuery, onSearchChange }: ShoppingFilters
           placeholder="Szukaj..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-8 py-2 border border-text-light rounded-md"
+          className="w-full pl-8 py-2 border border-text-light rounded-lg"
         />
       </div>
     </div>

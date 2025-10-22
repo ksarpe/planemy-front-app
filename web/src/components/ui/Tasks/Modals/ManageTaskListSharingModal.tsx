@@ -52,7 +52,7 @@ export default function ManageTaskListSharingModal({
 
   const modalContent = (
     <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white  rounded-md shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+      <div className="bg-white  rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 ">
           <div>
             <h2 className="text-xl font-semibold text-gray-900 ">Zarządzaj udostępnieniem</h2>
@@ -65,7 +65,7 @@ export default function ManageTaskListSharingModal({
 
         <div className="p-6 max-h-[calc(90vh-140px)] overflow-y-auto">
           {/* Add new sharing section */}
-          <div className="mb-6 p-4 bg-gray-50  rounded-md">
+          <div className="mb-6 p-4 bg-gray-50  rounded-lg">
             <h3 className="text-lg font-medium text-gray-900  mb-4 flex items-center">
               <UserPlus className="w-5 h-5 mr-2" />
               Dodaj nowe udostępnienie
@@ -81,7 +81,7 @@ export default function ManageTaskListSharingModal({
                   value={sharingEmail}
                   onChange={(e) => setSharingEmail(e.target.value)}
                   placeholder="przykład@email.com"
-                  className="w-full px-3 py-2 border border-gray-300  bg-white  text-gray-900  rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
+                  className="w-full px-3 py-2 border border-gray-300  bg-white  text-gray-900  rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 "
                   required
                 />
               </div>
@@ -93,7 +93,7 @@ export default function ManageTaskListSharingModal({
                   id="permission"
                   value={sharingPermission}
                   onChange={(e) => setSharingPermission(e.target.value as SharePermission)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="view">Tylko odczyt</option>
                   <option value="edit">Edycja</option>
                 </select>
@@ -101,7 +101,7 @@ export default function ManageTaskListSharingModal({
               <button
                 type="submit"
                 disabled={isSharing || !sharingEmail.trim()}
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                 {isSharing ? "Wysyłanie..." : "Wyślij zaproszenie"}
               </button>
             </form>
@@ -122,7 +122,7 @@ export default function ManageTaskListSharingModal({
                 {sharedUsers.map((sharedUser) => (
                   <div
                     key={sharedUser.id}
-                    className="flex items-center justify-between p-4 bg-white  border border-gray-200  rounded-md">
+                    className="flex items-center justify-between p-4 bg-white  border border-gray-200  rounded-lg">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-blue-100  rounded-full flex items-center justify-center">
@@ -156,7 +156,7 @@ export default function ManageTaskListSharingModal({
         <div className="flex justify-end space-x-3 p-6 border-t bg-gray-50">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors">
+            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
             Zamknij
           </button>
         </div>

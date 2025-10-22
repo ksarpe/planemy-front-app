@@ -37,7 +37,7 @@ export default function CreateTaskListModal({ isOpen, onClose }: CreateTaskListM
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white  rounded-md p-6 w-full max-w-md shadow-2xl">
+      <div className="bg-white  rounded-lg p-6 w-full max-w-md shadow-2xl">
         <h2 className="text-xl font-semibold mb-4 text-gray-900 ">Utwórz nową listę zadań</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -46,7 +46,7 @@ export default function CreateTaskListModal({ isOpen, onClose }: CreateTaskListM
               type="text"
               value={listName}
               onChange={(e) => setListName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300  bg-white  text-gray-900  rounded-md"
+              className="w-full px-3 py-2 border border-gray-300  bg-white  text-gray-900  rounded-lg"
               placeholder="np. Zadania domowe, Praca..."
               autoFocus
             />
@@ -55,13 +55,13 @@ export default function CreateTaskListModal({ isOpen, onClose }: CreateTaskListM
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2 text-gray-600  hover:bg-gray-100  rounded-md transition-colors">
+              className="px-4 py-2 text-gray-600  hover:bg-gray-100  rounded-lg transition-colors">
               Anuluj
             </button>
             <button
               type="submit"
               disabled={!listName.trim() || isCreating}
-              className="px-4 py-2 bg-primary  text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50">
+              className="px-4 py-2 bg-primary  text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50">
               Utwórz
             </button>
           </div>

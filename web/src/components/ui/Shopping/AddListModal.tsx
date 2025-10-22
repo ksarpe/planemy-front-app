@@ -49,11 +49,11 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white  rounded-md shadow-xl w-full max-w-md mx-4">
+      <div className="bg-white  rounded-lg shadow-xl w-full max-w-md mx-4">
         <div className="flex justify-between items-center px-4 pt-4">
           <div></div>
           <h2 className="text-xl font-semibold">Utwórz nową listę</h2>
-          <button onClick={handleClose} className=" hover:bg-gray-100  rounded-md transition-colors">
+          <button onClick={handleClose} className=" hover:bg-gray-100  rounded-lg transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -65,7 +65,7 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
               value={formData.name}
               onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
               placeholder="Zakupy na tydzień"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-300"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-300"
               required
               autoFocus
             />
@@ -75,13 +75,13 @@ function AddListModal({ isOpen, onClose }: AddListModalProps) {
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               Anuluj
             </button>
             <button
               type="submit"
               disabled={!formData.name.trim() || isSubmitting}
-              className="flex-1 flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-text-muted disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+              className="flex-1 flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-text-muted disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
               {isSubmitting ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
               ) : (

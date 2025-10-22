@@ -58,7 +58,7 @@ export default function TaskItem({ task }: TaskItemProps) {
       style={{
         borderColor: task.labels?.length === 1 ? task.labels[0].color : "#dcc5b2", // gray-300
       }}
-      className={`border-l-4 rounded-md p-4 bg-white  hover:-translate-y-0.5 hover:shadow-md 
+      className={`border-l-4 rounded-lg p-4 bg-white  hover:-translate-y-0.5 hover:shadow-md 
       ${clickedTask?.id === task.id ? "border-b border-l-10 border-r-10 border-t " : "hover:bg-gray-50 "}`}
       onClick={() => {
         // Toggle functionality - if already selected, deselect it
