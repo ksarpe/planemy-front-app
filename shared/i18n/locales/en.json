@@ -403,7 +403,7 @@
     },
     "list": {
       "empty": {
-        "title": "No tasks",
+        "title": "You don't have any tasks here!",
         "newTask": "New task"
       }
     },
@@ -419,6 +419,8 @@
       "pomodoro": "Pomodoro"
     },
     "details": {
+      "titleLabel": "title",
+      "descriptionLabel": "description",
       "addDescription": "Add task description...",
       "selectDueDate": "Select date",
       "titlePlaceholder": "Task title...",

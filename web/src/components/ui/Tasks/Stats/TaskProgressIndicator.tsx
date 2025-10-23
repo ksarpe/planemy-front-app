@@ -10,16 +10,14 @@ export default function TaskProgressIndicator({
       : 0;
 
   return (
-    <div className="bg-white  rounded-lg p-4 shadow-md">
+    <div className="bg-bg-alt text-text rounded-lg p-4 shadow-md text-sm">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-medium text-gray-700 ">Postęp</span>
-        <span className="text-sm text-gray-500 ">
-          {completedTasksLength} z {completedTasksLength + pendingTasksLength}
-        </span>
+        <span>Progress</span>
+        {completedTasksLength} of {completedTasksLength + pendingTasksLength}
       </div>
-      <div className="w-full bg-gray-200  rounded-full h-2">
+      <div className="w-full bg-gray-200 rounded-full h-3">
         <div
-          className="bg-green-500  h-2 rounded-full transition-all duration-300"
+          className="bg-green-500 h-3 rounded-full transition-all duration-300"
           style={{ width: `${progressPercentage}%` }}></div>
       </div>
     </div>

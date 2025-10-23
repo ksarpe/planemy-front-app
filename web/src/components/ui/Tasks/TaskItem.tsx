@@ -1,8 +1,8 @@
+import type { TaskItemProps } from "@shared/data/Tasks/interfaces";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
 import { useUpdateTask } from "@shared/hooks/tasks/useTasks";
+import { AlertCircle, Calendar, CheckCircle2, Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Calendar, AlertCircle, Clock, CheckCircle2 } from "lucide-react";
-import type { TaskItemProps } from "@shared/data/Tasks/interfaces";
 
 export default function TaskItem({ task }: TaskItemProps) {
   const { t } = useTranslation();
@@ -49,7 +49,7 @@ export default function TaskItem({ task }: TaskItemProps) {
       style={{
         borderColor: task.labels?.length === 1 ? task.labels[0].color : "#dcc5b2", // gray-300
       }}
-      className={`border-l-4 rounded-lg p-4 bg-bg hover:-translate-y-0.5 hover:shadow-md 
+      className={`border-l-4 rounded-lg p-4 bg-bg text-text hover:bg-bg-muted-light cursor-pointer
       ${clickedTask?.id === task.id ? "border-b border-l-10 border-r-10 border-t " : "hover:bg-bg-hover "}`}
       onClick={() => {
         // Toggle functionality - if already selected, deselect it
@@ -68,9 +68,9 @@ export default function TaskItem({ task }: TaskItemProps) {
               handleToggleComplete();
             }}>
             {task.isCompleted ? (
-              <CheckCircle2 size={20} className="text-success" />
+              <CheckCircle2 size={20} className="text-primary" />
             ) : (
-              <div className="w-5 h-5 border-1 border-text-muted-more hover:border-success rounded-full hover:bg-success transition-colors" />
+              <div className="w-5 h-5 border-1 border-text-muted-more rounded-full hover:bg-success hover:border-success transition-colors" />
             )}
           </button>
 
@@ -83,7 +83,7 @@ export default function TaskItem({ task }: TaskItemProps) {
               {task.title}
             </h3>
 
-            {task.description && (
+            {task.task_description && (
               <p
                 className={`text-xs mt-1 transition-colors duration-200 ${
                   task.isCompleted
@@ -92,7 +92,7 @@ export default function TaskItem({ task }: TaskItemProps) {
                     ? "text-primary "
                     : "text-text-muted "
                 }`}>
-                {task.description}
+                {task.task_description}
               </p>
             )}
 

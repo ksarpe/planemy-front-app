@@ -1,5 +1,5 @@
-import { clsx } from "clsx";
 import type { StatisticCardProps } from "@shared/data/Tasks/interfaces";
+import { clsx } from "clsx";
 
 export default function StatisticCard({
   title,
@@ -12,21 +12,21 @@ export default function StatisticCard({
   return (
     <button
       onClick={onClick}
-      className={clsx("w-full text-center sm:text-left px-2 rounded-lg", {
+      className={clsx("w-full text-center sm:text-left px-2 rounded-lg bg-bg-alt cursor-pointer  ", {
         // Zaznaczony
-        "bg-white  border-primary  shadow-md border-2": isSelected,
+        "border-bg-muted-light  shadow-md border-2 text-text": isSelected,
         // Niezaznaczony
-        "bg-white  shadow-md hover:shadow-lg hover:-translate-y-0.5": !isSelected,
+        "shadow-md hover:shadow-lg hover:-translate-y-0.5 text-text-muted-more": !isSelected,
       })}>
       <div className="flex flex-col lg:flex-row xl:flex-col justify-center gap-2">
         {/* Górna część: Ikona i Tytuł */}
-        <div className="flex items-center gap-2 text-gray-500 text-center justify-center xl:justify-start">
+        <div className="flex items-center gap-2 text-center justify-center xl:justify-start">
           <Icon size={16} className={clsx("flex-shrink-0", iconColor)} />
           <span className="text-sm font-medium truncate hidden xl:block">{title}</span>
         </div>
 
         {/* Dolna część: Licznik */}
-        <div className="block text-xl font-bold text-gray-800 text-center xl:text-left ">{count}</div>
+        <div className="block text-xl font-bold text-center xl:text-left ">{count}</div>
       </div>
     </button>
   );

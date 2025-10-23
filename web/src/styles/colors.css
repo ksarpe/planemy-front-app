@@ -7,6 +7,8 @@
   --color-bg: hsl(0, 0%, 96%);
   --color-primary: hsl(186, 100%, 39%);
   --color-primary-light: hsl(173, 80%, 90%);
+  --color-success: hsl(145, 63%, 49%);
+  --color-negative: hsl(0, 65%, 43%);
 }
 
 @layer theme {
@@ -19,5 +21,7 @@
     --color-bg-alt: hsl(0, 0%, 13%);
     --color-primary: hsl(186, 100%, 28%);
     --color-primary-light: hsl(0, 0%, 20%);
+    --color-success: hsl(145, 63%, 40%);
+    --color-negative: hsl(0, 87%, 36%);
   }
 }

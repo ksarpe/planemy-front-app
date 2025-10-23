@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from "react";
-import { Plus, X, Check } from "lucide-react";
 import type { QuickAddTaskProps } from "@shared/data/Tasks/interfaces";
-import { useCreateTask } from "@shared/hooks/tasks/useTasks";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
+import { useCreateTask } from "@shared/hooks/tasks/useTasks";
+import { Check, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
   const { currentTaskListId } = useTaskViewContext();
@@ -32,10 +32,9 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
 
     try {
       createTask({
-        taskListId: currentTaskListId,
+        task_list_id: currentTaskListId,
         title: taskTitle.trim(),
       });
-      // Zamknij i wyczyść od razu — optymistyczna mutacja zadba o widoczność
       setTaskTitle("");
       onCancel();
     } catch (error) {
@@ -53,22 +52,17 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
   };
 
   return (
-    <div ref={containerRef} className="border-l-4 border-success  rounded-lg p-4 bg-green-50  hover:shadow-md mb-3">
+    <div ref={containerRef} className="border-success rounded-lg p-4 text-text bg-bg-muted-light">
       <div className="flex items-center gap-3">
-        {/* Plus Icon */}
-        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-          <Plus size={16} className="text-success-hover " />
-        </div>
-
         {/* Input Field */}
         <input
           type="text"
           value={taskTitle}
           onChange={(e) => setTaskTitle(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Wpisz nazwę zadania..."
+          placeholder="Tell me your plans..."
           autoFocus
-          className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-gray-900  placeholder-gray-500 "
+          className="flex-1 bg-transparent border-none outline-none text-sm font-medium placeholder-gray-500 "
         />
 
         {/* Action Buttons */}

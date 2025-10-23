@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { X } from "lucide-react";
 import {
-  TaskViewHeader,
   CreateTaskListModal,
-  TaskList,
-  TaskStatistics,
+  EmptyStates,
   TaskAlerts,
   TaskDetails,
-  EmptyStates,
+  TaskList,
+  TaskStatistics,
+  TaskViewHeader,
 } from "@/components/ui/Tasks";
 import { TaskListPanel } from "@/components/ui/Tasks/TaskListPanel";
-import Spinner from "../ui/Utils/Spinner";
-import type { TaskListFilter } from "@shared/data/Tasks/types";
-import type { TaskListInterface } from "@shared/data/Tasks/interfaces";
-import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
 import { TaskViewProvider } from "@shared/context/TaskViewContext";
+import type { TaskListInterface } from "@shared/data/Tasks/interfaces";
+import type { TaskListFilter } from "@shared/data/Tasks/types";
+import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import Spinner from "../ui/Utils/Spinner";
 
 function TasksViewContent() {
   const {
@@ -108,8 +108,8 @@ function TasksViewContent() {
       </div>
 
       {/* Main content */}
-      <div className="flex flex-col p-4 md:p-8 gap-4">
-        <div className="">
+      <div className="flex flex-col px-4 py-2 md:px-8 md:py-4 gap-4 h-full overflow-hidden">
+        <div className="flex-shrink-0">
           {/* Header with Task Lists */}
           <TaskViewHeader onToggleLists={() => setShowListsPanel(!showListsPanel)} listsOpen={showListsPanel} />
         </div>
@@ -123,8 +123,8 @@ function TasksViewContent() {
 
         {/* Task list content */}
         {currentTaskList && (
-          <div className="flex flex-col gap-4">
-            <div>
+          <div className="flex flex-col gap-4 flex-1 min-h-0">
+            <div className="flex-shrink-0">
               <TaskStatistics tasks={tasks} filter={filter} onFilterChange={setFilter} />
               {/* Alerts in case some task is overdue */}
               <TaskAlerts tasks={tasks} />

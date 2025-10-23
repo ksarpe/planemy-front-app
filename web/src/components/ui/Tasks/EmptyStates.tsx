@@ -13,7 +13,7 @@ export default function EmptyStates({ type, onCreateListClick }: EmptyStatesProp
         <h3 className="text-lg font-medium text-gray-600  mb-2">{t("tasks.empty.noLists.title")}</h3>
         <p className="text-gray-500  mb-4">{t("tasks.empty.noLists.description")}</p>
         <Button onClick={onCreateListClick} variant="primary">
-          Create task
+          Create list
         </Button>
       </div>
     );

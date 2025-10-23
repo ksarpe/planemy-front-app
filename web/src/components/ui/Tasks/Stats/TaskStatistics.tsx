@@ -19,7 +19,7 @@ export default function TaskStatistics({ tasks, onFilterChange, filter }: TaskSt
     <div className="grid grid-cols-9 gap-2">
       {/* Task Statistics Cards */}
       <StatisticCard
-        title="W toku"
+        title="In progress"
         count={pendingTasks.length}
         icon={Clock}
         iconColor="text-amber-600"
@@ -28,7 +28,7 @@ export default function TaskStatistics({ tasks, onFilterChange, filter }: TaskSt
       />
 
       <StatisticCard
-        title="Ukończone"
+        title="Finished"
         count={completedTasks.length}
         icon={CheckCircle2}
         iconColor="text-green-600"
@@ -37,7 +37,7 @@ export default function TaskStatistics({ tasks, onFilterChange, filter }: TaskSt
       />
 
       <StatisticCard
-        title="Zaległe"
+        title="Overdue"
         count={overdueTasks.length}
         icon={AlertTriangle}
         iconColor="text-red-600"

@@ -1,11 +1,11 @@
-import { CheckCircle2, Plus } from "lucide-react";
-import TaskItem from "./TaskItem";
-import QuickAddTask from "./QuickAddTask";
-import { useState } from "react";
-import { ActionButton } from "../Common";
-import Spinner from "../Utils/Spinner";
-import { useTranslation } from "react-i18next";
 import type { TaskListProps } from "@shared/data/Tasks/interfaces";
+import { ListX, Plus } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Button } from "../shadcn/button";
+import Spinner from "../Utils/Spinner";
+import QuickAddTask from "./QuickAddTask";
+import TaskItem from "./TaskItem";
 
 export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
   const { t } = useTranslation();
@@ -61,21 +61,20 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
     return a.title.localeCompare(b.title);
   });
 
+  // IF THERE ARE NO TASKS TO SHOW
   if (filteredTasks.length === 0) {
     return (
       <div className="text-center py-8 flex flex-col items-center">
-        <CheckCircle2 size={48} className="mx-auto text-text-muted mb-4" />
+        <ListX size={48} className="mx-auto text-text-muted mb-4" />
         <h3 className="text-lg font-medium text-text mb-2">{t("tasks.list.empty.title")}</h3>
         <div className="mb-2 w-full max-w-md mt-4">
           {showQuickAdd ? (
             <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
           ) : (
-            <button
-              onClick={() => setShowQuickAdd(true)}
-              className="w-full flex items-center justify-center gap-2 border-l-4 border-success bg-success text-white px-4 py-3 rounded-lg hover:bg-success/90 cursor-pointer">
+            <Button onClick={() => setShowQuickAdd(true)} variant="primary" size="lg">
               <Plus size={18} />
               <span className="text-sm">{t("tasks.list.empty.newTask")}</span>
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -89,20 +88,16 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
         {showQuickAdd ? (
           <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
         ) : (
-          <ActionButton
-            onClick={() => setShowQuickAdd(true)}
-            icon={Plus}
-            iconSize={16}
-            text={t("tasks.list.empty.newTask")}
-            color="green"
-            size="md"
-          />
+          <Button onClick={() => setShowQuickAdd(true)} variant="primary" size="lg">
+            <Plus size={18} />
+            <span className="text-sm">{t("tasks.list.empty.newTask")}</span>
+          </Button>
         )}
       </div>
 
-      {/* Scrollable task list */}
-      <div className="flex-1 min-h-0 overflow-y-auto">
-        <ul className="space-y-3 pb-4">
+      {/* Scrollable task list - background fills to bottom */}
+      <div className="flex-1 overflow-y-auto bg-bg-alt rounded-lg">
+        <ul className="space-y-3 p-2">
           {sortedTasks.map((task) => (
             <TaskItem key={task.id} task={task} />
           ))}

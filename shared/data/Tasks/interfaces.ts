@@ -1,16 +1,16 @@
-import type { TaskListFilter, SharedUserStatus, EmptyListType } from "./types";
-import type { SharePermission } from "@shared/data/Utils/types";
 import type { LabelInterface } from "@shared/data/Utils/interfaces";
+import type { SharePermission } from "@shared/data/Utils/types";
 import { LucideIcon } from "lucide-react";
+import type { EmptyListType, SharedUserStatus, TaskListFilter } from "./types";
 
 export interface TaskInterface {
   id: string;
   title: string;
-  description?: string; // Optional textarea
+  task_description?: string; // Optional textarea
   dueDate?: string; // Optional datetime
   isCompleted: boolean;
   userId: string; // Creator of the task
-  taskListId: string; // Foreign key to TaskList
+  task_list_id: string; // Foreign key to TaskList
   sharedBy?: string; // ID of user who originally created the task (for shared lists)
   createdAt?: string;
   updatedAt?: string;

@@ -76,14 +76,14 @@ export const LoginForm = () => {
   return (
     <div className="p-8 rounded-lg w-full max-w-md mx-auto bg-bg">
       <Toaster position="bottom-center" richColors />
-      <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Your Life Assistant</h1>
-      <h2 className="text-xl font-normal text-left mb-6 text-gray-600 dark:text-gray-300">
+      <h1 className="text-2xl font-semibold text-text">Your Life Assistant</h1>
+      <h2 className="text-xl font-normal text-left mb-6 text-text-muted">
         {isLoginMode ? t("auth.login") : t("auth.register")}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="email" className="block text-sm font-medium text-text-muted mb-1">
             {t("auth.email")}
           </label>
           <input
@@ -118,6 +118,7 @@ export const LoginForm = () => {
           type="submit"
           disabled={isLoading}
           data-loading={isLoading || undefined}
+          variant={"primary"}
           className="w-full text-black py-2 px-4 rounded-lg hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors group relative">
           <span className="group-data-loading:text-transparent">
             {isLoading

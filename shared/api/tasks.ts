@@ -1,8 +1,8 @@
 import { APIError } from "@shared/data/Auth";
 import { TaskListsResponse, type TaskInterface, type TaskListInterface } from "@shared/data/Tasks/interfaces";
 
-export const getTasks = async (taskListId: string): Promise<TaskInterface[]> => {
-  const response = await fetch(`http://localhost:8080/api/v1/tasks?listId=${taskListId}`, {
+export const getTasks = async (task_list_id: string): Promise<TaskInterface[]> => {
+  const response = await fetch(`http://localhost:8080/api/v1/tasks?listId=${task_list_id}`, {
     method: "GET",
     credentials: "include",
   });
@@ -53,7 +53,7 @@ export const updateTask = async (taskId: string, taskData: Partial<TaskInterface
     throw new Error("Task ID is required for update");
   }
   const response = await fetch(`http://localhost:8080/api/v1/tasks/${taskId}`, {
-    method: "PUT",
+    method: "PATCH",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",

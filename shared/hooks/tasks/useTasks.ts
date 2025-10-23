@@ -1,26 +1,26 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "@shared/lib/queryClient";
 import {
   addTask,
-  updateTask,
-  deleteTask,
-  getTasks,
   addTaskList,
-  updateTaskList,
+  deleteTask,
   deleteTaskList,
-  getTaskLists,
   getTaskList,
+  getTaskLists,
+  getTasks,
+  updateTask,
+  updateTaskList,
 } from "@shared/api/tasks";
+import { queryClient } from "@shared/lib/queryClient";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type { TaskInterface, TaskListInterface, TaskListsResponse } from "@shared/data/Tasks/interfaces";
 
-export function useTasks(taskListId: string) {
+export function useTasks(task_list_id: string) {
   return useQuery<TaskInterface[], unknown, TaskInterface[], string[]>({
-    queryKey: ["tasks", taskListId],
-    queryFn: () => getTasks(taskListId),
+    queryKey: ["tasks", task_list_id],
+    queryFn: () => getTasks(task_list_id),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
-    enabled: !!taskListId, // Only run query if taskListId is provided
+    enabled: !!task_list_id, // Only run query if task_list_id is provided
   });
 }
 
@@ -63,13 +63,13 @@ export function useTaskLists() {
   });
 }
 
-export function useTaskList(taskListId: string) {
+export function useTaskList(task_list_id: string) {
   return useQuery<TaskListInterface | undefined, unknown, TaskListInterface | undefined, (string | undefined)[]>({
-    queryKey: ["taskLists", taskListId],
-    queryFn: () => getTaskList(taskListId),
+    queryKey: ["taskLists", task_list_id],
+    queryFn: () => getTaskList(task_list_id),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
-    enabled: !!taskListId, // Only run query if taskListId is provided
+    enabled: !!task_list_id, // Only run query if task_list_id is provided
   });
 }
 
