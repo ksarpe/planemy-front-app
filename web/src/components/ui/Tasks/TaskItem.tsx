@@ -41,7 +41,7 @@ export default function TaskItem({ task }: TaskItemProps) {
   };
 
   const handleToggleComplete = async () => {
-    updateTask({ id: task.id, data: { isCompleted: !task.isCompleted } });
+    updateTask({ id: task.id, data: { isCompleted: !task.isCompleted }, listId: task.task_list_id });
   };
 
   return (

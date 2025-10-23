@@ -1,6 +1,6 @@
-import { createContext, useState, PropsWithChildren, useMemo, useEffect } from "react";
 import type { TaskInterface, TaskListInterface } from "@shared/data/Tasks/interfaces";
 import { useTaskLists, useTasks } from "@shared/hooks/tasks/useTasks";
+import { createContext, PropsWithChildren, useEffect, useMemo, useState } from "react";
 
 interface TaskViewContextProps {
   currentTaskListId: string | null;
@@ -21,10 +21,10 @@ export { TaskViewContext };
 export function TaskViewProvider({ children }: PropsWithChildren) {
   const [currentTaskListId, setCurrentTaskListId] = useState<string | null>(null);
   const [clickedTask, setClickedTask] = useState<TaskInterface | null>(null);
-
+  
   // Fetch data using React Query
-  const { data: taskListsData, isLoading: isLoadingLists } = useTaskLists();
-  const { data: tasksData, isLoading: isLoadingTasks } = useTasks(currentTaskListId!);
+  const { data: taskListsData, isLoading: isLoadingLists } = useTaskLists(); //All task lists
+  const { data: tasksData, isLoading: isLoadingTasks } = useTasks(currentTaskListId!); //Tasks for current list
 
   // Compute current task list
   const currentTaskList = useMemo(() => {
@@ -34,6 +34,7 @@ export function TaskViewProvider({ children }: PropsWithChildren) {
 
   // Ensure tasks is always an array
   const tasks = useMemo(() => {
+    console.log(tasksData);
     return Array.isArray(tasksData) ? tasksData : [];
   }, [tasksData]);
 

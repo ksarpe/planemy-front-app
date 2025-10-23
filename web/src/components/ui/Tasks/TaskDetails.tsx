@@ -10,7 +10,7 @@ import { useDeleteLabelConnection } from "@shared/hooks/labels/useLabels";
 import { useDeleteTask, useUpdateTask } from "@shared/hooks/tasks/useTasks";
 import { format } from "date-fns";
 import { Calendar, CheckCircle2, Tag, Trash, Trash2, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button as AriaButton, Popover as AriaPopover, DatePicker, Dialog, Group } from "react-aria-components";
 import { useTranslation } from "react-i18next";
 import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
@@ -38,6 +38,23 @@ export default function TaskDetails() {
     }
     return "12:00";
   });
+
+  // Sync form state when clickedTask changes (when user clicks on a different task)
+  useEffect(() => {
+    if (clickedTask) {
+      setTitle(clickedTask.title || "");
+      setDescription(clickedTask.task_description || "");
+
+      if (clickedTask.dueDate && clickedTask.dueDate !== "") {
+        const date = new Date(clickedTask.dueDate);
+        setDueDate(date);
+        setDueTime(`${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`);
+      } else {
+        setDueDate(null);
+        setDueTime("12:00");
+      }
+    }
+  }, [clickedTask]); // Only re-run when the task ID changes (different task clicked)
 
   if (!clickedTask || !currentTaskListId) return null;
 
@@ -76,14 +93,14 @@ export default function TaskDetails() {
     }
 
     if (Object.keys(updates).length > 0) {
-      updateTask({ id: clickedTask.id, data: updates });
+      updateTask({ id: clickedTask.id, data: updates, listId: currentTaskListId  });
     }
 
     setClickedTask(null);
   };
 
   const handleToggleComplete = () => {
-    updateTask({ id: clickedTask.id, data: { isCompleted: !clickedTask.isCompleted } });
+    updateTask({ id: clickedTask.id, data: { isCompleted: !clickedTask.isCompleted }, listId: currentTaskListId  });
     setClickedTask(null);
   };
 
@@ -194,7 +211,9 @@ export default function TaskDetails() {
                   </Dialog>
                 </AriaPopover>
               </DatePicker>
-              {!dueDate && <Label className="text-text-muted-more text-xs">Task doesn't have due date by default</Label>}
+              {!dueDate && (
+                <Label className="text-text-muted-more text-xs">Task doesn't have due date by default</Label>
+              )}
             </div>
 
             {/* Time Select */}

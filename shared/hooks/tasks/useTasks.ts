@@ -35,11 +35,16 @@ export function useCreateTask() {
 
 export function useUpdateTask() {
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<TaskInterface> }) => updateTask(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    mutationFn: ({ id, data, listId }: { id: string; data: Partial<TaskInterface>; listId: string }) =>
+      updateTask(id, data),
+    onSuccess: (_, variables) => {
+      const { listId } = variables;
+      queryClient.invalidateQueries({
+        queryKey: ["tasks", listId],
+      });
     },
     onError: (error: unknown) => {
+      console.error("Error updating task:", error);
       return error;
     },
   });

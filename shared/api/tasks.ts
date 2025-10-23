@@ -2,7 +2,7 @@ import { APIError } from "@shared/data/Auth";
 import { TaskListsResponse, type TaskInterface, type TaskListInterface } from "@shared/data/Tasks/interfaces";
 
 export const getTasks = async (task_list_id: string): Promise<TaskInterface[]> => {
-  const response = await fetch(`http://localhost:8080/api/v1/tasks?listId=${task_list_id}`, {
+  const response = await fetch(`http://localhost:8080/api/v1/task-lists/${task_list_id}/tasks`, {
     method: "GET",
     credentials: "include",
   });
@@ -12,8 +12,7 @@ export const getTasks = async (task_list_id: string): Promise<TaskInterface[]> =
     throw new APIError(`Getting tasks failed`, response.status, errorBody);
   }
   const data = await response.json();
-  console.log("getTasks response data:", data);
-  console.log("getTasks data type:", typeof data, "isArray:", Array.isArray(data));
+  console.log("getTasks response data:", data, "for", task_list_id);
 
   // If backend returns { items: [...] } format, extract the items array
   if (data && typeof data === "object" && "items" in data && Array.isArray(data.items)) {
@@ -48,6 +47,7 @@ export const addTask = async (taskData: Partial<TaskInterface>): Promise<Partial
   return data;
 };
 
+//TODO, Patch has empty body response so handle it differently.
 export const updateTask = async (taskId: string, taskData: Partial<TaskInterface>): Promise<Partial<TaskInterface>> => {
   if (!taskId) {
     throw new Error("Task ID is required for update");
@@ -60,13 +60,12 @@ export const updateTask = async (taskId: string, taskData: Partial<TaskInterface
     },
     body: JSON.stringify(taskData),
   });
-
   if (!response.ok) {
     const errorBody = await response.json();
     throw new APIError(`Updating task failed`, response.status, errorBody);
   }
-  const data = await response.json();
-  return data;
+
+  return taskData;
 };
 
 export const deleteTask = async (taskId: string): Promise<void> => {
