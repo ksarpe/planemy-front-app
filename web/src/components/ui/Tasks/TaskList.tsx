@@ -16,7 +16,7 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
     return (
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-8">
         <Spinner />
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{t("tasks.loading.tasks")}</p>
+        <p className="mt-2 text-sm text-text-muted">{t("tasks.loading.tasks")}</p>
       </div>
     );
   }
@@ -64,15 +64,15 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
   if (filteredTasks.length === 0) {
     return (
       <div className="text-center py-8 flex flex-col items-center">
-        <CheckCircle2 size={48} className="mx-auto text-gray-400  mb-4" />
-        <h3 className="text-lg font-medium text-gray-600  mb-2">{t("tasks.list.empty.title")}</h3>
+        <CheckCircle2 size={48} className="mx-auto text-text-muted mb-4" />
+        <h3 className="text-lg font-medium text-text mb-2">{t("tasks.list.empty.title")}</h3>
         <div className="mb-2 w-full max-w-md mt-4">
           {showQuickAdd ? (
             <QuickAddTask onCancel={() => setShowQuickAdd(false)} />
           ) : (
             <button
               onClick={() => setShowQuickAdd(true)}
-              className="w-full flex items-center justify-center gap-2 border-l-4 border-success  bg-success  text-white px-4 py-3 rounded-lg hover:bg-success-hover  cursor-pointer">
+              className="w-full flex items-center justify-center gap-2 border-l-4 border-success bg-success text-white px-4 py-3 rounded-lg hover:bg-success/90 cursor-pointer">
               <Plus size={18} />
               <span className="text-sm">{t("tasks.list.empty.newTask")}</span>
             </button>

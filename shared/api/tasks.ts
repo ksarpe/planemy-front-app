@@ -12,7 +12,22 @@ export const getTasks = async (taskListId: string): Promise<TaskInterface[]> => 
     throw new APIError(`Getting tasks failed`, response.status, errorBody);
   }
   const data = await response.json();
-  return data;
+  console.log("getTasks response data:", data);
+  console.log("getTasks data type:", typeof data, "isArray:", Array.isArray(data));
+
+  // If backend returns { items: [...] } format, extract the items array
+  if (data && typeof data === "object" && "items" in data && Array.isArray(data.items)) {
+    return data.items;
+  }
+
+  // If it's already an array, return it
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  // Fallback to empty array if data format is unexpected
+  console.warn("Unexpected getTasks response format:", data);
+  return [];
 };
 
 export const addTask = async (taskData: Partial<TaskInterface>): Promise<Partial<TaskInterface>> => {
@@ -71,7 +86,6 @@ export const deleteTask = async (taskId: string): Promise<void> => {
 };
 
 export const getTaskLists = async (): Promise<TaskListsResponse> => {
-  return { items: [], limit: 0, offset: 0, total: 0 };
   const response = await fetch("http://localhost:8080/api/v1/task-lists", {
     method: "GET",
     credentials: "include",
@@ -89,7 +103,6 @@ export const getTaskList = async (listId: string): Promise<TaskListInterface | u
   if (!listId) {
     throw new Error("Task list ID is required");
   }
-  return undefined;
   const response = await fetch(`http://localhost:8080/api/v1/task-lists/${listId}`, {
     method: "GET",
     credentials: "include",
@@ -103,7 +116,7 @@ export const getTaskList = async (listId: string): Promise<TaskListInterface | u
   return data;
 };
 
-//TODO: listData just string or extend it to Partial?
+//TODO: listData just string name or extend it to Partial?
 export const addTaskList = async (listData: string): Promise<Partial<TaskListInterface>> => {
   const response = await fetch("http://localhost:8080/api/v1/task-lists", {
     method: "POST",
@@ -111,11 +124,12 @@ export const addTaskList = async (listData: string): Promise<Partial<TaskListInt
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(listData),
+    body: JSON.stringify({ name: listData }),
   });
 
   if (!response.ok) {
     const errorBody = await response.json();
+    console.log("errorBody", errorBody);
     throw new APIError(`Adding task list failed`, response.status, errorBody);
   }
   const data = await response.json();

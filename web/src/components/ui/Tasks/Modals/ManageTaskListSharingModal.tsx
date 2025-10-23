@@ -18,7 +18,7 @@ export default function ManageTaskListSharingModal({
   const [sharingPermission, setSharingPermission] = useState<SharePermission>("view");
   const [isSharing, setIsSharing] = useState(false);
   const { user } = useAuthContext();
-  const { showToast } = useToastContext();
+  //const { showToast } = useToastContext();
 
   const handleShareWithUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ export default function ManageTaskListSharingModal({
           onSuccess: () => {
             setSharingEmail("");
             setSharingPermission("view");
-            showToast("success", "Zaproszenie zostało wysłane");
+           // showToast("success", "Zaproszenie zostało wysłane");
           },
         },
       );

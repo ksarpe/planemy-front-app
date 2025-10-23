@@ -65,9 +65,13 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
   // Komponent dla każdej listy zadań
   const TaskListItem = ({ list }: { list: TaskListInterface }) => {
     const { data: tasks = [] } = useTasks(list.id);
+
+    // Ensure tasks is always an array
+    const tasksArray = Array.isArray(tasks) ? tasks : [];
+
     const stats = {
-      total: tasks.length,
-      completed: tasks.filter((task) => task.isCompleted).length,
+      total: tasksArray.length,
+      completed: tasksArray.filter((task) => task.isCompleted).length,
     };
 
     const isSelected = currentList?.id === list.id;
@@ -101,12 +105,12 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
                 <div>
                   <div className="flex items-center gap-2">
                     <h4 className="font-medium text-sm truncate">{list.name}</h4>
-                    {list.shared && <Users size={14} className="text-blue-600 flex-shrink-0" />}
+                    {list.shared && <Users size={14} className="text-primary flex-shrink-0" />}
                   </div>
                 </div>
               )}
 
-              <div className="flex items-center gap-3 mt-1 text-xs text-gray-500 justify-between">
+              <div className="flex items-center gap-3 mt-1 text-xs text-text-muted justify-between">
                 <span className={`${stats.completed === stats.total && stats.total > 0 ? "text-success" : ""}`}>
                   {stats.completed}/{stats.total}
                 </span>
@@ -121,7 +125,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
             <div className="relative" onClick={(e) => e.stopPropagation()}>
               <BasicDropdown
                 trigger={
-                  <button className="p-1 hover:bg-gray-100 rounded transition-colors">
+                  <button className="p-1 hover:bg-bg-hover rounded transition-colors">
                     <MoreVertical size={14} />
                   </button>
                 }
@@ -152,9 +156,9 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
         {/* Progress Bar */}
         {stats.total > 0 && (
           <div className="mt-2">
-            <div className="w-full bg-gray-200 rounded-full h-1.5">
+            <div className="w-full bg-bg-hover rounded-full h-1.5">
               <div
-                className="bg-green-500 h-1.5 rounded-full transition-all duration-300"
+                className="bg-success h-1.5 rounded-full transition-all duration-300"
                 style={{ width: `${(stats.completed / stats.total) * 100}%` }}></div>
             </div>
           </div>
@@ -178,11 +182,11 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
       <div className="space-y-2">
         {lists.length === 0 ? (
           <div className="text-center py-8">
-            <div className="text-gray-400 mb-2">📋</div>
-            <p className="text-sm text-gray-500 mb-3">{t("tasks.panel.empty.title")}</p>
+            <div className="text-text-muted mb-2">📋</div>
+            <p className="text-sm text-text-muted mb-3">{t("tasks.panel.empty.title")}</p>
             <button
               onClick={onAddList}
-              className="text-sm bg-primary text-white px-3 py-2 rounded-lg hover:bg-text-muted transition-colors">
+              className="text-sm bg-primary text-white px-3 py-2 rounded-lg hover:bg-primary/90 transition-colors">
               {t("tasks.panel.empty.createFirst")}
             </button>
           </div>

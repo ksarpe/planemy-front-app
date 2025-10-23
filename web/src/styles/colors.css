@@ -2,6 +2,7 @@
   --color-text: hsl(0, 0%, 0%);
   --color-text-muted: hsl(0, 0%, 30%);
   --color-text-muted-more: hsl(0, 0%, 50%);
+  --color-bg-muted-light: hsl(0, 0%, 90%);
   --color-bg-alt: hsl(0, 0%, 100%);
   --color-bg: hsl(0, 0%, 96%);
   --color-primary: hsl(186, 100%, 39%);
@@ -12,6 +13,8 @@
   .dark {
     --color-text: hsl(0, 0%, 100%);
     --color-text-muted: hsl(0, 0%, 70%);
+    --color-text-muted-more: hsl(0, 0%, 50%);
+    --color-bg-muted-light: hsl(0, 0%, 20%);
     --color-bg: hsl(0, 0%, 10%); /* nigth */
     --color-bg-alt: hsl(0, 0%, 13%);
     --color-primary: hsl(186, 100%, 28%);

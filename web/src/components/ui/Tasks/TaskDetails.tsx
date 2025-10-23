@@ -115,9 +115,7 @@ export default function TaskDetails() {
       <div className="h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center pb-4 justify-between">
-          <button
-            onClick={() => setClickedTask(null)}
-            className="text-gray-400  hover:text-gray-600  transition-colors">
+          <button onClick={() => setClickedTask(null)} className="text-text-muted hover:text-text transition-colors">
             <PanelRightClose size={20} />
           </button>
           <div>
@@ -169,19 +167,18 @@ export default function TaskDetails() {
             {!isEditingDate ? (
               <button
                 onClick={startEditingDate}
-                className="w-full flex items-center justify-between bg-gray-50  rounded-lg p-3 hover:bg-gray-100  transition-colors cursor-pointer">
-                <p
-                  className={`text-sm ${isOverdue() && !clickedTask.isCompleted ? "text-red-700 " : "text-gray-700 "}`}>
+                className="w-full flex items-center justify-between bg-bg-alt rounded-lg p-3 hover:bg-bg-hover transition-colors cursor-pointer">
+                <p className={`text-sm ${isOverdue() && !clickedTask.isCompleted ? "text-negative " : "text-text "}`}>
                   {formatDueDate()}
                 </p>
                 <Calendar size={16} className="text-primary " />
               </button>
             ) : (
-              <div className="space-y-3 bg-white  border border-gray-200  rounded-lg p-4">
+              <div className="space-y-3 bg-bg border border-text-muted-more rounded-lg p-4">
                 {/* Data i godzina w jednym wierszu */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
-                    <label className="block text-xs font-medium text-gray-600 ">{t("tasks.details.dateLabel")}</label>
+                    <label className="block text-xs font-medium text-text-muted ">{t("tasks.details.dateLabel")}</label>
                     <input
                       type="date"
                       value={tempDate}
@@ -192,12 +189,12 @@ export default function TaskDetails() {
                           updateDateFromTemp();
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300    rounded-lg"
+                      className="w-full px-3 py-2 border border-text-muted-more rounded-lg"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-xs font-medium text-gray-600 ">{t("tasks.details.timeLabel")}</label>
+                    <label className="block text-xs font-medium text-text-muted ">{t("tasks.details.timeLabel")}</label>
                     <input
                       type="time"
                       value={tempTime}
@@ -208,7 +205,7 @@ export default function TaskDetails() {
                           updateDateFromTemp();
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300    rounded-lg"
+                      className="w-full px-3 py-2 border border-text-muted-more rounded-lg"
                     />
                   </div>
                 </div>
@@ -217,17 +214,17 @@ export default function TaskDetails() {
                 <div className="flex gap-2 pt-2">
                   <button
                     onClick={() => setIsEditingDate(false)}
-                    className="flex-1 px-3 py-2 text-sm bg-gray-100  text-gray-700  rounded-lg hover:bg-gray-200  transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-bg-alt text-text rounded-lg hover:bg-bg-hover transition-colors">
                     {t("tasks.details.actions.cancel")}
                   </button>
                   <button
                     onClick={updateDateFromTemp}
-                    className="flex-1 px-3 py-2 text-sm bg-green-100  text-green-700  rounded-lg hover:bg-green-200  transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-success/20 text-success rounded-lg hover:bg-success/30 transition-colors">
                     {t("tasks.details.actions.save")}
                   </button>
                   <button
                     onClick={handleRemoveDueDate}
-                    className="flex-1 px-3 py-2 text-sm bg-red-100  text-red-700  rounded-lg hover:bg-red-200  transition-colors">
+                    className="flex-1 px-3 py-2 text-sm bg-negative/20 text-negative rounded-lg hover:bg-negative/30 transition-colors">
                     {t("tasks.details.actions.removeDueDate")}
                   </button>
                 </div>
@@ -237,15 +234,15 @@ export default function TaskDetails() {
         </div>
 
         {/* Actions */}
-        <div className="space-y-3 pt-6 border-t border-gray-200 ">
+        <div className="space-y-3 pt-6 border-t border-bg-hover ">
           {/* Toggle Complete */}
           <button
             onClick={handleToggleComplete}
             className={`w-full flex items-center justify-center gap-2 py-3 rounded-lg font-medium shadow-md
       ${
         clickedTask.isCompleted
-          ? "bg-gray-100 text-gray-700 hover:bg-gray-200   " // Stan: Zrobione (akcja cofająca)
-          : "bg-success text-white hover:bg-success-hover" // Stan: Do zrobienia (akcja główna)
+          ? "bg-bg-alt text-text hover:bg-bg-hover " // Stan: Zrobione (akcja cofająca)
+          : "bg-success text-white hover:bg-success/90" // Stan: Do zrobienia (akcja główna)
       }`}>
             <CheckCircle2 size={18} />
             {clickedTask.isCompleted
@@ -257,7 +254,7 @@ export default function TaskDetails() {
           <button
             onClick={() => setShowDeleteConfirm(true)}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium shadow-md
-               bg-red-50 text-red-600 hover:bg-red-100
+               bg-negative/20 text-negative hover:bg-negative/30
                  ">
             <Trash2 size={16} />
             {t("tasks.details.actions.delete")}

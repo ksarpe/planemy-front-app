@@ -49,8 +49,8 @@ export default function TaskItem({ task }: TaskItemProps) {
       style={{
         borderColor: task.labels?.length === 1 ? task.labels[0].color : "#dcc5b2", // gray-300
       }}
-      className={`border-l-4 rounded-lg p-4 bg-white  hover:-translate-y-0.5 hover:shadow-md 
-      ${clickedTask?.id === task.id ? "border-b border-l-10 border-r-10 border-t " : "hover:bg-gray-50 "}`}
+      className={`border-l-4 rounded-lg p-4 bg-bg hover:-translate-y-0.5 hover:shadow-md 
+      ${clickedTask?.id === task.id ? "border-b border-l-10 border-r-10 border-t " : "hover:bg-bg-hover "}`}
       onClick={() => {
         // Toggle functionality - if already selected, deselect it
         if (clickedTask?.id === task.id) {
@@ -68,9 +68,9 @@ export default function TaskItem({ task }: TaskItemProps) {
               handleToggleComplete();
             }}>
             {task.isCompleted ? (
-              <CheckCircle2 size={20} className="text-green-500 " />
+              <CheckCircle2 size={20} className="text-success" />
             ) : (
-              <div className="w-5 h-5 border-1 border-gray-300  hover:border-green-500  rounded-full hover:bg-green-500  transition-colors" />
+              <div className="w-5 h-5 border-1 border-text-muted-more hover:border-success rounded-full hover:bg-success transition-colors" />
             )}
           </button>
 
@@ -78,7 +78,7 @@ export default function TaskItem({ task }: TaskItemProps) {
           <div className="">
             <h3
               className={`font-medium text-sm leading-5 transition-colors duration-200 ${
-                task.isCompleted ? "line-through text-gray-500 " : ""
+                task.isCompleted ? "line-through text-text-muted " : ""
               }`}>
               {task.title}
             </h3>
@@ -87,10 +87,10 @@ export default function TaskItem({ task }: TaskItemProps) {
               <p
                 className={`text-xs mt-1 transition-colors duration-200 ${
                   task.isCompleted
-                    ? "line-through text-gray-400 "
+                    ? "line-through text-text-muted "
                     : clickedTask?.id === task.id
-                    ? "text-blue-600 "
-                    : "text-gray-600 "
+                    ? "text-primary "
+                    : "text-text-muted "
                 }`}>
                 {task.description}
               </p>
@@ -101,17 +101,17 @@ export default function TaskItem({ task }: TaskItemProps) {
               <div
                 className={`flex items-center gap-1 mt-2 text-xs transition-colors duration-200 ${
                   isOverdue()
-                    ? "text-red-600 "
+                    ? "text-negative "
                     : isDueSoon()
-                    ? "text-yellow-600 "
+                    ? "text-warning "
                     : clickedTask?.id === task.id
-                    ? "text-blue-600 "
-                    : "text-gray-500 "
+                    ? "text-primary "
+                    : "text-text-muted "
                 }`}>
                 <Calendar size={12} />
                 <span>{formatDueDate()}</span>
-                {isOverdue() && <AlertCircle size={12} className="text-red-500 " />}
-                {isDueSoon() && <Clock size={12} className="text-yellow-500 " />}
+                {isOverdue() && <AlertCircle size={12} className="text-negative" />}
+                {isDueSoon() && <Clock size={12} className="text-warning" />}
               </div>
             )}
           </div>
@@ -119,11 +119,9 @@ export default function TaskItem({ task }: TaskItemProps) {
 
         {/* Status indicators */}
         <div className="flex flex-col items-end gap-3">
-          {task.isCompleted && (
-            <span className="text-xs text-green-600  font-medium">{t("tasks.status.completed")}</span>
-          )}
-          {isOverdue() && <span className="text-xs text-red-600  font-medium">{t("tasks.item.overdue")}</span>}
-          {isDueSoon() && <span className="text-xs text-yellow-600  font-medium">{t("tasks.item.urgent")}</span>}
+          {task.isCompleted && <span className="text-xs text-success font-medium">{t("tasks.status.completed")}</span>}
+          {isOverdue() && <span className="text-xs text-negative font-medium">{t("tasks.item.overdue")}</span>}
+          {isDueSoon() && <span className="text-xs text-warning font-medium">{t("tasks.item.urgent")}</span>}
 
           {/* If task has no labels, show the button to add labels */}
         </div>
