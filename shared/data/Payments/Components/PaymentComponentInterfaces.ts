@@ -36,5 +36,5 @@ export interface PaymentSummaryProps {
 export interface AddPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (paymentData: Omit<PaymentInterface, "id" | "userId">) => Promise<void>;
+  onSubmit: (paymentData: Omit<PaymentInterface, "id">) => Promise<void>;
 }

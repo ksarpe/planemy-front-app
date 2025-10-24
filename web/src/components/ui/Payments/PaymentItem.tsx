@@ -1,19 +1,20 @@
-import { ChevronDown, ChevronUp, Check, DollarSign, Calendar, AlertCircle } from "lucide-react";
-import { PaymentInterface } from "@shared/data/Payments/interfaces";
 import { getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@shared/api/payments";
-import { PaymentDetailsPanel } from "./PaymentDetailsPanel";
-import { useTranslation } from "react-i18next";
 import type { PaymentItemProps } from "@shared/data/Payments/Components/PaymentComponentInterfaces";
+import { AlertCircle, Calendar, Check, ChevronDown, ChevronUp, DollarSign } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { PaymentDetailsPanel } from "./PaymentDetailsPanel";
 
 export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentItemProps) {
   const { t } = useTranslation();
 
-  const daysUntil = getDaysUntilPayment(payment.nextPaymentDate);
+  // TODO: Update to new database structure (due_date, paid_at)
+  const daysUntil = getDaysUntilPayment(payment.due_date);
   const isOverdue = daysUntil < 0;
-  const isDueSoon = daysUntil <= payment.reminderDays && daysUntil >= 0;
-  const isPaidForCurrentPeriod = isPaymentPaidForCurrentPeriod(payment);
+  const isDueSoon = daysUntil <= 3 && daysUntil >= 0; // Default 3 days reminder
+  const isPaidForCurrentPeriod = isPaymentPaidForCurrentPeriod(payment.paid_at);
 
-  const getCategoryIcon = (category: PaymentInterface["category"]) => {
+  // TODO: Category field not yet in database
+  const getCategoryIcon = (category?: string) => {
     switch (category) {
       case "subscription":
         return "📺";
@@ -36,25 +37,21 @@ export default function PaymentItem({ payment, isExpanded, onToggle }: PaymentIt
         onClick={onToggle}
         className="flex justify-between items-center md:p-4 cursor-pointer hover:bg-bg-alt/80 rounded-lg transition-colors">
         <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
-          <div className="text-xl md:text-2xl flex-shrink-0">{getCategoryIcon(payment.category)}</div>
+          <div className="text-xl md:text-2xl flex-shrink-0">{getCategoryIcon()}</div>
 
           <div className="flex-1 min-w-0">
             <div className="flex flex-col gap-1 mb-1">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-medium text-sm md:text-base truncate text-text">{payment.name}</span>
-                <span className={`px-2 py-1 text-xs rounded-full flex-shrink-0 bg-bg-alt text-text`}>
-                  {t(`payments.modal.categories.${payment.category}`)}
-                </span>
+                <span className="font-medium text-sm md:text-base truncate text-text">{payment.title}</span>
+                {/* TODO: Category badge when database supports it */}
               </div>
             </div>
 
             <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4 text-xs md:text-sm text-text-light">
               <div className="flex items-center gap-1">
                 <DollarSign size={12} className="md:w-[14px] md:h-[14px]" />
-                <span className="font-medium">
-                  {payment.amount.toFixed(2)} {payment.currency}
-                </span>
-                <span className="text-text-light">({t(`payments.modal.frequencies.${payment.cycle}`)})</span>
+                <span className="font-medium">${payment.amount.toFixed(2)}</span>
+                {/* TODO: Cycle info when database supports it */}
               </div>
 
               <div className="flex items-center gap-1">

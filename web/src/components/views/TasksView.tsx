@@ -4,7 +4,6 @@ import {
   TaskAlerts,
   TaskDetails,
   TaskList,
-  TaskListsDrawer,
   TaskStatistics,
   TaskViewHeader,
 } from "@/components/ui/Tasks";
@@ -14,6 +13,8 @@ import type { TaskListFilter } from "@shared/data/Tasks/types";
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
 import { useEffect, useState } from "react";
+import { Drawer } from "../ui/Common/Drawer";
+import { TaskListPanel } from "../ui/Tasks/TaskListPanel";
 import Spinner from "../ui/Utils/Spinner";
 
 function TasksViewContent() {
@@ -60,22 +61,18 @@ function TasksViewContent() {
   return (
     <div className="relative h-full flex flex-col bg-bg">
       {/* Task Lists Drawer */}
-      <TaskListsDrawer
-        isOpen={showListsPanel}
-        onClose={() => setShowListsPanel(false)}
-        allTaskLists={allTaskLists}
-        currentTaskList={currentTaskList}
-        onSelectList={handleSelectList}
-        onAddList={handleAddList}
-      />
+
+      <Drawer isOpen={showListsPanel} onClose={() => setShowListsPanel(false)} width="sm" position="right">
+        <TaskListPanel
+          lists={allTaskLists}
+          currentList={currentTaskList}
+          onSelectList={handleSelectList}
+          onAddList={handleAddList}
+        />
+      </Drawer>
 
       {/* Task Details Drawer */}
-      <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 max-w-full bg-bg-alt border-l border-bg-hover shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
-          clickedTask ? "translate-x-0" : "translate-x-full"
-        }`}>
-        {clickedTask && <TaskDetails />}
-      </div>
+      <div>{clickedTask && <TaskDetails />}</div>
 
       {/* Main content */}
       <div className="flex flex-col px-4 py-2 md:px-8 md:py-4 gap-4 h-full overflow-hidden">

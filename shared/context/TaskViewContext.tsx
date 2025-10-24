@@ -1,6 +1,6 @@
 import type { TaskInterface, TaskListInterface } from "@shared/data/Tasks/interfaces";
 import { useTaskLists, useTasks } from "@shared/hooks/tasks/useTasks";
-import { createContext, PropsWithChildren, useEffect, useMemo, useState } from "react";
+import { createContext, PropsWithChildren, useMemo, useState } from "react";
 
 interface TaskViewContextProps {
   currentTaskListId: string | null;

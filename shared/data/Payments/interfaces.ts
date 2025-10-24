@@ -1,21 +1,18 @@
-// Payment related domain models (migrated from '@/data/types')
+// Payment related domain models - matches backend database structure
 
 export interface PaymentInterface {
   id: string;
-  name: string;
+  title: string;
   amount: number;
-  currency: string;
-  cycle: "weekly" | "monthly" | "quarterly" | "yearly";
-  category: "subscription" | "utility" | "insurance" | "loan" | "rent" | "other";
-  description?: string;
-  nextPaymentDate: string;
-  lastPaymentDate?: string;
-  isPaid: boolean;
-  autoRenew: boolean;
-  reminderDays: number;
-  userId: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  due_date: string; // ISO 8601 format
+  paid_at: string | null; // ISO 8601 format or null if unpaid
+  // Future fields (commented out until backend supports them):
+  // currency?: string;
+  // cycle?: "weekly" | "monthly" | "quarterly" | "yearly";
+  // category?: "subscription" | "utility" | "insurance" | "loan" | "rent" | "other";
+  // description?: string;
+  // autoRenew?: boolean;
+  // reminderDays?: number;
 }
 
 export interface PaymentResponse {

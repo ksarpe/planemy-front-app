@@ -69,3 +69,6 @@ export const deletePayment = async (paymentId: string): Promise<void> => {
     throw new APIError(`Deleting payment failed`, response.status, errorBody);
   }
 };
+
+// Re-export helper functions from utils (for backward compatibility with existing components)
+export { calculateNextPaymentDate, getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@shared/utils/helpers";
