@@ -111,7 +111,7 @@ export default function TaskDetails() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-bg">
+    <div className="h-full flex flex-col bg-bg-alt">
       {/* Header */}
       <div className="p-6 border-b border-bg-alt">
         <div className="flex items-center justify-between">

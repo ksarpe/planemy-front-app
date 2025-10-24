@@ -4,18 +4,16 @@ import {
   TaskAlerts,
   TaskDetails,
   TaskList,
+  TaskListsDrawer,
   TaskStatistics,
   TaskViewHeader,
 } from "@/components/ui/Tasks";
-import { TaskListPanel } from "@/components/ui/Tasks/TaskListPanel";
 import { TaskViewProvider } from "@shared/context/TaskViewContext";
 import type { TaskListInterface } from "@shared/data/Tasks/interfaces";
 import type { TaskListFilter } from "@shared/data/Tasks/types";
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
-import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import Spinner from "../ui/Utils/Spinner";
 
 function TasksViewContent() {
@@ -30,7 +28,6 @@ function TasksViewContent() {
     clickedTask,
   } = useTaskViewContext();
   const { defaultTaskListId } = usePreferencesContext();
-  const { t } = useTranslation();
 
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [filter, setFilter] = useState<TaskListFilter>("pending");
@@ -46,7 +43,6 @@ function TasksViewContent() {
 
   const handleSelectList = (list: TaskListInterface) => {
     setCurrentTaskListId(list.id);
-    setShowListsPanel(false);
   };
 
   const handleAddList = () => {
@@ -63,41 +59,15 @@ function TasksViewContent() {
 
   return (
     <div className="relative h-full flex flex-col bg-bg">
-      {/* Task Lists Panel Overlay */}
-      <div
-        className={`fixed inset-0 z-40 transition-opacity duration-300 ${
-          showListsPanel ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-        aria-hidden={showListsPanel ? "false" : "true"}
-        onClick={() => setShowListsPanel(false)}>
-        <div className="absolute inset-0 bg-black/30" />
-      </div>
-
-      {/* Task Lists Panel Drawer */}
-      <div
-        role="dialog"
-        aria-label={t("tasks.panel.ariaLabel")}
-        className={`fixed top-0 right-0 h-full w-80 sm:w-100 max-w-full bg-bg-alt border-l border-bg-hover shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
-          showListsPanel ? "translate-x-0" : "translate-x-full"
-        }`}
-        onClick={(e) => e.stopPropagation()}>
-        <div className="p-4 border-b border-bg-hover flex items-center justify-between bg-bg-alt sticky top-0 z-10">
-          <span className="text-lg px-2">{t("tasks.panel.title")}</span>
-          <button
-            onClick={() => setShowListsPanel(false)}
-            className="px-2 hover:text-negative cursor-pointer rounded-lg hover:bg-bg-hover">
-            <X size={22} />
-          </button>
-        </div>
-        <div className="flex-1 overflow-auto scrollbar-hide p-2">
-          <TaskListPanel
-            lists={allTaskLists}
-            currentList={currentTaskList}
-            onSelectList={handleSelectList}
-            onAddList={handleAddList}
-          />
-        </div>
-      </div>
+      {/* Task Lists Drawer */}
+      <TaskListsDrawer
+        isOpen={showListsPanel}
+        onClose={() => setShowListsPanel(false)}
+        allTaskLists={allTaskLists}
+        currentTaskList={currentTaskList}
+        onSelectList={handleSelectList}
+        onAddList={handleAddList}
+      />
 
       {/* Task Details Drawer */}
       <div
