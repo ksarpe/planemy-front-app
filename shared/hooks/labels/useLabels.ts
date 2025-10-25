@@ -1,23 +1,23 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../lib/queryClient";
 import {
   addLabel,
-  updateLabel,
-  deleteLabel,
-  getLabels,
-  getLabel,
   addLabelConnection,
+  deleteAllLabelConnectionsForObject,
+  deleteLabel,
   deleteLabelConnection,
   deleteLabelConnectionByParams,
-  deleteAllLabelConnectionsForObject,
+  getLabel,
   getLabelConnections,
+  getLabels,
+  updateLabel,
 } from "../../api/labels";
+import { queryClient } from "../../lib/queryClient";
 
-import type { LabelInterface, LabelConnection } from "../../data/Utils/interfaces";
+import type { LabelConnection, LabelInterface, LabelResponse } from "../../data/Utils/interfaces";
 
 // Labels hooks
 export function useLabels() {
-  return useQuery<LabelInterface[], unknown, LabelInterface[], string[]>({
+  return useQuery<LabelResponse, unknown, LabelResponse, string[]>({
     queryKey: ["labels"],
     queryFn: getLabels,
     staleTime: 5 * 60 * 1000,
@@ -37,7 +37,7 @@ export function useLabel(labelId: string) {
 
 export function useCreateLabel() {
   return useMutation({
-    mutationFn: (labelData: Partial<LabelInterface>) => addLabel(labelData),
+    mutationFn: (labelData: Omit<LabelInterface, "id" | "userId">) => addLabel(labelData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["labels"] });
     },
@@ -78,7 +78,7 @@ export function useLabelConnections(objectId?: string, objectType?: string) {
 
 export function useCreateLabelConnection() {
   return useMutation({
-    mutationFn: (connectionData: Partial<LabelConnection>) => addLabelConnection(connectionData),
+    mutationFn: (connectionData: Omit<LabelConnection, "id" | "createdAt">) => addLabelConnection(connectionData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["label-connections"] });
     },
@@ -117,12 +117,22 @@ export function useDeleteAllLabelConnectionsForObject() {
 // Convenience hooks for common operations
 export function useAddLabelToObject() {
   return useMutation({
-    mutationFn: ({ objectId, objectType, labelId }: { objectId: string; objectType: string; labelId: string }) =>
+    mutationFn: ({
+      objectId,
+      objectType,
+      labelId,
+      userId,
+    }: {
+      objectId: string;
+      objectType: string;
+      labelId: string;
+      userId: string;
+    }) =>
       addLabelConnection({
+        userId,
         objectId,
         objectType,
         labelId,
-        createdAt: new Date().toISOString(),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["label-connections"] });

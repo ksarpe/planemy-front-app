@@ -1,8 +1,8 @@
 import { APIError } from "../data/Auth";
-import { type LabelInterface, type LabelConnection } from "../data/Utils/interfaces";
+import { LabelResponse, type LabelConnection, type LabelInterface } from "../data/Utils/interfaces";
 
 // Labels API functions
-export const getLabels = async (): Promise<LabelInterface[]> => {
+export const getLabels = async (): Promise<LabelResponse> => {
   const response = await fetch("http://localhost:8080/api/v1/labels", {
     method: "GET",
     credentials: "include",

@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/shadcn/button";
 import { Calendar as CalendarRAC } from "@/components/ui/shadcn/calendar-rac";
 import { DateInput } from "@/components/ui/shadcn/datefield-rac";
-import { Input } from "@/components/ui/shadcn/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/shadcn/select";
-import { Textarea } from "@/components/ui/shadcn/textarea";
 import { parseDate } from "@internationalized/date";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
 import { useDeleteLabelConnection } from "@shared/hooks/labels/useLabels";
@@ -13,7 +11,13 @@ import { Calendar, CheckCircle2, Tag, Trash, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button as AriaButton, Popover as AriaPopover, DatePicker, Dialog, Group } from "react-aria-components";
 import { useTranslation } from "react-i18next";
-import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
+import {
+  BasicDropdown,
+  BasicDropdownItem,
+  DeleteConfirmationModal,
+  FloatingLabelInput,
+  FloatingLabelTextarea,
+} from "../Common";
 import { Drawer } from "../Common/Drawer";
 import { Label } from "../shadcn/label";
 
@@ -25,6 +29,12 @@ export default function TaskDetails() {
   const { mutate: removeTask } = useDeleteTask();
   const { mutate: removeLabelConnection } = useDeleteLabelConnection();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // Sync drawer open state with clickedTask
+  useEffect(() => {
+    setIsDrawerOpen(!!clickedTask);
+  }, [clickedTask]);
 
   // Form state
   const [title, setTitle] = useState(clickedTask?.title || "");
@@ -57,8 +67,6 @@ export default function TaskDetails() {
     }
   }, [clickedTask]); // Only re-run when the task ID changes (different task clicked)
 
-  if (!clickedTask || !currentTaskListId) return null;
-
   // Generate time options (same as event-panel)
   const timeOptions = [];
   for (let hour = 0; hour <= 23; hour++) {
@@ -74,6 +82,8 @@ export default function TaskDetails() {
   }
 
   const handleSave = () => {
+    if (!clickedTask || !currentTaskListId) return;
+
     const updates: Partial<{ title: string; task_description: string; dueDate: string }> = {};
 
     if (title.trim() !== clickedTask.title) {
@@ -101,35 +111,62 @@ export default function TaskDetails() {
   };
 
   const handleToggleComplete = () => {
+    if (!clickedTask || !currentTaskListId) return;
     updateTask({ id: clickedTask.id, data: { isCompleted: !clickedTask.isCompleted }, listId: currentTaskListId });
     setClickedTask(null);
   };
 
   const handleDelete = () => {
+    if (!clickedTask) return;
     setShowDeleteConfirm(false);
     setClickedTask(null);
     removeTask(clickedTask.id);
   };
 
+  const handleClose = () => {
+    setIsDrawerOpen(false);
+    // Wait for animation to finish before clearing clickedTask
+    setTimeout(() => {
+      setClickedTask(null);
+    }, 300); // Match animation duration
+  };
+
   return (
     <>
       <Drawer
-        isOpen={!!clickedTask}
-        onClose={() => setClickedTask(null)}
+        isOpen={isDrawerOpen}
+        onClose={handleClose}
         width="sm"
         position="right"
-        headerActions={
-          <Button
-            onClick={() => setShowDeleteConfirm(true)}
-            variant="delete"
-            size="icon"
-            className="flex-shrink-0"
-            aria-label={t("tasks.details.actions.delete")}>
-            <Trash2 size={18} />
-          </Button>
+        header={
+          clickedTask && (
+            <Button
+              onClick={() => setShowDeleteConfirm(true)}
+              variant="delete"
+              size="icon"
+              className="flex-shrink-0"
+              aria-label={t("tasks.details.actions.delete")}>
+              <Trash2 size={18} />
+            </Button>
+          )
+        }
+        footer={
+          clickedTask && (
+            <div className="flex items-center justify-end gap-2">
+              <Button
+                onClick={handleToggleComplete}
+                variant={clickedTask.isCompleted ? "default" : "success"}
+                className="flex items-center justify-center gap-2">
+                <CheckCircle2 size={18} />
+                {clickedTask.isCompleted ? t("tasks.details.actions.markIncomplete") : "Complete"}
+              </Button>
+              <Button onClick={handleSave} variant="primary">
+                {t("tasks.details.actions.save")}
+              </Button>
+            </div>
+          )
         }>
-        <div className="h-full flex flex-col">
-          {/* Content - Scrollable */}
+        {clickedTask && currentTaskListId && (
           <div className="flex-1 overflow-y-auto p-6">
             <div className="space-y-6">
               {/* Labels */}
@@ -143,7 +180,7 @@ export default function TaskDetails() {
                             className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full cursor-pointer"
                             style={{ backgroundColor: label.color + "20", color: label.color }}>
                             <Tag size={12} />
-                            {label.name}
+                            {label.label_name}
                           </div>
                         }
                         usePortal={true}>
@@ -160,30 +197,24 @@ export default function TaskDetails() {
               )}
 
               {/* Title */}
-              <div className="group relative">
-                <label
-                  htmlFor="title"
-                  className="cursor-text absolute top-1/2 -translate-y-1/2 px-1 text-sm text-text transition-all group-focus-within:top-0 group-focus-within:text-xs group-focus-within:font-medium group-focus-within:text-text has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium has-[+input:not(:placeholder-shown)]:text-text">
-                  <span className="inline-flex bg-bg px-2">{t("tasks.details.titleLabel")}</span>
-                </label>
-                <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="" autoFocus />
-              </div>
+              <FloatingLabelInput
+                id="title"
+                label={t("tasks.details.titleLabel")}
+                value={title}
+                labelBg="bg-bg-alt"
+                onChange={(e) => setTitle(e.target.value)}
+                autoFocus
+              />
 
               {/* Description */}
-              <div className="group relative">
-                <label
-                  htmlFor="task_description"
-                  className="origin-start absolute top-0 block translate-y-2 cursor-text px-1 text-sm text-text-muted/70 transition-all group-focus-within:pointer-events-none group-focus-within:-translate-y-1/2 group-focus-within:cursor-default group-focus-within:text-xs group-focus-within:font-medium group-focus-within:text-text has-[+textarea:not(:placeholder-shown)]:pointer-events-none has-[+textarea:not(:placeholder-shown)]:-translate-y-1/2 has-[+textarea:not(:placeholder-shown)]:cursor-default has-[+textarea:not(:placeholder-shown)]:text-xs has-[+textarea:not(:placeholder-shown)]:font-medium has-[+textarea:not(:placeholder-shown)]:text-text">
-                  <span className="inline-flex bg-bg px-2">{t("tasks.details.descriptionLabel")}</span>
-                </label>
-                <Textarea
-                  id="task_description"
-                  value={task_description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={4}
-                  placeholder=" "
-                />
-              </div>
+              <FloatingLabelTextarea
+                id="task_description"
+                label={t("tasks.details.descriptionLabel")}
+                labelBg="bg-bg-alt"
+                value={task_description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={4}
+              />
 
               {/* Due Date & Time */}
               <div className="space-y-3">
@@ -197,13 +228,13 @@ export default function TaskDetails() {
                       }
                     }}
                     className="group flex flex-col gap-1">
-                    <Group className="flex w-full items-center rounded-lg border border-text-muted-more bg-bg hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                    <Group className="flex w-full items-center rounded-lg border border-text-muted-more bg-bg-alt hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
                       <DateInput className="flex flex-1 text-text" unstyled />
                       <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                         <Calendar size={16} />
                       </AriaButton>
                     </Group>
-                    <AriaPopover className="rounded-lg border border-text-muted-more bg-bg p-2 shadow-lg">
+                    <AriaPopover className="rounded-lg border border-text-muted-more bg-bg-alt p-2 shadow-lg">
                       <Dialog className="outline-none">
                         <CalendarRAC />
                       </Dialog>
@@ -241,35 +272,21 @@ export default function TaskDetails() {
               </div>
             </div>
           </div>
-
-          {/* Footer - Fixed at bottom */}
-          <div className="p-4 border-t border-bg-alt flex items-center justify-end gap-2">
-            {/* Complete and Save buttons */}
-            <Button
-              onClick={handleToggleComplete}
-              variant={clickedTask.isCompleted ? "default" : "success"}
-              className="flex items-center justify-center gap-2">
-              <CheckCircle2 size={18} />
-              {clickedTask.isCompleted ? t("tasks.details.actions.markIncomplete") : "Complete"}
-            </Button>
-
-            <Button onClick={handleSave} variant="primary">
-              {t("tasks.details.actions.save")}
-            </Button>
-          </div>
-        </div>
+        )}
       </Drawer>
 
       {/* Delete Confirmation Modal */}
-      <DeleteConfirmationModal
-        isOpen={showDeleteConfirm}
-        onClose={() => setShowDeleteConfirm(false)}
-        onConfirm={handleDelete}
-        title={t("tasks.details.deleteConfirmation.title")}
-        message={t("tasks.details.deleteConfirmation.message")}
-        itemName={clickedTask.title}
-        confirmButtonText={t("tasks.details.deleteConfirmation.confirmButton")}
-      />
+      {clickedTask && (
+        <DeleteConfirmationModal
+          isOpen={showDeleteConfirm}
+          onClose={() => setShowDeleteConfirm(false)}
+          onConfirm={handleDelete}
+          title={t("tasks.details.deleteConfirmation.title")}
+          message={t("tasks.details.deleteConfirmation.message")}
+          itemName={clickedTask.title}
+          confirmButtonText={t("tasks.details.deleteConfirmation.confirmButton")}
+        />
+      )}
     </>
   );
 }

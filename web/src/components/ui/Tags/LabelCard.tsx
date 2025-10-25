@@ -1,6 +1,6 @@
-import { Tag, Edit3, Trash2 } from "lucide-react";
 import type { LabelCardProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
 import { useT } from "@shared/hooks/utils/useT";
+import { Edit3, Tag, Trash2 } from "lucide-react";
 
 export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   const { t } = useT();
@@ -12,11 +12,11 @@ export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   };
 
   return (
-    <div className="bg-white  rounded-lg p-4 shadow-md border border-gray-200  hover:shadow-md transition-shadow duration-200">
+    <div className="bg-bg-alt  rounded-lg p-4 shadow-md border border-bg-muted-light  hover:shadow-md transition-shadow duration-200">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full border border-gray-300" style={{ backgroundColor: label.color }} />
-          <h3 className="font-medium text-text  truncate">{label.name}</h3>
+          <h3 className="font-medium text-text  truncate">{label.label_name}</h3>
         </div>
         <div className="flex gap-1">
           <button
@@ -40,7 +40,7 @@ export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
         className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full"
         style={{ backgroundColor: label.color + "20", color: label.color }}>
         <Tag size={12} />
-        {label.name}
+        {label.label_name}
       </div>
     </div>
   );

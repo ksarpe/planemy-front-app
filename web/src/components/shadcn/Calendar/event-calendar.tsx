@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
 import {
   addDays,
   addMonths,
@@ -11,19 +10,18 @@ import {
   subWeeks,
 } from "date-fns";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { addHoursToDate } from "@/components/shadcn/utils";
-import { AgendaDaysToShow } from "@/components/shadcn/constants";
 import { AgendaView } from "@/components/shadcn/Calendar/agenda-view";
 import { CalendarDndProvider } from "@/components/shadcn/Calendar/calendar-dnd-context";
 import { DayView } from "@/components/shadcn/Calendar/day-view";
 import { EventPanel } from "@/components/shadcn/Calendar/event-panel";
-import { EventGap, EventHeight, WeekCellsHeight } from "@/components/shadcn/constants";
 import { MonthView } from "@/components/shadcn/Calendar/month-view";
 import { WeekView } from "@/components/shadcn/Calendar/week-view";
+import { AgendaDaysToShow, EventGap, EventHeight, WeekCellsHeight } from "@/components/shadcn/constants";
 import type { CalendarEvent, CalendarView } from "@/components/shadcn/types";
-import { cn } from "@/lib/shadcn/utils";
+import { addHoursToDate } from "@/components/shadcn/utils";
 import { Button } from "@/components/ui/shadcn/button";
 import {
   DropdownMenu,
@@ -32,6 +30,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/shadcn/dropdown-menu";
+import { cn } from "@/lib/shadcn/utils";
 
 export interface EventCalendarProps {
   events?: CalendarEvent[];
@@ -245,18 +244,16 @@ export function EventCalendar({
 
   return (
     <div
-      className="flex h-full flex-col border-bg-alt border-l has-data-[slot=month-view]:flex-1"
+      className="flex h-full flex-col  has-data-[slot=month-view]:flex-1"
       style={
         {
           "--event-height": `${EventHeight}px`,
           "--event-gap": `${EventGap}px`,
           "--week-cells-height": `${WeekCellsHeight}px`,
-          backgroundColor: "var(--color-bg)",
-          color: "var(--color-text)",
         } as React.CSSProperties
       }>
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
-        <div className={cn("flex items-center justify-between p-2 sm:p-4 bg-bg-alt", className)}>
+        <div className={cn("flex items-center justify-between p-2 sm:p-4 bg-bg-alt text-text", className)}>
           {/* LEFT SIDE */}
           <div className="flex items-center gap-1 sm:gap-2">
             <div className="flex items-center sm:gap-2">

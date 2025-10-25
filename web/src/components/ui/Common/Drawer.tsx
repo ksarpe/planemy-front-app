@@ -9,7 +9,8 @@ interface DrawerProps {
   width?: "sm" | "md" | "lg" | "full"; // Different width options
   position?: "left" | "right"; // Slide from left or right
   showOverlay?: boolean;
-  headerActions?: ReactNode; // Optional actions in header (e.g., delete button)
+  header?: ReactNode; // Optional actions in header (e.g., delete button)
+  footer?: ReactNode; // Optional footer with action buttons
 }
 
 const widthClasses = {
@@ -27,7 +28,8 @@ export function Drawer({
   width = "sm",
   position = "right",
   showOverlay = true,
-  headerActions,
+  header,
+  footer,
 }: DrawerProps) {
   const slideDirection = position === "right" ? "translate-x-full" : "-translate-x-full";
 
@@ -53,7 +55,7 @@ export function Drawer({
           widthClasses[width]
         } border-0 rounded-l-2xl max-w-full bg-bg-alt border-${
           position === "right" ? "l" : "r"
-        } border-bg-hover shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
+        } shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : slideDirection
         }`}
         style={{
@@ -61,20 +63,23 @@ export function Drawer({
         }}
         onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="p-2 border-b border-bg-muted-light rounded-tl-2xl bg-bg-alt sticky top-0 z-10">
-          <div className="flex items-center justify-between gap-2">
+        <div className="py-2 pl-2 pr-4 border-b border-bg-muted-light rounded-tl-2xl bg-bg-alt sticky top-0 z-10">
+          <div className="flex items-center justify-between gap-2 p-2">
             <button
               onClick={onClose}
               className="text-text-muted hover:text-text hover:bg-bg-muted-light cursor-pointer rounded-lg p-2 transition-colors"
               aria-label="Close panel">
               <X size={24} />
             </button>
-            {headerActions}
+            {header}
           </div>
         </div>
 
         {/* Content */}
         <div className="flex-1 overflow-auto scrollbar-hide">{children}</div>
+
+        {/* Footer */}
+        {footer && <div className="p-6 rounded-bl-2xl bg-bg-alt sticky bottom-0">{footer}</div>}
       </div>
     </>
   );

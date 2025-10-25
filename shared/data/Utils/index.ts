@@ -1,3 +1,3 @@
 export * from "./interfaces";
-export * from "./types";
 export * from "./toast";
+export * from "./types";

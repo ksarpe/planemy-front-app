@@ -1,4 +1,4 @@
-import type { SharePermission, ShareStatus, ShareableObjectType } from "@/data/Utils/types";
+import type { SharePermission, ShareStatus, ShareableObjectType } from "./types";
 
 export interface ShareNotification {
   id?: string; // Firestore document ID
@@ -49,12 +49,20 @@ export interface UserNotificationStatus {
   createdAt: string; // ISO string - when first seen by user
 }
 
+// Frontend-friendly interface (camelCase)
 export interface LabelInterface {
   id: string;
-  name: string;
+  label_name: string; // Transformed from label_name
   color: string; // hex color or predefined color class
   description?: string;
-  userId: string;
+  userId: string; // Transformed from user_id
+}
+
+export interface LabelResponse {
+  items: LabelInterface[];
+  total: number;
+  limit: number;
+  offset: number;
 }
 
 export interface LabelConnection {

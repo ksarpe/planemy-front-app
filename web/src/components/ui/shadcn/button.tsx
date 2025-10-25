@@ -10,6 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-bg-alt text-text hover:bg-bg-muted-light cursor-pointer",
+        default_light: "bg-text-muted-more text-text hover:bg-text-muted-more/60 cursor-pointer",
         primary: "bg-primary text-white cursor-pointer hover:bg-primary/60",
         success: "bg-success text-white cursor-pointer hover:bg-success/80",
         delete: "bg-negative text-white cursor-pointer hover:bg-negative/80",
