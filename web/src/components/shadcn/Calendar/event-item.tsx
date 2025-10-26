@@ -1,11 +1,13 @@
-import { useMemo } from "react";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { differenceInMinutes, format, getMinutes, isPast, isValid } from "date-fns";
+import { useMemo } from "react";
 
-import { getBorderRadiusClasses, getEventColorClasses } from "@/components/shadcn/utils";
 import type { CalendarEvent } from "@/components/shadcn/types";
+import { getBorderRadiusClasses, getEventColorClasses } from "@/components/shadcn/utils";
 import { cn } from "@/lib/shadcn/utils";
+import { LabelInterface } from "@shared/data/Utils";
+import { useLabelContext } from "@shared/hooks/context/useLabelContext";
 
 // Safe date formatting with error handling
 const formatTimeWithOptionalMinutes = (date: Date | string | number) => {
@@ -50,6 +52,7 @@ interface EventWrapperProps {
   dndAttributes?: DraggableAttributes;
   onMouseDown?: (e: React.MouseEvent) => void;
   onTouchStart?: (e: React.TouchEvent) => void;
+  labelColor?: string;
 }
 
 function EventWrapper({
@@ -65,6 +68,7 @@ function EventWrapper({
   dndAttributes,
   onMouseDown,
   onTouchStart,
+  labelColor,
 }: EventWrapperProps) {
   // Safe date calculation with error handling
   const displayEnd = useMemo(() => {
@@ -102,7 +106,7 @@ function EventWrapper({
         isEventInPast && "line-through opacity-60",
         // Responsive padding
         "sm:px-2",
-        getEventColorClasses(event.color),
+        getEventColorClasses(labelColor || event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         className,
       )}
@@ -157,6 +161,18 @@ export function EventItem({
   onMouseDown,
   onTouchStart,
 }: EventItemProps) {
+  const { getLabelForObject } = useLabelContext();
+
+  // Get labels for the current event
+  const eventLabel: LabelInterface | undefined = (() => {
+    try {
+      return getLabelForObject("event", event.id);
+    } catch (error) {
+      console.error("Error getting labels for event:", error);
+      return undefined;
+    }
+  })();
+
   // Use the provided currentTime (for dragging) or the event's actual time
   const displayStart = useMemo(() => {
     return currentTime || createSafeDate(event?.start || new Date());
@@ -223,7 +239,8 @@ export function EventItem({
         dndListeners={dndListeners}
         dndAttributes={dndAttributes}
         onMouseDown={onMouseDown}
-        onTouchStart={onTouchStart}>
+        onTouchStart={onTouchStart}
+        labelColor={eventLabel?.color}>
         {children || (
           <span className="truncate">
             {!event.allDay && (

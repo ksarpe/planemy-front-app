@@ -68,10 +68,17 @@ export interface LabelResponse {
 export interface LabelConnection {
   id: string;
   userId: string;
-  objectId: string;
-  objectType: string;
-  labelId: string;
+  entity_id: string;
+  entity_type: string;
+  label_id: string;
   createdAt: string;
+}
+
+export interface LabelConnectionResponse {
+  items: LabelConnection[];
+  total: number;
+  limit: number;
+  offset: number;
 }
 
 export interface LabelContextType {

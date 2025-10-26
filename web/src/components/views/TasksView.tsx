@@ -62,7 +62,12 @@ function TasksViewContent() {
     <div className="relative h-full flex flex-col bg-bg">
       {/* Task Lists Drawer */}
 
-      <Drawer isOpen={showListsPanel} onClose={() => setShowListsPanel(false)} width="sm" position="right">
+      <Drawer
+        isOpen={showListsPanel}
+        onClose={() => setShowListsPanel(false)}
+        width="sm"
+        position="right"
+        title="Task Lists">
         <TaskListPanel
           lists={allTaskLists}
           currentList={currentTaskList}

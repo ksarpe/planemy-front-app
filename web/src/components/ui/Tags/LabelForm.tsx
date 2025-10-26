@@ -30,7 +30,7 @@ import type { LabelFormProps } from "@shared/data/Utils/Components/UtilComponent
 export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, loading }: LabelFormProps) {
   const { t } = useT();
   const [formData, setFormData] = useState({
-    name: initialLabel?.name || "",
+    name: initialLabel?.label_name || "",
     color: initialLabel?.color || "#3B82F6",
     description: initialLabel?.description || "",
   });

@@ -58,6 +58,7 @@ interface DateInputProps extends DateInputPropsRac {
 function DateInput({ className, unstyled = false, ...props }: Omit<DateInputProps, "children">) {
   return (
     <DateInputRac
+      aria-label="Date input"
       className={composeRenderProps(className, (className) => cn(!unstyled && dateInputStyle, className))}
       {...props}>
       {(segment) => <DateSegment segment={segment} />}

@@ -1,5 +1,5 @@
 import { APIError } from "../data/Auth";
-import { LabelResponse, type LabelConnection, type LabelInterface } from "../data/Utils/interfaces";
+import { LabelConnectionResponse, LabelResponse, type LabelConnection, type LabelInterface } from "../data/Utils/interfaces";
 
 // Labels API functions
 export const getLabels = async (): Promise<LabelResponse> => {
@@ -94,7 +94,7 @@ export const deleteLabel = async (labelId: string): Promise<void> => {
 };
 
 // Label Connections API functions
-export const getLabelConnections = async (objectId?: string, objectType?: string): Promise<LabelConnection[]> => {
+export const getLabelConnections = async (objectId?: string, objectType?: string): Promise<LabelConnectionResponse> => {
   let url = "http://localhost:8080/api/v1/label-connections";
   const params = new URLSearchParams();
 
@@ -119,7 +119,7 @@ export const getLabelConnections = async (objectId?: string, objectType?: string
 };
 
 export const addLabelConnection = async (
-  connectionData: Partial<LabelConnection>,
+  connectionData: Pick<LabelConnection, "entity_id" | "entity_type" | "label_id">,
 ): Promise<Partial<LabelConnection>> => {
   const response = await fetch("http://localhost:8080/api/v1/label-connections", {
     method: "POST",

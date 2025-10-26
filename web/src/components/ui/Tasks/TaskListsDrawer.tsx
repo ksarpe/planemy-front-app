@@ -20,7 +20,7 @@ export function TaskListsDrawer({
   onAddList,
 }: TaskListsDrawerProps) {
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} width="sm" position="right">
+    <Drawer isOpen={isOpen} onClose={onClose} width="sm" position="right" title="Task Lists">
       <TaskListPanel
         lists={allTaskLists}
         currentList={currentTaskList}

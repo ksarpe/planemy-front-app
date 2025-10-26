@@ -7,13 +7,17 @@ import { Button as AriaButton, Popover as AriaPopover, DatePicker, Dialog, Group
 import { DefaultEndHour, DefaultStartHour, EndHour, StartHour } from "@/components/shadcn/constants";
 import type { CalendarEvent, EventColor } from "@/components/shadcn/types";
 import { FloatingLabelInput, FloatingLabelTextarea } from "@/components/ui/Common";
+import { Badge } from "@/components/ui/Common/Badge";
 import { Drawer } from "@/components/ui/Common/Drawer";
+import Multiselect from "@/components/ui/Common/Multiselect";
 import { Button } from "@/components/ui/shadcn/button";
 import { Calendar as CalendarRAC } from "@/components/ui/shadcn/calendar-rac";
 import { DateInput } from "@/components/ui/shadcn/datefield-rac";
 import { Label } from "@/components/ui/shadcn/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/shadcn/select";
 import { Switch } from "@/components/ui/shadcn/switch";
+import { useLabelContext } from "@shared/hooks/context/useLabelContext";
+import { useCreateLabelConnection } from "@shared/hooks/labels/useLabels";
 import { Calendar } from "lucide-react";
 import { toast } from "sonner";
 
@@ -35,6 +39,8 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
   const [allDay, setAllDay] = useState(false);
   const [location, setLocation] = useState("");
   const [color, setColor] = useState<EventColor>("sky");
+  const { labels, getLabelForObject } = useLabelContext();
+  const { mutate: createLabelConnection } = useCreateLabelConnection();
 
   // Helper function to format time for input
   const formatTimeForInput = (date: Date) => {
@@ -158,10 +164,22 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
     }
   };
 
+  const newLabelAddAction = async (labelId: string) => {
+    if (!event?.id) {
+      toast.error("Save the event before adding labels.", { position: "bottom-center" });
+      return;
+    }
+    createLabelConnection({ entity_id: event.id, entity_type: "event", label_id: labelId });
+  };
+
+  const labelsToSelect = labels.map((label) => ({ label: label.label_name, value: label.id, color: label.color }));
+  const eventLabel = getLabelForObject("event", event?.id || "");
+
   return (
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
+      title={event?.id ? "Edit Event" : "Create Event"}
       // HEADER
       header={
         <div className="flex items-center justify-between">
@@ -216,6 +234,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                 {/* Start Date */}
                 <div className="flex-1">
                   <DatePicker
+                    aria-label="Event Date Picker"
                     value={startDate ? parseDate(format(startDate, "yyyy-MM-dd")) : null}
                     onChange={(date) => {
                       if (date) {
@@ -228,7 +247,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                     }}
                     className="group flex flex-col gap-1">
                     <Group className="flex w-full items-center rounded-lg border border-text-muted-more bg-bg-alt hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
-                      <DateInput className="flex flex-1 text-text" unstyled />
+                      <DateInput aria-label="Start Event Date Input" className="flex flex-1 text-text" unstyled />
                       <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                         <Calendar size={16} />
                       </AriaButton>
@@ -247,6 +266,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                 {/* End Date */}
                 <div className="flex-1">
                   <DatePicker
+                    aria-label="Event End Date Picker"
                     value={endDate ? parseDate(format(endDate, "yyyy-MM-dd")) : null}
                     onChange={(date) => {
                       if (date) {
@@ -257,7 +277,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                     minValue={startDate ? parseDate(format(startDate, "yyyy-MM-dd")) : undefined}
                     className="group flex flex-col gap-1">
                     <Group className="flex w-full items-center rounded-lg border border-text-muted-more hover:border-white bg-bg-alt px-3 py-2 text-xs transition-colors focus-within:border-ring">
-                      <DateInput className="flex flex-1 text-text" unstyled />
+                      <DateInput aria-label="End Event Date Input" className="flex flex-1 text-text" unstyled />
                       <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                         <Calendar size={16} />
                       </AriaButton>
@@ -320,10 +340,18 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
             <Switch id="all-day" checked={allDay} onCheckedChange={(checked) => setAllDay(checked === true)} />
             <Label htmlFor="all-day">All day</Label>
           </div>
-          {/* Color */}
-          <Button variant="default_light" onClick={() => {}}>
-            + Add label
-          </Button>
+          {/* CURRENT LABELS BADGES */}
+          {event?.id && eventLabel && <Badge size="lg">{eventLabel?.label_name}</Badge>}
+          {/* LABEL SELECT */}
+          {event?.id && (
+            <Multiselect
+              options={labelsToSelect}
+              placeholder="Select label"
+              openedPlaceholder="Search labels"
+              addButtonText="Create label"
+              onSelect={newLabelAddAction}
+            />
+          )}
         </div>
       </div>
     </Drawer>

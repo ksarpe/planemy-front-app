@@ -50,7 +50,7 @@ export function Drawer({
       {/* Drawer */}
       <div
         role="dialog"
-        aria-label={title}
+        aria-label={title || "Drawer"}
         className={`fixed ${position}-0 h-9/10 ${
           widthClasses[width]
         } border-0 rounded-l-2xl max-w-full bg-bg-alt border-${

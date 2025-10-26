@@ -138,6 +138,7 @@ export default function TaskDetails() {
         onClose={handleClose}
         width="sm"
         position="right"
+        title="Task Details"
         header={
           clickedTask && (
             <Button

@@ -13,7 +13,12 @@ import {
 } from "../../api/labels";
 import { queryClient } from "../../lib/queryClient";
 
-import type { LabelConnection, LabelInterface, LabelResponse } from "../../data/Utils/interfaces";
+import type {
+  LabelConnection,
+  LabelConnectionResponse,
+  LabelInterface,
+  LabelResponse,
+} from "../../data/Utils/interfaces";
 
 // Labels hooks
 export function useLabels() {
@@ -68,7 +73,7 @@ export function useDeleteLabel() {
 
 // Label Connections hooks
 export function useLabelConnections(objectId?: string, objectType?: string) {
-  return useQuery<LabelConnection[], unknown, LabelConnection[], (string | undefined)[]>({
+  return useQuery<LabelConnectionResponse, unknown, LabelConnectionResponse, (string | undefined)[]>({
     queryKey: ["label-connections", objectId, objectType],
     queryFn: () => getLabelConnections(objectId, objectType),
     staleTime: 5 * 60 * 1000,
@@ -78,7 +83,8 @@ export function useLabelConnections(objectId?: string, objectType?: string) {
 
 export function useCreateLabelConnection() {
   return useMutation({
-    mutationFn: (connectionData: Omit<LabelConnection, "id" | "createdAt">) => addLabelConnection(connectionData),
+    mutationFn: (connectionData: Pick<LabelConnection, "entity_id" | "entity_type" | "label_id">) =>
+      addLabelConnection(connectionData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["label-connections"] });
     },
@@ -115,30 +121,30 @@ export function useDeleteAllLabelConnectionsForObject() {
 }
 
 // Convenience hooks for common operations
-export function useAddLabelToObject() {
-  return useMutation({
-    mutationFn: ({
-      objectId,
-      objectType,
-      labelId,
-      userId,
-    }: {
-      objectId: string;
-      objectType: string;
-      labelId: string;
-      userId: string;
-    }) =>
-      addLabelConnection({
-        userId,
-        objectId,
-        objectType,
-        labelId,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
-    },
-  });
-}
+// export function useAddLabelToObject() {
+//   return useMutation({
+//     mutationFn: ({
+//       objectId,
+//       objectType,
+//       labelId,
+//       userId,
+//     }: {
+//       objectId: string;
+//       objectType: string;
+//       labelId: string;
+//       userId: string;
+//     }) =>
+//       addLabelConnection({
+//         userId,
+//         objectId,
+//         objectType,
+//         labelId,
+//       }),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+//     },
+//   });
+// }
 
 export function useRemoveLabelFromObject() {
   return useMutation({
@@ -147,16 +153,6 @@ export function useRemoveLabelFromObject() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["label-connections"] });
     },
-  });
-}
-
-export function useLabelsForObject(objectId: string, objectType: string) {
-  return useQuery<LabelConnection[], unknown, LabelConnection[], (string | undefined)[]>({
-    queryKey: ["label-connections", objectId, objectType],
-    queryFn: () => getLabelConnections(objectId, objectType),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    enabled: !!(objectId && objectType),
   });
 }
 
