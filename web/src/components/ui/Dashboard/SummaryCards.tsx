@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
+import { useNavigate } from "react-router-dom";
 //import { useT } from "@shared/hooks/utils/useT";
-import { FiShoppingBag, FiList, FiChevronRight } from "react-icons/fi";
 import { useDashboardSummary } from "@shared/hooks/combined/useSummary";
-import Spinner from "../Utils/Spinner";
+import { FiChevronRight, FiList, FiShoppingBag } from "react-icons/fi";
+import { SkeletonText } from "../Utils";
 
 export default function SummaryCards() {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ export default function SummaryCards() {
             </p> */}
                 </div>
               ) : (
-                <Spinner />
+                <SkeletonText lines={1} className="w-32" />
               )}
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function SummaryCards() {
           </p> */}
                 </div>
               ) : (
-                <Spinner />
+                <SkeletonText lines={1} className="w-32" />
               )}
             </div>
           </div>

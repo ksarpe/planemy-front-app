@@ -67,23 +67,18 @@
   }
 }
 
-:root {
-  --destructive-foreground: oklch(0.505 0.213 27.518);
-}
-
-.dark {
-  --destructive-foreground: oklch(0.704 0.191 22.216);
-}
-
-@theme inline {
-  --color-destructive-foreground: var(--destructive-foreground);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+/* Skeleton shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
   }
-  body {
-    @apply bg-background text-foreground;
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@layer utilities {
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
   }
 }
