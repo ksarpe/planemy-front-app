@@ -1,14 +1,16 @@
 import type { LabelCardProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
 import { useT } from "@shared/hooks/utils/useT";
 import { Edit3, Tag, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { DeleteConfirmationModal } from "../Common";
 
 export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   const { t } = useT();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleDelete = () => {
-    if (window.confirm(t("labels.actions.confirmDelete"))) {
-      onDelete(label.id);
-    }
+    setShowDeleteConfirm(false);
+    onDelete(label.id);
   };
 
   return (
@@ -26,7 +28,7 @@ export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
             <Edit3 size={14} />
           </button>
           <button
-            onClick={handleDelete}
+            onClick={() => setShowDeleteConfirm(true)}
             className="p-1 text-gray-500 hover:text-red-600 transition-colors duration-200"
             title={t("labels.actions.delete")}>
             <Trash2 size={14} />
@@ -42,6 +44,17 @@ export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
         <Tag size={12} />
         {label.label_name}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDelete}
+        title="Delete title"
+        message="Dou you really want to remove"
+        itemName={label.label_name}
+        confirmButtonText={"Delete"}
+      />
     </div>
   );
 }

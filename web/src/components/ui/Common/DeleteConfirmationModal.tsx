@@ -1,6 +1,7 @@
-import { AlertTriangle } from "lucide-react";
-import BaseModal from "./BaseModal";
 import { DeleteConfirmationModalProps } from "@shared/data/Common/interfaces";
+import { AlertTriangle } from "lucide-react";
+import { Button } from "../shadcn/button";
+import BaseModal from "./BaseModal";
 
 export default function DeleteConfirmationModal({
   isOpen,
@@ -16,18 +17,12 @@ export default function DeleteConfirmationModal({
 }: DeleteConfirmationModalProps) {
   const actions = (
     <>
-      <button
-        onClick={onClose}
-        disabled={isLoading}
-        className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50">
+      <Button onClick={onClose} disabled={isLoading} variant="default">
         {cancelButtonText}
-      </button>
-      <button
-        onClick={onConfirm}
-        disabled={isLoading}
-        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50">
-        {isLoading ? "Usuwanie..." : confirmButtonText}
-      </button>
+      </Button>
+      <Button onClick={onConfirm} disabled={isLoading} variant="delete">
+        {isLoading ? "Removing..." : confirmButtonText}
+      </Button>
     </>
   );
 
@@ -36,7 +31,7 @@ export default function DeleteConfirmationModal({
       <div className="flex items-start gap-3">
         <AlertTriangle size={24} className="text-red-500 flex-shrink-0 mt-1" />
         <div>
-          <p className="text-gray-600 mb-2">
+          <p className="text-text-muted-more mb-2">
             {message} <span className="font-semibold">"{itemName}"</span>?
           </p>
 

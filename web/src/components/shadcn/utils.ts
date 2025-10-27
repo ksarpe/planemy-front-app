@@ -1,29 +1,13 @@
 import { isSameDay } from "date-fns";
 
 import type { CalendarEvent, EventColor } from "@/components/shadcn/types";
+import { getColorClasses } from "@shared/data/Utils/colors";
 
 /**
- * Get CSS classes for event colors - now using theme colors
+ * Get CSS classes for event colors - now using centralized color system
  */
 export function getEventColorClasses(color?: EventColor | string): string {
-  const eventColor = color || "sky";
-
-  switch (eventColor) {
-    case "sky":
-      return "bg-primary/10 hover:bg-primary/20 text-primary border-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 dark:text-primary";
-    case "amber":
-      return "bg-yellow-100 hover:bg-yellow-200 text-yellow-900 border-yellow-200 dark:bg-yellow-900/20 dark:hover:bg-yellow-900/30 dark:text-yellow-200";
-    case "violet":
-      return "bg-purple-100 hover:bg-purple-200 text-purple-900 border-purple-200 dark:bg-purple-900/20 dark:hover:bg-purple-900/30 dark:text-purple-200";
-    case "rose":
-      return "bg-pink-100 hover:bg-pink-200 text-pink-900 border-pink-200 dark:bg-pink-900/20 dark:hover:bg-pink-900/30 dark:text-pink-200";
-    case "emerald":
-      return "bg-green-100 hover:bg-green-200 text-green-900 border-green-200 dark:bg-green-900/20 dark:hover:bg-green-900/30 dark:text-green-200";
-    case "orange":
-      return "bg-orange-100 hover:bg-orange-200 text-orange-900 border-orange-200 dark:bg-orange-900/20 dark:hover:bg-orange-900/30 dark:text-orange-200";
-    default:
-      return "bg-primary/10 hover:bg-primary/20 text-primary border-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 dark:text-primary";
-  }
+  return getColorClasses(color);
 }
 
 /**

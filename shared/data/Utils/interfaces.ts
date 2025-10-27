@@ -53,7 +53,7 @@ export interface UserNotificationStatus {
 export interface LabelInterface {
   id: string;
   label_name: string; // Transformed from label_name
-  color: string; // hex color or predefined color class
+  color: string; // Color name (sky, amber, violet, etc.) - see colors.ts
   description?: string;
   userId: string; // Transformed from user_id
 }

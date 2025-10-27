@@ -1,37 +1,15 @@
-import { useState } from "react";
-import { Plus, Edit3 } from "lucide-react";
-import { useT } from "@shared/hooks/utils/useT";
-
-const predefinedColors = [
-  "#EF4444",
-  "#F97316",
-  "#F59E0B",
-  "#EAB308",
-  "#84CC16",
-  "#22C55E",
-  "#10B981",
-  "#14B8A6",
-  "#06B6D4",
-  "#0EA5E9",
-  "#3B82F6",
-  "#6366F1",
-  "#8B5CF6",
-  "#A855F7",
-  "#D946EF",
-  "#EC4899",
-  "#F43F5E",
-  "#6B7280",
-  "#374151",
-  "#1F2937",
-];
-
+import { ColorPicker } from "@/components/ui/Common/ColorPicker";
+import type { ColorName } from "@shared/data/Utils/colors";
 import type { LabelFormProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
+import { useT } from "@shared/hooks/utils/useT";
+import { Edit3, Plus } from "lucide-react";
+import { useState } from "react";
 
 export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, loading }: LabelFormProps) {
   const { t } = useT();
   const [formData, setFormData] = useState({
     name: initialLabel?.label_name || "",
-    color: initialLabel?.color || "#3B82F6",
+    color: (initialLabel?.color as ColorName) || "sky",
     description: initialLabel?.description || "",
   });
 
@@ -47,7 +25,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
 
       // Reset form only for create mode
       if (mode === "create") {
-        setFormData({ name: "", color: "#3B82F6", description: "" });
+        setFormData({ name: "", color: "sky", description: "" });
       }
     } catch (error) {
       console.error(`Error ${mode === "create" ? "creating" : "updating"} label:`, error);
@@ -56,7 +34,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
 
   const handleCancel = () => {
     if (mode === "create") {
-      setFormData({ name: "", color: "#3B82F6", description: "" });
+      setFormData({ name: "", color: "sky", description: "" });
     }
     onCancel();
   };
@@ -66,7 +44,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
   const SubmitIcon = mode === "create" ? Plus : Edit3;
 
   return (
-    <div className="bg-white  rounded-lg p-6 shadow-md border border-gray-200 ">
+    <div className="bg-bg-alt rounded-lg p-6 shadow-md border border-gray-200 ">
       <h3 className="text-lg font-semibold mb-4 text-text ">{title}</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -97,24 +75,7 @@ export default function LabelForm({ mode, initialLabel, onSubmit, onCancel, load
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700  mb-2">{t("labels.form.color")}</label>
-        <div className="flex flex-wrap gap-2 mb-3">
-          {predefinedColors.map((color) => (
-            <button
-              key={color}
-              onClick={() => setFormData({ ...formData, color })}
-              className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${
-                formData.color === color ? "border-gray-800 scale-110" : "border-gray-300 hover:scale-105"
-              }`}
-              style={{ backgroundColor: color }}
-            />
-          ))}
-        </div>
-        <input
-          type="color"
-          value={formData.color}
-          onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-          className="w-16 h-8 rounded border border-gray-300 "
-        />
+        <ColorPicker selectedColor={formData.color} onSelectColor={(color) => setFormData({ ...formData, color })} />
       </div>
 
       <div className="flex gap-2">
