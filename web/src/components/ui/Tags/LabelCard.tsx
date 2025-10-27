@@ -1,6 +1,7 @@
 import type { LabelCardProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
 import { getBadgeColorClasses, type ColorName } from "@shared/data/Utils/colors";
 import { Tag } from "lucide-react";
+import { Badge } from "../Common/Badge";
 
 export default function LabelCard({ label, onEdit }: LabelCardProps) {
   const colorClasses = getBadgeColorClasses(label.color as ColorName);
@@ -18,10 +19,10 @@ export default function LabelCard({ label, onEdit }: LabelCardProps) {
 
       {label.description && <p className="text-sm text-gray-600  mb-3">{label.description}</p>}
 
-      <div className={`inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full border ${colorClasses}`}>
+      <Badge variant={label.color as ColorName} size="lg">
         <Tag size={12} />
         {label.label_name}
-      </div>
+      </Badge>
     </div>
   );
 }

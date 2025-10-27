@@ -94,7 +94,7 @@ function EventWrapper({
       return false;
     }
   }, [displayEnd]);
-
+  console.log(labelColor);
   return (
     <button
       className={cn(
@@ -273,7 +273,8 @@ export function EventItem({
         dndListeners={dndListeners}
         dndAttributes={dndAttributes}
         onMouseDown={onMouseDown}
-        onTouchStart={onTouchStart}>
+        onTouchStart={onTouchStart}
+        labelColor={eventLabel?.color}>
         {durationMinutes < 45 ? (
           <div className="truncate">
             {event.title}{" "}
@@ -294,7 +295,7 @@ export function EventItem({
     <button
       className={cn(
         "flex w-full flex-col gap-1 rounded p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
-        getEventColorClasses(event.color),
+        getEventColorClasses(eventLabel?.color || event.color),
         className,
       )}
       style={

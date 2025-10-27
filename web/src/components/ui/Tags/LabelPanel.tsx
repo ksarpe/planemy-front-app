@@ -7,12 +7,13 @@ import type { LabelInterface } from "@shared/data/Utils/interfaces";
 import { useT } from "@shared/hooks/utils/useT";
 import { useEffect, useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { Badge } from "../Common/Badge";
 
 interface LabelPanelProps {
   isOpen: boolean;
   onClose: () => void;
   label?: LabelInterface | null;
-  onSubmit: (data: { label_name: string; color: string; description?: string }, labelId?: string) => Promise<void>;
+  onSubmit: (data: { label_name: string; color: ColorName; description?: string }, labelId?: string) => Promise<void>;
   onDelete?: (labelId: string) => Promise<void>;
   loading?: boolean;
 }
@@ -37,7 +38,7 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
     } else {
       setFormData({
         label_name: "",
-        color: "rose",
+        color: "blue",
         description: "",
       });
     }
@@ -68,7 +69,7 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
   const handleClose = () => {
     setFormData({
       label_name: "",
-      color: "rose",
+      color: "blue",
       description: "",
     });
     onClose();
@@ -127,6 +128,12 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
 
           {/* Color Picker */}
           <div>
+            {/* Preview badge */}
+            {formData.label_name != "" && (
+              <Badge variant={formData.color || "blue"} className="mb-4" size="lg">
+                {formData.label_name}
+              </Badge>
+            )}
             {/* <label className="block text-sm font-medium text-text-muted mb-3">{t("labels.form.color")}</label> */}
             <ColorPicker
               selectedColor={formData.color}

@@ -1,11 +1,11 @@
 //import { usePendingShares } from "@shared/hooks/permissions/usePermissions";
-import { useState, useEffect } from "react";
-import { SidebarNav } from "../ui/Sidebar/SidebarNav";
-import { SidebarUserSection } from "../ui/Sidebar/SidebarUserSection";
-import { DarkModeToggle } from "../ui/Sidebar/DarkModeToggle";
-import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
+import { NavLink } from "react-router-dom";
+import { DarkModeToggle } from "../ui/Sidebar/DarkModeToggle";
+import { SidebarNav } from "../ui/Sidebar/SidebarNav";
 import SidebarSettings from "../ui/Sidebar/SidebarSettings";
+import { SidebarUserSection } from "../ui/Sidebar/SidebarUserSection";
 
 export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   //TODO: counts (lightweight; consider optimization later)
@@ -51,11 +51,8 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         <div className="w-full h-px bg-text-muted/20 my-2" />
 
         {/* SETTINGS */}
-        <div>
-          <SidebarSettings collapsed={collapsed} />
-        </div>
+        <SidebarSettings collapsed={collapsed} />
         <div className="w-full h-px bg-text-muted/20 my-2" />
-
         {/* USER INFO */}
         <SidebarUserSection collapsed={collapsed} handleNavigate={onClose || (() => {})} />
 

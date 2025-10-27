@@ -74,7 +74,7 @@ export function LabelProvider({ children }: PropsWithChildren) {
         if (!connection) return undefined;
 
         // Return the full label object
-
+        console.log(labels.find((label) => label.id === connection.labelId));
         return labels.find((label) => label.id === connection.labelId);
       },
     [labelConnections, labels],

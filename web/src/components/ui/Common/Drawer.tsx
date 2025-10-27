@@ -53,9 +53,7 @@ export function Drawer({
         aria-label={title || "Drawer"}
         className={`fixed ${position}-0 h-9/10 ${
           widthClasses[width]
-        } border-0 rounded-l-2xl max-w-full bg-bg-alt border-${
-          position === "right" ? "l" : "r"
-        } shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
+        } border-0 rounded-l-2xl max-w-full bg-bg-alt shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : slideDirection
         }`}
         style={{

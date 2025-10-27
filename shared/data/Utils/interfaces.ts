@@ -1,3 +1,4 @@
+import { ColorName } from "./colors";
 import type { SharePermission, ShareStatus, ShareableObjectType } from "./types";
 
 export interface ShareNotification {
@@ -53,7 +54,7 @@ export interface UserNotificationStatus {
 export interface LabelInterface {
   id: string;
   label_name: string; // Transformed from label_name
-  color: string; // Color name (sky, amber, violet, etc.) - see colors.ts
+  color: ColorName; // Color name (sky, amber, violet, etc.) - see colors.ts
   description?: string;
   userId: string; // Transformed from user_id
 }

@@ -38,7 +38,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
   const [endTime, setEndTime] = useState(`${DefaultEndHour}:00`);
   const [allDay, setAllDay] = useState(false);
   const [location, setLocation] = useState("");
-  const [color, setColor] = useState<EventColor>("sky");
+  const [color, setColor] = useState<EventColor>("blue");
   const { labels, getLabelForObject } = useLabelContext();
   const { mutate: createLabelConnection } = useCreateLabelConnection();
 
@@ -75,7 +75,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
     setEndTime(addMinutesToTime(defaultStart, 15)); // Set end time to 15 minutes after start
     setAllDay(false);
     setLocation("");
-    setColor("sky");
+    setColor("blue");
   }, []);
 
   useEffect(() => {
@@ -246,7 +246,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                       }
                     }}
                     className="group flex flex-col gap-1">
-                    <Group className="flex w-full items-center rounded-lg border border-text-muted-more bg-bg-alt hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                    <Group className="flex w-full items-center rounded-lg border border-text-muted-more bg-bg-alt hover:border-text-muted px-3 py-2 text-xs transition-colors focus-within:border-ring">
                       <DateInput aria-label="Start Event Date Input" className="flex flex-1 text-text" unstyled />
                       <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                         <Calendar size={16} />
@@ -276,7 +276,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                     }}
                     minValue={startDate ? parseDate(format(startDate, "yyyy-MM-dd")) : undefined}
                     className="group flex flex-col gap-1">
-                    <Group className="flex w-full items-center rounded-lg border border-text-muted-more hover:border-white bg-bg-alt px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                    <Group className="flex w-full items-center rounded-lg border border-text-muted-more hover:border-text-muted bg-bg-alt px-3 py-2 text-xs transition-colors focus-within:border-ring">
                       <DateInput aria-label="End Event Date Input" className="flex flex-1 text-text" unstyled />
                       <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                         <Calendar size={16} />
@@ -338,10 +338,14 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
           {/* All Day Switch */}
           <div className="flex items-center gap-2">
             <Switch id="all-day" checked={allDay} onCheckedChange={(checked) => setAllDay(checked === true)} />
-            <Label htmlFor="all-day">All day</Label>
+            <Label className={`${allDay ? "text-text font-bold" : "text-text-muted-more"} `}>All day</Label>
           </div>
           {/* CURRENT LABELS BADGES */}
-          {event?.id && eventLabel && <Badge size="lg">{eventLabel?.label_name}</Badge>}
+          {event?.id && eventLabel && (
+            <Badge size="lg" variant={eventLabel.color || "blue"}>
+              {eventLabel?.label_name}
+            </Badge>
+          )}
           {/* LABEL SELECT */}
           {event?.id && (
             <Multiselect

@@ -1,10 +1,13 @@
 import LabelPanel from "@/components/ui/Tags/LabelPanel";
 import LabelsGrid from "@/components/ui/Tags/LabelsGrid";
+import { ColorName } from "@shared/data/Utils";
 import { LabelInterface } from "@shared/data/Utils/interfaces";
 import { useLabelContext } from "@shared/hooks/context/useLabelContext";
 import { useCreateLabel, useDeleteLabel, useUpdateLabel } from "@shared/hooks/labels/useLabels";
 import { useT } from "@shared/hooks/utils/useT";
+import { Plus } from "lucide-react";
 import { useState } from "react";
+import { Button } from "../ui/shadcn/button";
 
 export default function LabelsView() {
   const { t } = useT();
@@ -15,12 +18,12 @@ export default function LabelsView() {
   const { mutateAsync: updateLabel } = useUpdateLabel();
   const { mutateAsync: deleteLabel } = useDeleteLabel();
 
-  const handleCreateLabel = async (data: { label_name: string; color: string; description?: string }) => {
+  const handleCreateLabel = async (data: { label_name: string; color: ColorName; description?: string }) => {
     await createLabel({ label_name: data.label_name, color: data.color, description: data.description });
   };
 
   const handleUpdateLabel = async (
-    data: { label_name: string; color: string; description?: string },
+    data: { label_name: string; color: ColorName; description?: string },
     labelId?: string,
   ) => {
     if (!labelId) return;
@@ -50,8 +53,12 @@ export default function LabelsView() {
     <div className="flex h-full p-4 gap-4">
       <div className="w-full rounded-lg shadow-md overflow-auto scrollbar-hide flex flex-col gap-6 bg-bg  p-6">
         {/* Header */}
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col justify-between items-start gap-4">
           <h2 className="text-2xl font-semibold text-text ">{t("labels.title")}</h2>
+          <Button onClick={handleOpenCreatePanel} variant="primary">
+            <Plus size={16} />
+            Create label
+          </Button>
         </div>
 
         {/* Labels Grid */}

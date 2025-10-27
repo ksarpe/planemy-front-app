@@ -3,7 +3,7 @@
  * Used across the application for consistent theming.
  */
 
-export type ColorName = "emerald" | "amber" | "red" | "rose" | "violet";
+export type ColorName = "blue" | "green" | "yellow" | "red" | "purple";
 
 export interface ColorConfig {
   name: ColorName;
@@ -23,50 +23,50 @@ export interface ColorConfig {
  * These classes work with both light and dark modes (handled by CSS variables)
  */
 export const COLORS: Record<ColorName, ColorConfig> = {
-  emerald: {
-    name: "emerald",
-    label: "Emerald",
-    hex: "#10B981",
-    bg: "bg-green-100",
-    bgHover: "hover:bg-green-200",
-    text: "text-green-900",
-    border: "border-green-200",
+  blue: {
+    name: "blue",
+    label: "Blue",
+    hex: "#3B82F6",
+    bg: "bg-blue-500",
+    bgHover: "hover:bg-blue-600",
+    text: "text-white",
+    border: "border-blue-500",
   },
-  amber: {
-    name: "amber",
-    label: "Amber",
-    hex: "#F59E0B",
-    bg: "bg-yellow-100",
-    bgHover: "hover:bg-yellow-200",
-    text: "text-yellow-900",
-    border: "border-yellow-200",
+  green: {
+    name: "green",
+    label: "Green",
+    hex: "#22C55E",
+    bg: "bg-green-500",
+    bgHover: "hover:bg-green-600",
+    text: "text-white",
+    border: "border-green-500",
+  },
+  yellow: {
+    name: "yellow",
+    label: "Yellow",
+    hex: "#EAB308",
+    bg: "bg-yellow-500",
+    bgHover: "hover:bg-yellow-600",
+    text: "text-white",
+    border: "border-yellow-500",
   },
   red: {
     name: "red",
     label: "Red",
     hex: "#EF4444",
-    bg: "bg-red-100",
-    bgHover: "hover:bg-red-200",
-    text: "text-red-900",
-    border: "border-red-200",
+    bg: "bg-red-500",
+    bgHover: "hover:bg-red-600",
+    text: "text-white",
+    border: "border-red-500",
   },
-  rose: {
-    name: "rose",
-    label: "Rose",
-    hex: "#F43F5E",
-    bg: "bg-pink-100",
-    bgHover: "hover:bg-pink-200",
-    text: "text-pink-900",
-    border: "border-pink-200",
-  },
-  violet: {
-    name: "violet",
-    label: "Violet",
+  purple: {
+    name: "purple",
+    label: "Purple",
     hex: "#8B5CF6",
-    bg: "bg-purple-100",
-    bgHover: "hover:bg-purple-200",
-    text: "text-purple-900",
-    border: "border-purple-200",
+    bg: "bg-purple-500",
+    bgHover: "hover:bg-purple-600",
+    text: "text-white",
+    border: "border-purple-500",
   },
 };
 
@@ -79,8 +79,8 @@ export const COLOR_NAMES: ColorName[] = Object.keys(COLORS) as ColorName[];
  * Get color configuration by name
  */
 export function getColorConfig(color?: ColorName | string): ColorConfig {
-  const colorName = (color as ColorName) || "rose";
-  return COLORS[colorName] || COLORS.rose;
+  const colorName = (color as ColorName) || "blue";
+  return COLORS[colorName] || COLORS.blue;
 }
 
 /**
@@ -104,7 +104,7 @@ export function getBadgeColorClasses(color?: ColorName | string): string {
  * Backend expects format: #RRGGBB
  */
 export function colorNameToHex(colorName?: ColorName | string): string {
-  if (!colorName) return COLORS.rose.hex;
+  if (!colorName) return COLORS.blue.hex;
 
   // If already hex format, return as-is
   if (typeof colorName === "string" && colorName.startsWith("#")) {
@@ -120,7 +120,7 @@ export function colorNameToHex(colorName?: ColorName | string): string {
  * Returns the color name if found, otherwise returns the hex as-is
  */
 export function hexToColorName(hex?: string): ColorName | string {
-  if (!hex) return "sky";
+  if (!hex) return "blue";
 
   // Find color by hex value
   const colorEntry = Object.entries(COLORS).find(([_, config]) => config.hex === hex);
