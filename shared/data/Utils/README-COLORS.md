@@ -6,17 +6,6 @@ Unified color system for labels, events, badges, and other UI components across 
 
 ## Usage
 
-### 1. In Label Forms (LabelForm.tsx)
-
-```tsx
-import { ColorPicker } from "@/components/ui/Common/ColorPicker";
-import type { ColorName } from "@shared/data/Utils/colors";
-
-const [color, setColor] = useState<ColorName>("sky");
-
-<ColorPicker selectedColor={color} onSelectColor={setColor} />;
-```
-
 ### 2. In Event Calendar (event-calendar.tsx)
 
 ```tsx

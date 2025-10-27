@@ -1,4 +1,4 @@
-import LabelForm from "@/components/ui/Tags/LabelForm";
+import LabelPanel from "@/components/ui/Tags/LabelPanel";
 import LabelsGrid from "@/components/ui/Tags/LabelsGrid";
 import { LabelInterface } from "@shared/data/Utils/interfaces";
 import { useLabelContext } from "@shared/hooks/context/useLabelContext";
@@ -9,25 +9,41 @@ import { useState } from "react";
 export default function LabelsView() {
   const { t } = useT();
   const { labels, isLoadingLabels } = useLabelContext();
-  const [isCreating, setIsCreating] = useState(false);
-  const [editingLabel, setEditingLabel] = useState<LabelInterface | null>(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [selectedLabel, setSelectedLabel] = useState<LabelInterface | null>(null);
   const { mutateAsync: createLabel } = useCreateLabel();
   const { mutateAsync: updateLabel } = useUpdateLabel();
   const { mutateAsync: deleteLabel } = useDeleteLabel();
 
-  const handleCreateLabel = async (data: { name: string; color: string; description?: string }) => {
-    await createLabel({ label_name: data.name, color: data.color, description: data.description });
-    setIsCreating(false);
+  const handleCreateLabel = async (data: { label_name: string; color: string; description?: string }) => {
+    await createLabel({ label_name: data.label_name, color: data.color, description: data.description });
   };
 
-  const handleUpdateLabel = async (data: { name: string; color: string; description?: string }, labelId?: string) => {
+  const handleUpdateLabel = async (
+    data: { label_name: string; color: string; description?: string },
+    labelId?: string,
+  ) => {
     if (!labelId) return;
     await updateLabel({ id: labelId, data: { ...data } });
-    setEditingLabel(null);
   };
 
   const handleDeleteLabel = async (labelId: string) => {
     await deleteLabel(labelId);
+  };
+
+  const handleOpenCreatePanel = () => {
+    setSelectedLabel(null);
+    setIsPanelOpen(true);
+  };
+
+  const handleOpenEditPanel = (label: LabelInterface) => {
+    setSelectedLabel(label);
+    setIsPanelOpen(true);
+  };
+
+  const handleClosePanel = () => {
+    setIsPanelOpen(false);
+    setSelectedLabel(null);
   };
 
   return (
@@ -38,38 +54,27 @@ export default function LabelsView() {
           <h2 className="text-2xl font-semibold text-text ">{t("labels.title")}</h2>
         </div>
 
-        {/* Create New Label Form */}
-        {isCreating && (
-          <LabelForm
-            mode="create"
-            onSubmit={handleCreateLabel}
-            onCancel={() => setIsCreating(false)}
-            loading={isLoadingLabels}
-          />
-        )}
-
-        {/* Edit Label Form */}
-        {editingLabel && (
-          <LabelForm
-            mode="edit"
-            initialLabel={editingLabel}
-            onSubmit={handleUpdateLabel}
-            onCancel={() => setEditingLabel(null)}
-            loading={isLoadingLabels}
-          />
-        )}
-
         {/* Labels Grid */}
         <div className="flex-1">
           <LabelsGrid
             labels={labels}
-            onEdit={setEditingLabel}
+            onEdit={handleOpenEditPanel}
             onDelete={handleDeleteLabel}
-            onCreateNew={() => setIsCreating(true)}
+            onCreateNew={handleOpenCreatePanel}
             loading={isLoadingLabels}
           />
         </div>
       </div>
+
+      {/* Label Panel (Create/Edit) */}
+      <LabelPanel
+        isOpen={isPanelOpen}
+        onClose={handleClosePanel}
+        label={selectedLabel}
+        onSubmit={selectedLabel ? handleUpdateLabel : handleCreateLabel}
+        onDelete={handleDeleteLabel}
+        loading={isLoadingLabels}
+      />
     </div>
   );
 }

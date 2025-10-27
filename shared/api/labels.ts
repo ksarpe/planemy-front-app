@@ -1,5 +1,11 @@
 import { APIError } from "../data/Auth";
-import { LabelConnectionResponse, LabelResponse, type LabelConnection, type LabelInterface } from "../data/Utils/interfaces";
+import { colorNameToHex, hexToColorName } from "../data/Utils/colors";
+import {
+  LabelConnectionResponse,
+  LabelResponse,
+  type LabelConnection,
+  type LabelInterface,
+} from "../data/Utils/interfaces";
 
 // Labels API functions
 export const getLabels = async (): Promise<LabelResponse> => {
@@ -13,6 +19,15 @@ export const getLabels = async (): Promise<LabelResponse> => {
     throw new APIError(`Getting labels failed`, response.status, errorBody);
   }
   const data = await response.json();
+
+  // Convert hex colors back to color names for frontend
+  if (data.items && Array.isArray(data.items)) {
+    data.items = data.items.map((label: LabelInterface) => ({
+      ...label,
+      color: hexToColorName(label.color),
+    }));
+  }
+
   return data;
 };
 
@@ -31,17 +46,29 @@ export const getLabel = async (labelId: string): Promise<LabelInterface | undefi
     throw new APIError(`Getting label failed`, response.status, errorBody);
   }
   const data = await response.json();
+
+  // Convert hex color back to color name for frontend
+  if (data.color) {
+    data.color = hexToColorName(data.color);
+  }
+
   return data;
 };
 
 export const addLabel = async (labelData: Partial<LabelInterface>): Promise<Partial<LabelInterface>> => {
+  // Convert color name to hex for backend
+  const dataToSend = {
+    ...labelData,
+    color: colorNameToHex(labelData.color),
+  };
+
   const response = await fetch("http://localhost:8080/api/v1/labels", {
     method: "POST",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(labelData),
+    body: JSON.stringify(dataToSend),
   });
 
   if (!response.ok) {
@@ -49,6 +76,12 @@ export const addLabel = async (labelData: Partial<LabelInterface>): Promise<Part
     throw new APIError(`Adding label failed`, response.status, errorBody);
   }
   const data = await response.json();
+
+  // Convert hex back to color name for frontend
+  if (data.color) {
+    data.color = hexToColorName(data.color);
+  }
+
   return data;
 };
 
@@ -60,13 +93,19 @@ export const updateLabel = async (
     throw new Error("Label ID is required for update");
   }
 
+  // Convert color name to hex for backend if color is being updated
+  const dataToSend = {
+    ...labelData,
+    ...(labelData.color && { color: colorNameToHex(labelData.color) }),
+  };
+
   const response = await fetch(`http://localhost:8080/api/v1/labels/${labelId}`, {
     method: "PUT",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(labelData),
+    body: JSON.stringify(dataToSend),
   });
 
   if (!response.ok) {
@@ -74,6 +113,12 @@ export const updateLabel = async (
     throw new APIError(`Updating label failed`, response.status, errorBody);
   }
   const data = await response.json();
+
+  // Convert hex back to color name for frontend
+  if (data.color) {
+    data.color = hexToColorName(data.color);
+  }
+
   return data;
 };
 

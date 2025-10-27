@@ -1,60 +1,27 @@
 import type { LabelCardProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
-import { useT } from "@shared/hooks/utils/useT";
-import { Edit3, Tag, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { DeleteConfirmationModal } from "../Common";
+import { getBadgeColorClasses, type ColorName } from "@shared/data/Utils/colors";
+import { Tag } from "lucide-react";
 
-export default function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
-  const { t } = useT();
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-  const handleDelete = () => {
-    setShowDeleteConfirm(false);
-    onDelete(label.id);
-  };
+export default function LabelCard({ label, onEdit }: LabelCardProps) {
+  const colorClasses = getBadgeColorClasses(label.color as ColorName);
 
   return (
-    <div className="bg-bg-alt  rounded-lg p-4 shadow-md border border-bg-muted-light  hover:shadow-md transition-shadow duration-200">
+    <div
+      className="bg-bg-alt  rounded-lg p-4 shadow-md border border-bg-muted-light  hover:shadow-md transition-shadow duration-200 cursor-pointer"
+      onClick={() => onEdit(label)}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full border border-gray-300" style={{ backgroundColor: label.color }} />
+          <div className={`w-4 h-4 rounded-full border ${colorClasses}`} />
           <h3 className="font-medium text-text  truncate">{label.label_name}</h3>
-        </div>
-        <div className="flex gap-1">
-          <button
-            onClick={() => onEdit(label)}
-            className="p-1 text-gray-500 hover:text-blue-600 transition-colors duration-200"
-            title={t("labels.actions.edit")}>
-            <Edit3 size={14} />
-          </button>
-          <button
-            onClick={() => setShowDeleteConfirm(true)}
-            className="p-1 text-gray-500 hover:text-red-600 transition-colors duration-200"
-            title={t("labels.actions.delete")}>
-            <Trash2 size={14} />
-          </button>
         </div>
       </div>
 
       {label.description && <p className="text-sm text-gray-600  mb-3">{label.description}</p>}
 
-      <div
-        className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full"
-        style={{ backgroundColor: label.color + "20", color: label.color }}>
+      <div className={`inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full border ${colorClasses}`}>
         <Tag size={12} />
         {label.label_name}
       </div>
-
-      {/* Delete Confirmation Modal */}
-      <DeleteConfirmationModal
-        isOpen={showDeleteConfirm}
-        onClose={() => setShowDeleteConfirm(false)}
-        onConfirm={handleDelete}
-        title="Delete title"
-        message="Dou you really want to remove"
-        itemName={label.label_name}
-        confirmButtonText={"Delete"}
-      />
     </div>
   );
 }

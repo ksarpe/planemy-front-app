@@ -1,6 +1,6 @@
 // Utils feature component interfaces
 
-import type { LabelInterface, Announcement, UserNotificationStatus } from "../interfaces";
+import type { Announcement, LabelInterface, UserNotificationStatus } from "../interfaces";
 
 export interface ToastProps {
   type: "success" | "error" | "warning";
@@ -53,23 +53,10 @@ export interface AnnouncementCardProps {
 }
 
 // Tags/Labels component interfaces
-export interface AddLabelTileProps {
-  onClick: () => void;
-  loading: boolean;
-}
-
 export interface LabelCardProps {
   label: LabelInterface;
   onEdit: (label: LabelInterface) => void;
   onDelete: (labelId: string) => void;
-}
-
-export interface LabelFormProps {
-  mode: "create" | "edit";
-  initialLabel?: LabelInterface;
-  onSubmit: (data: { name: string; color: string; description?: string }, labelId?: string) => Promise<void>;
-  onCancel: () => void;
-  loading: boolean;
 }
 
 export interface LabelsGridProps {

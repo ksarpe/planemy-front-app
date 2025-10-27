@@ -1,10 +1,9 @@
-import { LabelInterface } from "@shared/data/Utils/interfaces";
-import LabelCard from "./LabelCard";
-import AddLabelTile from "./AddLabelTile";
-import EmptyLabelsState from "./EmptyLabelsState";
 import type { LabelsGridProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
+import { LabelInterface } from "@shared/data/Utils/interfaces";
+import EmptyLabelsState from "./EmptyLabelsState";
+import LabelCard from "./LabelCard";
 
-export default function LabelsGrid({ labels, onEdit, onDelete, onCreateNew, loading }: LabelsGridProps) {
+export default function LabelsGrid({ labels, onEdit, onDelete, onCreateNew }: LabelsGridProps) {
   if (labels.length === 0) {
     return <EmptyLabelsState onCreateFirst={onCreateNew} />;
   }
@@ -15,9 +14,6 @@ export default function LabelsGrid({ labels, onEdit, onDelete, onCreateNew, load
       {labels.map((label: LabelInterface) => (
         <LabelCard key={label.id} label={label} onEdit={onEdit} onDelete={onDelete} />
       ))}
-
-      {/* Add New Label Tile - only shown when labels exist */}
-      <AddLabelTile onClick={onCreateNew} loading={loading} />
     </div>
   );
 }
