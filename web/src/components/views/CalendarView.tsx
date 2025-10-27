@@ -1,9 +1,9 @@
-import { useMemo } from "react";
 import { EventCalendar } from "@/components/shadcn/Calendar/event-calendar";
 import type { CalendarEvent } from "@/components/shadcn/types";
-import { useEvents, useCreateEvent, useUpdateEvent, useDeleteEvent } from "@shared/hooks/events";
-import type { EventInterface } from "@shared/data/Calendar/events";
 import Spinner from "@/components/ui/Utils/Spinner";
+import type { EventInterface } from "@shared/data/Calendar/events";
+import { useCreateEvent, useDeleteEvent, useEvents, useUpdateEvent } from "@shared/hooks/events";
+import { useMemo } from "react";
 
 // Convert EventInterface to CalendarEvent
 const convertToCalendarEvent = (event: EventInterface): CalendarEvent => ({
@@ -13,7 +13,7 @@ const convertToCalendarEvent = (event: EventInterface): CalendarEvent => ({
   start: new Date(event.starts_at),
   end: new Date(event.ends_at),
   allDay: false, // EventInterface doesn't have allDay field
-  color: "sky", // Default color
+  color: "blue", // Default color
   location: "", // EventInterface doesn't have location field
 });
 
@@ -81,7 +81,7 @@ export default function CalendarView() {
   }
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
+    <div id="calendar-view" className="h-full flex flex-col overflow-hidden">
       <EventCalendar
         events={calendarEvents}
         onEventAdd={handleEventAdd}

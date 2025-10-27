@@ -23,8 +23,10 @@ const DevelopmentView = lazy(() => import("@/components/views/DevelopmentView"))
 
 // providers/route // no lazy load as it is important to have fast
 import Providers from "@shared/context/AllProviders";
-import { WebToastProvider } from "./context/WebToastProvider";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { TutorialOverlay } from "./components/ui/Tutorial/TutorialOverlay";
+import { TutorialProvider } from "./context/TutorialContext";
+import { WebToastProvider } from "./context/WebToastProvider";
 
 const router = createBrowserRouter([
   {
@@ -53,10 +55,13 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <Providers>
     <WebToastProvider>
-      {/* Top level suspense to handle all lazy loaded components */}
-      <Suspense fallback={<Spinner />}>
-        <RouterProvider router={router} />
-      </Suspense>
+      <TutorialProvider>
+        {/* Top level suspense to handle all lazy loaded components */}
+        <Suspense fallback={<Spinner />}>
+          <RouterProvider router={router} />
+          <TutorialOverlay />
+        </Suspense>
+      </TutorialProvider>
     </WebToastProvider>
   </Providers>,
 );

@@ -253,7 +253,7 @@ export function EventCalendar({
         <div className={cn("flex items-center justify-between p-2 sm:p-4 bg-bg-alt text-text", className)}>
           {/* LEFT SIDE */}
           <div className="flex items-center gap-1 sm:gap-2">
-            <div className="flex items-center sm:gap-2">
+            <div id="calendar-navigation" className="flex items-center sm:gap-2">
               <Button variant="default" size="icon" onClick={handlePrevious} aria-label="Previous">
                 <ChevronLeftIcon size={16} aria-hidden="true" />
               </Button>
@@ -268,7 +268,7 @@ export function EventCalendar({
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="default" className="gap-1.5 max-[479px]:h-8">
+                <Button id="view-switcher" variant="default" className="gap-1.5 max-[479px]:h-8">
                   <span>
                     <span className="min-[480px]:hidden" aria-hidden="true">
                       {view.charAt(0).toUpperCase()}
@@ -294,6 +294,7 @@ export function EventCalendar({
               </DropdownMenuContent>
             </DropdownMenu>
             <Button
+              id="add-event-button"
               variant="primary"
               onClick={() => {
                 setSelectedEvent(null); // Ensure we're creating a new event
