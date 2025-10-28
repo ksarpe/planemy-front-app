@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
     <>
       {isOpen && <div className="fixed inset-0 bg-black/40 md:hidden z-40" onClick={onClose} aria-hidden="true" />}
       <aside
-        className={`p-4 fixed inset-y-0 left-0 z-50 ${widthClasses} h-full transform transition-all duration-300 bg-bg-alt md:static flex flex-col justify-between p-2 ${
+        className={`p-4 fixed inset-y-0 left-0 z-30 ${widthClasses} h-full transform transition-all duration-300 bg-bg-alt md:static flex flex-col justify-between p-2 ${
           isOpen ? " translate-x-0" : " -translate-x-full md:translate-x-0"
         }`}>
         {/* LOGO */}
@@ -54,7 +54,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         <SidebarSettings collapsed={collapsed} />
         <div className="w-full h-px bg-text-muted/20 my-2" />
         {/* USER INFO */}
-        <SidebarUserSection collapsed={collapsed} handleNavigate={onClose || (() => {})} />
+        <SidebarUserSection collapsed={collapsed} />
 
         <div className="w-full h-px bg-text-muted/20 my-2" />
         {/* Collapse button + Dark Mode */}

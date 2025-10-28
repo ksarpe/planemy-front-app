@@ -67,6 +67,15 @@ export interface NotificationSettingsSectionProps {
   handleNotificationChange: (field: keyof NotificationSettings | string, value: boolean) => void;
 }
 
+export interface PersonalInformationSectionProps {
+  userInfo: {
+    nickname?: string;
+    email?: string;
+    username?: string;
+  };
+  handleUserInfoChange: (field: string, value: string) => void;
+}
+
 export interface LanguageRegionSectionProps {
   language: string;
   setLanguage: (language: string) => void;
@@ -92,4 +101,3 @@ export interface Feedback {
 export interface CreateFeedbackData {
   message: string;
 }
-

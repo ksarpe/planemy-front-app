@@ -1,6 +1,4 @@
 import { Calendar, Clock, ChevronRight } from "lucide-react";
-import { format } from "date-fns";
-import { pl } from "date-fns/locale";
 import { useUpcomingEvents } from "@shared/hooks/combined/useSummary";
 import { useNavigate } from "react-router-dom";
 import { useT } from "@shared/hooks/utils/useT";
