@@ -1,21 +1,86 @@
 import { useT } from "@shared/hooks/utils/useT";
+import { useState } from "react";
+import { InputModal } from "../Common";
+import { Button } from "../shadcn/button";
 
 export default function SecuritySection() {
   const { t } = useT();
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  const handleChangePassword = async (values: Record<string, string>) => {
+    // Validate passwords match
+    if (values.newPassword !== values.confirmPassword) {
+      alert("Hasła nie są zgodne!");
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      // TODO: Call API to change password
+      console.log("Changing password:", {
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      });
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setIsChangePasswordModalOpen(false);
+      alert("Hasło zostało zmienione!");
+    } catch (error) {
+      console.error("Error changing password:", error);
+      alert("Błąd podczas zmiany hasła");
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="flex gap-4 items-center flex-wrap">
-        <button className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
-          {t("security.changePassword")}
-        </button>
-        <button className="px-4 py-2 bg-bg-alt text-text rounded-lg hover:bg-bg-muted-light transition-colors border border-bg-muted-light">
-          {t("security.setup2FA")}
-        </button>
-        <button className="px-4 py-2 border border-negative/30 text-negative rounded-lg hover:bg-negative/10 transition-colors">
-          {t("security.deleteAccount")}
-        </button>
+    <>
+      <div className="space-y-6">
+        <div className="flex gap-4 items-center flex-wrap">
+          <Button onClick={() => setIsChangePasswordModalOpen(true)} variant="default_light">
+            {t("security.changePassword")}
+          </Button>
+          <Button variant="delete">{t("security.deleteAccount")}</Button>
+        </div>
       </div>
-    </div>
+
+      <InputModal
+        isOpen={isChangePasswordModalOpen}
+        onClose={() => setIsChangePasswordModalOpen(false)}
+        onSubmit={handleChangePassword}
+        title="Zmień hasło"
+        inputs={[
+          {
+            name: "oldPassword",
+            label: "Obecne hasło",
+            type: "password",
+            placeholder: "Wprowadź obecne hasło",
+            required: true,
+            autoFocus: true,
+          },
+          {
+            name: "newPassword",
+            label: "Nowe hasło",
+            type: "password",
+            placeholder: "Wprowadź nowe hasło",
+            required: true,
+            helperText: "Hasło powinno mieć minimum 8 znaków",
+          },
+          {
+            name: "confirmPassword",
+            label: "Potwierdź nowe hasło",
+            type: "password",
+            placeholder: "Potwierdź nowe hasło",
+            required: true,
+          },
+        ]}
+        submitButtonText="Zmień hasło"
+        cancelButtonText="Anuluj"
+        isLoading={isChangingPassword}
+      />
+    </>
   );
 }

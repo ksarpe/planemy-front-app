@@ -10,7 +10,6 @@ export default function BaseModal({
   title,
   children,
   showCloseButton = true,
-  maxWidth = "w-96",
   actions,
 }: BaseModalProps) {
   // Handle ESC key press
@@ -52,7 +51,7 @@ export default function BaseModal({
               damping: 20,
             }}
             onClick={(e) => e.stopPropagation()}
-            className={`bg-bg  text-text  p-6 rounded-xl ${maxWidth} max-h-[90vh] overflow-y-auto shadow-2xl cursor-default relative`}>
+            className={`bg-bg  text-text  p-6 rounded-xl w-1/5 max-h-[90vh] overflow-y-auto shadow-2xl cursor-default relative`}>
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold">{title}</h3>

@@ -6,3 +6,4 @@ export { default as DeleteConfirmationModal } from "./DeleteConfirmationModal";
 export { EditableText } from "./EditableText";
 export { FloatingLabelInput } from "./FloatingLabelInput";
 export { FloatingLabelTextarea } from "./FloatingLabelTextarea";
+export { default as InputModal } from "./InputModal";

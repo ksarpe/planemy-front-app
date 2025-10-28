@@ -1,6 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
-import { BasicDropdownItemVariantColor, ActionButtonColor, ActionButtonSize } from "./types";
+import { ActionButtonColor, ActionButtonSize, BasicDropdownItemVariantColor } from "./types";
 
 // Basic Dropdown
 export interface BasicDropdownProps {
@@ -62,4 +62,27 @@ export interface DeleteConfirmationModalProps {
   confirmButtonText?: string;
   cancelButtonText?: string;
   isLoading?: boolean;
+}
+
+export interface InputModalInput {
+  name: string;
+  label: string;
+  type?: "text" | "password" | "email" | "number";
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+  autoFocus?: boolean;
+  helperText?: string;
+}
+
+export interface InputModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (values: Record<string, string>) => void;
+  title: string;
+  inputs: InputModalInput[];
+  submitButtonText?: string;
+  cancelButtonText?: string;
+  isLoading?: boolean;
+  maxWidth?: string;
 }
