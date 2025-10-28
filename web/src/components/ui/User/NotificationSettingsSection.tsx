@@ -1,4 +1,3 @@
-import { Bell } from "lucide-react";
 import type { NotificationSettingsSectionProps } from "@shared/data/User";
 import { useT } from "@shared/hooks/utils/useT";
 
@@ -29,34 +28,28 @@ export default function NotificationSettingsSection({
   ];
 
   return (
-    <div className="bg-white  rounded-lg p-6 border border-gray-200 ">
-      <h3 className="text-lg font-semibold text-gray-900  mb-6 flex items-center gap-2">
-        <Bell size={20} className="text-primary" />
-        {t("notifications.title")}
-      </h3>
-      <div className="space-y-4">
-        {notificationSettings.map((setting) => (
-          <div key={setting.key} className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-gray-900 ">{setting.label}</p>
-              <p className="text-sm text-gray-500 ">{setting.description}</p>
-            </div>
-            <button
-              onClick={() =>
-                handleNotificationChange(setting.key, !notifications[setting.key as keyof typeof notifications])
-              }
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                notifications[setting.key as keyof typeof notifications] ? "bg-primary" : "bg-gray-200"
-              }`}>
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  notifications[setting.key as keyof typeof notifications] ? "translate-x-6" : "translate-x-1"
-                }`}
-              />
-            </button>
+    <div className="space-y-4">
+      {notificationSettings.map((setting) => (
+        <div key={setting.key} className="flex items-center justify-between py-3">
+          <div>
+            <p className="font-medium text-text">{setting.label}</p>
+            <p className="text-sm text-text-muted">{setting.description}</p>
           </div>
-        ))}
-      </div>
+          <button
+            onClick={() =>
+              handleNotificationChange(setting.key, !notifications[setting.key as keyof typeof notifications])
+            }
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              notifications[setting.key as keyof typeof notifications] ? "bg-primary" : "bg-bg-muted-light"
+            }`}>
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                notifications[setting.key as keyof typeof notifications] ? "translate-x-6" : "translate-x-1"
+              }`}
+            />
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
