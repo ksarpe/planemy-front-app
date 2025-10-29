@@ -11,7 +11,7 @@ interface FloatingLabelInputProps extends ComponentProps<typeof Input> {
 export function FloatingLabelInput({
   label,
   id,
-  labelBg = "bg-bg",
+  labelBg = "bg-bg-alt",
   autoFocus = true,
   ...inputProps
 }: FloatingLabelInputProps) {

@@ -53,15 +53,15 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <Providers>
-    <WebToastProvider>
-      <TutorialProvider>
-        {/* Top level suspense to handle all lazy loaded components */}
-        <Suspense fallback={<Spinner />}>
+  <Suspense fallback={<Spinner />}>
+    <Providers>
+      <WebToastProvider>
+        <TutorialProvider>
+          {/* Top level suspense to handle all lazy loaded components */}
           <RouterProvider router={router} />
           <TutorialOverlay />
-        </Suspense>
-      </TutorialProvider>
-    </WebToastProvider>
-  </Providers>,
+        </TutorialProvider>
+      </WebToastProvider>
+    </Providers>
+  </Suspense>,
 );

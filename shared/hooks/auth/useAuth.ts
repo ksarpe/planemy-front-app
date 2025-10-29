@@ -44,9 +44,7 @@ export const useUserInfoQuery = () => {
   return useQuery<User, unknown, User, string[]>({
     queryKey: ["userInfo"],
     queryFn: validateUser,
-    refetchOnWindowFocus: false,
     retry: 0,
-    enabled: true,
   });
 };
 

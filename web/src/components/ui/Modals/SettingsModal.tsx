@@ -1,14 +1,15 @@
 import { NotificationSettingsSection, PersonalInformationSection, SecuritySection } from "@/components/ui/User";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/shadcn/tabs";
-import { updateUserProfile } from "@shared/api/user_profile";
 import type { NotificationSettings } from "@shared/data/User";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
 import { useToast } from "@shared/hooks/toasts/useToast";
+import { useUpdateUserProfile } from "@shared/hooks/user";
 import { useEffect, useState } from "react";
 import { FiBell, FiGlobe, FiShield, FiUser } from "react-icons/fi";
 import LargeModal, { LargeModalContent, LargeModalFooter, LargeModalHeader } from "../Common/LargeModal";
 import { SkeletonText } from "../Utils";
+import { Button } from "../shadcn/button";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -21,7 +22,17 @@ interface UserInfo {
 }
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const { user, refetchUser } = useAuthContext();
+  const { user } = useAuthContext();
+  const { mutate: updateUserProfile, isPending: isSavingProfile } = useUpdateUserProfile({
+    onSuccess: () => {
+      setIsDirty(false);
+      showSuccess("Changes have been saved");
+    },
+    onError: () => {
+      //handleDiscard();
+      showError("Failed to save changes to user profile");
+    },
+  });
   const { showSuccess, showError } = useToast();
   const { language, setLanguage } = usePreferencesContext();
 
@@ -90,26 +101,16 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   }, [isOpen, isDirty]);
 
   const handleSave = async () => {
-    try {
-      // Save language
-      if (selectedLanguage !== language) {
-        setLanguage(selectedLanguage);
-      }
+    // Save language
+    if (selectedLanguage !== language) {
+      setLanguage(selectedLanguage);
+    }
 
-      // Save user profile if changed
-      if (user && (userInfo.username !== user.username || userInfo.email !== user.email)) {
-        await updateUserProfile({
-          username: userInfo.username,
-          email: userInfo.email,
-        });
-        await refetchUser();
-      }
-
-      setIsDirty(false);
-      showSuccess("Zmiany zostały zapisane");
-    } catch (e) {
-      console.error("Failed to save settings:", e);
-      showError("Nie udało się zapisać zmian");
+    if (user && (userInfo.username !== user.username || userInfo.email !== user.email)) {
+      updateUserProfile({
+        username: userInfo.username,
+        email: userInfo.email,
+      });
     }
   };
 
@@ -178,16 +179,12 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             {/* Tab panels */}
             <TabsPanel value="profile" className="flex-1 overflow-y-auto scrollbar-hide">
               <div className="p-8">
-                <h3 className="text-xl font-bold text-text mb-2">Informacje osobiste</h3>
-                <p className="text-sm text-text-muted mb-6">Zarządzaj swoim profilem i danymi osobowymi</p>
                 <PersonalInformationSection userInfo={userInfo} handleUserInfoChange={handleUserInfoChange} />
               </div>
             </TabsPanel>
 
             <TabsPanel value="language" className="flex-1 overflow-y-auto scrollbar-hide">
               <div className="p-8">
-                <h3 className="text-xl font-bold text-text mb-2">Język aplikacji</h3>
-                <p className="text-sm text-text-muted mb-6">Wybierz język interfejsu aplikacji</p>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-text mb-3">Preferowany język</label>
@@ -207,8 +204,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
             <TabsPanel value="notifications" className="flex-1 overflow-y-auto scrollbar-hide">
               <div className="p-8">
-                <h3 className="text-xl font-bold text-text mb-2">Powiadomienia</h3>
-                <p className="text-sm text-text-muted mb-6">Zarządzaj preferencjami powiadomień</p>
                 <NotificationSettingsSection
                   notifications={notifications}
                   handleNotificationChange={handleNotificationChange}
@@ -218,8 +213,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
             <TabsPanel value="security" className="flex-1 overflow-y-auto scrollbar-hide">
               <div className="p-8">
-                <h3 className="text-xl font-bold text-text mb-2">Bezpieczeństwo</h3>
-                <p className="text-sm text-text-muted mb-6">Zarządzaj ustawieniami bezpieczeństwa konta</p>
                 <SecuritySection />
               </div>
             </TabsPanel>
@@ -229,18 +222,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
       {/* Footer with actions - only when dirty */}
       <LargeModalFooter show={isDirty}>
-        <p className="text-sm text-text-muted">Masz niezapisane zmiany</p>
+        <p className="text-sm text-red-400">You have unsaved changes!</p>
         <div className="flex items-center gap-3">
-          <button
-            onClick={handleDiscard}
-            className="px-5 py-2.5 rounded-lg text-text bg-bg-alt hover:bg-bg-muted-light transition-all font-medium">
+          <Button onClick={handleDiscard} variant="default">
             Odrzuć zmiany
-          </button>
-          <button
-            onClick={handleSave}
-            className="px-6 py-2.5 rounded-lg bg-primary text-white font-medium hover:bg-primary/80 transition-all shadow-sm">
-            Zapisz zmiany
-          </button>
+          </Button>
+          <Button disabled={isSavingProfile} onClick={handleSave} variant="primary">
+            Save changes
+          </Button>
         </div>
       </LargeModalFooter>
     </LargeModal>

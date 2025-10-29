@@ -1,11 +1,9 @@
-import { UpcomingPayments, FeedbackBanner, UpcomingEvents, SummaryCards } from "@/components/ui/Dashboard";
+import { SummaryCards, UpcomingEvents, UpcomingPayments } from "@/components/ui/Dashboard";
 
 export default function DashboardView() {
   return (
     <div className="h-full overflow-auto scrollbar-hide">
       <div className="p-4 space-y-4 bg-bg-alt min-h-full">
-        {/* Feedback Banner */}
-        <FeedbackBanner />
         {/* Quick Actions and Summary Cards */}
         <SummaryCards />
 

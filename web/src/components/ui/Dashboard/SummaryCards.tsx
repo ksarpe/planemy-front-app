@@ -26,14 +26,14 @@ export default function SummaryCards() {
           className="bg-bg rounded-lg p-4 flex items-center justify-between cursor-pointer"
           onClick={() => navigate("/shopping")}>
           <div className="flex flex-col gap-2">
-            <p className="text-text-muted text-xs">LISTA ZAKUPÓW</p>
+            <p className="text-text-muted text-xs">SHOPPING LIST</p>
             <div className="flex items-center space-x-4">
               <div className="p-2 bg-primary-light rounded-lg">
                 <FiShoppingBag className="h-8 w-8 text-primary" />
               </div>
               {!isLoadingSummary && summaryData ? (
                 <div>
-                  <p className="font-medium text-text">{summaryData.defaultShoppingListName || "Brak listy zakupów"}</p>
+                  <p className="font-medium text-text">{summaryData.defaultShoppingListName || "No Shopping List"}</p>
                   {/* <p className="text-sm text-gray-500">
               {shoppingPending === 0
                 ? t("dashboard.allBought")
@@ -55,7 +55,7 @@ export default function SummaryCards() {
           className="bg-bg rounded-lg p-4 flex items-center justify-between cursor-pointer"
           onClick={() => navigate("/tasks")}>
           <div className="flex flex-col gap-2">
-            <p className="text-text-muted text-xs">LISTA ZADAŃ</p>
+            <p className="text-text-muted text-xs">TASK LIST</p>
             <div className="flex items-center space-x-4">
               <div className="p-2 bg-primary-light rounded-lg">
                 <FiList className="h-8 w-8 text-primary" />
