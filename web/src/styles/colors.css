@@ -5,10 +5,13 @@
   --color-bg-muted-light: hsl(0, 0%, 90%);
   --color-bg-alt: hsl(0, 0%, 100%);
   --color-bg: hsl(0, 0%, 96%);
+  --color-bg-hover: hsl(0, 0%, 93%);
+  --color-border: hsl(0, 0%, 85%);
   --color-primary: hsl(186, 100%, 39%);
   --color-primary-light: hsl(173, 80%, 90%);
   --color-success: hsl(145, 63%, 49%);
   --color-negative: hsl(0, 65%, 43%);
+  --color-accent: hsl(262, 83%, 58%);
 }
 
 @layer theme {
@@ -19,9 +22,12 @@
     --color-bg-muted-light: hsl(0, 0%, 20%);
     --color-bg: hsl(0, 0%, 10%); /* nigth */
     --color-bg-alt: hsl(0, 0%, 13%);
+    --color-bg-hover: hsl(0, 0%, 15%);
+    --color-border: hsl(0, 0%, 25%);
     --color-primary: hsl(186, 100%, 28%);
     --color-primary-light: hsl(0, 0%, 20%);
     --color-success: hsl(145, 63%, 40%);
     --color-negative: hsl(0, 87%, 36%);
+    --color-accent: hsl(262, 83%, 48%);
   }
 }

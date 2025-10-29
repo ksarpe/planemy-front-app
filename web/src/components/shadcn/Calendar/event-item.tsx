@@ -1,13 +1,14 @@
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { differenceInMinutes, format, getMinutes, isPast, isValid } from "date-fns";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { CalendarEvent } from "@/components/shadcn/types";
 import { getBorderRadiusClasses, getEventColorClasses } from "@/components/shadcn/utils";
 import { cn } from "@/lib/shadcn/utils";
 import { LabelInterface } from "@shared/data/Utils";
 import { useLabelContext } from "@shared/hooks/context/useLabelContext";
+import { EventTooltip } from "./EventTooltip";
 
 // Safe date formatting with error handling
 const formatTimeWithOptionalMinutes = (date: Date | string | number) => {
@@ -53,6 +54,9 @@ interface EventWrapperProps {
   onMouseDown?: (e: React.MouseEvent) => void;
   onTouchStart?: (e: React.TouchEvent) => void;
   labelColor?: string;
+  eventRef?: React.RefObject<HTMLButtonElement | null>;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 function EventWrapper({
@@ -69,6 +73,9 @@ function EventWrapper({
   onMouseDown,
   onTouchStart,
   labelColor,
+  eventRef,
+  onMouseEnter,
+  onMouseLeave,
 }: EventWrapperProps) {
   // Safe date calculation with error handling
   const displayEnd = useMemo(() => {
@@ -97,6 +104,7 @@ function EventWrapper({
   console.log(labelColor);
   return (
     <button
+      ref={eventRef}
       className={cn(
         // Base styles using theme colors
         "flex size-full overflow-hidden px-1 text-left font-medium transition outline-none select-none focus-visible:ring-[3px]",
@@ -121,6 +129,8 @@ function EventWrapper({
       onClick={onClick}
       onMouseDown={onMouseDown}
       onTouchStart={onTouchStart}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       {...dndListeners}
       {...dndAttributes}>
       {children}
@@ -162,6 +172,10 @@ export function EventItem({
   onTouchStart,
 }: EventItemProps) {
   const { getLabelForObject } = useLabelContext();
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [isHoveringEventItem, setIsHoveringEventItem] = useState(false);
+  const [isHoveringTooltip, setIsHoveringTooltip] = useState(false);
+  const eventRef = useRef<HTMLButtonElement | null>(null);
 
   // Get labels for the current event
   const eventLabel: LabelInterface | undefined = (() => {
@@ -172,6 +186,40 @@ export function EventItem({
       return undefined;
     }
   })();
+
+  // Handle mouse enter/leave for event item
+  const handleMouseEnter = () => {
+    if (!isDragging) {
+      setIsHoveringEventItem(true);
+      setIsTooltipOpen(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHoveringEventItem(false);
+  };
+
+  // Handle tooltip hover state
+  const handleTooltipMouseEnter = () => {
+    setIsHoveringTooltip(true);
+  };
+
+  const handleTooltipMouseLeave = () => {
+    setIsHoveringTooltip(false);
+  };
+
+  // Close tooltip when not hovering either element
+  useEffect(() => {
+    if (!isHoveringEventItem && !isHoveringTooltip && isTooltipOpen) {
+      // Small delay to allow mouse to move between event and tooltip
+      const timer = setTimeout(() => {
+        if (!isHoveringEventItem && !isHoveringTooltip) {
+          setIsTooltipOpen(false);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isHoveringEventItem, isHoveringTooltip, isTooltipOpen]);
 
   // Use the provided currentTime (for dragging) or the event's actual time
   const displayStart = useMemo(() => {
@@ -228,65 +276,91 @@ export function EventItem({
 
   if (view === "month") {
     return (
-      <EventWrapper
-        event={event}
-        isFirstDay={isFirstDay}
-        isLastDay={isLastDay}
-        isDragging={isDragging}
-        onClick={onClick}
-        className={cn("mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs", className)}
-        currentTime={currentTime}
-        dndListeners={dndListeners}
-        dndAttributes={dndAttributes}
-        onMouseDown={onMouseDown}
-        onTouchStart={onTouchStart}
-        labelColor={eventLabel?.color}>
-        {children || (
-          <span className="truncate">
-            {!event.allDay && (
-              <span className="truncate font-normal opacity-70 sm:text-[11px]">
-                {formatTimeWithOptionalMinutes(displayStart)}{" "}
-              </span>
-            )}
-            {event.title}
-          </span>
-        )}
-      </EventWrapper>
+      <>
+        <EventWrapper
+          event={event}
+          isFirstDay={isFirstDay}
+          isLastDay={isLastDay}
+          isDragging={isDragging}
+          onClick={onClick}
+          className={cn("mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs", className)}
+          currentTime={currentTime}
+          dndListeners={dndListeners}
+          dndAttributes={dndAttributes}
+          onMouseDown={onMouseDown}
+          onTouchStart={onTouchStart}
+          labelColor={eventLabel?.color}
+          eventRef={eventRef}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}>
+          {children || (
+            <span className="truncate">
+              {!event.allDay && (
+                <span className="truncate font-normal opacity-70 sm:text-[11px]">
+                  {formatTimeWithOptionalMinutes(displayStart)}{" "}
+                </span>
+              )}
+              {event.title}
+            </span>
+          )}
+        </EventWrapper>
+        <EventTooltip
+          event={event}
+          isOpen={isTooltipOpen}
+          onClose={() => setIsTooltipOpen(false)}
+          anchorElement={eventRef.current}
+          onMouseEnter={handleTooltipMouseEnter}
+          onMouseLeave={handleTooltipMouseLeave}
+        />
+      </>
     );
   }
 
   if (view === "week" || view === "day") {
     return (
-      <EventWrapper
-        event={event}
-        isFirstDay={isFirstDay}
-        isLastDay={isLastDay}
-        isDragging={isDragging}
-        onClick={onClick}
-        className={cn(
-          "py-1",
-          durationMinutes < 45 ? "items-center" : "flex-col",
-          view === "week" ? "text-[10px] sm:text-xs" : "text-xs",
-          className,
-        )}
-        currentTime={currentTime}
-        dndListeners={dndListeners}
-        dndAttributes={dndAttributes}
-        onMouseDown={onMouseDown}
-        onTouchStart={onTouchStart}
-        labelColor={eventLabel?.color}>
-        {durationMinutes < 45 ? (
-          <div className="truncate">
-            {event.title}{" "}
-            {showTime && <span className="opacity-70">{formatTimeWithOptionalMinutes(displayStart)}</span>}
-          </div>
-        ) : (
-          <>
-            <div className="truncate font-medium">{event.title}</div>
-            {showTime && <div className="truncate font-normal opacity-70 sm:text-[11px]">{getEventTime()}</div>}
-          </>
-        )}
-      </EventWrapper>
+      <>
+        <EventWrapper
+          event={event}
+          isFirstDay={isFirstDay}
+          isLastDay={isLastDay}
+          isDragging={isDragging}
+          onClick={onClick}
+          className={cn(
+            "py-1",
+            durationMinutes < 45 ? "items-center" : "flex-col",
+            view === "week" ? "text-[10px] sm:text-xs" : "text-xs",
+            className,
+          )}
+          currentTime={currentTime}
+          dndListeners={dndListeners}
+          dndAttributes={dndAttributes}
+          onMouseDown={onMouseDown}
+          onTouchStart={onTouchStart}
+          labelColor={eventLabel?.color}
+          eventRef={eventRef}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}>
+          {durationMinutes < 45 ? (
+            <div className="truncate">
+              {event.title}{" "}
+              {showTime && <span className="opacity-70">{formatTimeWithOptionalMinutes(displayStart)}</span>}
+            </div>
+          ) : (
+            <>
+              <div className="truncate font-medium">{event.title}</div>
+              {showTime && <div className="truncate font-normal opacity-70 sm:text-[11px]">{getEventTime()}</div>}
+            </>
+          )}
+        </EventWrapper>
+        <EventTooltip
+          event={event}
+          isOpen={isTooltipOpen}
+          onClose={() => setIsTooltipOpen(false)}
+          anchorElement={eventRef.current}
+          onMouseEnter={handleTooltipMouseEnter}
+          onMouseLeave={handleTooltipMouseLeave}
+        />
+      </>
     );
   }
 

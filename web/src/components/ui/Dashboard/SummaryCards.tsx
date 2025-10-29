@@ -23,7 +23,7 @@ export default function SummaryCards() {
       <div className="grid grid-cols-2 gap-4">
         {/* Shopping Summary */}
         <div
-          className="bg-bg rounded-lg p-4 flex items-center justify-between cursor-pointer"
+          className="bg-bg-alt rounded-lg p-4 flex items-center justify-between cursor-pointer"
           onClick={() => navigate("/shopping")}>
           <div className="flex flex-col gap-2">
             <p className="text-text-muted text-xs">SHOPPING LIST</p>
@@ -52,7 +52,7 @@ export default function SummaryCards() {
 
         {/* Task summary */}
         <div
-          className="bg-bg rounded-lg p-4 flex items-center justify-between cursor-pointer"
+          className="bg-bg-alt rounded-lg p-4 flex items-center justify-between cursor-pointer"
           onClick={() => navigate("/tasks")}>
           <div className="flex flex-col gap-2">
             <p className="text-text-muted text-xs">TASK LIST</p>

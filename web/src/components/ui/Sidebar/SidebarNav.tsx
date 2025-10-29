@@ -1,16 +1,9 @@
-import { NavLink } from "react-router-dom";
-import {
-  FiHome,
-  FiCalendar,
-  FiList,
-  FiShoppingBag,
-  FiDollarSign,
-  FiTrendingUp,
-  FiTag,
-  FiBookOpen,
-} from "react-icons/fi";
 import type { SidebarNavProps } from "@shared/data/Layout/Components/LayoutComponentInterfaces";
 import { useT } from "@shared/hooks/utils/useT";
+import { FaRegFaceGrimace } from "react-icons/fa6";
+import { FiCalendar, FiDollarSign, FiHome, FiList, FiTag, FiTrendingUp } from "react-icons/fi";
+
+import { NavLink } from "react-router-dom";
 
 export type { SidebarNavProps } from "@shared/data/Layout/Components/LayoutComponentInterfaces";
 
@@ -21,13 +14,16 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
     { to: "/", label: t("sidebar.dashboard"), Icon: FiHome },
     { to: "/calendar", label: t("sidebar.calendar"), Icon: FiCalendar },
     { to: "/tasks", label: t("sidebar.tasks"), Icon: FiList },
-    { to: "/shopping", label: t("sidebar.shopping"), Icon: FiShoppingBag },
+    //{ to: "/shopping", label: t("sidebar.shopping"), Icon: FiShoppingBag },
     { to: "/payments", label: t("sidebar.payments"), Icon: FiDollarSign },
   ];
-  const personalItems = [{ to: "/development", label: t("sidebar.development"), Icon: FiTrendingUp }];
+  const personalItems = [
+    { to: "/development", label: t("sidebar.development"), Icon: FiTrendingUp },
+    { to: "/", label: "Buddy", Icon: FaRegFaceGrimace },
+  ];
   const utilsItems = [
     { to: "/labels", label: t("sidebar.labels"), Icon: FiTag },
-    { to: "/feedback", label: t("sidebar.feedback"), Icon: FiBookOpen },
+    //{ to: "/feedback", label: t("sidebar.feedback"), Icon: FiBookOpen },
   ];
 
   if (collapsed) {

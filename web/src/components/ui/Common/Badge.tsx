@@ -14,6 +14,7 @@ const badgeVariants = cva(
         yellow: "bg-yellow-500 text-black border-yellow-500",
         red: "bg-red-500 text-white border-red-500",
         purple: "bg-purple-500 text-white border-purple-500",
+        primary: "bg-primary text-white border-primary"
       },
       size: {
         default: "px-[calc(--spacing(1)-1px)] text-xs",

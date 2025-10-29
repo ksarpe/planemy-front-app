@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
+import { SettingsModal } from "../ui/Modals";
 import { DarkModeToggle } from "../ui/Sidebar/DarkModeToggle";
 import { SidebarNav } from "../ui/Sidebar/SidebarNav";
 import SidebarSettings from "../ui/Sidebar/SidebarSettings";
@@ -14,6 +15,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
   // something for getting global notifications
   //const totalNotifications = taskListShares.length + shoppingListShares.length;
   const [collapsed, setCollapsed] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   useEffect(() => {
     const stored = localStorage.getItem("app_sidebar_collapsed");
     if (stored === "true") setCollapsed(true);
@@ -51,10 +53,10 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         <div className="w-full h-px bg-text-muted/20 my-2" />
 
         {/* SETTINGS */}
-        <SidebarSettings collapsed={collapsed} />
+        <SidebarSettings collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
         <div className="w-full h-px bg-text-muted/20 my-2" />
         {/* USER INFO */}
-        <SidebarUserSection collapsed={collapsed} />
+        <SidebarUserSection collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
 
         <div className="w-full h-px bg-text-muted/20 my-2" />
         {/* Collapse button + Dark Mode */}
@@ -73,6 +75,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
           </button>
         </div>
       </aside>
+      <SettingsModal isOpen={isSettingsModalOpen} onClose={() => setIsSettingsModalOpen(false)} />
     </>
   );
 }

@@ -1,2 +1,1 @@
-export { default as AnnouncementCard } from "./AnnouncementCard";
-export { default as AnnouncementsList } from "./AnnouncementsList";
+export { default as NotificationPopup } from "./NotificationPopup";

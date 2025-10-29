@@ -13,7 +13,7 @@ export default function UpcomingEvents() {
   const groups = data?.groups || [];
 
   return (
-    <div className="bg-bg dark:bg-bg-dark rounded-lg p-4">
+    <div className="bg-bg-alt dark:bg-bg-dark rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-text dark:text-text-dark flex items-center">
           <Calendar className="h-5 w-5 mr-2 text-primary" />

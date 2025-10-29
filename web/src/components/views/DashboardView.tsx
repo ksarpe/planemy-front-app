@@ -3,7 +3,7 @@ import { SummaryCards, UpcomingEvents, UpcomingPayments } from "@/components/ui/
 export default function DashboardView() {
   return (
     <div className="h-full overflow-auto scrollbar-hide">
-      <div className="p-4 space-y-4 bg-bg-alt min-h-full">
+      <div className="p-4 space-y-4 bg-bg min-h-full">
         {/* Quick Actions and Summary Cards */}
         <SummaryCards />
 

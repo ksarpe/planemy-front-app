@@ -19,7 +19,7 @@ export function FloatingLabelInput({
     <div className="group relative">
       <label
         htmlFor={id}
-        className="cursor-text absolute top-1/2 -translate-y-1/2 px-1 text-sm text-text-muted/70 transition-all group-focus-within:top-0 group-focus-within:text-xs group-focus-within:font-medium group-focus-within:text-text has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium has-[+input:not(:placeholder-shown)]:text-text">
+        className="cursor-text absolute top-1/2 -translate-y-1/2 px-1 text-sm text-text-muted/70 transition-all group-focus-within:top-0 group-focus-within:text-xs group-focus-within:font-medium group-focus-within:text-text has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium has-[+input:not(:placeholder-shown)]:text-text-muted">
         <span className={`inline-flex ${labelBg} px-2`}>{label}</span>
       </label>
       <Input id={id} placeholder="" {...inputProps} autoFocus={autoFocus} />

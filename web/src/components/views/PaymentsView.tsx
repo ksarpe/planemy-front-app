@@ -34,7 +34,7 @@ export default function Payments() {
   // const { overduePayments, upcomingThisWeek, upcomingNextWeek, remainingPayments, totalMonthlyAmount } = categorizedPayments;
 
   return (
-    <div className="flex h-full overflow-auto scrollbar-hide p-2 md:p-4">
+    <div className="flex bg-bg h-full overflow-auto scrollbar-hide p-2 md:p-4">
       <div className="w-full flex flex-col gap-4 md:gap-6 p-4 md:p-6">
         {/* Header */}
         <div className="flex justify-between items-center">

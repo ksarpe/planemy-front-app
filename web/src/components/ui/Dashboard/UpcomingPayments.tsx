@@ -1,8 +1,8 @@
-import { Package } from "lucide-react";
 import { usePayments } from "@shared/hooks/payments";
-import { differenceInDays } from "date-fns";
-import { useNavigate } from "react-router-dom";
 import { useT } from "@shared/hooks/utils/useT";
+import { differenceInDays } from "date-fns";
+import { Package } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Spinner from "../Utils/Spinner";
 
 export default function UpcomingPayments() {
@@ -26,7 +26,7 @@ export default function UpcomingPayments() {
   };
 
   return (
-    <div className="bg-bg dark:bg-bg-dark rounded-lg p-4">
+    <div className="bg-bg-alt dark:bg-bg-dark rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-text dark:text-text-dark flex items-center">
           {t("dashboard.upcomingPayments")}
