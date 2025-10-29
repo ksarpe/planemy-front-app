@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { useToast } from "@shared/hooks/toasts/useToast";
-import { useLogin, useRegister } from "@shared/hooks/auth/useAuth";
-import { useT } from "@shared/hooks/utils/useT";
-import { Toaster } from "sonner";
 import { APIError } from "@shared/data/Auth/interfaces";
+import { useLogin, useRegister } from "@shared/hooks/auth";
+import { useToast } from "@shared/hooks/toasts/useToast";
+import { useT } from "@shared/hooks/utils/useT";
 import { LoaderCircleIcon } from "lucide-react";
+import { useState } from "react";
+import { Toaster } from "sonner";
 import { Button } from "../ui/shadcn/button";
 
 export const LoginForm = () => {

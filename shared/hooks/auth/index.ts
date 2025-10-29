@@ -1,1 +1,1 @@
-export { useLogin, useRegister } from "./useAuth";
+export { useChangePassword, useLogin, useLogout, useRegister, useUserInfoQuery } from "./useAuth";

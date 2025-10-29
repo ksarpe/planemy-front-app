@@ -1,5 +1,5 @@
 //types
-import type { LoginRequest, RegisterRequest, AuthResponse } from "@shared/data/Auth/interfaces";
+import type { AuthResponse, LoginRequest, RegisterRequest } from "@shared/data/Auth/interfaces";
 import { APIError } from "@shared/data/Auth/interfaces";
 import { User } from "@shared/data/User";
 
@@ -18,6 +18,7 @@ export const loginUser = async (credentials: LoginRequest): Promise<AuthResponse
     throw new APIError(`Authentication failed`, response.status, errorBody);
   }
   const data = await response.json();
+  console.log("loginUser response data:", data);
   return data;
 };
 
@@ -53,15 +54,33 @@ export const logoutUser = async (): Promise<void> => {
 };
 
 export const validateUser = async (): Promise<User> => {
-    const response = await fetch("http://localhost:8080/api/v1/auth/userinfo", {
-        method: "GET",
-        credentials: "include",
-    });
+  const response = await fetch("http://localhost:8080/api/v1/auth/userinfo", {
+    method: "GET",
+    credentials: "include",
+  });
 
-    if (!response.ok) {
-        const errorBody = await response.json();
-        throw new APIError(`User validation failed`, response.status, errorBody);
-    }
-    const data = await response.json();
-    return data;
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new APIError(`User validation failed`, response.status, errorBody);
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const changePassword = async (currentPassword: string, newPassword: string): Promise<void> => {
+  const response = await fetch("http://localhost:8080/api/v1/auth/change-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ currentPassword, newPassword }),
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new APIError(`Changing password failed`, response.status, errorBody);
+  }
+  const data = await response.json();
+  return data;
 };

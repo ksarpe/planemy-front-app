@@ -18,12 +18,10 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  message: string;
-  token?: string;
-  user?: {
-    id: string;
-    username: string;
-  };
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+  token_type: string;
 }
 
 // Component interfaces

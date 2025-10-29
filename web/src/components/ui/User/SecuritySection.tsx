@@ -1,3 +1,6 @@
+import { APIError } from "@shared/data/Auth";
+import { useChangePassword } from "@shared/hooks/auth";
+import { useToast } from "@shared/hooks/toasts/useToast";
 import { useT } from "@shared/hooks/utils/useT";
 import { useState } from "react";
 import { InputModal } from "../Common";
@@ -6,34 +9,33 @@ import { Button } from "../shadcn/button";
 export default function SecuritySection() {
   const { t } = useT();
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const { showError, showSuccess } = useToast();
 
-  const handleChangePassword = async (values: Record<string, string>) => {
+  const { mutate: changePassword, isPending: isChangingPassword } = useChangePassword({
+    onSuccess: () => {
+      setIsChangePasswordModalOpen(false);
+      showSuccess("Hasło zostało pomyślnie zmienione!");
+    },
+    onError: (error: APIError) => {
+      //const errorMessage = getErrorMessage(error);
+      if (error.status === 401) {
+        showError("Obecne hasło jest niepoprawne.");
+      }
+    },
+  });
+
+  const handleChangePassword = (values: Record<string, string>) => {
     // Validate passwords match
     if (values.newPassword !== values.confirmPassword) {
-      alert("Hasła nie są zgodne!");
+      showError("Nowe hasło i potwierdzenie nie są zgodne.");
       return;
     }
 
-    setIsChangingPassword(true);
-    try {
-      // TODO: Call API to change password
-      console.log("Changing password:", {
-        oldPassword: values.oldPassword,
-        newPassword: values.newPassword,
-      });
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setIsChangePasswordModalOpen(false);
-      alert("Hasło zostało zmienione!");
-    } catch (error) {
-      console.error("Error changing password:", error);
-      alert("Błąd podczas zmiany hasła");
-    } finally {
-      setIsChangingPassword(false);
-    }
+    // Call mutation with React Query callbacks
+    changePassword({
+      currentPassword: values.oldPassword,
+      newPassword: values.newPassword,
+    });
   };
 
   return (

@@ -1,4 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
+import { MutationCache, QueryClient } from "@tanstack/react-query";
 
 // Konfiguracja globalnych ustawień dla React Query
 export const queryClient = new QueryClient({
@@ -37,4 +37,9 @@ export const queryClient = new QueryClient({
       retry: false, // Mutacje zwykle nie powinny być automatycznie ponawiane
     },
   },
+  // mutationCache: new MutationCache({
+  //   onError: (error) => {
+  //     window.location.href = "/login";
+  //   },
+  // }),
 });
