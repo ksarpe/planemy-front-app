@@ -1,5 +1,5 @@
-import PaymentItem from "./PaymentItem";
 import type { PaymentSectionProps } from "@shared/data/Payments/Components/PaymentComponentInterfaces";
+import PaymentItem from "./PaymentItem";
 
 export const PaymentSection = ({
   title,
@@ -12,9 +12,9 @@ export const PaymentSection = ({
   if (payments.length === 0 && !emptyMessage) return null;
 
   return (
-    <div className={`bg-bg rounded-lg p-4 shadow-md border border-bg-alt`}>
+    <div className={`bg-bg rounded-2xl p-4 shadow-md border border-bg-alt`}>
       <div className="flex items-center gap-2 mb-3">
-        <h3 className={`text-lg ${textColor} p-1 rounded-lg shadow-sm`}>{title}</h3>
+        <h3 className={`text-lg ${textColor} p-1 rounded-2xl shadow-sm`}>{title}</h3>
       </div>
 
       {payments.length === 0 ? (

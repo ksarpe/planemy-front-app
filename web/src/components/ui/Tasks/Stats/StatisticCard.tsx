@@ -12,7 +12,7 @@ export default function StatisticCard({
   return (
     <button
       onClick={onClick}
-      className={clsx("w-full text-center sm:text-left px-2 rounded-lg bg-bg-alt cursor-pointer  ", {
+      className={clsx("w-full text-center sm:text-left px-2 rounded-2xl bg-bg-alt cursor-pointer  ", {
         // Zaznaczony
         "border-bg-muted-light  shadow-md border-2 text-text": isSelected,
         // Niezaznaczony

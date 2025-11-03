@@ -8,7 +8,7 @@ export default function LabelCard({ label, onEdit }: LabelCardProps) {
 
   return (
     <div
-      className="bg-bg-alt  rounded-lg p-4 shadow-md border border-bg-muted-light  hover:shadow-md transition-shadow duration-200 cursor-pointer"
+      className="bg-bg-alt  rounded-2xl p-4 shadow-md border border-bg-muted-light  hover:shadow-md transition-shadow duration-200 cursor-pointer"
       onClick={() => onEdit(label)}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">

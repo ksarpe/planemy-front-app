@@ -1,6 +1,6 @@
 // ActionButton.tsx
-import { clsx } from "clsx";
 import { ActionButtonProps } from "@shared/data/Common/interfaces";
+import { clsx } from "clsx";
 
 // ZMIANA: Bardziej zaawansowana struktura stylów dla pełnej kontroli
 const colorStyles = {
@@ -63,7 +63,7 @@ export default function ActionButton({
         onClick={onClick}
         disabled={disabled}
         className={clsx(
-          "flex items-center flex-col justify-center rounded-lg w-full cursor-pointer",
+          "flex items-center flex-col justify-center rounded-2xl w-full cursor-pointer",
           styles.base,
           styles.hover,
           iconSizeClasses[size],
@@ -81,7 +81,7 @@ export default function ActionButton({
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        "flex items-center justify-center gap-2 rounded-lg font-semibold shadow-md",
+        "flex items-center justify-center gap-2 rounded-2xl font-semibold shadow-md",
         " hover:shadow-lg",
         styles.base,
         styles.hover,

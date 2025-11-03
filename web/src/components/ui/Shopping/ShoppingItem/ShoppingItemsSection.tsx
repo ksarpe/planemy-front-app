@@ -1,8 +1,8 @@
+import type { ShoppingItemsSectionProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
+import { AnimatePresence, motion } from "framer-motion";
 import { Package, Plus } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useMemo } from "react";
 import { ShoppingItem } from "./ShoppingItem";
-import type { ShoppingItemsSectionProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
 
 export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: ShoppingItemsSectionProps) {
   // Keep incomplete items on top; completed at the bottom, preserving relative order
@@ -23,7 +23,7 @@ export function ShoppingItemsSection({ items, listId, onAddItem, isFiltered }: S
           {!isFiltered && (
             <button
               onClick={onAddItem}
-              className="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+              className="w-full md:w-auto flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-2xl hover:opacity-90 transition-opacity">
               <Plus size={18} />
               Dodaj produkt
             </button>

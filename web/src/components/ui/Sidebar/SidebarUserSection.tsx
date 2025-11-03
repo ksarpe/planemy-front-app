@@ -33,7 +33,7 @@ export function SidebarUserSection({ collapsed, onSettingsClick }: SidebarUserSe
       <div className="flex flex-col items-center gap-4">
         <div
           onClick={onSettingsClick}
-          className="w-12 h-12 rounded-lg bg-primary hover:bg-primary/60 flex items-center justify-center font-bold text-text cursor-pointer"
+          className="w-12 h-12 rounded-2xl bg-primary hover:bg-primary/60 flex items-center justify-center font-bold text-text cursor-pointer"
           title={user?.username || user?.email || "Profil"}>
           {(user?.username || user?.email || "U").charAt(0).toUpperCase()}
         </div>
@@ -44,11 +44,11 @@ export function SidebarUserSection({ collapsed, onSettingsClick }: SidebarUserSe
 
   return (
     <div className="">
-      <div className="flex items-center gap-3 justify-between p-2 rounded-lg hover:bg-bg-hover transition-colors">
+      <div className="flex items-center gap-3 justify-between p-2 rounded-2xl hover:bg-bg-hover transition-colors">
         <div
           onClick={onSettingsClick}
           className="flex items-center gap-3 flex-1 min-w-0 overflow-hidden group cursor-pointer">
-          <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center font-bold text-black">
+          <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center font-bold text-black">
             {(user!.username || user!.email || "U").charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">

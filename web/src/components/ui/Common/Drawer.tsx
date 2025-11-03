@@ -65,7 +65,7 @@ export function Drawer({
           <div className="flex items-center justify-between gap-2 p-2">
             <button
               onClick={onClose}
-              className="text-text-muted hover:text-text hover:bg-bg-muted-light cursor-pointer rounded-lg p-2 transition-colors"
+              className="text-text-muted hover:text-text hover:bg-bg-muted-light cursor-pointer rounded-2xl p-2 transition-colors"
               aria-label="Close panel">
               <X size={24} />
             </button>

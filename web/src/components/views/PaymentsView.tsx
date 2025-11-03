@@ -59,7 +59,7 @@ export default function Payments() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {payments.map((payment) => (
-                <div key={payment.id} className="bg-bg-alt p-4 rounded-lg border border-bg-hover">
+                <div key={payment.id} className="bg-bg-alt p-4 rounded-2xl border border-bg-hover">
                   <h3 className="font-semibold text-text mb-2">{payment.title}</h3>
                   <p className="text-2xl font-bold text-primary mb-2">${payment.amount.toFixed(2)}</p>
                   <p className="text-sm text-text-muted mb-2">Due: {new Date(payment.due_date).toLocaleDateString()}</p>

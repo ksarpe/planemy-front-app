@@ -52,7 +52,7 @@ export default function QuickAddTask({ onCancel }: QuickAddTaskProps) {
   };
 
   return (
-    <div ref={containerRef} className="border-success rounded-lg p-4 text-text bg-bg-muted-light">
+    <div ref={containerRef} className="border-success rounded-2xl p-4 text-text bg-bg-muted-light">
       <div className="flex items-center gap-3">
         {/* Input Field */}
         <input

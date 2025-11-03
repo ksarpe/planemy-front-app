@@ -1,13 +1,12 @@
+import type { ShoppingListInterface } from "@shared/data/Shopping";
+import type { ShoppingListPanelProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
+import { useLabelContext } from "@shared/hooks/context/useLabelContext";
+import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
+import { useDeleteShoppingList, useShoppingListStats, useUpdateShoppingList } from "@shared/hooks/shopping/useShopping";
+import { Check, Edit2, MoreVertical, Plus, RefreshCw, Share2, Tag, Trash, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDeleteShoppingList, useUpdateShoppingList } from "@shared/hooks/shopping/useShopping";
-import { useShoppingListStats } from "@shared/hooks/shopping/useShopping";
-import { Plus, MoreVertical, Edit2, Trash2, Share2, RefreshCw, Check, Tag, Trash } from "lucide-react";
-import type { ShoppingListPanelProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
-import type { ShoppingListInterface } from "@shared/data/Shopping";
 import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
-import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
-import { useLabelContext } from "@shared/hooks/context/useLabelContext";
 
 function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: ShoppingListPanelProps) {
   const navigate = useNavigate();
@@ -68,7 +67,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
       <div className="flex items-center mb-4">
         <button
           onClick={onAddList}
-          className="p-2 bg-success text-white rounded-lg hover:bg-success-hover transition-colors">
+          className="p-2 bg-success text-white rounded-2xl hover:bg-success-hover transition-colors">
           <Plus size={16} />
         </button>
       </div>
@@ -81,7 +80,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
             <p className="text-sm text-gray-500 mb-3">Brak list zakupów</p>
             <button
               onClick={onAddList}
-              className="text-sm bg-primary text-white px-3 py-2 rounded-lg hover:bg-text-muted transition-colors">
+              className="text-sm bg-primary text-white px-3 py-2 rounded-2xl hover:bg-text-muted transition-colors">
               Utwórz pierwszą listę
             </button>
           </div>
@@ -94,7 +93,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
             return (
               <div
                 key={list.id}
-                className={`p-3 rounded-lg border transition-all cursor-pointer ${
+                className={`p-3 rounded-2xl border transition-all cursor-pointer ${
                   isSelected ? "border-primary bg-bg-hover " : "border-primary hover:bg-bg-hover "
                 }`}
                 onClick={() => !isEditing && onSelectList(list)}>
@@ -199,7 +198,7 @@ function ShoppingListPanel({ lists, currentList, onSelectList, onAddList }: Shop
                         <div onClick={(e) => e.stopPropagation()}>
                           <BasicDropdown
                             trigger={
-                              <button className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors text-sm cursor-pointer text-gray-700 hover:bg-gray-50">
+                              <button className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-2xl transition-colors text-sm cursor-pointer text-gray-700 hover:bg-gray-50">
                                 <Tag size={16} />
                                 Etykiety
                               </button>

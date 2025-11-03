@@ -1,4 +1,3 @@
-import React, { useMemo, useRef, useEffect } from "react";
 import {
   addHours,
   areIntervalsOverlapping,
@@ -15,15 +14,15 @@ import {
   startOfDay,
   startOfWeek,
 } from "date-fns";
+import React, { useEffect, useMemo, useRef } from "react";
 
 import { DraggableEvent } from "@/components/shadcn/Calendar/draggable-event";
 import { DroppableCell } from "@/components/shadcn/Calendar/droppable-cell";
 import { EventItem } from "@/components/shadcn/Calendar/event-item";
-import { isMultiDayEvent } from "@/components/shadcn/utils";
 import { useCurrentTimeIndicator } from "@/components/shadcn/Calendar/use-current-time-indicator";
-import { WeekCellsHeight } from "@/components/shadcn/constants";
+import { EndHour, StartHour, WeekCellsHeight } from "@/components/shadcn/constants";
 import { type CalendarEvent } from "@/components/shadcn/types";
-import { EndHour, StartHour } from "@/components/shadcn/constants";
+import { isMultiDayEvent } from "@/components/shadcn/utils";
 import { cn } from "@/lib/shadcn/utils";
 
 interface WeekViewProps {
@@ -204,8 +203,10 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
   }, [currentDate]);
 
   return (
-    <div data-slot="week-view" className="flex h-full flex-col">
-      <div className="sticky top-0 z-30 grid grid-cols-[3.5rem_repeat(7,1fr)] border-b border-bg-alt backdrop-blur-md bg-bg rounded-tl-xl">
+    <div
+      data-slot="week-view"
+      className="flex h-full flex-col rounded-xl bg-bg shadow-[-6px_-6px_16px_rgba(0,0,0,0.1)] dark:shadow-[-6px_-6px_16px_rgba(0,0,0,0.4)] overflow-hidden">
+      <div className="sticky top-0 z-30 grid grid-cols-[3.5rem_repeat(7,1fr)] border-b border-bg-alt backdrop-blur-md">
         <div className="py-2 text-center text-sm text-text-muted">
           <span className="max-[479px]:sr-only text-xs">{format(new Date(), "O")}</span>
         </div>
@@ -282,9 +283,9 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               key={hour.toString()}
               className="border-bg-alt relative min-h-[var(--week-cells-height)]  flex items-center justify-center">
               {index > 0 && (
-          <span className="absolute left-1/2 -translate-x-1/2 truncate -top-2 flex items-center justify-center text-[10px] sm:text-xs bg-bg text-text-muted">
-            {format(hour, "h a")}
-          </span>
+                <span className="absolute left-1/2 -translate-x-1/2 truncate -top-2 flex items-center justify-center text-[10px] sm:text-xs bg-bg text-text-muted">
+                  {format(hour, "h a")}
+                </span>
               )}
             </div>
           ))}

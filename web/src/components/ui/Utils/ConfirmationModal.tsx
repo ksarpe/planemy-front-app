@@ -1,6 +1,6 @@
 // src/components/ui/Utils/ConfirmationModal.tsx
-import { useEffect, useRef } from "react";
 import type { ConfirmationModalProps } from "@shared/data/Utils/Components/UtilComponentInterfaces";
+import { useEffect, useRef } from "react";
 
 export default function ConfirmationModal({
   isOpen,
@@ -42,7 +42,7 @@ export default function ConfirmationModal({
         <div className="flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm rounded-lg cursor-pointer bg-gray-100  hover:bg-gray-200  text-gray-700 ">
+            className="px-4 py-2 text-sm rounded-2xl cursor-pointer bg-gray-100  hover:bg-gray-200  text-gray-700 ">
             {cancelLabel}
           </button>
           <button
@@ -50,7 +50,7 @@ export default function ConfirmationModal({
               onConfirm();
               onClose();
             }}
-            className="px-4 py-2 cursor-pointer text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white">
+            className="px-4 py-2 cursor-pointer text-sm rounded-2xl bg-red-500 hover:bg-red-600 text-white">
             {confirmLabel}
           </button>
         </div>

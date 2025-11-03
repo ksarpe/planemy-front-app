@@ -191,7 +191,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <select
                       value={selectedLanguage}
                       onChange={(e) => handleLanguageChange(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-bg-alt border border-bg-muted-light rounded-lg text-text focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+                      className="w-full px-4 py-2.5 bg-bg-alt border border-bg-muted-light rounded-2xl text-text focus:outline-none focus:ring-2 focus:ring-primary transition-all">
                       <option value="pl">Polski 🇵🇱</option>
                       <option value="en">English 🇬🇧</option>
                       <option value="de">Deutsch 🇩🇪</option>

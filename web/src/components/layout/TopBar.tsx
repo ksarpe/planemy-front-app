@@ -8,7 +8,7 @@ export default function TopBar({ setIsSidebarOpen }: { setIsSidebarOpen: (open: 
           type="button"
           aria-label="Otwórz menu"
           onClick={() => setIsSidebarOpen(true)}
-          className="inline-flex items-center justify-center rounded-lg p-2 bg-text-muted/20 hover:bg-bg-alt cursor-pointer transition-colors">
+          className="inline-flex items-center justify-center rounded-2xl p-2 bg-text-muted/20 hover:bg-bg-alt cursor-pointer transition-colors">
           <Menu size={20} />
         </button>{" "}
         <img src="logo.png" alt="Logo" className="h-14 w-auto" />

@@ -86,7 +86,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
     return (
       <div
         key={list.id}
-        className={`p-2 rounded-lg border transition-all text-text ${
+        className={`p-2 rounded-2xl border transition-all text-text ${
           isSelected ? "border-text bg-bg-hover " : "hover:bg-bg-hover border-bg-muted-light "
         }`}
         onClick={() => !isEditing && onSelectList(list)}>
@@ -195,7 +195,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
             <p className="text-sm text-text-muted mb-3">{t("tasks.panel.empty.title")}</p>
             <button
               onClick={onAddList}
-              className="text-sm bg-primary text-white px-3 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+              className="text-sm bg-primary text-white px-3 py-2 rounded-2xl hover:bg-primary/90 transition-colors">
               {t("tasks.panel.empty.createFirst")}
             </button>
           </div>

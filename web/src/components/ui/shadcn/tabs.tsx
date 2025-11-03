@@ -29,7 +29,7 @@ function TabsList({
         "relative z-0 flex w-fit items-center justify-center gap-1 text-text-muted",
         "data-[orientation=vertical]:flex-col",
         variant === "default"
-          ? "rounded-lg bg-bg p-1"
+          ? "rounded-2xl bg-bg p-1"
           : "data-[orientation=horizontal]:py-2 data-[orientation=vertical]:py-2 data-[orientation=vertical]:gap-1",
         className,
       )}
@@ -39,7 +39,7 @@ function TabsList({
         <TabsPrimitive.Indicator
           data-slot="tab-indicator"
           className={cn(
-            "absolute bottom-0 left-0 h-(--active-tab-height) w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-(--active-tab-bottom) transition-[width,translate] duration-200 ease-in-out -z-1 rounded-lg bg-bg-muted-light",
+            "absolute bottom-0 left-0 h-(--active-tab-height) w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-(--active-tab-bottom) transition-[width,translate] duration-200 ease-in-out -z-1 rounded-2xl bg-bg-muted-light",
           )}
         />
       )}
@@ -52,7 +52,7 @@ function TabsTab({ className, ...props }: TabsPrimitive.Tab.Props) {
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        "flex flex-1 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary data-disabled:pointer-events-none data-disabled:opacity-64 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "flex flex-1 shrink-0 cursor-pointer items-center justify-center rounded-2xl border border-transparent text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary data-disabled:pointer-events-none data-disabled:opacity-64 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         // Colors matching Button default variant
         "text-text-muted hover:text-text hover:bg-bg-muted-light",
         "data-selected:text-text data-selected:bg-bg-muted-light data-selected:font-semibold",

@@ -275,7 +275,7 @@ export function TutorialOverlay() {
 
           {/* Highlight Border */}
           <div
-            className={`fixed z-50 pointer-events-none border-2 border-primary rounded-lg animate-pulse ${
+            className={`fixed z-50 pointer-events-none border-2 border-primary rounded-2xl animate-pulse ${
               currentStep === 0 ? "animate-in fade-in duration-500" : ""
             }`}
             style={{
@@ -298,7 +298,7 @@ export function TutorialOverlay() {
       {/* Tooltip */}
       <div
         key={currentStep} // Force re-render on step change for animation
-        className={`fixed z-50 bg-bg-alt border border-border rounded-lg shadow-2xl p-4 ${getAnimationClass()}`}
+        className={`fixed z-50 bg-bg-alt border border-border rounded-2xl shadow-2xl p-4 ${getAnimationClass()}`}
         style={{
           top: `${top}px`,
           left: `${left}px`,

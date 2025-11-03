@@ -74,7 +74,7 @@ export const LoginForm = () => {
   const isLoading = login.isPending || register.isPending;
 
   return (
-    <div className="p-8 rounded-lg w-full max-w-md mx-auto bg-bg">
+    <div className="p-8 rounded-2xl w-full max-w-md mx-auto bg-bg">
       <Toaster position="bottom-center" richColors />
       <h1 className="text-2xl font-semibold text-text">Your Life Assistant</h1>
       <h2 className="text-xl font-normal text-left mb-6 text-text-muted">
@@ -91,7 +91,7 @@ export const LoginForm = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            className="w-full px-3 py-2 border border-gray-300  rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white  text-gray-900  placeholder-gray-500 "
             placeholder={t("auth.emailPlaceholder")}
             required
             autoComplete="email"
@@ -99,7 +99,7 @@ export const LoginForm = () => {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700  mb-1">
             {t("auth.password")}
           </label>
           <input
@@ -107,7 +107,7 @@ export const LoginForm = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            className="w-full px-3 py-2 border border-gray-300  rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white  text-gray-900  placeholder-gray-500 "
             placeholder={t("auth.passwordPlaceholder")}
             required
             autoComplete={isLoginMode ? "current-password" : "new-password"}
@@ -119,7 +119,7 @@ export const LoginForm = () => {
           disabled={isLoading}
           data-loading={isLoading || undefined}
           variant={"primary"}
-          className="w-full text-black py-2 px-4 rounded-lg hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors group relative">
+          className="w-full text-black py-2 px-4 rounded-2xl hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors group relative">
           <span className="group-data-loading:text-transparent">
             {isLoading
               ? isLoginMode
@@ -138,9 +138,7 @@ export const LoginForm = () => {
       </form>
 
       <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          {isLoginMode ? t("auth.noAccount") : t("auth.hasAccount")}
-        </p>
+        <p className="text-sm text-gray-600 ">{isLoginMode ? t("auth.noAccount") : t("auth.hasAccount")}</p>
         <button
           onClick={() => setIsLoginMode(!isLoginMode)}
           className="text-lg mt-2 text-primary hover:text-primary/80 cursor-pointer font-medium transition-colors">

@@ -59,4 +59,4 @@ console.log(config.bg); // "bg-green-100"
 
 ## Theme Support
 
-All colors work with both light and dark modes automatically (no `dark:` prefix needed).
+All colors work with both light and dark modes automatically (no ` prefix needed).

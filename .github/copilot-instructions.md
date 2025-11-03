@@ -87,7 +87,7 @@ Both platforms use path aliases to import from `shared/`:
 - Import shared types: `import type { TaskItemProps } from "@shared/data/Tasks/interfaces"`
 
 - colors fetched from colors.css file.
-- in className for background use bg-[value from colors.css] for example bg-primary, or bg-bg. DON'T use dark:. It is handled automatically based on system preference.
+- in className for background use bg-[value from colors.css] for example bg-primary, or bg-bg. DON'T use It is handled automatically based on system preference.
 
 ### State Management
 

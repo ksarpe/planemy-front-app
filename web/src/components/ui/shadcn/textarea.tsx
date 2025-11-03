@@ -48,7 +48,7 @@ export function Textarea({ className, onChange, ...props }: React.ComponentProps
     <textarea
       data-slot="textarea"
       className={cn(
-        "placeholder:text-muted-more border-text-muted-more text-text flex min-h-15 w-full rounded-lg border border-b-input bg-transparent px-3 py-2 text-sm transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        " text-text flex min-h-15 w-full rounded-2xl shadow-[10px_6px_12px] hover:shadow-[6px_4px_8px] shadow-button-active-shadow focus:not:shadow-button-active-shadow focus:shadow-[inset_5px_4px_6px_var(--color-button-active-shadow)] bg-transparent px-3 py-2 text-sm transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-50",
         "aria-invalid:border-b-destructive",
         "hover:border-text-muted",
         className,

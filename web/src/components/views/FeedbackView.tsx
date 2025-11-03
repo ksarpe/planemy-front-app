@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Send, MessageCircle, Clock, CheckCircle, Users, Wrench } from "lucide-react";
 import { useFeedback } from "@shared/hooks/feedback/useFeedback";
 import { useT } from "@shared/hooks/utils/useT";
+import { CheckCircle, Clock, MessageCircle, Send, Users, Wrench } from "lucide-react";
+import { useState } from "react";
 
 export default function FeedbackView() {
   const [message, setMessage] = useState("");
@@ -61,7 +61,7 @@ export default function FeedbackView() {
       </div>
 
       {/* Formularz wysyłania feedbacku */}
-      <div className="bg-white rounded-lg shadow-md border border-border p-6 mb-8">
+      <div className="bg-white rounded-2xl shadow-md border border-border p-6 mb-8">
         <h2 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
           <MessageCircle className="w-5 h-5 text-orange-500" />
           {t("feedback.sendFeedback")}
@@ -77,7 +77,7 @@ export default function FeedbackView() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={t("feedback.messagePlaceholder")}
-              className="w-full h-32 px-3 py-2 border border-border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full h-32 px-3 py-2 border border-border rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               required
             />
             <p className="text-xs text-text-secondary mt-1">{t("feedback.minimumCharacters")}</p>
@@ -87,7 +87,7 @@ export default function FeedbackView() {
             <button
               type="submit"
               disabled={isCreating || message.trim().length < 10}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-2xl hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
               {isCreating ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -105,7 +105,7 @@ export default function FeedbackView() {
       </div>
 
       {/* Publiczne zgłoszenia - roadmap */}
-      <div className="bg-white rounded-lg shadow-md border border-border p-6">
+      <div className="bg-white rounded-2xl shadow-md border border-border p-6">
         <h2 className="text-lg font-semibold text-text-primary mb-2 flex items-center gap-2">
           <Users className="w-5 h-5 text-primary" />
           {t("feedback.roadmapTitle")}
@@ -126,7 +126,7 @@ export default function FeedbackView() {
             {publicFeedbacks.map((feedback) => (
               <div
                 key={feedback.id}
-                className={`border rounded-lg p-4 transition-all ${
+                className={`border rounded-2xl p-4 transition-all ${
                   feedback.status === "resolved" ? "border-green-200 bg-green-50/50" : "border-blue-200 bg-blue-50/50"
                 }`}>
                 <div className="flex items-start justify-between mb-3">

@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
 import type { EditableTextProps } from "@shared/data/Common/Components/CommonComponentInterfaces";
+import { useEffect, useRef, useState } from "react";
 
 export default function EditableText({ value, onSave, className, placeholder }: EditableTextProps) {
   const [isEditing, setIsEditing] = useState(false);
@@ -44,12 +44,12 @@ export default function EditableText({ value, onSave, className, placeholder }: 
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
       placeholder={placeholder}
-      className="w-full px-3 py-2 bg-white border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+      className="w-full px-3 py-2 bg-white border border-blue-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
     />
   ) : (
     <div
       onClick={() => setIsEditing(true)}
-      className={`w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-100 hover:border-gray-300 transition-colors min-h-[42px] flex items-center ${className}`}>
+      className={`w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-2xl cursor-pointer hover:bg-gray-100 hover:border-gray-300 transition-colors min-h-[42px] flex items-center ${className}`}>
       <span className="text-base sm:text-sm">
         {tempValue || <span className="text-gray-400 italic">{placeholder || "Kliknij, aby edytować"}</span>}
       </span>

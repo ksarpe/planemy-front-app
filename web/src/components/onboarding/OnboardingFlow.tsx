@@ -1,17 +1,17 @@
 // src/components/onboarding/OnboardingFlow.tsx
 
-import { AnimatePresence, motion } from "framer-motion";
-import ReactCountryFlag from "react-country-flag";
-import { useCallback, useState, useEffect } from "react";
-import { useT } from "@shared/hooks/utils/useT";
-import { useUpdateUserProfile } from "@shared/hooks/user/useUserProfile";
 import type { OnboardingData, OnboardingStep, User } from "@shared/data/User/interfaces";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
+import { useUpdateUserProfile } from "@shared/hooks/user/useUserProfile";
+import { useT } from "@shared/hooks/utils/useT";
+import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
+import ReactCountryFlag from "react-country-flag";
 
 // Import onboarding steps
+import { CompletionStep } from "./steps/CompletionStep";
 import { PersonalInfoStep } from "./steps/PersonalInfoStep";
 import { PreferencesStep } from "./steps/PreferencesStep";
-import { CompletionStep } from "./steps/CompletionStep";
 
 export const OnboardingFlow = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -150,7 +150,7 @@ export const OnboardingFlow = () => {
             )}
           </div>
           {mascottName.length > 1 && (
-            <div className="text-center rounded-lg border bg-blue-300 shadow-lg">{mascottName}</div>
+            <div className="text-center rounded-2xl border bg-blue-300 shadow-lg">{mascottName}</div>
           )}
         </div>
 
@@ -180,7 +180,7 @@ export const OnboardingFlow = () => {
               {currentStepIndex > 0 ? (
                 <button
                   onClick={handlePrev}
-                  className="py-2 bg-text-muted w-full text-black font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                  className="py-2 bg-text-muted w-full text-black font-medium rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed">
                   {t("common.previous")}
                 </button>
               ) : (
@@ -189,14 +189,14 @@ export const OnboardingFlow = () => {
               {!currentStep.isRequired && currentStepIndex < steps.length - 1 && (
                 <button
                   onClick={handleSkip}
-                  className="py-2 bg-text-muted w-full text-black font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                  className="py-2 bg-text-muted w-full text-black font-medium rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed">
                   {t("common.skip")}
                 </button>
               )}
               <button
                 onClick={currentStepIndex === steps.length - 1 ? handleComplete : handleNext}
                 disabled={currentStepIndex === steps.length - 1 ? updateUser.isPending : false}
-                className="py-2 bg-primary w-full text-black font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                className="py-2 bg-primary w-full text-black font-medium rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed">
                 {currentStepIndex === steps.length - 1
                   ? updateUser.isPending
                     ? t("common.loading")

@@ -1,5 +1,5 @@
-import { useT } from "@shared/hooks/utils/useT";
 import type { OnboardingStepBaseProps } from "@shared/data/User/interfaces";
+import { useT } from "@shared/hooks/utils/useT";
 
 export const CompletionStep = ({ onboardingData }: OnboardingStepBaseProps) => {
   const { t } = useT();
@@ -12,7 +12,7 @@ export const CompletionStep = ({ onboardingData }: OnboardingStepBaseProps) => {
       </div>
 
       {/* Summary */}
-      <div className="p-6 bg-bg-alt  rounded-lg space-y-4 text-left">
+      <div className="p-6 bg-bg-alt  rounded-2xl space-y-4 text-left">
         <h3 className="font-semibold text-text  text-center mb-4">
           {t("onboarding.completion.summary", "Twoje ustawienia:")}
         </h3>

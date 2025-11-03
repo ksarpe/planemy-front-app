@@ -26,11 +26,9 @@ export default function UpcomingPayments() {
   };
 
   return (
-    <div className="bg-bg-alt dark:bg-bg-dark rounded-lg p-4">
+    <div className="bg-bg-alt  rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-text dark:text-text-dark flex items-center">
-          {t("dashboard.upcomingPayments")}
-        </h2>
+        <h2 className="text-lg font-semibold text-text  flex items-center">{t("dashboard.upcomingPayments")}</h2>
         <p className="text-xs text-primary cursor-pointer" onClick={() => navigate("/payments")}>
           Przejdź do płatności
         </p>
@@ -51,9 +49,9 @@ export default function UpcomingPayments() {
             .map((payment) => (
               <div
                 key={payment.id}
-                className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                className="flex items-center justify-between p-3 border border-gray-200  rounded-2xl">
                 <div>
-                  <p className="text-sm font-medium text-text dark:text-text-dark">{payment.name}</p>
+                  <p className="text-sm font-medium text-text ">{payment.name}</p>
                   <p className="text-xs text-gray-500">
                     {payment.daysLeft === 0
                       ? t("today")
@@ -64,7 +62,7 @@ export default function UpcomingPayments() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-text dark:text-text-dark">
+                  <p className="text-sm font-bold text-text ">
                     {payment.amount.toFixed(2)} {payment.currency}
                   </p>
                   <p

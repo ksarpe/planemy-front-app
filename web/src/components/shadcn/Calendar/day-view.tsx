@@ -1,4 +1,3 @@
-import React, { useMemo, useRef, useEffect } from "react";
 import {
   addHours,
   areIntervalsOverlapping,
@@ -10,15 +9,15 @@ import {
   isSameDay,
   startOfDay,
 } from "date-fns";
+import React, { useEffect, useMemo, useRef } from "react";
 
 import { DraggableEvent } from "@/components/shadcn/Calendar/draggable-event";
 import { DroppableCell } from "@/components/shadcn/Calendar/droppable-cell";
 import { EventItem } from "@/components/shadcn/Calendar/event-item";
-import { isMultiDayEvent } from "@/components/shadcn/utils";
 import { useCurrentTimeIndicator } from "@/components/shadcn/Calendar/use-current-time-indicator";
-import { WeekCellsHeight } from "@/components/shadcn/constants";
+import { EndHour, StartHour, WeekCellsHeight } from "@/components/shadcn/constants";
 import type { CalendarEvent } from "@/components/shadcn/types";
-import { EndHour, StartHour } from "@/components/shadcn/constants";
+import { isMultiDayEvent } from "@/components/shadcn/utils";
 import { cn } from "@/lib/shadcn/utils";
 
 interface DayViewProps {
@@ -183,9 +182,11 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
   }, [currentDate]);
 
   return (
-    <div data-slot="day-view" className="contents">
+    <div
+      data-slot="day-view"
+      className="flex flex-col flex-1 rounded-xl bg-bg shadow-[-6px_-6px_16px_rgba(0,0,0,0.1)] dark:shadow-[-6px_-6px_16px_rgba(0,0,0,0.4)] overflow-hidden">
       {showAllDaySection && (
-        <div className="border-t border-bg-alt bg-bg-alt">
+        <div className="border-b border-bg-alt bg-bg-alt">
           <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]">
             <div className="relative">
               <span className="absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs text-text-muted">
@@ -217,7 +218,9 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
         </div>
       )}
 
-      <div ref={scrollContainerRef} className="grid flex-1 min-h-0 grid-cols-[3rem_1fr] overflow-y-auto border-t border-bg-alt sm:grid-cols-[4rem_1fr] bg-bg rounded-tl-xl">
+      <div
+        ref={scrollContainerRef}
+        className="grid flex-1 min-h-0 grid-cols-[3rem_1fr] overflow-y-auto sm:grid-cols-[4rem_1fr]">
         <div>
           {hours.map((hour, index) => (
             <div

@@ -1,11 +1,11 @@
-import { useMemo } from "react";
 import { RiCalendarEventLine } from "@remixicon/react";
 import { addDays, format, isToday } from "date-fns";
+import { useMemo } from "react";
 
-import { AgendaDaysToShow } from "@/components/shadcn/constants";
 import { EventItem } from "@/components/shadcn/Calendar/event-item";
-import { getAgendaEventsForDay } from "@/components/shadcn/utils";
+import { AgendaDaysToShow } from "@/components/shadcn/constants";
 import type { CalendarEvent } from "@/components/shadcn/types";
+import { getAgendaEventsForDay } from "@/components/shadcn/utils";
 
 interface AgendaViewProps {
   currentDate: Date;
@@ -30,7 +30,7 @@ export function AgendaView({ currentDate, events, onEventSelect }: AgendaViewPro
   const hasEvents = days.some((day) => getAgendaEventsForDay(events, day).length > 0);
 
   return (
-    <div className="flex-1 px-4 overflow-y-auto bg-bg rounded-tl-xl">
+    <div className="flex-1 px-4 overflow-y-auto bg-bg rounded-xl shadow-[-6px_-6px_16px_rgba(0,0,0,0.1)] dark:shadow-[-6px_-6px_16px_rgba(0,0,0,0.4)]">
       {!hasEvents ? (
         <div className="flex min-h-[70svh] flex-col items-center justify-center py-16 text-center">
           <RiCalendarEventLine size={32} className="mb-2" style={{ color: "var(--color-text-muted-more)" }} />

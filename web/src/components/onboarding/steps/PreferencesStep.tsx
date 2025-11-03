@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 //import { useT } from "@shared/hooks/utils/useT";
 import type { OnboardingStepBaseProps } from "@shared/data/User/interfaces";
 import ReactCountryFlag from "react-country-flag";
@@ -25,7 +25,7 @@ export const PreferencesStep = ({ onboardingData, updateOnboardingData }: Onboar
             <button
               key={lang.code}
               onClick={() => setLanguage(lang.code)}
-              className={`p-4 rounded-lg border-2 transition-all ${
+              className={`p-4 rounded-2xl border-2 transition-all ${
                 language === lang.code
                   ? "border-primary bg-primary/5 text-primary"
                   : "border-gray-200  bg-bg-alt  hover:border-primary/50 text-text"

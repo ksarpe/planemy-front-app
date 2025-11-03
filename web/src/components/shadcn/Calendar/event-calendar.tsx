@@ -306,7 +306,7 @@ export function EventCalendar({
           </div>
         </div>
 
-        <div className="flex flex-1 min-h-0 flex-col bg-bg-alt">
+        <div className="flex flex-1 min-h-0 flex-col pl-2">
           {view === "month" && (
             <MonthView
               currentDate={currentDate}

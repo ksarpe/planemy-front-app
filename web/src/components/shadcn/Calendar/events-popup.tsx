@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef } from "react";
 import { format, isSameDay } from "date-fns";
 import { XIcon } from "lucide-react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import type { CalendarEvent } from "@/components/shadcn/types";
@@ -76,7 +76,7 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
   return (
     <div
       ref={popupRef}
-      className="absolute z-50 max-h-96 w-80 overflow-auto rounded-lg border shadow-lg"
+      className="absolute z-50 max-h-96 w-80 overflow-auto rounded-2xl border shadow-lg"
       style={{
         top: `${adjustedPosition.top}px`,
         left: `${adjustedPosition.left}px`,

@@ -23,7 +23,7 @@ export function TaskViewHeader({ onToggleLists, listsOpen }: TaskViewHeaderProps
             <button
               type="button"
               onClick={onToggleLists}
-              className="text-text cursor-pointer hover:bg-bg-muted-light rounded-lg">
+              className="text-text cursor-pointer hover:bg-bg-muted-light rounded-2xl">
               <MoreVertical size={22} />
             </button>
           )}

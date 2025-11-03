@@ -52,7 +52,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-bg rounded-lg shadow-xl w-full max-w-md">
+      <div className="bg-bg rounded-2xl shadow-xl w-full max-w-md">
         <div className="flex justify-between items-center p-6 border-b border-bg-hover">
           <h2 className="text-xl font-semibold text-text">Add new payment</h2>
           <Button onClick={onClose} variant={"default"}>
@@ -68,7 +68,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               type="text"
               value={formData.title}
               onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
-              className="w-full px-3 py-2 bg-bg-alt border border-bg-hover rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text"
+              className="w-full px-3 py-2 bg-bg-alt border border-bg-hover rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary text-text"
               placeholder="Electric Bill - August 2024"
               required
             />
@@ -82,7 +82,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               step="0.01"
               value={formData.amount}
               onChange={(e) => setFormData((prev) => ({ ...prev, amount: e.target.value }))}
-              className="w-full px-3 py-2 bg-bg-alt border border-bg-hover rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text"
+              className="w-full px-3 py-2 bg-bg-alt border border-bg-hover rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary text-text"
               placeholder="125.50"
               required
             />
@@ -95,7 +95,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full px-3 py-2 bg-bg-alt border border-bg-hover rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text"
+              className="w-full px-3 py-2 bg-bg-alt border border-bg-hover rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary text-text"
               required
             />
           </div>

@@ -5,7 +5,7 @@ export function ShoppingProgress({ total, completed }: ShoppingProgressProps) {
   const percent = Math.round((completed / total) * 100);
 
   return (
-    <div className="bg-white  rounded-lg p-4 shadow-md">
+    <div className="bg-white  rounded-2xl p-4 shadow-md">
       <div className="flex justify-between items-center mb-2">
         <span className="text-sm text-text-light ">Postęp</span>
         <span className="text-sm text-text-light">

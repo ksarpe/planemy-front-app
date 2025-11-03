@@ -1,16 +1,16 @@
+import {
+  LanguageRegionSection,
+  NotificationSettingsSection,
+  PersonalInformationSection,
+  SaveBar,
+  SecuritySection,
+} from "@/components/ui/User";
+import { getUserProfile, upsertUserProfile } from "@shared/api/user_profile";
+import type { NotificationSettings, UserBasicInfo, UserSettings } from "@shared/data/User";
+import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
 import { useEffect, useRef, useState } from "react";
-import {
-  PersonalInformationSection,
-  NotificationSettingsSection,
-  LanguageRegionSection,
-  SecuritySection,
-  SaveBar,
-} from "@/components/ui/User";
 import { useBlocker } from "react-router-dom";
-import type { NotificationSettings, UserBasicInfo, UserSettings } from "@shared/data/User";
-import { upsertUserProfile, getUserProfile } from "@shared/api/user_profile";
-import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 
 import Spinner from "@/components/ui/Utils/Spinner";
 import { useT } from "@shared/hooks/utils/useT";
@@ -169,7 +169,7 @@ export default function ProfileView() {
 
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full bg-bg-alt  rounded-lg shadow-md overflow-auto scrollbar-hide">
+      <div className="w-full bg-bg-alt  rounded-2xl shadow-md overflow-auto scrollbar-hide">
         <div className="p-6 pb-24">
           {isLoading ? (
             <div className="w-full min-h-[300px] flex items-center justify-center">

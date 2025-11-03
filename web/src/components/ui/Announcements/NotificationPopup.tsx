@@ -64,19 +64,19 @@ function NotificationIcon({ type }: { type: NotificationType }) {
   switch (type) {
     case "task":
       return (
-        <div className="rounded-lg bg-primary/10 p-2">
+        <div className="rounded-2xl bg-primary/10 p-2">
           <CheckSquare className={`${iconClass} text-primary`} />
         </div>
       );
     case "event":
       return (
-        <div className="rounded-lg bg-accent/10 p-2">
+        <div className="rounded-2xl bg-accent/10 p-2">
           <Calendar className={`${iconClass} text-accent`} />
         </div>
       );
     case "share":
       return (
-        <div className="rounded-lg bg-success/10 p-2">
+        <div className="rounded-2xl bg-success/10 p-2">
           <Share2 className={`${iconClass} text-success`} />
         </div>
       );
@@ -145,7 +145,7 @@ export default function NotificationPopup({ children, open, onOpenChange }: Noti
               </button>
             )}
             <button
-              className="rounded-lg p-1 hover:bg-bg-hover transition-colors"
+              className="rounded-2xl p-1 hover:bg-bg-hover transition-colors"
               onClick={() => onOpenChange?.(false)}
               aria-label="Close notifications">
               <X className="w-4 h-4 text-text-muted" />

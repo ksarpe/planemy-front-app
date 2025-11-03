@@ -1,8 +1,8 @@
-import { createPortal } from "react-dom";
-import { useEffect } from "react";
-import { X } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
 import { BaseModalProps } from "@shared/data/Common/interfaces";
+import { AnimatePresence, motion } from "framer-motion";
+import { X } from "lucide-react";
+import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export default function BaseModal({
   isOpen,
@@ -60,7 +60,7 @@ export default function BaseModal({
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="text-text/60  hover:text-text  transition-colors p-1 rounded-lg hover:bg-bg-alt ">
+                  className="text-text/60  hover:text-text  transition-colors p-1 rounded-2xl hover:bg-bg-alt ">
                   <X size={20} />
                 </motion.button>
               )}

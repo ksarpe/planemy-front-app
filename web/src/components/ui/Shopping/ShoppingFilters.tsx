@@ -1,5 +1,5 @@
-import { Search } from "lucide-react";
 import type { ShoppingFiltersProps } from "@shared/data/Shopping/Components/ShoppingComponentInterfaces";
+import { Search } from "lucide-react";
 
 export function ShoppingFilters({ searchQuery, onSearchChange }: ShoppingFiltersProps) {
   return (
@@ -11,7 +11,7 @@ export function ShoppingFilters({ searchQuery, onSearchChange }: ShoppingFilters
           placeholder="Szukaj..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-8 py-2 border border-text-light rounded-lg"
+          className="w-full pl-8 py-2 border border-text-light rounded-2xl"
         />
       </div>
     </div>

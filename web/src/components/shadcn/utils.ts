@@ -15,11 +15,11 @@ export function getEventColorClasses(color?: EventColor | string): string {
  */
 export function getBorderRadiusClasses(isFirstDay: boolean, isLastDay: boolean): string {
   if (isFirstDay && isLastDay) {
-    return "rounded"; // Both ends rounded
+    return "rounded-2xl"; // Both ends rounded
   } else if (isFirstDay) {
-    return "rounded-l rounded-r-none"; // Only left end rounded
+    return "rounded-l-2xl rounded-r-none"; // Only left end rounded
   } else if (isLastDay) {
-    return "rounded-r rounded-l-none"; // Only right end rounded
+    return "rounded-r-2xl rounded-l-none"; // Only right end rounded
   } else {
     return "rounded-none"; // No rounded corners
   }

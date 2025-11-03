@@ -18,7 +18,7 @@ export function ColorPicker({ selectedColor, onSelectColor, className = "" }: Co
               type="button"
               onClick={() => onSelectColor(colorConfig.name)}
               className={`
-                w-10 h-10 rounded-lg transition-all cursor-pointer
+                w-10 h-10 rounded-2xl transition-all cursor-pointer
                 ${colorConfig.bg} ${colorConfig.border} border-2
                 ${isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-bg scale-110" : "hover:scale-105"}
               `}

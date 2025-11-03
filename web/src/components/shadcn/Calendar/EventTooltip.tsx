@@ -179,7 +179,7 @@ export function EventTooltip({
               <h3 className="text-lg font-semibold text-text leading-tight flex-1">{event.title}</h3>
               <button
                 onClick={onClose}
-                className="p-1 rounded-lg hover:bg-bg-muted-light transition-colors text-text-muted hover:text-text flex-shrink-0">
+                className="p-1 rounded-2xl hover:bg-bg-muted-light transition-colors text-text-muted hover:text-text flex-shrink-0">
                 <X size={18} />
               </button>
             </div>
@@ -231,7 +231,7 @@ export function EventTooltip({
                   onEdit();
                   onClose();
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-text bg-bg hover:bg-bg-muted-light transition-colors">
+                className="flex items-center gap-2 px-3 py-1.5 rounded-2xl text-sm font-medium text-text bg-bg hover:bg-bg-muted-light transition-colors">
                 <Edit size={14} />
                 Edit
               </button>
@@ -243,7 +243,7 @@ export function EventTooltip({
                   onDelete();
                   onClose();
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-negative hover:bg-negative/10 transition-colors ml-auto">
+                className="flex items-center gap-2 px-3 py-1.5 rounded-2xl text-sm font-medium text-negative hover:bg-negative/10 transition-colors ml-auto">
                 <Trash2 size={14} />
                 Delete
               </button>

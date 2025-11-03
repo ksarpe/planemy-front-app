@@ -15,11 +15,11 @@ import {
   BasicDropdown,
   BasicDropdownItem,
   DeleteConfirmationModal,
-  FloatingLabelInput,
-  FloatingLabelTextarea,
 } from "../Common";
 import { Drawer } from "../Common/Drawer";
 import { Label } from "../shadcn/label";
+import { Input } from "../shadcn/input";
+import { Textarea } from "../shadcn/textarea";
 
 export default function TaskDetails() {
   const { t } = useTranslation();
@@ -198,20 +198,16 @@ export default function TaskDetails() {
               )}
 
               {/* Title */}
-              <FloatingLabelInput
+              <Input
                 id="title"
-                label={t("tasks.details.titleLabel")}
                 value={title}
-                labelBg="bg-bg-alt"
                 onChange={(e) => setTitle(e.target.value)}
                 autoFocus
               />
 
               {/* Description */}
-              <FloatingLabelTextarea
+              <Textarea
                 id="task_description"
-                label={t("tasks.details.descriptionLabel")}
-                labelBg="bg-bg-alt"
                 value={task_description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
@@ -229,13 +225,13 @@ export default function TaskDetails() {
                       }
                     }}
                     className="group flex flex-col gap-1">
-                    <Group className="flex w-full items-center rounded-lg border border-text-muted-more bg-bg-alt hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                    <Group className="flex w-full items-center rounded-2xl border border-text-muted-more bg-bg-alt hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
                       <DateInput className="flex flex-1 text-text" unstyled />
                       <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                         <Calendar size={16} />
                       </AriaButton>
                     </Group>
-                    <AriaPopover className="rounded-lg border border-text-muted-more bg-bg-alt p-2 shadow-lg">
+                    <AriaPopover className="rounded-2xl border border-text-muted-more bg-bg-alt p-2 shadow-lg">
                       <Dialog className="outline-none">
                         <CalendarRAC />
                       </Dialog>

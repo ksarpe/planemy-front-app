@@ -13,7 +13,7 @@ export function Skeleton({ className, variant = "rectangular", width, height, an
     text: "h-4 rounded",
     circular: "rounded-full",
     rectangular: "rounded-none",
-    rounded: "rounded-lg",
+    rounded: "rounded-2xl",
   };
 
   const animationClasses = {
@@ -46,7 +46,7 @@ export function SkeletonText({ lines = 1, className }: { lines?: number; classNa
 
 export function SkeletonCard({ className }: { className?: string }) {
   return (
-    <div className={cn("border border-border rounded-lg p-4 space-y-3", className)}>
+    <div className={cn("border border-border rounded-2xl p-4 space-y-3", className)}>
       <div className="flex items-start space-x-3">
         <Skeleton variant="circular" width={40} height={40} />
         <div className="flex-1 space-y-2">

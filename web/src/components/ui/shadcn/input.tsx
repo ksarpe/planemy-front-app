@@ -8,9 +8,8 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       type={type}
       autoFocus={props.autoFocus}
       className={cn(
-        "border-text-muted-more text-text flex h-9 w-full min-w-0 rounded-lg border bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-        "hover:border-text-muted",
+        "text-text w-full rounded-2xl px-3 py-2 text-sm shadow-[10px_6px_12px] hover:shadow-[6px_4px_8px] shadow-button-active-shadow focus:not:shadow-button-active-shadow focus:shadow-[inset_5px_4px_6px_var(--color-button-active-shadow)]\
+        aria-invalid:ring-destructive/20 aria-invalid:border-destructive outline-0",
         className,
       )}
       {...props}
@@ -19,3 +18,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
 }
 
 export { Input };
+
+// background: linear-gradient(145deg, #cacaca, #f0f0f0);
+// box-shadow:  12px 12px 25px #949494,
+//              -12px -12px 25px #ffffff;

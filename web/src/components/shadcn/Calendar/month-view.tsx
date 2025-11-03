@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useEffect, useMemo, useState, useRef } from "react";
 import {
   addDays,
   eachDayOfInterval,
@@ -13,15 +12,15 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { DraggableEvent } from "@/components/shadcn/Calendar/draggable-event";
 import { DroppableCell } from "@/components/shadcn/Calendar/droppable-cell";
-import { EventGap, EventHeight } from "@/components/shadcn/constants";
 import { EventItem } from "@/components/shadcn/Calendar/event-item";
-import { getAllEventsForDay, getEventsForDay, getSpanningEventsForDay, sortEvents } from "@/components/shadcn/utils";
 import { useEventVisibility } from "@/components/shadcn/Calendar/use-event-visibility";
+import { DefaultStartHour, EventGap, EventHeight } from "@/components/shadcn/constants";
 import { type CalendarEvent } from "@/components/shadcn/types";
-import { DefaultStartHour } from "@/components/shadcn/constants";
+import { getAllEventsForDay, getEventsForDay, getSpanningEventsForDay, sortEvents } from "@/components/shadcn/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/shadcn/popover";
 
 interface MonthViewProps {
@@ -142,10 +141,12 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
   }, [weeks, weekOffset, VISIBLE_WEEKS]);
 
   return (
-    //contents view to allow grid structure (children elements are direct child of parent of month-view)
-    <div data-slot="month-view" className="contents">
+    // Wrapper z cieniem i zaokrąglonymi rogami
+    <div
+      data-slot="month-view"
+      className="flex flex-col flex-1 rounded-tl-2xl bg-bg-alt shadow-[-4px_-4px_6px] shadow-shadow overflow-auto">
       {/* ROW WITH WEEKDAYS NAMES */}
-      <div className="grid grid-cols-7 border-b border-bg-alt rounded-tl-xl bg-bg">
+      <div className="grid grid-cols-7">
         {weekdays.map((day) => (
           <div key={day} className="py-2 text-center text-sm text-text-muted">
             {day}
@@ -153,7 +154,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
         ))}
       </div>
       {/* CALENDAR */}
-      <div ref={containerRef} className="grid flex-1 bg-bg">
+      <div ref={containerRef} className="grid flex-1">
         {visibleWeeks.map((week, weekIndex) => (
           // Each week row
           <div key={`week-${weekOffset + weekIndex}`} className="grid grid-cols-7 [&:last-child>*]:border-b-0">
@@ -174,7 +175,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
 
               return (
                 //Actual DAY CELL
-                <div key={day.toString()} className="border-r border-b border-bg-alt last:border-r-0">
+                <div key={day.toString()} className="border-r border-b border-bg-muted-light last:border-r-0">
                   <DroppableCell
                     id={cellId}
                     date={day}

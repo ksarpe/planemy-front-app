@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { X, ChevronDown, ChevronUp } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import type { AddItemModalProps } from "@shared/data/Shopping";
 import { useShoppingContext } from "@shared/hooks/context/useShoppingContext";
 import { useAddShoppingItem } from "@shared/hooks/shopping/useShoppingItems";
-import type { AddItemModalProps } from "@shared/data/Shopping";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, ChevronUp, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
   const { categories } = useShoppingContext();
@@ -141,7 +141,7 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
                   placeholder="Wpisz nazwę produktu"
                   required
                   autoFocus
@@ -170,7 +170,7 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                           onChange={(e) =>
                             setFormData((prev) => ({ ...prev, quantity: parseFloat(e.target.value) || 1 }))
                           }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
                           required
                           disabled={isSubmitting}
                         />
@@ -181,7 +181,7 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                         <select
                           value={formData.unit}
                           onChange={(e) => setFormData((prev) => ({ ...prev, unit: e.target.value }))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
                           disabled={isSubmitting}>
                           <option value="szt">szt</option>
                           <option value="kg">kg</option>
@@ -199,7 +199,7 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                       <select
                         value={formData.category}
                         onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
                         disabled={isSubmitting}>
                         <option value="Inne">Inne</option>
                         {categories.map((cat) => (
@@ -219,7 +219,7 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                         step="0.01"
                         value={formData.price}
                         onChange={(e) => setFormData((prev) => ({ ...prev, price: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
                         placeholder="0.00 zł"
                         disabled={isSubmitting}
                       />
@@ -231,7 +231,7 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                       <textarea
                         value={formData.notes}
                         onChange={(e) => setFormData((prev) => ({ ...prev, notes: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-none"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-none"
                         rows={3}
                         placeholder="Dodaj notatki..."
                         disabled={isSubmitting}
@@ -246,7 +246,7 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                 <button
                   type="button"
                   onClick={() => setIsExpanded(true)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
                   disabled={isSubmitting}>
                   <span>Pokaż więcej opcji</span>
                   <ChevronDown size={16} />
@@ -257,7 +257,7 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                 <button
                   type="button"
                   onClick={() => setIsExpanded(false)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
                   disabled={isSubmitting}>
                   <span>Pokaż mniej opcji</span>
                   <ChevronUp size={16} />
@@ -269,13 +269,13 @@ export function AddItemModal({ isOpen, onClose, listId }: AddItemModalProps) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-2xl hover:bg-gray-200 transition-colors"
                   disabled={isSubmitting}>
                   Anuluj
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-text-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex-1 px-4 py-2 bg-primary text-white rounded-2xl hover:bg-text-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   disabled={isSubmitting}>
                   {isSubmitting ? "Dodaję..." : "Dodaj produkt"}
                 </button>

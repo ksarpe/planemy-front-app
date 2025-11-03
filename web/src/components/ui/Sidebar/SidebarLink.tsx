@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
 import type { SidebarLinkProps } from "@shared/data/Layout";
+import { NavLink } from "react-router-dom";
 
 export default function SidebarLink({ to, icon: Icon, label, onNavigate }: SidebarLinkProps) {
   // each navlink configuration, including default values + active/inactive styles
@@ -8,7 +8,7 @@ export default function SidebarLink({ to, icon: Icon, label, onNavigate }: Sideb
       to={to}
       onClick={onNavigate}
       className={({ isActive }) =>
-        `px-4 py-1.5 rounded-lg ${isActive ? "bg-bg-hover  font-bold" : "hover:bg-bg-hover "}`
+        `px-4 py-1.5 rounded-2xl ${isActive ? "bg-bg-hover  font-bold" : "hover:bg-bg-hover "}`
       }>
       <span className="flex items-center gap-4">
         {Icon && <Icon size={20} />}

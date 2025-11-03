@@ -1,6 +1,6 @@
-import { Globe } from "lucide-react";
 import type { LanguageRegionSectionProps } from "@shared/data/User";
 import { useT } from "@shared/hooks/utils/useT";
+import { Globe } from "lucide-react";
 
 export default function LanguageRegionSection({
   language,
@@ -11,7 +11,7 @@ export default function LanguageRegionSection({
   const { t } = useT();
 
   return (
-    <div className="bg-white  rounded-lg p-6 border border-gray-200 ">
+    <div className="bg-white  rounded-2xl p-6 border border-gray-200 ">
       <h3 className="text-lg font-semibold text-gray-900  mb-6 flex items-center gap-2">
         <Globe size={20} className="text-primary" />
         {t("languageAndRegion.title")}
@@ -22,7 +22,7 @@ export default function LanguageRegionSection({
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300  rounded-lg bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary">
+            className="w-full px-3 py-2 border border-gray-300  rounded-2xl bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary">
             <option value="pl">{t("languageAndRegion.polish")}</option>
             <option value="en">{t("languageAndRegion.english")}</option>
           </select>
@@ -32,7 +32,7 @@ export default function LanguageRegionSection({
           <select
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300  rounded-lg bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary">
+            className="w-full px-3 py-2 border border-gray-300  rounded-2xl bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary">
             <option value="Europe/Warsaw">{t("languageAndRegion.timezones.warsaw")}</option>
             <option value="Europe/London">{t("languageAndRegion.timezones.london")}</option>
             <option value="Europe/Berlin">{t("languageAndRegion.timezones.berlin")}</option>

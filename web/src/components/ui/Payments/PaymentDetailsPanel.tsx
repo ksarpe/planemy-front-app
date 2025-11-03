@@ -1,22 +1,22 @@
+import { getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@shared/api/payments";
+import type { PaymentDetailsPanelProps } from "@shared/data/Payments/Components/PaymentComponentInterfaces";
 import { usePayments } from "@shared/hooks/payments";
+import { format } from "date-fns";
 import {
-  Tag,
-  Calendar,
-  Clock,
-  DollarSign,
-  Check,
-  Trash2,
   Bell,
-  Repeat,
-  History,
+  Calendar,
+  Check,
+  Clock,
   CreditCard,
+  DollarSign,
+  History,
+  Repeat,
+  Tag,
+  Trash2,
   TrendingUp,
 } from "lucide-react";
-import { getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@shared/api/payments";
-import { format } from "date-fns";
-import { EditableText } from "../Common/EditableText";
 import { useTranslation } from "react-i18next";
-import type { PaymentDetailsPanelProps } from "@shared/data/Payments/Components/PaymentComponentInterfaces";
+import { EditableText } from "../Common/EditableText";
 
 export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
   const { t } = useTranslation();
@@ -122,8 +122,8 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
       <div className="py-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
           {/* Nazwa płatności */}
-          <div className="lg:col-span-2 flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
-            <div className="p-2 bg-primary rounded-lg">
+          <div className="lg:col-span-2 flex items-center gap-3 p-3 bg-bg rounded-2xl border border-bg-alt shadow-md">
+            <div className="p-2 bg-primary rounded-2xl">
               <Tag size={16} className="text-text" />
             </div>
             <div className="flex-1 min-w-0">
@@ -138,8 +138,8 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
           </div>
 
           {/* Kwota */}
-          <div className="flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
-            <div className="p-2 bg-success rounded-lg">
+          <div className="flex items-center gap-3 p-3 bg-bg rounded-2xl border border-bg-alt shadow-md">
+            <div className="p-2 bg-success rounded-2xl">
               <DollarSign size={16} className="text-text" />
             </div>
             <div className="flex-1 min-w-0">
@@ -155,8 +155,8 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
           </div>
 
           {/* Przypomnienie */}
-          <div className="flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
-            <div className="p-2 bg-bg-hover rounded-lg">
+          <div className="flex items-center gap-3 p-3 bg-bg rounded-2xl border border-bg-alt shadow-md">
+            <div className="p-2 bg-bg-hover rounded-2xl">
               <Bell size={16} className="text-text" />
             </div>
             <div className="flex-1 min-w-0">
@@ -172,8 +172,8 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
           </div>
 
           {/* Następna płatność - Now Editable */}
-          <div className="flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
-            <div className="p-2 bg-primary rounded-lg">
+          <div className="flex items-center gap-3 p-3 bg-bg rounded-2xl border border-bg-alt shadow-md">
+            <div className="p-2 bg-primary rounded-2xl">
               <Calendar size={16} className="text-text" />
             </div>
             <div className="flex-1 min-w-0">
@@ -194,8 +194,8 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
           </div>
 
           {/* Ostatnia płatność - Read only */}
-          <div className="flex items-center gap-3 p-3 bg-bg rounded-lg border border-bg-alt shadow-md">
-            <div className="p-2 bg-bg-hover rounded-lg">
+          <div className="flex items-center gap-3 p-3 bg-bg rounded-2xl border border-bg-alt shadow-md">
+            <div className="p-2 bg-bg-hover rounded-2xl">
               <History size={16} className="text-text" />
             </div>
             <div>
@@ -241,7 +241,7 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
         {!isPaidForCurrentPeriod && (
           <button
             onClick={() => markAsPaid(payment.id)}
-            className="inline-flex items-center gap-2 bg-success text-text px-4 py-2 rounded-lg hover:bg-success-hover transition-colors text-sm font-medium">
+            className="inline-flex items-center gap-2 bg-success text-text px-4 py-2 rounded-2xl hover:bg-success-hover transition-colors text-sm font-medium">
             <Check size={14} />
             <span className="hidden sm:inline">{t("payments.details.markAsPaid")}</span>
             <span className="sm:hidden">{t("payments.details.markAsPaidShort")}</span>
@@ -250,7 +250,7 @@ export const PaymentDetailsPanel = ({ payment }: PaymentDetailsPanelProps) => {
 
         <button
           onClick={() => removePayment(payment.id)}
-          className="inline-flex items-center gap-2 bg-negative text-text px-4 py-2 rounded-lg hover:opacity-80 transition-colors text-sm font-medium ml-auto">
+          className="inline-flex items-center gap-2 bg-negative text-text px-4 py-2 rounded-2xl hover:opacity-80 transition-colors text-sm font-medium ml-auto">
           <Trash2 size={14} />
           <span className="hidden sm:inline">{t("payments.details.delete")}</span>
         </button>

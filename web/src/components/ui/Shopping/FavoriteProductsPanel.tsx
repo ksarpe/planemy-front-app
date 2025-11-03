@@ -1,7 +1,7 @@
-import { useState } from "react";
 import type { FavoriteProductInterface, FavoriteProductsPanelProps } from "@shared/data/Shopping";
 import { useAddFavoriteToList, useDeleteFavoriteProduct } from "@shared/hooks/shopping/useShoppingItems";
-import { Plus, Star, Trash2, Search, Package } from "lucide-react";
+import { Package, Plus, Search, Star, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPanelProps) {
   const removeFromFavorites = useDeleteFavoriteProduct();
@@ -50,7 +50,7 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
             placeholder="Szukaj..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           />
         </div>
       </div>
@@ -74,7 +74,9 @@ function FavoriteProductsPanel({ products, currentListId }: FavoriteProductsPane
           </div>
         ) : (
           filteredProducts.map((product) => (
-            <div key={product.id} className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50  transition-colors">
+            <div
+              key={product.id}
+              className="p-3 border border-gray-200 rounded-2xl hover:bg-gray-50  transition-colors">
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">

@@ -1,11 +1,11 @@
-import { Bell, Check, X, Clock, UserCheck, Share2, CheckCircle2 } from "lucide-react";
-import { usePendingShares, useAcceptShare, useRejectShare } from "@shared/hooks/permissions/usePermissions";
-import { useAnnouncementsWithStatus } from "@shared/hooks/announcements/useAnnouncements";
 import { AnnouncementsList } from "@/components/ui/Announcements";
-import Spinner from "../ui/Utils/Spinner";
-import type { ShareableObjectType } from "@shared/data/Utils/types";
 import type { Permission } from "@shared/data/Utils/interfaces";
+import type { ShareableObjectType } from "@shared/data/Utils/types";
+import { useAnnouncementsWithStatus } from "@shared/hooks/announcements/useAnnouncements";
+import { useAcceptShare, usePendingShares, useRejectShare } from "@shared/hooks/permissions/usePermissions";
 import { useT } from "@shared/hooks/utils/useT";
+import { Bell, Check, CheckCircle2, Clock, Share2, UserCheck, X } from "lucide-react";
+import Spinner from "../ui/Utils/Spinner";
 
 export default function NotificationsView() {
   const { t } = useT();
@@ -64,7 +64,7 @@ export default function NotificationsView() {
   if (isLoading) {
     return (
       <div className="flex h-full p-4 gap-4">
-        <div className="w-full bg-bg-alt  rounded-lg shadow-md overflow-auto scrollbar-hide">
+        <div className="w-full bg-bg-alt  rounded-2xl shadow-md overflow-auto scrollbar-hide">
           <div className="flex items-center justify-center min-h-[400px]">
             <Spinner />
           </div>
@@ -75,7 +75,7 @@ export default function NotificationsView() {
 
   return (
     <div className="flex h-full p-4 gap-4">
-      <div className="w-full bg-bg-alt  rounded-lg shadow-md overflow-auto scrollbar-hide">
+      <div className="w-full bg-bg-alt  rounded-2xl shadow-md overflow-auto scrollbar-hide">
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
@@ -116,7 +116,7 @@ export default function NotificationsView() {
                 {allShares.map((share: Permission) => (
                   <div
                     key={share.id}
-                    className="bg-white  border border-gray-200  rounded-lg shadow-md hover:shadow-md transition-shadow">
+                    className="bg-white  border border-gray-200  rounded-2xl shadow-md hover:shadow-md transition-shadow">
                     <div className="p-6">
                       <div className="flex items-start gap-4">
                         {/* Icon */}
@@ -170,14 +170,14 @@ export default function NotificationsView() {
                               <div className="flex gap-3">
                                 <button
                                   onClick={() => handleAccept(share.id!)}
-                                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-2xl hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                                   <Check size={16} />
                                   {t("notifications.sharing.accept")}
                                 </button>
 
                                 <button
                                   onClick={() => handleReject(share.id!)}
-                                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-2xl hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                   <X size={16} />
                                   {t("notifications.sharing.reject")}
                                 </button>

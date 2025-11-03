@@ -5,28 +5,27 @@ import * as React from "react";
 import { cn } from "@/lib/shadcn/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-2xl text-sm font-medium transition-all duration-200 shrink-0 \
+  shadow-[4px_4px_8px_rgba(0,0,0,0.4)] hover:shadow-[6px_6px_12px_rgba(0,0,0,0.5)] active:shadow-[inset_2px_2px_7px] active:shadow-button-active-shadow \
+",
   {
     variants: {
       variant: {
-        default: "bg-bg-alt text-text hover:bg-bg-muted-light cursor-pointer",
-        default_light: "bg-text-muted-more text-text hover:bg-text-muted-more/60 cursor-pointer",
-        primary: "bg-primary text-white cursor-pointer hover:bg-primary/60",
-        success: "bg-success text-white cursor-pointer hover:bg-success/80",
-        delete: "bg-negative text-white cursor-pointer hover:bg-negative/80",
-        destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-        outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-bg-muted-light cursor-pointer",
-        link: "text-primary underline-offset-4 hover:underline",
+        default: "bg-bg-alt text-text cursor-pointer",
+        default_light: "bg-bg-muted-light text-text cursor-pointer",
+        primary: "bg-primary text-white cursor-pointer",
+        success: "bg-success text-white cursor-pointer",
+        delete: "bg-negative text-white cursor-pointer",
+        destructive: "bg-destructive text-white cursor-pointer",
+        outline: "bg-bg text-text cursor-pointer border-2 border-bg-muted-light",
+        secondary: "bg-bg-alt text-text cursor-pointer",
+        ghost: "bg-transparent text-text cursor-pointer hover:bg-bg-muted-light/30",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-lg gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-lg px-6 has-[>svg]:px-4",
-        icon: "size-9",
+        default: "h-10 px-5 py-2.5 has-[>svg]:px-4",
+        sm: "h-8 rounded-xl gap-1.5 px-3.5 has-[>svg]:px-3 text-xs",
+        lg: "h-12 rounded-2xl px-7 has-[>svg]:px-5 text-base",
+        icon: "size-10",
       },
     },
     defaultVariants: {

@@ -37,8 +37,10 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
               title={label}
               onClick={handleNavigate}
               className={({ isActive }) =>
-                `mb-0.5 relative w-12 h-12 flex flex-col items-center justify-center rounded-lg transition-colors ${
-                  isActive ? "bg-bg" : "hover:bg-bg"
+                `mb-2 relative w-12 h-12 flex flex-col items-center justify-center rounded-2xl transition-all duration-200 ${
+                  isActive
+                    ? "shadow-[inset_5px_4px_6px_var(--color-button-active-shadow)]"
+                    : "shadow-[10px_6px_12px] shadow-button-active-shadow hover:shadow-[6px_4px_8px] hover:shadow-button-active-shadow"
                 }`
               }>
               {({ isActive }) => (
@@ -55,8 +57,10 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
               title={label}
               onClick={handleNavigate}
               className={({ isActive }) =>
-                `mb-0.5 relative w-12 h-12 flex flex-col items-center justify-center rounded-lg transition-colors ${
-                  isActive ? "bg-bg" : "hover:bg-bg"
+                `mb-2 relative w-12 h-12 flex flex-col items-center justify-center rounded-2xl transition-all duration-200 ${
+                  isActive
+                    ? "shadow-[inset_5px_4px_6px_var(--color-button-active-shadow)]"
+                    : "shadow-[10px_6px_12px] shadow-button-active-shadow hover:shadow-[6px_4px_8px] hover:shadow-button-active-shadow"
                 }`
               }>
               {({ isActive }) => (
@@ -75,8 +79,10 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
               title={label}
               onClick={handleNavigate}
               className={({ isActive }) =>
-                `mb-0.5 relative w-12 h-12 flex items-center justify-center rounded-lg transition-colors ${
-                  isActive ? "bg-bg" : "hover:bg-bg"
+                `mb-2 relative w-12 h-12 flex items-center justify-center rounded-2xl transition-all duration-200 ${
+                  isActive
+                    ? "shadow-[inset_5px_4px_6px_var(--color-button-active-shadow)]"
+                    : "shadow-[10px_6px_12px] shadow-button-active-shadow hover:shadow-[6px_4px_8px] hover:shadow-button-active-shadow"
                 }`
               }>
               {({ isActive }) => (
@@ -102,7 +108,11 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
             to={to}
             onClick={handleNavigate}
             className={({ isActive }) =>
-              `p-2 mb-0.5 rounded-lg flex items-center gap-4 text-sm ${isActive ? "bg-bg" : "hover:bg-bg"}`
+              `p-2 mb-2 rounded-2xl flex items-center gap-4 text-sm transition-all duration-200 ${
+                isActive
+                  ? "shadow-[inset_5px_4px_6px_var(--color-button-active-shadow)]"
+                  : "shadow-[6px_6px_6px] shadow-button-active-shadow hover:shadow-[6px_4px_8px] hover:shadow-button-active-shadow"
+              }`
             }>
             {({ isActive }) => (
               <>
@@ -120,7 +130,11 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
             to={to}
             onClick={handleNavigate}
             className={({ isActive }) =>
-              `p-2 mb-0.5 rounded-lg flex items-center gap-4 text-sm ${isActive ? "bg-bg" : "hover:bg-bg"}`
+              `p-2 mb-2 rounded-2xl flex items-center gap-4 text-sm transition-all duration-200 ${
+                isActive
+                  ? "shadow-[inset_5px_4px_6px_var(--color-button-active-shadow)]"
+                  : "shadow-[10px_6px_12px] shadow-button-active-shadow hover:shadow-[6px_4px_8px] hover:shadow-button-active-shadow"
+              }`
             }>
             {({ isActive }) => (
               <>
@@ -140,8 +154,10 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
             to={to}
             onClick={handleNavigate}
             className={({ isActive }) =>
-              `p-2 mb-0.5 rounded-lg flex items-center gap-4 text-sm transition-colors ${
-                isActive ? "bg-bg" : "hover:bg-bg"
+              `p-2 mb-2 rounded-2xl flex items-center gap-4 text-sm transition-all duration-200 ${
+                isActive
+                  ? "shadow-[inset_5px_4px_6px_var(--color-button-active-shadow)]"
+                  : "shadow-[10px_6px_12px] shadow-button-active-shadow hover:shadow-[6px_4px_8px] hover:shadow-button-active-shadow"
               }`
             }>
             {({ isActive }) => (

@@ -1,4 +1,4 @@
-import { DeleteConfirmationModal, FloatingLabelInput } from "@/components/ui/Common";
+import { DeleteConfirmationModal } from "@/components/ui/Common";
 import { ColorPicker } from "@/components/ui/Common/ColorPicker";
 import { Drawer } from "@/components/ui/Common/Drawer";
 import { Button } from "@/components/ui/shadcn/button";
@@ -8,6 +8,7 @@ import { useT } from "@shared/hooks/utils/useT";
 import { useEffect, useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Badge } from "../Common/Badge";
+import { Input } from "../shadcn/input";
 
 interface LabelPanelProps {
   isOpen: boolean;
@@ -107,11 +108,9 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
       <div className="flex-1 overflow-y-auto p-6">
         <div className="space-y-6">
           {/* Name */}
-          <FloatingLabelInput
+          <Input
             id="label-name"
-            label={t("labels.form.name")}
             value={formData.label_name}
-            labelBg="bg-bg-alt"
             onChange={(e) => setFormData({ ...formData, label_name: e.target.value })}
             autoFocus
           />

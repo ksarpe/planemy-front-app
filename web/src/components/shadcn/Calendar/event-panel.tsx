@@ -6,16 +6,17 @@ import { Button as AriaButton, Popover as AriaPopover, DatePicker, Dialog, Group
 
 import { DefaultEndHour, DefaultStartHour, EndHour, StartHour } from "@/components/shadcn/constants";
 import type { CalendarEvent, EventColor } from "@/components/shadcn/types";
-import { FloatingLabelInput, FloatingLabelTextarea } from "@/components/ui/Common";
 import { Badge } from "@/components/ui/Common/Badge";
 import { Drawer } from "@/components/ui/Common/Drawer";
 import Multiselect from "@/components/ui/Common/Multiselect";
 import { Button } from "@/components/ui/shadcn/button";
 import { Calendar as CalendarRAC } from "@/components/ui/shadcn/calendar-rac";
 import { DateInput } from "@/components/ui/shadcn/datefield-rac";
+import { Input } from "@/components/ui/shadcn/input";
 import { Label } from "@/components/ui/shadcn/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/shadcn/select";
 import { Switch } from "@/components/ui/shadcn/switch";
+import { Textarea } from "@/components/ui/shadcn/textarea";
 import { useLabelContext } from "@shared/hooks/context/useLabelContext";
 import { useCreateLabelConnection } from "@shared/hooks/labels/useLabels";
 import { Calendar } from "lucide-react";
@@ -207,20 +208,12 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
       <div className="flex-1 overflow-y-auto p-6">
         <div className="space-y-6">
           {/* Title */}
-          <FloatingLabelInput
-            id="title"
-            label="Title"
-            labelBg="bg-bg-alt"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            autoFocus
-          />
+          <Input id="title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
 
           {/* Description */}
-          <FloatingLabelTextarea
+          <Textarea
             id="description"
-            label="Description"
-            labelBg="bg-bg-alt"
+            placeholder="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
@@ -246,13 +239,13 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                       }
                     }}
                     className="group flex flex-col gap-1">
-                    <Group className="flex w-full items-center rounded-lg border border-text-muted-more bg-bg-alt hover:border-text-muted px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                    <Group className="flex w-full items-center rounded-2xl border border-text-muted-more bg-bg-alt hover:border-text-muted px-3 py-2 text-xs transition-colors focus-within:border-ring">
                       <DateInput aria-label="Start Event Date Input" className="flex flex-1 text-text" unstyled />
                       <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                         <Calendar size={16} />
                       </AriaButton>
                     </Group>
-                    <AriaPopover className="rounded-lg border border-text-muted-more bg-bg-alt p-2 shadow-lg">
+                    <AriaPopover className="rounded-2xl border border-text-muted-more bg-bg-alt p-2 shadow-lg">
                       <Dialog className="outline-none">
                         <CalendarRAC />
                       </Dialog>
@@ -276,13 +269,13 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                     }}
                     minValue={startDate ? parseDate(format(startDate, "yyyy-MM-dd")) : undefined}
                     className="group flex flex-col gap-1">
-                    <Group className="flex w-full items-center rounded-lg border border-text-muted-more hover:border-text-muted bg-bg-alt px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                    <Group className="flex w-full items-center rounded-2xl border border-text-muted-more hover:border-text-muted bg-bg-alt px-3 py-2 text-xs transition-colors focus-within:border-ring">
                       <DateInput aria-label="End Event Date Input" className="flex flex-1 text-text" unstyled />
                       <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                         <Calendar size={16} />
                       </AriaButton>
                     </Group>
-                    <AriaPopover className="rounded-lg border border-text-muted-more bg-bg-alt p-2 shadow-lg">
+                    <AriaPopover className="rounded-2xl border border-text-muted-more bg-bg-alt p-2 shadow-lg">
                       <Dialog className="outline-none">
                         <CalendarRAC />
                       </Dialog>

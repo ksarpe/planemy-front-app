@@ -3,7 +3,7 @@ import { Skeleton, SkeletonAvatar, SkeletonBadge, SkeletonText } from "./Skeleto
 // Calendar Event Skeleton
 export function SkeletonCalendarEvent() {
   return (
-    <div className="border border-border rounded-lg p-3 space-y-2 bg-bg-alt">
+    <div className="border border-border rounded-2xl p-3 space-y-2 bg-bg-alt">
       <div className="flex items-center justify-between">
         <Skeleton variant="text" className="w-32 h-5" />
         <SkeletonBadge />
@@ -37,7 +37,7 @@ export function SkeletonTaskItem() {
 // Label Card Skeleton
 export function SkeletonLabelCard() {
   return (
-    <div className="border border-border rounded-lg p-4 bg-bg-alt">
+    <div className="border border-border rounded-2xl p-4 bg-bg-alt">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
           <Skeleton variant="circular" width={12} height={12} />
@@ -67,7 +67,7 @@ export function SkeletonShoppingItem() {
 // Payment Card Skeleton
 export function SkeletonPaymentCard() {
   return (
-    <div className="border border-border rounded-lg p-4 bg-bg-alt space-y-3">
+    <div className="border border-border rounded-2xl p-4 bg-bg-alt space-y-3">
       <div className="flex items-center justify-between">
         <Skeleton variant="text" className="w-32 h-6" />
         <SkeletonBadge />
@@ -90,7 +90,7 @@ export function SkeletonPaymentCard() {
 // Profile Header Skeleton
 export function SkeletonProfileHeader() {
   return (
-    <div className="flex items-center space-x-4 p-6 bg-bg-alt rounded-lg">
+    <div className="flex items-center space-x-4 p-6 bg-bg-alt rounded-2xl">
       <SkeletonAvatar size={80} />
       <div className="flex-1 space-y-3">
         <Skeleton variant="text" className="w-48 h-7" />

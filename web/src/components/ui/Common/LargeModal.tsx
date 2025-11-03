@@ -95,7 +95,7 @@ export function LargeModalHeader({ children, onClose }: { children: ReactNode; o
       {onClose && (
         <button
           onClick={onClose}
-          className="p-2.5 rounded-lg hover:bg-bg-muted-light transition-all text-text-muted hover:text-text"
+          className="p-2.5 rounded-2xl hover:bg-bg-muted-light transition-all text-text-muted hover:text-text"
           aria-label="Close modal">
           <X size={24} />
         </button>

@@ -42,7 +42,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         </NavLink>
 
         {/* NAVIGATION / PERSONAL / UTILS */}
-        <div className="flex flex-col gap-4 flex-1 overflow-hidden mt-8">
+        <div className="flex flex-col flex-1 mt-4">
           <SidebarNav
             handleNavigate={onClose || (() => {})}
             //totalNotifications={totalNotifications}
@@ -67,9 +67,9 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
           <DarkModeToggle collapsed={collapsed} />
           <button
             aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
-            className="flex items-center rounded-lg cursor-pointer text-primary"
+            className="flex items-center rounded-2xl cursor-pointer text-primary"
             onClick={() => setCollapsed((c) => !c)}>
-            <span className="hover:bg-bg rounded-lg px-1 transition-colors">
+            <span className="hover:bg-bg rounded-2xl px-1 transition-colors">
               {collapsed ? <FiChevronsRight size={24} /> : <FiChevronsLeft size={24} />}
             </span>
           </button>
