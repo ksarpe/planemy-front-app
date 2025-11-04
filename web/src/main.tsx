@@ -9,6 +9,7 @@ import "@shared/i18n";
 import MainLayout from "@/components/layout/MainLayout"; //no lazy load coz it is used everywhere
 import Spinner from "./components/ui/Utils/Spinner";
 
+const BuddyView = lazy(() => import("@/components/views/BuddyView"));
 const CalendarView = lazy(() => import("@/components/views/CalendarView"));
 const DashboardView = lazy(() => import("@/components/views/DashboardView"));
 const NotFoundView = lazy(() => import("@/components/views/NotFoundView"));
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <DashboardView /> },
+      { path: "/buddy", element: <BuddyView /> },
       { path: "/calendar", element: <CalendarView /> },
       { path: "/tasks", element: <TasksView /> },
       { path: "/profile", element: <ProfileView /> },

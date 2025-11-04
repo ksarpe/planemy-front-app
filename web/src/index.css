@@ -77,6 +77,16 @@
   }
 }
 
+/* Autocomplete detection animation */
+@keyframes onAutoFillStart {
+  from {
+    /**/
+  }
+  to {
+    /**/
+  }
+}
+
 @layer utilities {
   .animate-shimmer {
     animation: shimmer 2s infinite linear;

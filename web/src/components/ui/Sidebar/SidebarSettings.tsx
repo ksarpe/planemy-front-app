@@ -76,7 +76,7 @@ export default function SidebarSettings({
     <div className="flex gap-0.5 justify-between">
       <NotificationPopup open={isNotificationOpen} onOpenChange={setIsNotificationOpen}>
         <div
-          className="rounded-2xl p-2 text-lg hover:bg-bg cursor-pointer relative"
+          className="p-2 text-lg hover:bg-bg cursor-pointer relative  rounded-full"
           onClick={() => setIsNotificationOpen(!isNotificationOpen)}
           title="Notifications">
           <FiBell className="text-text-muted" />
@@ -89,13 +89,13 @@ export default function SidebarSettings({
       </NotificationPopup>
       <button
         onClick={onSettingsClick}
-        className="rounded-2xl p-2 text-lg hover:bg-bg transition-colors"
+        className="p-2 text-lg cursor-pointer transition-colors  rounded-full"
         title="Settings">
-        <FiSettings className="text-text-muted hover:text-text transition-colors" />
+        <FiSettings className="text-text-muted hover:text-text transition-colors " />
       </button>
       <button
         onClick={handleTutorialClick}
-        className="rounded-2xl p-2 text-lg hover:bg-bg transition-colors"
+        className="p-2 text-lg transition-colors  rounded-full cursor-pointer"
         title="Start Tutorial">
         <FiBook className="text-text-muted hover:text-text transition-colors" />
       </button>

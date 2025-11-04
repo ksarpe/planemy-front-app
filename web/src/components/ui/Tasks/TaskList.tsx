@@ -96,8 +96,8 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
       </div>
 
       {/* Scrollable task list - background fills to bottom */}
-      <div className="flex-1 overflow-y-auto bg-bg-alt rounded-2xl">
-        <ul className="space-y-3 p-2">
+      <div className="flex-1 bg-bg-alt rounded-2xl">
+        <ul className="space-y-4 p-0">
           {sortedTasks.map((task) => (
             <TaskItem key={task.id} task={task} />
           ))}

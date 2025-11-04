@@ -6,24 +6,22 @@ import { parseDate } from "@internationalized/date";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
 import { useDeleteLabelConnection } from "@shared/hooks/labels/useLabels";
 import { useDeleteTask, useUpdateTask } from "@shared/hooks/tasks/useTasks";
+import { useToast } from "@shared/hooks/toasts/useToast";
 import { format } from "date-fns";
 import { Calendar, CheckCircle2, Tag, Trash, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button as AriaButton, Popover as AriaPopover, DatePicker, Dialog, Group } from "react-aria-components";
 import { useTranslation } from "react-i18next";
-import {
-  BasicDropdown,
-  BasicDropdownItem,
-  DeleteConfirmationModal,
-} from "../Common";
+import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
 import { Drawer } from "../Common/Drawer";
-import { Label } from "../shadcn/label";
 import { Input } from "../shadcn/input";
+import { Label } from "../shadcn/label";
 import { Textarea } from "../shadcn/textarea";
 
 export default function TaskDetails() {
   const { t } = useTranslation();
   const { clickedTask, setClickedTask, currentTaskListId } = useTaskViewContext();
+  const { showSuccess } = useToast();
 
   const { mutate: updateTask } = useUpdateTask();
   const { mutate: removeTask } = useDeleteTask();
@@ -105,6 +103,7 @@ export default function TaskDetails() {
 
     if (Object.keys(updates).length > 0) {
       updateTask({ id: clickedTask.id, data: updates, listId: currentTaskListId });
+      showSuccess("Task updated successfully");
     }
 
     setClickedTask(null);
@@ -168,105 +167,104 @@ export default function TaskDetails() {
           )
         }>
         {clickedTask && currentTaskListId && (
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="space-y-6">
-              {/* Labels */}
-              {clickedTask.labels && clickedTask.labels.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {clickedTask.labels.map((label) => (
-                    <div onClick={(e) => e.stopPropagation()} key={label.id}>
-                      <BasicDropdown
-                        trigger={
-                          <div
-                            className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full cursor-pointer"
-                            style={{ backgroundColor: label.color + "20", color: label.color }}>
-                            <Tag size={12} />
-                            {label.label_name}
-                          </div>
-                        }
-                        usePortal={true}>
-                        <BasicDropdownItem
-                          icon={Trash}
-                          variant="red"
-                          onClick={() => removeLabelConnection(clickedTask.id)}>
-                          {t("tasks.item.labels.remove")}
-                        </BasicDropdownItem>
-                      </BasicDropdown>
-                    </div>
-                  ))}
+          <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-2">
+            {/* Labels */}
+            {clickedTask.labels && clickedTask.labels.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {clickedTask.labels.map((label) => (
+                  <div onClick={(e) => e.stopPropagation()} key={label.id}>
+                    <BasicDropdown
+                      trigger={
+                        <div
+                          className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full cursor-pointer"
+                          style={{ backgroundColor: label.color + "20", color: label.color }}>
+                          <Tag size={12} />
+                          {label.label_name}
+                        </div>
+                      }
+                      usePortal={true}>
+                      <BasicDropdownItem
+                        icon={Trash}
+                        variant="red"
+                        onClick={() => removeLabelConnection(clickedTask.id)}>
+                        {t("tasks.item.labels.remove")}
+                      </BasicDropdownItem>
+                    </BasicDropdown>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Title */}
+            <Input
+              label="Title"
+              placeholder="Make sandwich"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              autoFocus
+            />
+            {/* Description */}
+            <Textarea
+              label="Description"
+              value={task_description}
+              placeholder="buy ham and cheese"
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+            />
+
+            {/* Due Date & Time */}
+            <div className="space-y-3">
+              <div>
+                <DatePicker
+                  value={dueDate ? parseDate(format(dueDate, "yyyy-MM-dd")) : null}
+                  onChange={(date) => {
+                    if (date) {
+                      const jsDate = new Date(date.year, date.month - 1, date.day);
+                      setDueDate(jsDate);
+                    }
+                  }}
+                  className="group flex flex-col gap-1">
+                  <Group className="flex w-full items-center rounded-2xl border border-text-muted-more bg-bg-alt hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                    <DateInput className="flex flex-1 text-text" unstyled />
+                    <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
+                      <Calendar size={16} />
+                    </AriaButton>
+                  </Group>
+                  <AriaPopover className="rounded-2xl border border-text-muted-more bg-bg-alt p-2 shadow-lg">
+                    <Dialog className="outline-none">
+                      <CalendarRAC />
+                    </Dialog>
+                  </AriaPopover>
+                </DatePicker>
+                {!dueDate && (
+                  <Label className="text-text-muted-more text-xs">Task doesn't have due date by default</Label>
+                )}
+              </div>
+
+              {/* Time Select */}
+              {dueDate && (
+                <div>
+                  <Select value={dueTime} onValueChange={setDueTime}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
 
-              {/* Title */}
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                autoFocus
-              />
-
-              {/* Description */}
-              <Textarea
-                id="task_description"
-                value={task_description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={4}
-              />
-
-              {/* Due Date & Time */}
-              <div className="space-y-3">
-                <div>
-                  <DatePicker
-                    value={dueDate ? parseDate(format(dueDate, "yyyy-MM-dd")) : null}
-                    onChange={(date) => {
-                      if (date) {
-                        const jsDate = new Date(date.year, date.month - 1, date.day);
-                        setDueDate(jsDate);
-                      }
-                    }}
-                    className="group flex flex-col gap-1">
-                    <Group className="flex w-full items-center rounded-2xl border border-text-muted-more bg-bg-alt hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
-                      <DateInput className="flex flex-1 text-text" unstyled />
-                      <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
-                        <Calendar size={16} />
-                      </AriaButton>
-                    </Group>
-                    <AriaPopover className="rounded-2xl border border-text-muted-more bg-bg-alt p-2 shadow-lg">
-                      <Dialog className="outline-none">
-                        <CalendarRAC />
-                      </Dialog>
-                    </AriaPopover>
-                  </DatePicker>
-                  {!dueDate && (
-                    <Label className="text-text-muted-more text-xs">Task doesn't have due date by default</Label>
-                  )}
-                </div>
-
-                {/* Time Select */}
-                {dueDate && (
-                  <div>
-                    <Select value={dueTime} onValueChange={setDueTime}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                {/* Remove Due Date Button */}
-                {dueDate && (
-                  <Button variant="default" onClick={() => setDueDate(null)} className="w-full">
-                    {t("tasks.details.actions.removeDueDate")}
-                  </Button>
-                )}
-              </div>
+              {/* Remove Due Date Button */}
+              {dueDate && (
+                <Button variant="default" onClick={() => setDueDate(null)} className="w-full">
+                  {t("tasks.details.actions.removeDueDate")}
+                </Button>
+              )}
             </div>
           </div>
         )}

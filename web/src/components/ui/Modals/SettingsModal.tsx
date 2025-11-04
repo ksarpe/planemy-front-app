@@ -8,6 +8,7 @@ import { useUpdateUserProfile } from "@shared/hooks/user";
 import { useEffect, useState } from "react";
 import { FiBell, FiGlobe, FiShield, FiUser } from "react-icons/fi";
 import LargeModal, { LargeModalContent, LargeModalFooter, LargeModalHeader } from "../Common/LargeModal";
+import Multiselect from "../Common/Multiselect";
 import { SkeletonText } from "../Utils";
 import { Button } from "../shadcn/button";
 
@@ -188,14 +189,23 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-text mb-3">Preferowany język</label>
-                    <select
-                      value={selectedLanguage}
-                      onChange={(e) => handleLanguageChange(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-bg-alt border border-bg-muted-light rounded-2xl text-text focus:outline-none focus:ring-2 focus:ring-primary transition-all">
-                      <option value="pl">Polski 🇵🇱</option>
-                      <option value="en">English 🇬🇧</option>
-                      <option value="de">Deutsch 🇩🇪</option>
-                    </select>
+                    <Multiselect
+                      options={[
+                        { label: "Polski 🇵🇱", value: "pl" },
+                        { label: "English 🇬🇧", value: "en" },
+                        { label: "Deutsch 🇩🇪", value: "de" },
+                      ]}
+                      placeholder={
+                        selectedLanguage === "pl"
+                          ? "Polski 🇵🇱"
+                          : selectedLanguage === "en"
+                          ? "English 🇬🇧"
+                          : "Deutsch 🇩🇪"
+                      }
+                      openedPlaceholder="Szukaj języka..."
+                      addButtonText="Dodaj język"
+                      onSelect={handleLanguageChange}
+                    />
                   </div>
                   <p className="text-xs text-text-muted">Zmiana języka zostanie zastosowana natychmiast</p>
                 </div>

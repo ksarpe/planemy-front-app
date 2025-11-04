@@ -1,24 +1,22 @@
 import * as React from "react";
 
 import { cn } from "@/lib/shadcn/utils";
+import { useId } from "react";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+interface InputProps extends React.ComponentProps<"input"> {
+  label: string;
+}
+
+function Input({ label, className, type, ...props }: InputProps) {
+  const id = useId();
   return (
-    <input
-      type={type}
-      autoFocus={props.autoFocus}
-      className={cn(
-        "text-text w-full rounded-2xl px-3 py-2 text-sm shadow-[10px_6px_12px] hover:shadow-[6px_4px_8px] shadow-button-active-shadow focus:not:shadow-button-active-shadow focus:shadow-[inset_5px_4px_6px_var(--color-button-active-shadow)]\
-        aria-invalid:ring-destructive/20 aria-invalid:border-destructive outline-0",
-        className,
-      )}
-      {...props}
-    />
+    <div className={cn("rounded-2xl py-1 px-2 border hover:border-text-muted-more border-bg-muted-light", className)}>
+      <label htmlFor={id} className="text-xs text-text-muted-more font-medium">
+        {label}
+      </label>
+      <input value={props.value} type={type} className={cn("text-text w-full outline-0")} {...props} />
+    </div>
   );
 }
 
 export { Input };
-
-// background: linear-gradient(145deg, #cacaca, #f0f0f0);
-// box-shadow:  12px 12px 25px #949494,
-//              -12px -12px 25px #ffffff;

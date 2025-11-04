@@ -14,9 +14,7 @@ export function HelpPopover({ collapsed }: HelpPopoverProps) {
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <div
-          className={`rounded-2xl p-2 ${
-            collapsed ? "flex items-center justify-center w-full" : ""
-          } hover:bg-bg cursor-pointer`}
+          className={`p-2  rounded-full ${collapsed ? "flex items-center justify-center w-full" : ""} cursor-pointer`}
           onClick={() => setIsOpen(true)}
           title="Help">
           <FiHelpCircle size={20} className="text-text-muted hover:text-text transition-colors" />

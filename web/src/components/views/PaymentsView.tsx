@@ -34,16 +34,17 @@ export default function Payments() {
   // const { overduePayments, upcomingThisWeek, upcomingNextWeek, remainingPayments, totalMonthlyAmount } = categorizedPayments;
 
   return (
-    <div className="flex bg-bg h-full overflow-auto scrollbar-hide p-2 md:p-4">
+    <div className="flex h-full overflow-auto scrollbar-hide p-2 md:p-4">
       <div className="w-full flex flex-col gap-4 md:gap-6 p-4 md:p-6">
         {/* Header */}
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-text">Bills</h1>
-          <Button onClick={() => setIsModalOpen(true)} variant="primary">
-            <Plus size={18} />
-            <span className="text-sm md:text-base">Add Bill</span>
-          </Button>
-        </div>
+        {payments.length != 0 && (
+          <div className="flex justify-end items-center">
+            <Button onClick={() => setIsModalOpen(true)} variant="primary">
+              <Plus size={18} />
+              <span className="text-sm md:text-base">Add Bill</span>
+            </Button>
+          </div>
+        )}
 
         {/* Bills List */}
         <div className="space-y-4">
@@ -53,7 +54,7 @@ export default function Payments() {
               <h3 className="text-base md:text-lg font-medium text-text mb-2">No bills yet</h3>
               <p className="text-sm md:text-base text-text-muted mb-4">Add your first bill to get started</p>
               <Button onClick={() => setIsModalOpen(true)} variant="primary">
-                Add Bill
+                Add first bill
               </Button>
             </div>
           ) : (

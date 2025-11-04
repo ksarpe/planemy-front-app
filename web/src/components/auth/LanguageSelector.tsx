@@ -19,7 +19,7 @@ export const LanguageSelector = () => {
       <Select value={language} onValueChange={(value) => setLanguage(value as "en" | "pl" | "de")}>
         <SelectTrigger
           id={id}
-          className="px-2 transition-colors duration-200 cursor-pointer outline-none focus:outline-none focus:ring-0">
+          className="px-2 transition-colors duration-200 cursor-pointer outline-none focus:outline-none">
           <SelectValue>
             <span className="text-sm text-text">{currentLanguage?.flag}</span>
           </SelectValue>

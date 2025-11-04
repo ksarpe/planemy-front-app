@@ -42,7 +42,7 @@ export default function SecuritySection() {
     <>
       <div className="space-y-6">
         <div className="flex gap-4 items-center flex-wrap">
-          <Button onClick={() => setIsChangePasswordModalOpen(true)} variant="default_light">
+          <Button onClick={() => setIsChangePasswordModalOpen(true)} variant="default">
             {t("security.changePassword")}
           </Button>
           <Button variant="delete">{t("security.deleteAccount")}</Button>

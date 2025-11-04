@@ -1,37 +1,43 @@
 @theme {
+  /* main colors */
+  --color-primary: hsl(186, 100%, 39%);
+  --color-primary-light: hsl(186, 95%, 34%);
+  --color-bg: hsl(0, 0%, 96%);
+  --color-bg-alt: hsl(0, 0%, 100%);
   --color-text: hsl(0, 0%, 0%);
   --color-text-muted: hsl(0, 0%, 30%);
   --color-text-muted-more: hsl(0, 0%, 50%);
   --color-bg-muted-light: hsl(0, 0%, 90%);
-  --color-bg-alt: hsl(0, 0%, 100%);
-  --color-bg: hsl(0, 0%, 96%);
+
+  /* utils */
   --color-bg-hover: hsl(0, 0%, 93%);
   --color-border: hsl(0, 0%, 85%);
-  --color-primary: hsl(186, 100%, 39%);
-  --color-primary-light: hsl(173, 80%, 90%);
   --color-success: hsl(145, 63%, 49%);
   --color-negative: hsl(0, 65%, 43%);
   --color-accent: hsl(262, 83%, 58%);
-  --color-button-active-shadow: hsl(0, 0%, 70%);
-  --color-shadow: rgba(0,0,0,0.1);
+  --color-button-active-shadow: hsl(0, 0%, 80%);
+  --color-shadow: rgba(0, 0, 0, 0.1);
 }
 
 @layer theme {
   .dark {
+    /* main colors */
+    --color-primary: #00818f;
+    --color-primary-light: hsl(186, 98%, 19%);
+    --color-bg: hsl(0, 0%, 10%);
+    --color-bg-alt: hsl(0, 0%, 15%);
     --color-text: hsl(0, 0%, 100%);
     --color-text-muted: hsl(0, 0%, 70%);
     --color-text-muted-more: hsl(0, 0%, 50%);
-    --color-bg-muted-light: hsl(0, 0%, 20%);
-    --color-bg: hsl(0, 0%, 10%); /* nigth */
-    --color-bg-alt: #212121;
+    --color-bg-muted-light: hsl(0, 0%, 25%);
+
+    /* utils */
     --color-bg-hover: hsl(0, 0%, 15%);
     --color-border: hsl(0, 0%, 25%);
-    --color-primary: #00818f;
-    --color-primary-light: hsl(0, 0%, 20%);
     --color-success: hsl(145, 63%, 40%);
     --color-negative: hsl(0, 87%, 36%);
     --color-accent: hsl(262, 83%, 48%);
-    --color-button-active-shadow: hsl(0, 0%, 0\%);
-    --color-shadow: rgba(0,0,0,0.2)
+    --color-button-active-shadow: hsl(0, 0%, 10%);
+    --color-shadow: rgba(0, 0, 0, 0.2);
   }
 }

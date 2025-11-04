@@ -21,8 +21,8 @@ function SelectTrigger({ className, children, ...props }: React.ComponentProps<t
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        "flex w-full items-center justify-between rounded-2xl border border-text-muted-more bg-bg-alt px-3 py-2 text-sm text-text transition-colors",
-        "hover:border-text-muted focus:border-ring focus:outline-none",
+        "flex w-full items-center justify-between rounded-2xl bg-bg-alt px-3 py-2 text-sm text-text transition-colors",
+        "focus:outline-none",
         "disabled:cursor-not-allowed disabled:opacity-50 disabled:text-text-muted",
         className,
       )}

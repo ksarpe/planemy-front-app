@@ -144,7 +144,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
     // Wrapper z cieniem i zaokrąglonymi rogami
     <div
       data-slot="month-view"
-      className="flex flex-col flex-1 rounded-tl-2xl bg-bg-alt shadow-[-4px_-4px_6px] shadow-shadow overflow-auto">
+      className="flex flex-col flex-1 rounded-tl-2xl bg-bg-alt shadow-[-2px_-2px_6px] border border-bg-muted-light shadow-bg-muted-light overflow-auto">
       {/* ROW WITH WEEKDAYS NAMES */}
       <div className="grid grid-cols-7">
         {weekdays.map((day) => (

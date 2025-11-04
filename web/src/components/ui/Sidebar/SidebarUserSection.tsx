@@ -1,7 +1,7 @@
 import { useLogout } from "@shared/hooks/auth/useAuth";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 import { useToast } from "@shared/hooks/toasts/useToast";
-import { FiLogOut } from "react-icons/fi";
+import { FiLogOut, FiUser } from "react-icons/fi";
 
 export interface SidebarUserSectionProps {
   collapsed: boolean;
@@ -11,12 +11,11 @@ export interface SidebarUserSectionProps {
 export function SidebarUserSection({ collapsed, onSettingsClick }: SidebarUserSectionProps) {
   const { user } = useAuthContext();
   const logout = useLogout();
-  const { showSuccess, showError } = useToast();
+  const { showError } = useToast();
 
   const handleLogout = () => {
     try {
       logout.mutate();
-      showSuccess("Pomyślnie wylogowano");
     } catch (error) {
       console.error("Error during logout:", error);
       showError("Błąd podczas wylogowywania");
@@ -33,9 +32,9 @@ export function SidebarUserSection({ collapsed, onSettingsClick }: SidebarUserSe
       <div className="flex flex-col items-center gap-4">
         <div
           onClick={onSettingsClick}
-          className="w-12 h-12 rounded-2xl bg-primary hover:bg-primary/60 flex items-center justify-center font-bold text-text cursor-pointer"
+          className="w-12 h-12 rounded-full  bg-bg-muted-light flex items-center justify-center font-bold text-text cursor-pointer"
           title={user?.username || user?.email || "Profil"}>
-          {(user?.username || user?.email || "U").charAt(0).toUpperCase()}
+          <FiUser size={24} className="text-text-muted" />
         </div>
         <FiLogOut size={24} className="text-text-muted hover:text-red-400 cursor-pointer" onClick={handleLogoutClick} />
       </div>
@@ -44,12 +43,12 @@ export function SidebarUserSection({ collapsed, onSettingsClick }: SidebarUserSe
 
   return (
     <div className="">
-      <div className="flex items-center gap-3 justify-between p-2 rounded-2xl hover:bg-bg-hover transition-colors">
+      <div className="flex items-center  gap-3 justify-between p-2 rounded-2xl">
         <div
           onClick={onSettingsClick}
           className="flex items-center gap-3 flex-1 min-w-0 overflow-hidden group cursor-pointer">
-          <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center font-bold text-black">
-            {(user!.username || user!.email || "U").charAt(0).toUpperCase()}
+          <div className="w-12 h-12 rounded-full bg-bg-muted-light flex items-center justify-center font-bold text-black">
+            <FiUser size={24} className="text-text-muted" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-text truncate ">{user!.username || user!.email || "Użytkownik"}</p>

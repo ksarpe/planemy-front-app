@@ -6,6 +6,7 @@ import { LoaderCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { Toaster } from "sonner";
 import { Button } from "../ui/shadcn/button";
+import { Input } from "../ui/shadcn/input";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -36,31 +37,9 @@ export const LoginForm = () => {
       }
     } catch (error) {
       if (error instanceof APIError) {
-        // Map API error codes to i18n messages
         switch (error.status) {
           case 401:
             showError(t("auth.errors.wrongPassword"));
-            break;
-          case 404:
-            showError(t("auth.errors.userNotFound"));
-            break;
-          case 409:
-            showError(t("auth.errors.emailAlreadyInUse"));
-            break;
-          case 400:
-            if (error.body?.message?.includes("password")) {
-              showError(t("auth.errors.weakPassword"));
-            } else if (error.body?.message?.includes("email")) {
-              showError(t("auth.errors.invalidEmail"));
-            } else {
-              showError(error.body?.message || t("auth.errors.unknownError"));
-            }
-            break;
-          case 403:
-            showError(t("auth.errors.userDisabled"));
-            break;
-          case 429:
-            showError(t("auth.errors.tooManyRequests"));
             break;
           default:
             showError(error.body?.message || t("auth.errors.unknownError"));
@@ -74,7 +53,7 @@ export const LoginForm = () => {
   const isLoading = login.isPending || register.isPending;
 
   return (
-    <div className="p-8 rounded-2xl w-full max-w-md mx-auto bg-bg">
+    <div>
       <Toaster position="bottom-center" richColors />
       <h1 className="text-2xl font-semibold text-text">Your Life Assistant</h1>
       <h2 className="text-xl font-normal text-left mb-6 text-text-muted">
@@ -82,44 +61,30 @@ export const LoginForm = () => {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-text-muted mb-1">
-            {t("auth.email")}
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300  rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white  text-gray-900  placeholder-gray-500 "
-            placeholder={t("auth.emailPlaceholder")}
-            required
-            autoComplete="email"
-          />
-        </div>
+        <Input
+          label="E-mail"
+          type="email"
+          placeholder="E-mail"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          autoComplete="email"
+        />
 
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700  mb-1">
-            {t("auth.password")}
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300  rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white  text-gray-900  placeholder-gray-500 "
-            placeholder={t("auth.passwordPlaceholder")}
-            required
-            autoComplete={isLoginMode ? "current-password" : "new-password"}
-          />
-        </div>
+        <Input
+          label={t("auth.password")}
+          type="password"
+          placeholder={t("auth.password")}
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          autoComplete={isLoginMode ? "current-password" : "new-password"}
+        />
 
         <Button
           type="submit"
           disabled={isLoading}
           data-loading={isLoading || undefined}
           variant={"primary"}
-          className="w-full text-black py-2 px-4 rounded-2xl hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors group relative">
+          className="w-full">
           <span className="group-data-loading:text-transparent">
             {isLoading
               ? isLoginMode

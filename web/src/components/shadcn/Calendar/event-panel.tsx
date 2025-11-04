@@ -195,7 +195,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
             </Button>
           )}
           <div className="flex gap-3">
-            <Button variant="default_light" onClick={onClose}>
+            <Button variant="default" onClick={onClose}>
               Cancel
             </Button>
             <Button onClick={handleSave} variant="primary">

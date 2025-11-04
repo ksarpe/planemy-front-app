@@ -10,6 +10,8 @@ export default function TaskItem({ task }: TaskItemProps) {
   const { clickedTask, setClickedTask } = useTaskViewContext();
   //const { labels, createLabelConnection, removeLabelConnection } = useLabelContext();
 
+  console.log("task:", task);
+
   const getDaysUntilDue = () => {
     if (!task.dueDate || task.dueDate === "") return null;
     const today = new Date();
@@ -46,11 +48,8 @@ export default function TaskItem({ task }: TaskItemProps) {
 
   return (
     <li
-      style={{
-        borderColor: task.labels?.length === 1 ? task.labels[0].color : "#dcc5b2", // gray-300
-      }}
-      className={`border-l-4 rounded-2xl p-4 bg-bg text-text hover:bg-bg-muted-light cursor-pointer
-      ${clickedTask?.id === task.id ? "border-b border-l-10 border-r-10 border-t " : "hover:bg-bg-hover "}`}
+      className={`rounded-2xl px-4 py-2 text-text cursor-pointer shadow-md border border-bg-muted-light hover:scale-101 duration-200
+      ${clickedTask?.id === task.id && "border-primary"}`}
       onClick={() => {
         // Toggle functionality - if already selected, deselect it
         if (clickedTask?.id === task.id) {
@@ -70,7 +69,7 @@ export default function TaskItem({ task }: TaskItemProps) {
             {task.isCompleted ? (
               <CheckCircle2 size={20} className="text-primary" />
             ) : (
-              <div className="w-5 h-5 border-1 border-text-muted-more rounded-full hover:bg-success hover:border-success transition-colors" />
+              <div className="w-5 h-5 border-1 border-text-muted-more rounded-full hover:bg-primary hover:border-primary transition-colors" />
             )}
           </button>
 
@@ -83,18 +82,14 @@ export default function TaskItem({ task }: TaskItemProps) {
               {task.title}
             </h3>
 
-            {task.task_description && (
+            {
               <p
                 className={`text-xs mt-1 transition-colors duration-200 ${
-                  task.isCompleted
-                    ? "line-through text-text-muted "
-                    : clickedTask?.id === task.id
-                    ? "text-primary "
-                    : "text-text-muted "
+                  task.isCompleted ? "line-through text-text-muted " : "text-text-muted-more "
                 }`}>
-                {task.task_description}
+                {task.task_description ? task.task_description : "Brak opisu"}
               </p>
-            )}
+            }
 
             {/* Due date */}
             {task.dueDate && task.dueDate !== "" && (
