@@ -50,15 +50,15 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
             collapsed={collapsed}
           />
         </div>
-        <div className="w-full h-px bg-text-muted/20 my-2" />
+        <div className="w-full h-px bg-text-muted/20 my-1" />
 
         {/* SETTINGS */}
         <SidebarSettings collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
-        <div className="w-full h-px bg-text-muted/20 my-2" />
+        <div className="w-full h-px bg-text-muted/20 my-1" />
         {/* USER INFO */}
         <SidebarUserSection collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
 
-        <div className="w-full h-px bg-text-muted/20 my-2" />
+        <div className="w-full h-px bg-text-muted/20 mb-4 mt-1" />
         {/* Collapse button + Dark Mode */}
         <div
           className={`hidden md:flex ${

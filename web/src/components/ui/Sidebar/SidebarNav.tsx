@@ -28,7 +28,7 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
   if (collapsed) {
     return (
       <nav className="flex flex-col h-full">
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-1">
           {navigationItems.map(({ to, Icon, label }) => (
             <SidebarNavLink key={to} to={to} label={label} Icon={Icon} onClick={handleNavigate} collapsed={true} />
           ))}
@@ -47,7 +47,7 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
 
   return (
     <nav className="flex flex-col h-full justify-between">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1">
         <span className="text-xs font-bold text-text-muted">NAVIGATION</span>
 
         {navigationItems.map(({ to, Icon, label }) => (

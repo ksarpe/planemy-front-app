@@ -16,7 +16,7 @@ export function DarkModeToggle({ collapsed = false }: DarkModeToggleProps) {
     return (
       <button
         onClick={toggleDark}
-        className="w-10 h-10 rounded-2xl cursor-pointer bg-bg-hover hover:bg-primary/10 flex items-center justify-center text-text hover:text-primary transition-all duration-200"
+        className="w-10 h-10 rounded-2xl cursor-pointer hover:bg-primary/10 flex items-center justify-center text-text hover:text-primary transition-all duration-200"
         title={isDark ? "Przełącz na tryb jasny" : "Przełącz na tryb ciemny"}
         aria-label={isDark ? "Przełącz na tryb jasny" : "Przełącz na tryb ciemny"}>
         {isDark ? <FiSun size={20} /> : <FiMoon size={20} />}

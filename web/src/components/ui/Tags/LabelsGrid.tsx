@@ -9,7 +9,7 @@ export default function LabelsGrid({ labels, onEdit, onDelete, onCreateNew }: La
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4-visible">
       {/* Existing Labels */}
       {labels.map((label: LabelInterface) => (
         <LabelCard key={label.id} label={label} onEdit={onEdit} onDelete={onDelete} />
