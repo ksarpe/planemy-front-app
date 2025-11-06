@@ -37,7 +37,7 @@ export function SidebarUserSection({ collapsed, onSettingsClick }: SidebarUserSe
           onClick={onSettingsClick}
           className={
             collapsed
-              ? "w-12 h-12 rounded-full bg-bg-muted-light flex items-center justify-center font-bold text-text cursor-pointer"
+              ? "w-12 h-12 rounded-full  flex items-center justify-center font-bold text-text cursor-pointer"
               : "flex items-center gap-3 flex-1 min-w-0 overflow-hidden group cursor-pointer"
           }
           title={collapsed ? user?.username || user?.email || "Profil" : "Profil"}>

@@ -13,7 +13,6 @@ const convertToCalendarEvent = (event: EventInterface): CalendarEvent => ({
   start: new Date(event.starts_at),
   end: new Date(event.ends_at),
   allDay: false, // EventInterface doesn't have allDay field
-  color: "blue", // Default color
   location: "", // EventInterface doesn't have location field
 });
 

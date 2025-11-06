@@ -39,7 +39,7 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
     } else {
       setFormData({
         label_name: "",
-        color: "blue",
+        color: "cyan",
         description: "",
       });
     }
@@ -70,7 +70,7 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
   const handleClose = () => {
     setFormData({
       label_name: "",
-      color: "blue",
+      color: "cyan",
       description: "",
     });
     onClose();
@@ -97,10 +97,10 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
       }
       footer={
         <div className="flex items-center justify-end gap-2 w-full">
-          <Button onClick={handleClose} variant="default" disabled={loading}>
+          <Button onClick={handleClose} variant="default" disabled={loading} size="lg">
             {t("common.cancel")}
           </Button>
-          <Button onClick={handleSubmit} variant="primary" disabled={!formData.label_name.trim() || loading}>
+          <Button onClick={handleSubmit} variant="primary" disabled={!formData.label_name.trim() || loading} size="lg">
             {label?.id ? t("labels.form.save") : t("labels.form.create")}
           </Button>
         </div>
@@ -109,21 +109,12 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
         <div className="space-y-6">
           {/* Name */}
           <Input
+            label="Label Name"
             id="label-name"
             value={formData.label_name}
             onChange={(e) => setFormData({ ...formData, label_name: e.target.value })}
             autoFocus
           />
-
-          {/* Description */}
-          {/* <FloatingLabelTextarea
-            id="label-description"
-            label={label?.id ? t("labels.form.description") : t("labels.form.descriptionOptional")}
-            labelBg="bg-bg-alt"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            rows={3}
-          /> */}
 
           {/* Color Picker */}
           <div>

@@ -53,9 +53,9 @@ function TabsTab({ className, ...props }: TabsPrimitive.Tab.Props) {
       data-slot="tabs-trigger"
       className={cn(
         "flex flex-1 shrink-0 cursor-pointer items-center justify-center rounded-2xl border border-transparent text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary data-disabled:pointer-events-none data-disabled:opacity-64 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        // Colors matching Button default variant
-        "text-text-muted hover:text-text hover:bg-bg-muted-light",
-        "data-selected:text-text data-selected:bg-bg-muted-light data-selected:font-semibold",
+        // Colors matching SidebarNavLink
+        "text-text-muted hover:bg-bg-muted-light active:scale-95",
+        "data-selected:bg-primary/10 data-selected:text-primary data-selected:font-medium",
         "gap-2 px-3 py-2.5",
         "data-[orientation=vertical]:w-full data-[orientation=vertical]:justify-start",
         className,

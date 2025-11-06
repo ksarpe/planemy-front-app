@@ -147,7 +147,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         ) : (
           <Tabs defaultValue="profile" orientation="vertical" className="w-full h-full flex flex-row">
             {/* Sidebar with tabs */}
-            <div className="w-56 bg-bg border-e border-bg-muted-light flex-shrink-0">
+            <div className="w-56 bg-bg border-bg-muted-light flex-shrink-0">
               <div className="p-4">
                 <h3 className="text-xs font-semibold text-text-muted uppercase mb-3 px-3">Account</h3>
                 <TabsList variant="underline" className="w-full flex-col items-stretch">
