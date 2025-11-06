@@ -1,17 +1,18 @@
-import { useRef, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { differenceInDays } from "date-fns";
+import { useRef, useState } from "react";
 
-import { type CalendarEvent } from "@/components/shadcn/types";
-import { EventItem } from "@/components/shadcn/Calendar/event-item";
 import { useCalendarDnd } from "@/components/shadcn/Calendar/calendar-dnd-context";
+import { EventItem } from "@/components/shadcn/Calendar/event-item";
+import { type CalendarEvent } from "@/components/shadcn/types";
 
 interface DraggableEventProps {
   event: CalendarEvent;
   view: "month" | "week" | "day";
   showTime?: boolean;
   onClick?: (e: React.MouseEvent) => void;
+  onDelete?: () => void;
   height?: number;
   isMultiDay?: boolean;
   multiDayWidth?: number;
@@ -25,6 +26,7 @@ export function DraggableEvent({
   view,
   showTime,
   onClick,
+  onDelete,
   height,
   isMultiDay,
   multiDayWidth,
@@ -115,6 +117,7 @@ export function DraggableEvent({
         isLastDay={isLastDay}
         isDragging={isDragging}
         onClick={onClick}
+        onDelete={onDelete}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         dndListeners={listeners}

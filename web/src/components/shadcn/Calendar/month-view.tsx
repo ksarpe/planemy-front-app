@@ -28,9 +28,10 @@ interface MonthViewProps {
   events: CalendarEvent[];
   onEventSelect: (event: CalendarEvent) => void;
   onEventCreate: (startTime: Date) => void;
+  onEventDelete?: (eventId: string) => void;
 }
 
-export function MonthView({ currentDate, events, onEventSelect, onEventCreate }: MonthViewProps) {
+export function MonthView({ currentDate, events, onEventSelect, onEventCreate, onEventDelete }: MonthViewProps) {
   // Generate extended date range - 3 months before and after current month
   const days = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
@@ -216,6 +217,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                               aria-hidden={isHidden ? "true" : undefined}>
                               <EventItem
                                 onClick={(e) => handleEventClick(event, e)}
+                                onDelete={() => onEventDelete?.(event.id)}
                                 event={event}
                                 view="month"
                                 isFirstDay={isFirstDay}
@@ -238,6 +240,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                               event={event}
                               view="month"
                               onClick={(e) => handleEventClick(event, e)}
+                              onDelete={() => onEventDelete?.(event.id)}
                               isFirstDay={isFirstDay}
                               isLastDay={isLastDay}
                             />

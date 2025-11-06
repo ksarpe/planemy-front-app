@@ -3,70 +3,48 @@
  * Used across the application for consistent theming.
  */
 
-export type ColorName = "blue" | "green" | "yellow" | "red" | "purple";
+export type ColorName = "cyan" | "pink" | "violet" | "indigo" | "rose" | "red";
 
 export interface ColorConfig {
   name: ColorName;
   label: string; // Display name for UI
-  hex: string; // Hex color for backend compatibility
-  // Background colors for different states
-  bg: string;
-  bgHover: string;
-  // Text color
-  text: string;
-  // Border color
-  border: string;
+  hex: string; // Hex color - primary source of truth
 }
 
 /**
  * Available colors configuration
- * These classes work with both light and dark modes (handled by CSS variables)
+ * Hex colors are used everywhere - in UI (inline styles) and backend storage
  */
 export const COLORS: Record<ColorName, ColorConfig> = {
-  blue: {
-    name: "blue",
-    label: "Blue",
-    hex: "#3B82F6",
-    bg: "bg-blue-500",
-    bgHover: "hover:bg-blue-600",
-    text: "text-white",
-    border: "border-blue-500",
+  cyan: {
+    name: "cyan",
+    label: "Cyan",
+    hex: "#00B3C7",
   },
-  green: {
-    name: "green",
-    label: "Green",
-    hex: "#22C55E",
-    bg: "bg-green-500",
-    bgHover: "hover:bg-green-600",
-    text: "text-white",
-    border: "border-green-500",
+  pink: {
+    name: "pink",
+    label: "Pink",
+    hex: "#F72585",
   },
-  yellow: {
-    name: "yellow",
-    label: "Yellow",
-    hex: "#EAB308",
-    bg: "bg-yellow-500",
-    bgHover: "hover:bg-yellow-600",
-    text: "text-white",
-    border: "border-yellow-500",
+  violet: {
+    name: "violet",
+    label: "Violet",
+    hex: "#7209B7",
+  },
+  indigo: {
+    name: "indigo",
+    label: "Indigo",
+    hex: "#3A0CA3",
+  },
+  rose: {
+    name: "rose",
+    label: "Rose",
+    hex: "#EAC8CA",
   },
   red: {
     name: "red",
     label: "Red",
     hex: "#EF4444",
-    bg: "bg-red-500",
-    bgHover: "hover:bg-red-600",
-    text: "text-white",
-    border: "border-red-500",
-  },
-  purple: {
-    name: "purple",
-    label: "Purple",
-    hex: "#8B5CF6",
-    bg: "bg-purple-500",
-    bgHover: "hover:bg-purple-600",
-    text: "text-white",
-    border: "border-purple-500",
   },
 };
 
@@ -79,24 +57,49 @@ export const COLOR_NAMES: ColorName[] = Object.keys(COLORS) as ColorName[];
  * Get color configuration by name
  */
 export function getColorConfig(color?: ColorName | string): ColorConfig {
-  const colorName = (color as ColorName) || "blue";
-  return COLORS[colorName] || COLORS.blue;
+  const colorName = (color as ColorName) || "cyan";
+  return COLORS[colorName] || COLORS.cyan;
 }
 
 /**
- * Get combined CSS classes for a color (useful for events, badges, etc.)
+ * Get hex color by name
  */
-export function getColorClasses(color?: ColorName | string): string {
+export function getColorHex(color?: ColorName | string): string {
   const config = getColorConfig(color);
-  return `${config.bg} ${config.bgHover} ${config.text} ${config.border}`;
+  return config.hex;
 }
 
 /**
- * Get badge-specific classes (no hover, smaller opacity)
+ * Get badge-specific inline styles
  */
-export function getBadgeColorClasses(color?: ColorName | string): string {
-  const config = getColorConfig(color);
-  return `${config.bg} ${config.text} ${config.border}`;
+export function getBadgeColorStyles(color?: ColorName | string): React.CSSProperties {
+  const hex = getColorHex(color);
+  return {
+    backgroundColor: hex,
+    borderColor: hex,
+    color: "#ffffff",
+  };
+}
+
+/**
+ * Get color classes for borders/backgrounds (for compatibility)
+ * Now returns empty string - use inline styles instead
+ * @deprecated Use getColorHex and inline styles instead
+ */
+export function getBadgeColorClasses(_color?: ColorName | string): string {
+  // Deprecated - kept for backward compatibility
+  // Use getBadgeColorStyles or getColorHex instead
+  return "";
+}
+
+/**
+ * Get combined CSS classes for a color (deprecated)
+ * @deprecated Use getColorHex and inline styles instead
+ */
+export function getColorClasses(_color?: ColorName | string): string {
+  // Deprecated - kept for backward compatibility
+  // Use inline styles with getColorHex instead
+  return "";
 }
 
 /**
@@ -104,7 +107,7 @@ export function getBadgeColorClasses(color?: ColorName | string): string {
  * Backend expects format: #RRGGBB
  */
 export function colorNameToHex(colorName?: ColorName | string): string {
-  if (!colorName) return COLORS.blue.hex;
+  if (!colorName) return COLORS.cyan.hex;
 
   // If already hex format, return as-is
   if (typeof colorName === "string" && colorName.startsWith("#")) {
@@ -117,18 +120,18 @@ export function colorNameToHex(colorName?: ColorName | string): string {
 
 /**
  * Convert hex color to color name (reverse mapping)
- * Returns the color name if found, otherwise returns the hex as-is
+ * Returns the color name if found, otherwise returns the first color as fallback
  */
 export function hexToColorName(hex?: string): ColorName | string {
-  if (!hex) return "blue";
+  if (!hex) return "cyan";
 
   // Find color by hex value
-  const colorEntry = Object.entries(COLORS).find(([_, config]) => config.hex === hex);
+  const colorEntry = Object.entries(COLORS).find(([_, config]) => config.hex.toLowerCase() === hex.toLowerCase());
 
   if (colorEntry) {
     return colorEntry[0] as ColorName;
   }
 
-  // If no match found, return hex (backward compatibility)
-  return hex;
+  // If no match found, return first color as fallback
+  return "cyan";
 }

@@ -4,9 +4,8 @@ import { ColorName } from "@shared/data/Utils";
 import { LabelInterface } from "@shared/data/Utils/interfaces";
 import { useLabelContext } from "@shared/hooks/context/useLabelContext";
 import { useCreateLabel, useDeleteLabel, useUpdateLabel } from "@shared/hooks/labels/useLabels";
-import { Palette, Plus, Sparkles, Tag } from "lucide-react";
+import { Palette, Sparkles, Tag } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Button } from "../ui/shadcn/button";
 
 export default function LabelsView() {
   const { labels, isLoadingLabels } = useLabelContext();
@@ -66,22 +65,15 @@ export default function LabelsView() {
   return (
     <div className="flex h-full p-6 gap-4">
       <div className="w-full rounded-2xl scrollbar-hide flex flex-col gap-6">
-        {/* Header with Stats */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-              <Tag className="text-primary" size={24} />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-text">Labels</h1>
-              <p className="text-sm text-text-muted">Organize with colors</p>
-            </div>
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+            <Tag className="text-primary" size={24} />
           </div>
-
-          <Button onClick={handleOpenCreatePanel} variant="primary" className="gap-2">
-            <Plus size={16} />
-            New Label
-          </Button>
+          <div>
+            <h1 className="text-2xl font-bold text-text">Labels</h1>
+            <p className="text-sm text-text-muted">Organize with colors</p>
+          </div>
         </div>
 
         {/* Quick Stats */}

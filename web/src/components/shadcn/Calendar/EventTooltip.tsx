@@ -1,11 +1,12 @@
 import type { CalendarEvent } from "@/components/shadcn/types";
 import { Badge } from "@/components/ui/Common/Badge";
+import { Button } from "@/components/ui/shadcn/button";
 import { cn } from "@/lib/shadcn/utils";
 import { LabelInterface } from "@shared/data/Utils";
 import { useLabelContext } from "@shared/hooks/context/useLabelContext";
 import { format, getMinutes, isValid } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
-import { Clock, Edit, MapPin, Trash2, X } from "lucide-react";
+import { Clock, MapPin, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -13,8 +14,8 @@ interface EventTooltipProps {
   event: CalendarEvent;
   isOpen: boolean;
   onClose: () => void;
-  onDelete?: () => void;
-  onEdit?: () => void;
+  onDeleteRequest?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   anchorElement: HTMLElement | null;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
@@ -44,8 +45,8 @@ export function EventTooltip({
   event,
   isOpen,
   onClose,
-  onDelete,
-  onEdit,
+  onDeleteRequest,
+  onClick,
   anchorElement,
   onMouseEnter,
   onMouseLeave,
@@ -163,7 +164,13 @@ export function EventTooltip({
           }}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
-          className="w-80 bg-bg rounded-xl shadow-2xl border border-bg-muted-light overflow-hidden">
+          onClick={(e) => {
+            if (onClick) {
+              onClick(e);
+              onClose();
+            }
+          }}
+          className="w-80 bg-bg-alt rounded-xl shadow-2xl border border-bg-muted-light overflow-hidden cursor-pointer">
           {/* Header with color accent */}
           <div
             className={cn("h-1.5")}
@@ -177,11 +184,14 @@ export function EventTooltip({
             {/* Title and close button */}
             <div className="flex items-start justify-between gap-3">
               <h3 className="text-lg font-semibold text-text leading-tight flex-1">{event.title}</h3>
-              <button
-                onClick={onClose}
-                className="p-1 rounded-2xl hover:bg-bg-muted-light transition-colors text-text-muted hover:text-text flex-shrink-0">
-                <X size={18} />
-              </button>
+              <Button
+                onClick={(e) => {
+                  onClose();
+                  e.stopPropagation();
+                }}
+                variant="ghost">
+                <X size={20} />
+              </Button>
             </div>
 
             {/* Time */}
@@ -223,30 +233,17 @@ export function EventTooltip({
           </div>
 
           {/* Actions footer */}
-          <div className="px-4 py-3 bg-bg-alt border-t border-bg-muted-light flex items-center gap-2">
-            {onEdit && (
-              <button
+          <div className="p-2 bg-bg-alt border-t border-bg flex items-center gap-2">
+            {onDeleteRequest && (
+              <Button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onEdit();
-                  onClose();
+                  onDeleteRequest();
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-2xl text-sm font-medium text-text bg-bg hover:bg-bg-muted-light transition-colors">
-                <Edit size={14} />
-                Edit
-              </button>
-            )}
-            {onDelete && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete();
-                  onClose();
-                }}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-2xl text-sm font-medium text-negative hover:bg-negative/10 transition-colors ml-auto">
-                <Trash2 size={14} />
-                Delete
-              </button>
+                variant="ghost"
+                className="ml-auto text-negative">
+                <Trash2 size={20} />
+              </Button>
             )}
           </div>
         </motion.div>

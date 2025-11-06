@@ -1,4 +1,4 @@
-import { getBadgeColorClasses, type ColorName } from "@shared/data/Utils/colors";
+import { getColorHex, type ColorName } from "@shared/data/Utils/colors";
 import { X } from "lucide-react";
 
 interface LabelBadgeProps {
@@ -13,14 +13,18 @@ interface LabelBadgeProps {
  * Uses the centralized color system from colors.ts
  */
 export function LabelBadge({ name, color, onRemove, className = "" }: LabelBadgeProps) {
-  const colorClasses = getBadgeColorClasses(color);
+  const colorHex = getColorHex(color);
 
   return (
     <span
+      style={{
+        backgroundColor: colorHex,
+        borderColor: colorHex,
+        color: "#ffffff",
+      }}
       className={`
         inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full
         border transition-colors
-        ${colorClasses}
         ${className}
       `}>
       <span className="font-medium">{name}</span>

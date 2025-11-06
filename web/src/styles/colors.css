@@ -1,6 +1,6 @@
 @theme {
   /* main colors */
-  --color-primary: hsl(186, 100%, 39%);
+  --color-primary: #00b3c7;
   --color-primary-light: hsl(186, 95%, 34%);
   --color-bg: hsl(0, 0%, 96%);
   --color-bg-alt: hsl(0, 0%, 100%);

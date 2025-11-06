@@ -4,9 +4,10 @@ import { differenceInMinutes, format, getMinutes, isPast, isValid } from "date-f
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { CalendarEvent } from "@/components/shadcn/types";
-import { getBorderRadiusClasses, getEventColorClasses } from "@/components/shadcn/utils";
+import { getBorderRadiusClasses } from "@/components/shadcn/utils";
+import DeleteConfirmationModal from "@/components/ui/Common/DeleteConfirmationModal";
 import { cn } from "@/lib/shadcn/utils";
-import { LabelInterface } from "@shared/data/Utils";
+import { getColorHex, LabelInterface } from "@shared/data/Utils";
 import { useLabelContext } from "@shared/hooks/context/useLabelContext";
 import { EventTooltip } from "./EventTooltip";
 
@@ -101,7 +102,11 @@ function EventWrapper({
       return false;
     }
   }, [displayEnd]);
-  console.log(labelColor);
+
+  // Get hex color for the event
+  const eventColor = labelColor || event.color;
+  const colorHex = eventColor ? getColorHex(eventColor) : "var(--color-primary)";
+
   return (
     <button
       ref={eventRef}
@@ -114,13 +119,14 @@ function EventWrapper({
         isEventInPast && "line-through opacity-60",
         // Responsive padding
         "sm:px-2",
-        getEventColorClasses(labelColor || event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         className,
       )}
       style={
         {
-          color: "var(--color-text)",
+          backgroundColor: colorHex,
+          borderColor: colorHex,
+          color: "#ffffff",
           "--tw-ring-color": "var(--color-primary)",
         } as React.CSSProperties
       }
@@ -143,6 +149,7 @@ interface EventItemProps {
   view: "month" | "week" | "day" | "agenda";
   isDragging?: boolean;
   onClick?: (e: React.MouseEvent) => void;
+  onDelete?: () => void;
   showTime?: boolean;
   currentTime?: Date; // For updating time during drag
   isFirstDay?: boolean;
@@ -160,6 +167,7 @@ export function EventItem({
   view,
   isDragging,
   onClick,
+  onDelete,
   showTime,
   currentTime,
   isFirstDay = true,
@@ -175,6 +183,7 @@ export function EventItem({
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isHoveringEventItem, setIsHoveringEventItem] = useState(false);
   const [isHoveringTooltip, setIsHoveringTooltip] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const eventRef = useRef<HTMLButtonElement | null>(null);
 
   // Get labels for the current event
@@ -206,6 +215,17 @@ export function EventItem({
 
   const handleTooltipMouseLeave = () => {
     setIsHoveringTooltip(false);
+  };
+
+  // Handle delete request from tooltip
+  const handleDeleteRequest = () => {
+    setIsTooltipOpen(false);
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowDeleteConfirm(false);
+    onDelete?.();
   };
 
   // Close tooltip when not hovering either element
@@ -308,9 +328,19 @@ export function EventItem({
           event={event}
           isOpen={isTooltipOpen}
           onClose={() => setIsTooltipOpen(false)}
+          onDeleteRequest={onDelete ? handleDeleteRequest : undefined}
+          onClick={onClick}
           anchorElement={eventRef.current}
           onMouseEnter={handleTooltipMouseEnter}
           onMouseLeave={handleTooltipMouseLeave}
+        />
+        <DeleteConfirmationModal
+          isOpen={showDeleteConfirm}
+          onClose={() => setShowDeleteConfirm(false)}
+          onConfirm={handleConfirmDelete}
+          title="Delete Event"
+          message="Are you sure you want to delete this event? This action cannot be undone."
+          itemName={event.title}
         />
       </>
     );
@@ -356,27 +386,43 @@ export function EventItem({
           event={event}
           isOpen={isTooltipOpen}
           onClose={() => setIsTooltipOpen(false)}
+          onDeleteRequest={onDelete ? handleDeleteRequest : undefined}
+          onClick={onClick}
           anchorElement={eventRef.current}
           onMouseEnter={handleTooltipMouseEnter}
           onMouseLeave={handleTooltipMouseLeave}
+        />
+        <DeleteConfirmationModal
+          isOpen={showDeleteConfirm}
+          onClose={() => setShowDeleteConfirm(false)}
+          onConfirm={handleConfirmDelete}
+          title="Delete Event"
+          message="Are you sure you want to delete this event? This action cannot be undone."
+          itemName={event.title}
         />
       </>
     );
   }
 
   // Agenda view - kept separate since it's significantly different
+  const agendaColorHex = eventLabel?.color
+    ? getColorHex(eventLabel.color)
+    : event.color
+    ? getColorHex(event.color)
+    : "var(--color-primary)";
+
   return (
     <button
       className={cn(
         "flex w-full flex-col gap-1 rounded p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
-        getEventColorClasses(eventLabel?.color || event.color),
         className,
       )}
       style={
         {
-          color: "var(--color-text)",
+          backgroundColor: agendaColorHex,
+          color: "#ffffff",
           "--tw-ring-color": "var(--color-primary)",
-          borderColor: "var(--color-primary)",
+          borderColor: agendaColorHex,
         } as React.CSSProperties
       }
       data-past-event={isPast(new Date(event.end)) || undefined}

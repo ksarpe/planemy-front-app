@@ -17,16 +17,19 @@ export function ColorPicker({ selectedColor, onSelectColor, className = "" }: Co
             <button
               type="button"
               onClick={() => onSelectColor(colorConfig.name)}
+              style={{
+                backgroundColor: colorConfig.hex,
+                borderColor: colorConfig.hex,
+              }}
               className={`
-                w-10 h-10 rounded-2xl transition-all cursor-pointer
-                ${colorConfig.bg} ${colorConfig.border} border-2
+                w-10 h-10 rounded-2xl transition-all cursor-pointer border-2
                 ${isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-bg scale-110" : "hover:scale-105"}
               `}
               aria-label={`Select ${colorConfig.label} color`}>
               {/* Checkmark for selected color */}
               {isSelected && (
                 <svg
-                  className={`w-5 h-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${colorConfig.text}`}
+                  className="w-5 h-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
