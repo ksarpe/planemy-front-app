@@ -104,7 +104,7 @@ web/
 │   ├── components/
 │   │   └── ui/
 │   │       ├── Sidebar/
-│   │       │   └── SidebarSettings.tsx  # Book icon button
+│   │       │   └── SidebarTools.tsx  # Book icon button
 │   │       └── Tutorial/
 │   │           └── TutorialOverlay.tsx  # Overlay component
 │   └── main.tsx                      # TutorialProvider wrapper

@@ -63,7 +63,7 @@ export default function DevelopmentView() {
     <div className="w-full h-full overflow-y-auto scrollbar-hide">
       <div className="mx-auto p-6 space-y-6">
         {/* Header - Twój Rozwój */}
-        <div className="bg-bg-alt rounded-3xl p-8 border border-border shadow-md dark:shadow-[4px_4px_12px_rgba(0,0,0,0.3),-4px_-4px_12px_rgba(255,255,255,0.05)]">
+        <div className="bg-bg-alt rounded-3xl p-8 border border-border shadow-md">
           <div className="flex items-start justify-between">
             <div className="space-y-2">
               <p className="text-text text-2xl">Śledź swoje postępy i osiągnięcia</p>

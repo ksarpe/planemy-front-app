@@ -74,27 +74,35 @@ export function EventTooltip({
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
 
-      let top = anchorRect.bottom + 8; // 8px gap below anchor
-      let left = anchorRect.left;
+      const gap = 2; // Gap between event and tooltip
 
-      // If tooltip would go off right edge, align to right side of anchor
+      // Default: left-bottom corner of tooltip at right-top corner of event
+      // This means: tooltip's left = event's right, tooltip's bottom = event's top
+      let left = anchorRect.right + gap;
+      let top = anchorRect.top - tooltipRect.height;
+
+      // Check if tooltip goes off right edge
       if (left + tooltipRect.width > viewportWidth - 16) {
-        left = anchorRect.right - tooltipRect.width;
+        // Try left side: right-bottom corner of tooltip at left-top corner of event
+        left = anchorRect.left - tooltipRect.width - gap;
       }
 
-      // If tooltip would go off left edge, align to left viewport edge
+      // Check if tooltip goes off left edge
       if (left < 16) {
-        left = 16;
+        // Fallback: align with event's left edge
+        left = anchorRect.left;
       }
 
-      // If tooltip would go off bottom, show above anchor instead
-      if (top + tooltipRect.height > viewportHeight - 16) {
-        top = anchorRect.top - tooltipRect.height - 8;
-      }
-
-      // If still off top, clamp to top of viewport
+      // Check if tooltip goes off top
       if (top < 16) {
-        top = 16;
+        // Show below instead: left-top corner of tooltip at right-bottom corner of event
+        top = anchorRect.bottom + gap;
+      }
+
+      // Check if tooltip goes off bottom
+      if (top + tooltipRect.height > viewportHeight - 16) {
+        // Move up to fit
+        top = viewportHeight - tooltipRect.height - 16;
       }
 
       setPosition({ top, left });

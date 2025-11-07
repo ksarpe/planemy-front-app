@@ -30,7 +30,7 @@ export function AgendaView({ currentDate, events, onEventSelect }: AgendaViewPro
   const hasEvents = days.some((day) => getAgendaEventsForDay(events, day).length > 0);
 
   return (
-    <div className="flex-1 px-4 overflow-y-auto bg-bg rounded-xl shadow-[-6px_-6px_16px_rgba(0,0,0,0.1)] dark:shadow-[-6px_-6px_16px_rgba(0,0,0,0.4)]">
+    <div className="flex-1 px-4 overflow-y-auto bg-bg rounded-xl shadow-[-6px_-6px_16px_rgba(0,0,0,0.1)]">
       {!hasEvents ? (
         <div className="flex min-h-[70svh] flex-col items-center justify-center py-16 text-center">
           <RiCalendarEventLine size={32} className="mb-2" style={{ color: "var(--color-text-muted-more)" }} />

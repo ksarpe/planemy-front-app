@@ -37,7 +37,7 @@ export default function Multiselect({
         <PopoverTrigger asChild>
           <Button
             id={id}
-            variant="outline"
+            variant="default"
             role="combobox"
             aria-expanded={open}
             className="w-full justify-between border-bg-muted-light px-3 font-medium hover:border-text">

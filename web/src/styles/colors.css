@@ -38,6 +38,6 @@
     --color-negative: hsl(0, 87%, 36%);
     --color-accent: hsl(262, 83%, 48%);
     --color-button-active-shadow: hsl(0, 0%, 10%);
-    --color-shadow: rgba(0, 0, 0, 0.2);
+    --color-shadow: rgba(0, 0, 0, 0.4);
   }
 }

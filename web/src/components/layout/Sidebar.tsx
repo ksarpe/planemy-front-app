@@ -5,8 +5,9 @@ import { NavLink } from "react-router-dom";
 import { SettingsModal } from "../ui/Modals";
 import { DarkModeToggle } from "../ui/Sidebar/DarkModeToggle";
 import { SidebarNav } from "../ui/Sidebar/SidebarNav";
-import SidebarSettings from "../ui/Sidebar/SidebarSettings";
+import SidebarTools from "../ui/Sidebar/SidebarTools";
 import { SidebarUserSection } from "../ui/Sidebar/SidebarUserSection";
+import { Button } from "../ui/shadcn/button";
 
 export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   //TODO: counts (lightweight; consider optimization later)
@@ -53,7 +54,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         <div className="w-full h-px bg-text-muted/20 my-1" />
 
         {/* SETTINGS */}
-        <SidebarSettings collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
+        <SidebarTools collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
         <div className="w-full h-px bg-text-muted/20 my-1" />
         {/* USER INFO */}
         <SidebarUserSection collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
@@ -64,15 +65,15 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
           className={`hidden md:flex ${
             collapsed ? "flex-col items-center gap-3" : "flex-row items-center justify-between"
           }`}>
-          <DarkModeToggle collapsed={collapsed} />
-          <button
+          <DarkModeToggle />
+          <Button
             aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
-            className="flex items-center rounded-2xl cursor-pointer text-primary"
+            variant="ghost"
             onClick={() => setCollapsed((c) => !c)}>
             <span className="hover:bg-bg rounded-2xl px-1 transition-colors">
               {collapsed ? <FiChevronsRight size={24} /> : <FiChevronsLeft size={24} />}
             </span>
-          </button>
+          </Button>
         </div>
       </aside>
       <SettingsModal isOpen={isSettingsModalOpen} onClose={() => setIsSettingsModalOpen(false)} />

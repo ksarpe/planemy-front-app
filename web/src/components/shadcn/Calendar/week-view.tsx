@@ -205,7 +205,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
   return (
     <div
       data-slot="week-view"
-      className="flex h-full flex-col rounded-xl bg-bg shadow-[-6px_-6px_16px_rgba(0,0,0,0.1)] dark:shadow-[-6px_-6px_16px_rgba(0,0,0,0.4)] overflow-hidden">
+      className="flex h-full flex-col rounded-xl bg-bg shadow-[-6px_-6px_16px_rgba(0,0,0,0.1)] overflow-hidden">
       <div className="sticky top-0 z-30 grid grid-cols-[3.5rem_repeat(7,1fr)] border-b border-bg-alt backdrop-blur-md">
         <div className="py-2 text-center text-sm text-text-muted">
           <span className="max-[479px]:sr-only text-xs">{format(new Date(), "O")}</span>

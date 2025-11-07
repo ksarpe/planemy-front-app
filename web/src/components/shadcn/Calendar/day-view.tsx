@@ -184,7 +184,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
   return (
     <div
       data-slot="day-view"
-      className="flex flex-col flex-1 rounded-xl bg-bg shadow-[-6px_-6px_16px_rgba(0,0,0,0.1)] dark:shadow-[-6px_-6px_16px_rgba(0,0,0,0.4)] overflow-hidden">
+      className="flex flex-col flex-1 rounded-xl bg-bg shadow-[-6px_-6px_16px_rgba(0,0,0,0.1)] overflow-hidden">
       {showAllDaySection && (
         <div className="border-b border-bg-alt bg-bg-alt">
           <div className="grid grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]">

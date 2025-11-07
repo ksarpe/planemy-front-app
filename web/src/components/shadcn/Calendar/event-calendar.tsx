@@ -257,7 +257,7 @@ export function EventCalendar({
               <Button variant="default" size="icon" onClick={handlePrevious} aria-label="Previous">
                 <ChevronLeftIcon size={16} aria-hidden="true" />
               </Button>
-              <Button onClick={handleToday}>Today</Button>
+              <Button variant="default" size="icon" onClick={handleToday}>Today</Button>
               <Button variant="default" size="icon" onClick={handleNext} aria-label="Next">
                 <ChevronRightIcon size={16} aria-hidden="true" />
               </Button>

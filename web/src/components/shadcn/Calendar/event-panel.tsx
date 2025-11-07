@@ -239,13 +239,13 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                       }
                     }}
                     className="group flex flex-col gap-1">
-                    <Group className="flex w-full items-center rounded-2xl border border-text-muted-more bg-bg-alt hover:border-text-muted px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                    <Group className="flex w-full items-center rounded-2xl border border-bg-muted-light hover:border-text-muted-more focus-within:border-primary bg-bg-alt px-3 py-2 text-xs transition-colors">
                       <DateInput aria-label="Start Event Date Input" className="flex flex-1 text-text" unstyled />
                       <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                         <Calendar size={16} />
                       </AriaButton>
                     </Group>
-                    <AriaPopover className="rounded-2xl border border-text-muted-more bg-bg-alt p-2 shadow-lg">
+                    <AriaPopover className="rounded-2xl border border-bg-muted-light bg-bg-alt p-2 shadow-lg">
                       <Dialog className="outline-none">
                         <CalendarRAC />
                       </Dialog>
@@ -269,13 +269,13 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
                     }}
                     minValue={startDate ? parseDate(format(startDate, "yyyy-MM-dd")) : undefined}
                     className="group flex flex-col gap-1">
-                    <Group className="flex w-full items-center rounded-2xl border border-text-muted-more hover:border-text-muted bg-bg-alt px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                    <Group className="flex w-full items-center rounded-2xl border border-bg-muted-light hover:border-text-muted-more focus-within:border-primary bg-bg-alt px-3 py-2 text-xs transition-colors">
                       <DateInput aria-label="End Event Date Input" className="flex flex-1 text-text" unstyled />
                       <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                         <Calendar size={16} />
                       </AriaButton>
                     </Group>
-                    <AriaPopover className="rounded-2xl border border-text-muted-more bg-bg-alt p-2 shadow-lg">
+                    <AriaPopover className="rounded-2xl border border-bg-muted-light bg-bg-alt p-2 shadow-lg">
                       <Dialog className="outline-none">
                         <CalendarRAC />
                       </Dialog>
