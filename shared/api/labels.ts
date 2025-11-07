@@ -183,6 +183,26 @@ export const addLabelConnection = async (
   return data;
 };
 
+// Set or update label connection (ensures only one label per object)
+export const setLabelConnection = async (
+  connectionData: Pick<LabelConnection, "entity_id" | "entity_type" | "label_id">,
+): Promise<Partial<LabelConnection>> => {
+  // First, get all existing connections for this object
+  const existingConnections = await getLabelConnections();
+
+  // Delete each existing connection individually
+  if (existingConnections.items && existingConnections.items.length > 0) {
+    await Promise.all(
+      existingConnections.items
+        .filter((connection) => connection.entity_id == connectionData.entity_id)
+        .map((connection) => deleteLabelConnection(connection.id)),
+    );
+  }
+
+  // Then create the new connection
+  return addLabelConnection(connectionData);
+};
+
 export const deleteLabelConnection = async (connectionId: string): Promise<void> => {
   if (!connectionId) {
     throw new Error("Connection ID is required for deletion");
@@ -199,46 +219,47 @@ export const deleteLabelConnection = async (connectionId: string): Promise<void>
   }
 };
 
-export const deleteLabelConnectionByParams = async (
-  objectId: string,
-  objectType: string,
-  labelId: string,
-): Promise<void> => {
-  if (!objectId || !objectType || !labelId) {
-    throw new Error("Object ID, object type, and label ID are required");
-  }
+// COMMENTED OUT - These endpoints don't exist on the server
+// export const deleteLabelConnectionByParams = async (
+//   objectId: string,
+//   objectType: string,
+//   labelId: string,
+// ): Promise<void> => {
+//   if (!objectId || !objectType || !labelId) {
+//     throw new Error("Object ID, object type, and label ID are required");
+//   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/label-connections/by-params`, {
-    method: "DELETE",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      objectId,
-      objectType,
-      labelId,
-    }),
-  });
+//   const response = await fetch(`http://localhost:8080/api/v1/label-connections/by-params`, {
+//     method: "DELETE",
+//     credentials: "include",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       objectId,
+//       objectType,
+//       labelId,
+//     }),
+//   });
 
-  if (!response.ok) {
-    const errorBody = await response.json();
-    throw new APIError(`Deleting label connection failed`, response.status, errorBody);
-  }
-};
+//   if (!response.ok) {
+//     const errorBody = await response.json();
+//     throw new APIError(`Deleting label connection failed`, response.status, errorBody);
+//   }
+// };
 
-export const deleteAllLabelConnectionsForObject = async (objectId: string, objectType: string): Promise<void> => {
-  if (!objectId || !objectType) {
-    throw new Error("Object ID and object type are required");
-  }
+// export const deleteAllLabelConnectionsForObject = async (objectId: string, objectType: string): Promise<void> => {
+//   if (!objectId || !objectType) {
+//     throw new Error("Object ID and object type are required");
+//   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/label-connections/object/${objectId}/${objectType}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
+//   const response = await fetch(`http://localhost:8080/api/v1/label-connections/object/${objectId}/${objectType}`, {
+//     method: "DELETE",
+//     credentials: "include",
+//   });
 
-  if (!response.ok) {
-    const errorBody = await response.json();
-    throw new APIError(`Deleting all label connections for object failed`, response.status, errorBody);
-  }
-};
+//   if (!response.ok) {
+//     const errorBody = await response.json();
+//     throw new APIError(`Deleting all label connections for object failed`, response.status, errorBody);
+//   }
+// };

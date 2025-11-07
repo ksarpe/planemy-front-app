@@ -16,8 +16,10 @@ interface LabelContextType {
   isLoadingLabels: boolean;
   labelConnections: LabelConnectionsByType;
   isLoadingConnections: boolean;
-  // Helper function to get labels for specific object
+  // Helper function to get label for specific object (returns single label since max 1 per object)
   getLabelForObject: (objectType: string, objectId: string) => LabelInterface | undefined;
+  // Helper to check if object has a label connection
+  hasLabel: (objectType: string, objectId: string) => boolean;
 }
 
 export const LabelContext = createContext<LabelContextType | undefined>(undefined);
@@ -69,15 +71,24 @@ export function LabelProvider({ children }: PropsWithChildren) {
       (objectType: string, objectId: string): LabelInterface | undefined => {
         const connectionsForType = labelConnections[objectType];
         if (!connectionsForType) return undefined;
-        // Find the first labelId for this specific object
+        // Find the first labelId for this specific object (should only be one)
         const connection = connectionsForType.find((conn) => conn.objectId === objectId);
         if (!connection) return undefined;
 
         // Return the full label object
-        console.log(labels.find((label) => label.id === connection.labelId));
         return labels.find((label) => label.id === connection.labelId);
       },
     [labelConnections, labels],
+  );
+
+  const hasLabel = useMemo(
+    () =>
+      (objectType: string, objectId: string): boolean => {
+        const connectionsForType = labelConnections[objectType];
+        if (!connectionsForType) return false;
+        return connectionsForType.some((conn) => conn.objectId === objectId);
+      },
+    [labelConnections],
   );
 
   return (
@@ -88,6 +99,7 @@ export function LabelProvider({ children }: PropsWithChildren) {
         labelConnections,
         isLoadingConnections,
         getLabelForObject,
+        hasLabel,
       }}>
       {children}
     </LabelContext.Provider>

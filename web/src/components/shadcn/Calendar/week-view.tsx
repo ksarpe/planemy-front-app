@@ -30,6 +30,7 @@ interface WeekViewProps {
   events: CalendarEvent[];
   onEventSelect: (event: CalendarEvent) => void;
   onEventCreate: (startTime: Date) => void;
+  onEventDelete?: (eventId: string) => void;
 }
 
 interface PositionedEvent {
@@ -41,7 +42,7 @@ interface PositionedEvent {
   zIndex: number;
 }
 
-export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: WeekViewProps) {
+export function WeekView({ currentDate, events, onEventSelect, onEventCreate, onEventDelete }: WeekViewProps) {
   const days = useMemo(() => {
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
     const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
@@ -257,6 +258,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                       <EventItem
                         key={`spanning-${event.id}`}
                         onClick={(e) => handleEventClick(event, e)}
+                        onDelete={() => onEventDelete?.(event.id)}
                         event={event}
                         view="month"
                         isFirstDay={isFirstDay}
@@ -314,6 +316,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                     event={positionedEvent.event}
                     view="week"
                     onClick={(e) => handleEventClick(positionedEvent.event, e)}
+                    onDelete={() => onEventDelete?.(positionedEvent.event.id)}
                     showTime
                     height={positionedEvent.height}
                   />

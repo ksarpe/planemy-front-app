@@ -322,6 +322,7 @@ export function EventCalendar({
               events={events}
               onEventSelect={handleEventSelect}
               onEventCreate={handleEventCreate}
+              onEventDelete={handleEventDelete}
             />
           )}
           {view === "day" && (
@@ -330,6 +331,7 @@ export function EventCalendar({
               events={events}
               onEventSelect={handleEventSelect}
               onEventCreate={handleEventCreate}
+              onEventDelete={handleEventDelete}
             />
           )}
           {view === "agenda" && (

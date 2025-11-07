@@ -43,21 +43,44 @@ export default function MainContentGrid({
               {todayEvents.length > 0 ? (
                 todayEvents.map((event) => {
                   const eventLabel = getLabelForObject("event", event.id);
-                  const eventTime = format(new Date(event.starts_at), "HH:mm");
+                  const startTime = format(new Date(event.starts_at), "HH:mm");
+                  const endTime = event.ends_at ? format(new Date(event.ends_at), "HH:mm") : null;
+                  let duration = "";
+                  if (event.starts_at && event.ends_at) {
+                    const diffMs = new Date(event.ends_at).getTime() - new Date(event.starts_at).getTime();
+                    const diffMinutes = Math.round(diffMs / 60000);
+                    if (diffMinutes >= 60) {
+                      const hours = Math.floor(diffMinutes / 60);
+                      const minutes = diffMinutes % 60;
+                      duration = ` (${hours}h${minutes > 0 ? ` ${minutes}m` : ""})`;
+                    } else {
+                      duration = ` (${diffMinutes}m)`;
+                    }
+                  }
 
                   return (
                     <div
                       key={event.id}
                       className="p-4 rounded-lg bg-bg-alt/80 backdrop-blur-sm border border-border hover:border-primary/30 transition-all cursor-pointer group">
                       <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-16 text-center">
-                          <Clock className="w-4 h-4 mx-auto text-text-muted mb-1" />
-                          <span className="text-sm font-semibold text-text">{eventTime}</span>
+                        <div className="flex-shrink-0 flex items-center gap-2 text-center">
+                          <Clock className="w-4 h-4 text-text-muted" />
+                          <span
+                            className={`text-sm font-semibold text-text ${
+                              event.ends_at && new Date(event.ends_at) < new Date() ? "line-through opacity-60" : ""
+                            }`}>
+                            {startTime}
+                            {endTime && ` - ${endTime}`}
+                            <span className="text-xs text-text-muted">{duration}</span>
+                          </span>
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-medium text-text group-hover:text-primary transition-colors">
+                          <h4
+                            className={`font-medium text-text group-hover:text-primary transition-colors ${
+                              event.ends_at && new Date(event.ends_at) < new Date() ? "line-through opacity-60" : ""
+                            }`}>
                             {event.title}
-                          </h3>
+                          </h4>
                         </div>
                         {eventLabel && <Badge variant={eventLabel.color}>{eventLabel.label_name}</Badge>}
                       </div>

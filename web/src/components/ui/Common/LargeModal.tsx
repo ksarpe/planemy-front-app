@@ -71,7 +71,7 @@ export default function LargeModal({
       )}
 
       {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={handleOverlayClick}>
         <div
           className={`bg-bg-alt rounded-2xl shadow-2xl w-full ${maxWidth} ${height} overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300`}
           onClick={(e) => e.stopPropagation()}

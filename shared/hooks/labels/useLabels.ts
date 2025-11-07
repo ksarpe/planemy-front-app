@@ -2,13 +2,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   addLabel,
   addLabelConnection,
-  deleteAllLabelConnectionsForObject,
+  // deleteAllLabelConnectionsForObject,
   deleteLabel,
   deleteLabelConnection,
-  deleteLabelConnectionByParams,
+  // deleteLabelConnectionByParams,
   getLabel,
   getLabelConnections,
   getLabels,
+  setLabelConnection,
   updateLabel,
 } from "../../api/labels";
 import { queryClient } from "../../lib/queryClient";
@@ -91,6 +92,17 @@ export function useCreateLabelConnection() {
   });
 }
 
+// Set label connection (replaces existing label if any - ensures only one label per object)
+export function useSetLabelConnection() {
+  return useMutation({
+    mutationFn: (connectionData: Pick<LabelConnection, "entity_id" | "entity_type" | "label_id">) =>
+      setLabelConnection(connectionData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+    },
+  });
+}
+
 export function useDeleteLabelConnection() {
   return useMutation({
     mutationFn: (connectionId: string) => deleteLabelConnection(connectionId),
@@ -100,32 +112,33 @@ export function useDeleteLabelConnection() {
   });
 }
 
-export function useDeleteLabelConnectionByParams() {
-  return useMutation({
-    mutationFn: ({ objectId, objectType, labelId }: { objectId: string; objectType: string; labelId: string }) =>
-      deleteLabelConnectionByParams(objectId, objectType, labelId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
-    },
-  });
-}
+// COMMENTED OUT - These endpoints don't exist on the server
+// export function useDeleteLabelConnectionByParams() {
+//   return useMutation({
+//     mutationFn: ({ objectId, objectType, labelId }: { objectId: string; objectType: string; labelId: string }) =>
+//       deleteLabelConnectionByParams(objectId, objectType, labelId),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+//     },
+//   });
+// }
 
-export function useDeleteAllLabelConnectionsForObject() {
-  return useMutation({
-    mutationFn: ({ objectId, objectType }: { objectId: string; objectType: string }) =>
-      deleteAllLabelConnectionsForObject(objectId, objectType),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
-    },
-  });
-}
+// export function useDeleteAllLabelConnectionsForObject() {
+//   return useMutation({
+//     mutationFn: ({ objectId, objectType }: { objectId: string; objectType: string }) =>
+//       deleteAllLabelConnectionsForObject(objectId, objectType),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+//     },
+//   });
+// }
 
-export function useRemoveLabelFromObject() {
-  return useMutation({
-    mutationFn: ({ objectId, objectType, labelId }: { objectId: string; objectType: string; labelId: string }) =>
-      deleteLabelConnectionByParams(objectId, objectType, labelId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["label-connections"] });
-    },
-  });
-}
+// export function useRemoveLabelFromObject() {
+//   return useMutation({
+//     mutationFn: ({ objectId, objectType, labelId }: { objectId: string; objectType: string; labelId: string }) =>
+//       deleteLabelConnectionByParams(objectId, objectType, labelId),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["label-connections"] });
+//     },
+//   });
+// }

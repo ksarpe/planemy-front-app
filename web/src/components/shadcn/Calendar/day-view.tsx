@@ -25,6 +25,7 @@ interface DayViewProps {
   events: CalendarEvent[];
   onEventSelect: (event: CalendarEvent) => void;
   onEventCreate: (startTime: Date) => void;
+  onEventDelete?: (eventId: string) => void;
 }
 
 interface PositionedEvent {
@@ -36,7 +37,7 @@ interface PositionedEvent {
   zIndex: number;
 }
 
-export function DayView({ currentDate, events, onEventSelect, onEventCreate }: DayViewProps) {
+export function DayView({ currentDate, events, onEventSelect, onEventCreate, onEventDelete }: DayViewProps) {
   const hours = useMemo(() => {
     const dayStart = startOfDay(currentDate);
     return eachHourOfInterval({
@@ -204,6 +205,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                   <EventItem
                     key={`spanning-${event.id}`}
                     onClick={(e: React.MouseEvent) => handleEventClick(event, e)}
+                    onDelete={() => onEventDelete?.(event.id)}
                     event={event}
                     view="month"
                     isFirstDay={isFirstDay}
@@ -253,6 +255,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                   event={positionedEvent.event}
                   view="day"
                   onClick={(e: React.MouseEvent) => handleEventClick(positionedEvent.event, e)}
+                  onDelete={() => onEventDelete?.(positionedEvent.event.id)}
                   showTime
                   height={positionedEvent.height}
                 />

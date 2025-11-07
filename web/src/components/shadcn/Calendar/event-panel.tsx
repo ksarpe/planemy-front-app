@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/shadcn/switch";
 import { Textarea } from "@/components/ui/shadcn/textarea";
 import { useLabelContext } from "@shared/hooks/context/useLabelContext";
-import { useCreateLabelConnection } from "@shared/hooks/labels/useLabels";
+import { useSetLabelConnection } from "@shared/hooks/labels/useLabels";
 import { Calendar } from "lucide-react";
 import { toast } from "sonner";
 
@@ -41,7 +41,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
   const [location, setLocation] = useState("");
   const [color, setColor] = useState<EventColor>("cyan");
   const { labels, getLabelForObject } = useLabelContext();
-  const { mutate: createLabelConnection } = useCreateLabelConnection();
+  const { mutate: setLabelConnection } = useSetLabelConnection();
 
   // Helper function to format time for input
   const formatTimeForInput = (date: Date) => {
@@ -170,7 +170,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
       toast.error("Save the event before adding labels.", { position: "bottom-center" });
       return;
     }
-    createLabelConnection({ entity_id: event.id, entity_type: "event", label_id: labelId });
+    setLabelConnection({ entity_id: event.id, entity_type: "event", label_id: labelId });
   };
 
   const labelsToSelect = labels.map((label) => ({ label: label.label_name, value: label.id, color: label.color }));
