@@ -11,12 +11,14 @@ const buttonVariants = cva(
       variant: {
         default: "bg-bg text-text hover:bg-bg-muted-light", //DEFAULT
         primary: "bg-primary text-white hover:bg-primary-light",
+        primary_reverse: "bg-bg-alt border border-primary text-primary hover:bg-primary/10",
         success: "bg-success text-white hover:bg-green-600",
         delete: "bg-negative text-white hover:bg-red-800",
         ghost: "text-text hover:bg-bg",
+        link: "text-primary font-normal hover:text-primary-light",
       },
       size: {
-        default: "p-2 text-xs", //DEFAULT
+        default: "text-sm p-2", //DEFAULT
         sm: "h-8 text-xs",
         lg: "p-4",
         icon: "size-10",

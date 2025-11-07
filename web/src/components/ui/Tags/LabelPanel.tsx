@@ -110,6 +110,7 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
           {/* Name */}
           <Input
             label="Label Name"
+            placeholder="Enter label name"
             id="label-name"
             value={formData.label_name}
             onChange={(e) => setFormData({ ...formData, label_name: e.target.value })}

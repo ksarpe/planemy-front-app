@@ -39,7 +39,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
   const [endTime, setEndTime] = useState(`${DefaultEndHour}:00`);
   const [allDay, setAllDay] = useState(false);
   const [location, setLocation] = useState("");
-  const [color, setColor] = useState<EventColor>("blue");
+  const [color, setColor] = useState<EventColor>("cyan");
   const { labels, getLabelForObject } = useLabelContext();
   const { mutate: createLabelConnection } = useCreateLabelConnection();
 
@@ -76,7 +76,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
     setEndTime(addMinutesToTime(defaultStart, 15)); // Set end time to 15 minutes after start
     setAllDay(false);
     setLocation("");
-    setColor("blue");
+    setColor("cyan");
   }, []);
 
   useEffect(() => {

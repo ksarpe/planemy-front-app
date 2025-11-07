@@ -4,17 +4,29 @@ import { cn } from "@/lib/shadcn/utils";
 import { useId } from "react";
 
 interface InputProps extends React.ComponentProps<"input"> {
-  label: string;
+  label?: string;
+  placeholder: string;
 }
 
-function Input({ label, className, type, ...props }: InputProps) {
+function Input({ label, className, type, placeholder, ...props }: InputProps) {
   const id = useId();
   return (
-    <div className={cn("rounded-2xl py-1 px-2 border hover:border-text-muted-more border-bg-muted-light", className)}>
-      <label htmlFor={id} className="text-xs text-text-muted-more font-medium">
-        {label}
-      </label>
-      <input value={props.value} type={type} className={cn("text-text w-full outline-0")} {...props} />
+    <div className={className}>
+      {/* If label is specified */}
+      {label && (
+        <label htmlFor={id} className="">
+          <span className="font-semibold text-text-muted text-sm">{label}</span>
+        </label>
+      )}
+      <input
+        placeholder={placeholder}
+        value={props.value}
+        type={type}
+        className={cn(
+          "text-text text-sm p-4 w-full rounded-2xl outline-0 border border-bg-muted-light hover:border-text-muted-more focus:border-primary focus:bg-primary/10",
+        )}
+        {...props}
+      />
     </div>
   );
 }
