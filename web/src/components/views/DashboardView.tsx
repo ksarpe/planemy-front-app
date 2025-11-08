@@ -6,7 +6,7 @@ import { useEvents } from "@shared/hooks/events/useEvents";
 import { usePayments } from "@shared/hooks/payments/usePayments";
 import { useTaskLists } from "@shared/hooks/tasks/useTasks";
 import { addDays, differenceInDays, isAfter, isBefore, isSameDay } from "date-fns";
-import { Calendar, CheckCircle, CreditCard, TrendingUp } from "lucide-react";
+import { Calendar, CheckCircle, CreditCard, ShoppingCart } from "lucide-react";
 import { useMemo } from "react";
 
 export default function DashboardView() {
@@ -58,7 +58,7 @@ export default function DashboardView() {
     return paymentsData.items
       .filter((payment) => {
         const daysLeft = differenceInDays(new Date(payment.due_date), new Date());
-        return !payment.paid_at && daysLeft >= 0 && daysLeft <= 7;
+        return !payment.paid_at && daysLeft <= 7;
       })
       .map((payment) => {
         const daysLeft = differenceInDays(new Date(payment.due_date), new Date());
@@ -77,10 +77,9 @@ export default function DashboardView() {
 
   // Stats
   const stats = [
-    { label: "Zadania na dzisiaj", value: todayTasksCount.toString(), icon: CheckCircle, color: "text-success" },
     {
-      label: "Nadchodzące wydarzenia",
-      value: (eventsData?.total || 0).toString(),
+      label: "Nadchodzące wydarzenia (7 dni)",
+      value: (tomorrowEvents.length + (next7DaysEvents.length || 0)).toString(),
       icon: Calendar,
       color: "text-primary",
     },
@@ -90,6 +89,8 @@ export default function DashboardView() {
       icon: CreditCard,
       color: "text-negative",
     },
+    { label: "Twoje zadania", value: todayTasksCount.toString(), icon: CheckCircle, color: "text-success" },
+    { label: "Listy zakupów", value: (0).toString(), icon: ShoppingCart, color: "text-accent" },
   ];
 
   return (
@@ -112,28 +113,6 @@ export default function DashboardView() {
 
         {/* Urgent Payments */}
         <UrgentPayments upcomingPayments={upcomingPayments} />
-
-        {/* Quick Actions */}
-        <div className="p-5 rounded-xl bg-bg-alt border border-border shadow-md shadow-shadow">
-          <h3 className="font-semibold text-text mb-4">Szybkie akcje</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { label: "Dodaj zadanie", icon: CheckCircle, color: "primary" },
-              { label: "Nowe wydarzenie", icon: Calendar, color: "success" },
-              { label: "Dodaj płatność", icon: CreditCard, color: "warning" },
-              { label: "Zobacz statystyki", icon: TrendingUp, color: "primary" },
-            ].map((action, index) => (
-              <button
-                key={index}
-                className="p-4 rounded-lg bg-bg border border-border hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 group">
-                <action.icon
-                  className={`w-6 h-6 text-${action.color} mx-auto mb-2 group-hover:scale-110 transition-transform`}
-                />
-                <p className="text-sm text-text-muted group-hover:text-text transition-colors">{action.label}</p>
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );

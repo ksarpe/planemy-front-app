@@ -14,7 +14,7 @@ export default function StatisticCard({
       onClick={onClick}
       className={clsx("w-full text-center border border-bg-muted-light  shadow-md hover:scale-105 duration-200 sm:text-left px-2 rounded-2xl bg-bg-alt cursor-pointer  ", {
         // Zaznaczony
-        " text-text border-text-muted-more": isSelected,
+        " text-text border-primary": isSelected,
         // Niezaznaczony
         " text-text-muted-more   ": !isSelected,
       })}>

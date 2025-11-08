@@ -1,36 +1,56 @@
-import type { PaymentSectionProps } from "@shared/data/Payments/Components/PaymentComponentInterfaces";
-import PaymentItem from "./PaymentItem";
+import type { PaymentInterface } from "@shared/data/Payments/interfaces";
+import type { LucideIcon } from "lucide-react";
+import { PaymentRow } from "./PaymentRow";
 
-export const PaymentSection = ({
+interface PaymentSectionProps {
+  title: string;
+  icon: LucideIcon;
+  count: number;
+  total: number;
+  payments: PaymentInterface[];
+  bgColor: string;
+  borderColor: string;
+  textColor: string;
+  onMarkPaid: (payment: PaymentInterface) => void;
+  onMarkUnpaid: (payment: PaymentInterface) => void;
+  onDelete: (paymentId: string) => void;
+}
+
+export function PaymentSection({
   title,
+  icon: Icon,
+  count,
+  total,
   payments,
-  emptyMessage,
-  expandedPaymentId,
-  onToggleExpand,
+  bgColor,
+  borderColor,
   textColor,
-}: PaymentSectionProps) => {
-  if (payments.length === 0 && !emptyMessage) return null;
-
+  onMarkPaid,
+  onMarkUnpaid,
+}: PaymentSectionProps) {
   return (
-    <div className={`bg-bg rounded-2xl p-4 shadow-md border border-bg-alt`}>
-      <div className="flex items-center gap-2 mb-3">
-        <h3 className={`text-lg ${textColor} p-1 rounded-2xl shadow-sm`}>{title}</h3>
-      </div>
-
-      {payments.length === 0 ? (
-        <p className="text-sm text-text-light italic">{emptyMessage}</p>
-      ) : (
-        <div className="space-y-2">
-          {payments.map((payment) => (
-            <PaymentItem
-              key={payment.id}
-              payment={payment}
-              isExpanded={expandedPaymentId === payment.id}
-              onToggle={() => onToggleExpand?.(payment.id)}
-            />
-          ))}
+    <div>
+      <div className={`px-6 py-3 ${bgColor} border-b ${borderColor} shadow-md shadow-shadow`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Icon className={textColor} size={16} />
+            <h3 className={`text-sm font-semibold ${textColor}`}>
+              {title} ({count})
+            </h3>
+          </div>
+          <p className={`text-sm font-bold ${textColor}`}>${total.toFixed(2)}</p>
         </div>
-      )}
+      </div>
+      <div className="divide-y divide-bg-muted-light">
+        {payments.map((payment) => (
+          <PaymentRow
+            key={payment.id}
+            payment={payment}
+            onMarkPaid={onMarkPaid}
+            onMarkUnpaid={onMarkUnpaid}
+          />
+        ))}
+      </div>
     </div>
   );
-};
+}

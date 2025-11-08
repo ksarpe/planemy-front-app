@@ -67,7 +67,7 @@ export interface DeleteConfirmationModalProps {
 export interface InputModalInput {
   name: string;
   label: string;
-  type?: "text" | "password" | "email" | "number";
+  type?: "text" | "password" | "email" | "number" | "date";
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;

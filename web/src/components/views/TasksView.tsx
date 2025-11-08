@@ -80,7 +80,7 @@ function TasksViewContent() {
       <div>{clickedTask && <TaskDetails />}</div>
 
       {/* Main content */}
-      <div className="flex flex-col px-4 py-2 md:px-4 md:py-4 gap-4 h-full overflow-hidden">
+      <div className="flex flex-col px-4 py-2 md:px-4 md:py-4 h-full overflow-hidden">
         <div className="flex-shrink-0">
           {/* Header with Task Lists */}
           <TaskViewHeader onToggleLists={() => setShowListsPanel(!showListsPanel)} listsOpen={showListsPanel} />

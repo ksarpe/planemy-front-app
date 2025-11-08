@@ -100,7 +100,12 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
           <Button onClick={handleClose} variant="default" disabled={loading} size="lg">
             {t("common.cancel")}
           </Button>
-          <Button onClick={handleSubmit} variant="primary" disabled={!formData.label_name.trim() || loading} size="lg">
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            variant="primary"
+            disabled={!formData.label_name.trim() || loading}
+            size="lg">
             {label?.id ? t("labels.form.save") : t("labels.form.create")}
           </Button>
         </div>
@@ -140,10 +145,10 @@ export default function LabelPanel({ isOpen, onClose, label, onSubmit, onDelete,
           isOpen={showDeleteConfirm}
           onClose={() => setShowDeleteConfirm(false)}
           onConfirm={handleDelete}
-          title={t("labels.deleteConfirmation.title")}
-          message={t("labels.deleteConfirmation.message")}
+          title={"Delete label"}
+          message={`Are you sure you want to delete label`}
           itemName={label.label_name}
-          confirmButtonText={t("labels.deleteConfirmation.confirmButton")}
+          confirmButtonText={"Delete label"}
         />
       )}
     </Drawer>

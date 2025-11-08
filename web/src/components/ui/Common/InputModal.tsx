@@ -1,6 +1,7 @@
 import { InputModalProps } from "@shared/data/Common/interfaces";
 import { useEffect, useState } from "react";
 import { Button } from "../shadcn/button";
+import { Input } from "../shadcn/input";
 import BaseModal from "./BaseModal";
 
 /**
@@ -98,25 +99,38 @@ export default function InputModal({
       <form onSubmit={handleSubmit}>
         <div className="space-y-4">
           {inputs.map((input) => (
-            <div key={input.name}>
-              <label className="block text-sm font-medium text-text-muted mb-2">
-                {input.label}
-                {input.required && <span className="text-negative ml-1">*</span>}
-              </label>
-              <input
-                type={input.type || "text"}
-                value={values[input.name] || ""}
-                onChange={(e) => handleChange(input.name, e.target.value)}
-                className="w-full px-3 py-2 border border-bg-muted-light bg-bg-alt text-text rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                placeholder={input.placeholder}
-                disabled={isLoading}
-                autoFocus={input.autoFocus}
-              />
-              {input.helperText && <p className="text-xs text-text-muted mt-1">{input.helperText}</p>}
-            </div>
+            <Input
+              key={input.name}
+              type={input.type || "text"}
+              label={input.label}
+              placeholder={input.placeholder || ""}
+              value={values[input.name]}
+              onChange={(e) => handleChange(input.name, e.target.value)}
+              disabled={isLoading}
+              autoFocus={input.autoFocus}
+            />
           ))}
         </div>
       </form>
     </BaseModal>
   );
 }
+
+//   </label>
+//   <input
+//     type={input.type || "text"}
+//     value={values[input.name] || ""}
+//     onChange={(e) => handleChange(input.name, e.target.value)}
+//     className="w-full px-3 py-2 border border-bg-muted-light bg-bg-alt text-text rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+//     placeholder={input.placeholder}
+//     disabled={isLoading}
+//     autoFocus={input.autoFocus}
+//   />
+//   {input.helperText && <p className="text-xs text-text-muted mt-1">{input.helperText}</p>}
+// </div>
+//           ))}
+//         </div>
+//       </form>
+//     </BaseModal>
+//   );
+// }
