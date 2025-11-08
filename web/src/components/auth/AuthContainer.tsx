@@ -4,16 +4,13 @@ import { LoginForm } from "./LoginForm";
 import { ThemeToggle } from "./ThemeToggle";
 
 export const AuthContainer = () => {
-  console.log("Rendering AuthContainer");
-
   return (
     <div className="min-h-screen flex flex-col bg-bg-alt px-4 py-4 relative overflow-hidden">
-      {/* Interactive Background */}
       <InteractiveBackground />
 
       {/* Header with Logo and Controls */}
       <div className="flex items-center justify-between w-full relative z-10">
-        <div className="text-2xl font-medium text-text">🪐Planemy</div>
+        <h1 className="text-2xl font-medium text-text">🪐Planemy</h1>
         <div className="flex items-center gap-2">
           <LanguageSelector />
           <ThemeToggle />
@@ -26,9 +23,10 @@ export const AuthContainer = () => {
           <LoginForm />
         </div>
       </div>
+
       {/* Footer */}
       <div>
-        <p className="text-xs text-gray-600 text-center">© 2024 Planemy. All rights reserved.</p>
+        <p className="text-xs text-gray-600 text-center">© 2024 Planemy. All rights reserved. v0.2.0</p>
       </div>
     </div>
   );

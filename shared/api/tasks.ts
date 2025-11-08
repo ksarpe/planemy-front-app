@@ -12,7 +12,6 @@ export const getTasks = async (task_list_id: string): Promise<TaskInterface[]> =
     throw new APIError(`Getting tasks failed`, response.status, errorBody);
   }
   const data = await response.json();
-  console.log("getTasks response data:", data, "for", task_list_id);
 
   // If backend returns { items: [...] } format, extract the items array
   if (data && typeof data === "object" && "items" in data && Array.isArray(data.items)) {
@@ -128,7 +127,6 @@ export const addTaskList = async (listData: string): Promise<Partial<TaskListInt
 
   if (!response.ok) {
     const errorBody = await response.json();
-    console.log("errorBody", errorBody);
     throw new APIError(`Adding task list failed`, response.status, errorBody);
   }
   const data = await response.json();

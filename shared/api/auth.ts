@@ -67,6 +67,19 @@ export const validateUser = async (): Promise<User> => {
   return data;
 };
 
+export const refreshToken = async (): Promise<void> => {
+  const response = await fetch("http://localhost:8080/api/v1/auth/refresh", {
+    method: "POST",
+    credentials: "include", // Important: sends refresh token cookie
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new APIError(`Token refresh failed`, response.status, errorBody);
+  }
+  // Response should set new access token and refresh token cookies
+};
+
 export const changePassword = async (currentPassword: string, newPassword: string): Promise<void> => {
   const response = await fetch("http://localhost:8080/api/v1/auth/change-password", {
     method: "POST",

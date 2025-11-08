@@ -14,7 +14,7 @@ import { AnimatedTagline } from "./AnimatedTagline";
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoginMode] = useState(true);
+  const [isLoginMode, setIsLoginMode] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
   const { t } = useT();
 
@@ -136,7 +136,7 @@ export const LoginForm = () => {
 
       <div className="mt-4 text-center flex items-center justify-center">
         <p className="text-sm text-gray-600 ">{isLoginMode ? t("auth.noAccount") : t("auth.hasAccount")}</p>
-        <Button onClick={() => showError("Coming soon")} variant="link" className="ml-1">
+        <Button onClick={() => isLoginMode ? setIsLoginMode(false) : setIsLoginMode(true)} variant="link" className="ml-1">
           {isLoginMode ? t("auth.register") : t("auth.login")}
         </Button>
       </div>

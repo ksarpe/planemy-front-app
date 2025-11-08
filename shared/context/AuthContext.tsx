@@ -1,12 +1,12 @@
-import { createContext } from "react";
-import { useUserInfoQuery } from "@shared/hooks/auth/useAuth";
 import type { AuthContextType } from "@shared/data/Auth";
+import { useValidate } from "@shared/hooks/auth/useAuth";
+import { createContext } from "react";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export { AuthContext };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data, isLoading, refetch } = useUserInfoQuery();
+  const { data, isLoading, refetch } = useValidate();
 
   const value = {
     user: data || null,

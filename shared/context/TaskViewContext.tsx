@@ -34,7 +34,6 @@ export function TaskViewProvider({ children }: PropsWithChildren) {
 
   // Ensure tasks is always an array
   const tasks = useMemo(() => {
-    console.log(tasksData);
     return Array.isArray(tasksData) ? tasksData : [];
   }, [tasksData]);
 

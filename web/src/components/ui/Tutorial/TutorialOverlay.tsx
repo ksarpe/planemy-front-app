@@ -9,8 +9,6 @@ export function TutorialOverlay() {
 
   const currentStepData = steps[currentStep];
 
-  console.log("TutorialOverlay render - isActive:", isActive, "steps:", steps.length, "currentStep:", currentStep);
-
   useEffect(() => {
     if (!isActive || !currentStepData) {
       setTargetRect(null);
@@ -19,13 +17,10 @@ export function TutorialOverlay() {
 
     const updateTargetPosition = () => {
       const element = document.querySelector(currentStepData.target);
-      console.log("Tutorial - Looking for:", currentStepData.target, "Found:", element);
       if (element) {
         const rect = element.getBoundingClientRect();
-        console.log("Tutorial - Element rect:", rect);
         setTargetRect(rect);
       } else {
-        console.warn("Tutorial - Element not found:", currentStepData.target);
         setTargetRect(null);
       }
     };
@@ -43,7 +38,6 @@ export function TutorialOverlay() {
   }, [isActive, currentStep, currentStepData]);
 
   if (!isActive || !currentStepData) {
-    console.log("Tutorial - Not showing overlay:", { isActive, hasStepData: !!currentStepData });
     return null;
   }
 
