@@ -35,8 +35,7 @@ export function useCreateTask() {
 
 export function useUpdateTask() {
   return useMutation({
-    mutationFn: ({ id, data, listId }: { id: string; data: Partial<TaskInterface>; listId: string }) =>
-      updateTask(id, data),
+    mutationFn: ({ id, data }: { id: string; data: Partial<TaskInterface>; listId: string }) => updateTask(id, data),
     onSuccess: (_, variables) => {
       const { listId } = variables;
       queryClient.invalidateQueries({

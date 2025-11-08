@@ -24,7 +24,7 @@ export function PaymentRow({ payment, onMarkPaid, onMarkUnpaid }: PaymentRowProp
 
   return (
     <div
-      className="group flex items-center justify-between p-4 hover:bg-bg-muted/5 transition-colors"
+      className="group flex items-center justify-between py-2 hover:bg-bg-muted/5 transition-colors"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}>
       {/* Left: Title and Date */}
@@ -41,8 +41,8 @@ export function PaymentRow({ payment, onMarkPaid, onMarkUnpaid }: PaymentRowProp
             initial={{ opacity: 0, marginRight: 0, x: -8 }}
             animate={{
               opacity: isHovered ? 1 : 0,
-              marginRight: isHovered ? 32 : 0,
-              x: isHovered ? 0 : -8,
+              marginRight: isHovered ? 36 : 0,
+              x: isHovered ? 12 : -8,
             }}
             whileHover={{ scale: 1.1 }}
             transition={{

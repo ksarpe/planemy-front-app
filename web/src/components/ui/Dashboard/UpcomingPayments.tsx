@@ -16,10 +16,10 @@ export default function UpcomingPayments() {
       return [];
     }
     return payments
-      .filter((payment) => !payment.isPaid)
+      .filter((payment) => !payment.paid_at)
       .map((payment) => ({
         ...payment,
-        daysLeft: differenceInDays(new Date(payment.nextPaymentDate), new Date()),
+        daysLeft: differenceInDays(new Date(payment.due_date), new Date()),
       }))
       .filter((payment) => payment.daysLeft >= 0)
       .sort((a, b) => a.daysLeft - b.daysLeft);
@@ -51,20 +51,20 @@ export default function UpcomingPayments() {
                 key={payment.id}
                 className="flex items-center justify-between p-3 border border-gray-200  rounded-2xl">
                 <div>
-                  <p className="text-sm font-medium text-text ">{payment.name}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm font-medium text-text ">{payment.title}</p>
+                  {/* <p className="text-xs text-gray-500">
                     {payment.daysLeft === 0
                       ? t("today")
                       : payment.daysLeft === 1
                       ? t("tomorrow")
                       : t("dashboard.inDays", { count: payment.daysLeft })}{" "}
                     • {payment.category}
-                  </p>
+                  </p> */}
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-text ">
+                  {/* <p className="text-sm font-bold text-text ">
                     {payment.amount.toFixed(2)} {payment.currency}
-                  </p>
+                  </p> */}
                   <p
                     className={`text-xs ${
                       payment.daysLeft <= 3

@@ -188,7 +188,7 @@ export default function Payments() {
             </div>
           </div>
         ) : activeTab === "deadlines" ? (
-          <div className="bg-bg-alt rounded-2xl overflow-hidden">
+          <div className="bg-bg-alt rounded-2xl flex flex-col gap-4">
             {/* Overdue Payments */}
             {stats.overduePayments.length > 0 && (
               <PaymentSection
@@ -258,13 +258,18 @@ export default function Payments() {
             )}
           </div>
         ) : (
-          <div className="bg-bg-alt rounded-2xl overflow-hidden">
+          <div className="bg-bg-alt rounded-2xl">
             {/* All Payments List */}
-            <div className="divide-y divide-bg-muted-light">
+            <ul className="flex flex-col gap-3">
               {payments.map((payment) => (
-                <PaymentListItem key={payment.id} payment={payment} onClick={setSelectedPayment} />
+                <PaymentListItem
+                  key={payment.id}
+                  payment={payment}
+                  onClick={setSelectedPayment}
+                  isSelected={selectedPayment?.id === payment.id}
+                />
               ))}
-            </div>
+            </ul>
           </div>
         )}
 

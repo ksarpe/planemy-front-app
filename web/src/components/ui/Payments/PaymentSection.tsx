@@ -29,8 +29,8 @@ export function PaymentSection({
   onMarkUnpaid,
 }: PaymentSectionProps) {
   return (
-    <div>
-      <div className={`px-6 py-3 ${bgColor} border-b ${borderColor} shadow-md shadow-shadow`}>
+    <div className="border-x border-bg-muted-light rounded-2xl shadow-md shadow-shadow">
+      <div className={`px-6 py-3 ${bgColor} border-b ${borderColor} rounded-2xl`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Icon className={textColor} size={16} />

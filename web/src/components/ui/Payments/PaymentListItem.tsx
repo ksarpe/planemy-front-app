@@ -1,98 +1,86 @@
 import type { PaymentInterface } from "@shared/data/Payments/interfaces";
 import { format, isBefore, startOfToday } from "date-fns";
-import { motion } from "framer-motion";
-import { AlertCircle, Calendar, CheckCircle2, ChevronRight } from "lucide-react";
+import { AlertCircle, Calendar, CheckCircle2 } from "lucide-react";
 
 interface PaymentListItemProps {
   payment: PaymentInterface;
   onClick: (payment: PaymentInterface) => void;
+  isSelected?: boolean;
 }
 
-export function PaymentListItem({ payment, onClick }: PaymentListItemProps) {
+export function PaymentListItem({ payment, onClick, isSelected = false }: PaymentListItemProps) {
   const isPaid = !!payment.paid_at;
   const isOverdue = !isPaid && isBefore(new Date(payment.due_date), startOfToday());
   const dueDate = new Date(payment.due_date);
 
   return (
-    <motion.div
-      onClick={() => onClick(payment)}
-      className="group relative flex items-center justify-between p-4 hover:bg-bg-muted/5 transition-colors cursor-pointer"
-      whileHover={{ x: 4 }}
-      transition={{ duration: 0.2 }}>
-      {/* Status Indicator - Left border */}
-      <div
-        className={`absolute left-0 top-0 bottom-0 w-1 rounded-r-full transition-all ${
-          isPaid ? "bg-success" : isOverdue ? "bg-negative" : "bg-primary"
-        }`}
-      />
-
-      {/* Content */}
-      <div className="flex items-center gap-4 flex-1 ml-3">
-        {/* Status Icon */}
-        <div
-          className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all ${
-            isPaid
-              ? "bg-success/10 text-success"
-              : isOverdue
-              ? "bg-negative/10 text-negative"
-              : "bg-primary/10 text-primary"
-          }`}>
-          {isPaid ? <CheckCircle2 size={20} /> : isOverdue ? <AlertCircle size={20} /> : <Calendar size={20} />}
-        </div>
-
-        {/* Details */}
-        <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-text mb-1 truncate group-hover:text-primary transition-colors">
-            {payment.title}
-          </h4>
-          <div className="flex items-center gap-3 text-sm text-text-muted">
-            <div className="flex items-center gap-1.5">
-              <Calendar size={14} />
-              <span>{format(dueDate, "MMM dd, yyyy")}</span>
-            </div>
-            {payment.recurrence_rule ? (
-              <div className="flex items-center gap-1.5">
-                <span className="text-text-muted-more">•</span>
-                <span>Recurring</span>
-              </div>
-            ) : <div className="flex items-center gap-1.5">
-                <span className="text-text-muted-more">•</span>
-                <span>Jednorazowe</span>
-              </div>}
-            {isPaid && payment.paid_at && (
-              <>
-                <span className="text-text-muted-more">•</span>
-                <div className="flex items-center gap-1.5 text-success">
-                  <CheckCircle2 size={14} />
-                  <span>Paid {format(new Date(payment.paid_at), "MMM dd")}</span>
-                </div>
-              </>
-            )}
-            {isOverdue && (
-              <>
-                <span className="text-text-muted-more">•</span>
-                <span className="text-negative font-medium">Overdue</span>
-              </>
-            )}
+    <li
+      className={`rounded-2xl px-4 py-2 text-text cursor-pointer shadow-md border border-bg-muted-light hover:scale-101 duration-200
+      ${isSelected && "border-primary"}`}
+      onClick={() => onClick(payment)}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3 flex-1">
+          {/* Status Icon */}
+          <div
+            className={`flex items-center justify-center w-10 h-10 rounded-xl flex-shrink-0 transition-all ${
+              isPaid ? " text-success" : isOverdue ? " text-negative" : " text-primary"
+            }`}>
+            {isPaid ? <CheckCircle2 size={20} /> : isOverdue ? <AlertCircle size={20} /> : <Calendar size={20} />}
           </div>
-        </div>
 
-        {/* Amount */}
-        <div className="flex items-center gap-3">
-          <div className="text-right">
-            <div
-              className={`text-2xl font-bold transition-colors ${
-                isPaid ? "text-success" : isOverdue ? "text-negative" : "text-primary"
+          {/* Payment content */}
+          <div className="flex-1 min-w-0">
+            <h3
+              className={`font-medium text-sm leading-5 transition-colors duration-200 ${
+                isPaid ? "line-through text-text-muted" : ""
               }`}>
-              ${payment.amount.toFixed(2)}
+              {payment.title}
+            </h3>
+
+            {/* Due date and recurrence */}
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
+              <div
+                className={`flex items-center gap-1 text-xs transition-colors duration-200 ${
+                  isOverdue
+                    ? "text-negative"
+                    : isPaid
+                    ? "text-text-muted"
+                    : isSelected
+                    ? "text-primary"
+                    : "text-text-muted"
+                }`}>
+                <Calendar size={12} />
+                <span>{format(dueDate, "MMM dd, yyyy")}</span>
+                {isOverdue && <AlertCircle size={12} className="text-negative" />}
+              </div>
+
+              {/* Paid date */}
+              {isPaid && payment.paid_at && (
+                <>
+                  <span className="text-text-muted-more text-xs">•</span>
+                  <div className="flex items-center gap-1 text-xs text-success">
+                    <CheckCircle2 size={12} />
+                    <span>Paid {format(new Date(payment.paid_at), "MMM dd")}</span>
+                  </div>
+                </>
+              )}
             </div>
-            {isPaid && <div className="text-xs text-success mt-0.5 font-medium">Paid</div>}
+          </div>
+        </div>
+
+        {/* Amount and status indicators */}
+        <div className="flex flex-col items-end gap-1 ml-3">
+          <div
+            className={`text-xl font-bold transition-colors ${
+              isPaid ? "text-success" : isOverdue ? "text-negative" : "text-primary"
+            }`}>
+            ${payment.amount.toFixed(2)}
           </div>
 
-          {/* Chevron */}
-          <ChevronRight size={20} className="text-text-muted-more group-hover:text-primary transition-colors" />
+          {isPaid && <span className="text-xs text-success font-medium">Paid</span>}
+          {isOverdue && <span className="text-xs text-negative font-medium">Overdue</span>}
         </div>
       </div>
-    </motion.div>
+    </li>
   );
 }

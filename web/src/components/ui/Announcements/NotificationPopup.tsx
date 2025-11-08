@@ -1,8 +1,8 @@
-import { Badge } from "@/components/ui/Common/Badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/shadcn/popover";
 import { formatDistanceToNow } from "date-fns";
 import { Calendar, CheckSquare, Share2, X } from "lucide-react";
 import { useState } from "react";
+import { Button } from "../shadcn/button";
 
 type NotificationType = "task" | "event" | "share";
 
@@ -32,30 +32,30 @@ const initialNotifications: Notification[] = [
     timestamp: new Date(Date.now() - 45 * 60 * 1000), // 45 minutes ago
     unread: true,
   },
-  {
-    id: 3,
-    type: "share",
-    title: "Task List Shared With You",
-    description: "John shared 'Project Tasks' list",
-    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-    unread: false,
-  },
-  {
-    id: 4,
-    type: "task",
-    title: "Task Completed",
-    description: "Review documentation marked as done",
-    timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-    unread: false,
-  },
-  {
-    id: 5,
-    type: "event",
-    title: "Event Reminder",
-    description: "Doctor's appointment in 2 days",
-    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-    unread: false,
-  },
+  // {
+  //   id: 3,
+  //   type: "share",
+  //   title: "Task List Shared With You",
+  //   description: "John shared 'Project Tasks' list",
+  //   timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+  //   unread: false,
+  // },
+  // {
+  //   id: 4,
+  //   type: "task",
+  //   title: "Task Completed",
+  //   description: "Review documentation marked as done",
+  //   timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
+  //   unread: false,
+  // },
+  // {
+  //   id: 5,
+  //   type: "event",
+  //   title: "Event Reminder",
+  //   description: "Doctor's appointment in 2 days",
+  //   timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+  //   unread: false,
+  // },
 ];
 
 function NotificationIcon({ type }: { type: NotificationType }) {
@@ -64,19 +64,19 @@ function NotificationIcon({ type }: { type: NotificationType }) {
   switch (type) {
     case "task":
       return (
-        <div className="rounded-2xl bg-primary/10 p-2">
+        <div className="rounded-2xl px-2">
           <CheckSquare className={`${iconClass} text-primary`} />
         </div>
       );
     case "event":
       return (
-        <div className="rounded-2xl bg-accent/10 p-2">
+        <div className="rounded-2xl px-2">
           <Calendar className={`${iconClass} text-accent`} />
         </div>
       );
     case "share":
       return (
-        <div className="rounded-2xl bg-success/10 p-2">
+        <div className="rounded-2xl px-2">
           <Share2 className={`${iconClass} text-success`} />
         </div>
       );
@@ -127,8 +127,8 @@ export default function NotificationPopup({ children, open, onOpenChange }: Noti
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
-        className="w-80 p-0"
-        align="start"
+        className="w-80 p-0 bg-bg-alt shadow-xl border border-bg-muted-light shadow-shadow"
+        align="end"
         side="right"
         sideOffset={8}
         onMouseLeave={() => onOpenChange?.(false)}>
@@ -136,25 +136,22 @@ export default function NotificationPopup({ children, open, onOpenChange }: Noti
         <div className="flex items-center justify-between px-4 py-3 border-b border-border">
           <div className="flex items-center gap-2">
             <h3 className="text-sm font-semibold text-text">Notifications</h3>
-            {unreadCount > 0 && <Badge className="min-w-5 px-1.5 py-0.5 text-xs">{unreadCount}</Badge>}
+            {unreadCount > 0 && <span className="text-xs font-bold text-primary">({unreadCount})</span>}
           </div>
           <div className="flex items-center gap-2">
             {unreadCount > 0 && (
-              <button className="text-xs font-medium text-primary hover:underline" onClick={handleMarkAllAsRead}>
+              <Button variant="link" size="sm" onClick={handleMarkAllAsRead}>
                 Mark all as read
-              </button>
+              </Button>
             )}
-            <button
-              className="rounded-2xl p-1 hover:bg-bg-hover transition-colors"
-              onClick={() => onOpenChange?.(false)}
-              aria-label="Close notifications">
+            <Button variant="ghost" onClick={() => onOpenChange?.(false)} aria-label="Close notifications">
               <X className="w-4 h-4 text-text-muted" />
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Notification List */}
-        <div className="max-h-[480px] overflow-y-auto">
+        <div className="">
           {notifications.length === 0 ? (
             <div className="px-4 py-8 text-center text-sm text-text-muted">No notifications</div>
           ) : (

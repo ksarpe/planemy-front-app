@@ -6,7 +6,6 @@ import { AuthProvider } from "./AuthContext";
 import { LabelProvider } from "./LabelContext";
 import { PaymentsProvider } from "./PaymentsContext";
 import { PreferencesProvider } from "./PreferencesContext";
-import { ShoppingProvider } from "./ShoppingContext";
 
 export default function Providers({ children }: PropsWithChildren) {
   return (
@@ -14,9 +13,7 @@ export default function Providers({ children }: PropsWithChildren) {
       <AuthProvider>
         <PreferencesProvider>
           <LabelProvider>
-            <ShoppingProvider>
               <PaymentsProvider>{children}</PaymentsProvider>
-            </ShoppingProvider>
           </LabelProvider>
         </PreferencesProvider>
       </AuthProvider>

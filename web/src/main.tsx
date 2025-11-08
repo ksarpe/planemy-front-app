@@ -13,13 +13,9 @@ const BuddyView = lazy(() => import("@/components/views/BuddyView"));
 const CalendarView = lazy(() => import("@/components/views/CalendarView"));
 const DashboardView = lazy(() => import("@/components/views/DashboardView"));
 const NotFoundView = lazy(() => import("@/components/views/NotFoundView"));
-const ProfileView = lazy(() => import("@/components/views/ProfileView"));
-const ShoppingView = lazy(() => import("@/components/views/ShoppingView"));
 const TasksView = lazy(() => import("@/components/views/TasksView"));
 const PaymentsView = lazy(() => import("@/components/views/PaymentsView"));
 const LabelsView = lazy(() => import("@/components/views/LabelsView"));
-const NotificationsView = lazy(() => import("@/components/views/NotificationsView"));
-const FeedbackView = lazy(() => import("@/components/views/FeedbackView"));
 const DevelopmentView = lazy(() => import("@/components/views/DevelopmentView"));
 
 // providers/route // no lazy load as it is important to have fast
@@ -42,13 +38,9 @@ const router = createBrowserRouter([
       { path: "/buddy", element: <BuddyView /> },
       { path: "/calendar", element: <CalendarView /> },
       { path: "/tasks", element: <TasksView /> },
-      { path: "/profile", element: <ProfileView /> },
-      { path: "/shopping", element: <ShoppingView /> },
       { path: "/payments", element: <PaymentsView /> },
       { path: "/development", element: <DevelopmentView /> },
       { path: "/labels", element: <LabelsView /> },
-      { path: "/notifications", element: <NotificationsView /> },
-      { path: "/feedback", element: <FeedbackView /> },
       { path: "*", element: <NotFoundView /> },
     ],
   },

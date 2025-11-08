@@ -1,4 +1,4 @@
-import { MutationCache, QueryClient } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 
 // Konfiguracja globalnych ustawień dla React Query
 export const queryClient = new QueryClient({
