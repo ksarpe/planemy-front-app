@@ -22,12 +22,13 @@ import type {
 } from "../../data/Utils/interfaces";
 
 // Labels hooks
-export function useLabels() {
+export function useLabels(options?: { enabled?: boolean }) {
   return useQuery<LabelResponse, unknown, LabelResponse, string[]>({
     queryKey: ["labels"],
     queryFn: getLabels,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
+    enabled: options?.enabled ?? true, // Domyślnie włączone, można wyłączyć przez enabled: false
   });
 }
 
@@ -73,12 +74,13 @@ export function useDeleteLabel() {
 }
 
 // Label Connections hooks
-export function useLabelConnections(objectId?: string, objectType?: string) {
+export function useLabelConnections(objectId?: string, objectType?: string, options?: { enabled?: boolean }) {
   return useQuery<LabelConnectionResponse, unknown, LabelConnectionResponse, (string | undefined)[]>({
     queryKey: ["label-connections", objectId, objectType],
     queryFn: () => getLabelConnections(objectId, objectType),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
+    enabled: options?.enabled ?? true,
   });
 }
 

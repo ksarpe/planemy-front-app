@@ -4,7 +4,6 @@ import { PropsWithChildren } from "react";
 import { queryClient } from "../lib/queryClient";
 import { AuthProvider } from "./AuthContext";
 import { LabelProvider } from "./LabelContext";
-import { PaymentsProvider } from "./PaymentsContext";
 import { PreferencesProvider } from "./PreferencesContext";
 
 export default function Providers({ children }: PropsWithChildren) {
@@ -12,9 +11,7 @@ export default function Providers({ children }: PropsWithChildren) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <PreferencesProvider>
-          <LabelProvider>
-              <PaymentsProvider>{children}</PaymentsProvider>
-          </LabelProvider>
+          <LabelProvider>{children}</LabelProvider>
         </PreferencesProvider>
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />

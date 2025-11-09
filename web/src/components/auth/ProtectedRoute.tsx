@@ -8,7 +8,11 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, loading } = useAuthContext();
 
   if (loading) {
-    return <Spinner />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-bg">
+        <Spinner />
+      </div>
+    );
   }
 
   if (!user) {

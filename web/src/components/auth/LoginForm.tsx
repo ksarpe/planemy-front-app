@@ -136,7 +136,10 @@ export const LoginForm = () => {
 
       <div className="mt-4 text-center flex items-center justify-center">
         <p className="text-sm text-gray-600 ">{isLoginMode ? t("auth.noAccount") : t("auth.hasAccount")}</p>
-        <Button onClick={() => isLoginMode ? setIsLoginMode(false) : setIsLoginMode(true)} variant="link" className="ml-1">
+        <Button
+          onClick={() => (isLoginMode ? setIsLoginMode(false) : setIsLoginMode(true))}
+          variant="link"
+          className="ml-1">
           {isLoginMode ? t("auth.register") : t("auth.login")}
         </Button>
       </div>

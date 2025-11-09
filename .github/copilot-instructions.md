@@ -55,7 +55,7 @@ Both platforms use path aliases to import from `shared/`:
 
 ### Context Layer (`shared/context/`)
 
-- Global state providers: `AuthContext`, `PreferencesContext`, `ShoppingContext`, `PaymentsContext`, `TaskViewContext`
+- Global state providers: `AuthContext`, `PreferencesContext`, `ShoppingContext`, `TaskViewContext`
 - All wrapped in `AllProviders.tsx` component
 - Consumed via custom hooks in `shared/hooks/context/`
 

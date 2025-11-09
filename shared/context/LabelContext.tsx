@@ -1,5 +1,6 @@
 import { createContext, useMemo, type PropsWithChildren } from "react";
 import type { LabelInterface } from "../data/Utils/interfaces";
+import { useAuthContext } from "../hooks/context/useAuthContext";
 import { useLabelConnections, useLabels } from "../hooks/labels/useLabels";
 
 // Simplified connection structure for efficient lookups
@@ -25,9 +26,13 @@ interface LabelContextType {
 export const LabelContext = createContext<LabelContextType | undefined>(undefined);
 
 export function LabelProvider({ children }: PropsWithChildren) {
-  const { data: labelsData, isLoading: isLoadingLabels } = useLabels();
-  // Fetch ALL label connections (no filters)
-  const { data: connectionsData, isLoading: isLoadingConnections } = useLabelConnections();
+  // Sprawdź czy użytkownik jest zalogowany - jeśli nie, nie wykonuj queries
+  const { user } = useAuthContext();
+
+  // Wykonaj queries TYLKO gdy user jest zalogowany (enabled: !!user)
+  const { data: labelsData, isLoading: isLoadingLabels } = useLabels({ enabled: !!user });
+  // Fetch ALL label connections (no filters) - tylko gdy user zalogowany
+  const { data: connectionsData, isLoading: isLoadingConnections } = useLabelConnections(undefined, undefined, { enabled: !!user });
 
   // Get ALL Labels (NO PAGINATION)
   const labels = useMemo(() => {
