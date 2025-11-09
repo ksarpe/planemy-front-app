@@ -1,20 +1,17 @@
 /**
  * API Configuration
  *
- * This file manages the base API URL based on the environment.
- * In development, it uses import.meta.env.VITE_API_URL or falls back to localhost.
- * In production, it should use the Railway URL.
+ * Używamy ścieżki względnej. To pozwala proxy (w Vite lokalnie,
+ * w Vercel/Railway w produkcji) na poprawne przekierowanie zapytań.
  */
-
-// Get API URL from environment variable, fallback to localhost for development
-export const API_BASE_URL =
-  typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL
-    ? import.meta.env.VITE_API_URL
-    : "http://localhost:8080";
 
 export const API_VERSION = "v1";
 
-// Full API path
+// API_BASE_URL powinno być pustym stringiem, aby ścieżka była względna
+// od roota domeny (np. /api/v1/...)
+export const API_BASE_URL = "";
+
+// export const API_URL będzie teraz "/api/v1"
 export const API_URL = `${API_BASE_URL}/api/${API_VERSION}`;
 
 // Helper function to build API endpoints
