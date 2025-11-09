@@ -32,9 +32,12 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
 
   return (
     <>
+      {/* Overlay - niższy z-index niż sidebar */}
       {isOpen && <div className="fixed inset-0 bg-black/40 md:hidden z-40" onClick={onClose} aria-hidden="true" />}
+
+      {/* Sidebar - wyższy z-index niż overlay */}
       <aside
-        className={`p-4 fixed inset-y-0 left-0 z-30 ${widthClasses} h-full transform transition-all duration-300 bg-bg-alt md:static flex flex-col justify-between p-2 ${
+        className={`p-4 fixed inset-y-0 left-0 z-50 ${widthClasses} h-full transform transition-all duration-300 bg-bg-alt md:static flex flex-col justify-between p-2 ${
           isOpen ? " translate-x-0" : " -translate-x-full md:translate-x-0"
         }`}>
         {/* LOGO */}
