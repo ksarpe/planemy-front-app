@@ -1,8 +1,9 @@
+import { buildApiUrl } from "../config/api";
 import { APIError } from "../data/Auth";
 import { type Feedback, type CreateFeedbackData } from "../data/User/interfaces";
 
 export const getFeedbacks = async (): Promise<Feedback[]> => {
-  const response = await fetch("http://localhost:8080/api/v1/feedback", {
+  const response = await fetch(buildApiUrl("feedback"), {
     method: "GET",
     credentials: "include",
   });
@@ -20,7 +21,7 @@ export const getFeedback = async (feedbackId: string): Promise<Feedback | undefi
     throw new Error("Feedback ID is required");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/feedback/${feedbackId}`, {
+  const response = await fetch(buildApiUrl(`feedback/${feedbackId}`), {
     method: "GET",
     credentials: "include",
   });
@@ -34,7 +35,7 @@ export const getFeedback = async (feedbackId: string): Promise<Feedback | undefi
 };
 
 export const getUserFeedbacks = async (): Promise<Feedback[]> => {
-  const response = await fetch("http://localhost:8080/api/v1/feedback/user", {
+  const response = await fetch(buildApiUrl("feedback/user"), {
     method: "GET",
     credentials: "include",
   });
@@ -48,7 +49,7 @@ export const getUserFeedbacks = async (): Promise<Feedback[]> => {
 };
 
 export const getPublicFeedbacks = async (): Promise<Feedback[]> => {
-  const response = await fetch("http://localhost:8080/api/v1/feedback/public", {
+  const response = await fetch(buildApiUrl("feedback/public"), {
     method: "GET",
     credentials: "include",
   });
@@ -62,7 +63,7 @@ export const getPublicFeedbacks = async (): Promise<Feedback[]> => {
 };
 
 export const addFeedback = async (feedbackData: CreateFeedbackData): Promise<Partial<Feedback>> => {
-  const response = await fetch("http://localhost:8080/api/v1/feedback", {
+  const response = await fetch(buildApiUrl("feedback"), {
     method: "POST",
     credentials: "include",
     headers: {
@@ -87,7 +88,7 @@ export const updateFeedback = async (
     throw new Error("Feedback ID is required for update");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/feedback/${feedbackId}`, {
+  const response = await fetch(buildApiUrl(`feedback/${feedbackId}`)  , {
     method: "PUT",
     credentials: "include",
     headers: {
@@ -109,7 +110,7 @@ export const deleteFeedback = async (feedbackId: string): Promise<void> => {
     throw new Error("Feedback ID is required for deletion");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/feedback/${feedbackId}`, {
+  const response = await fetch(buildApiUrl(`feedback/${feedbackId}`), {
     method: "DELETE",
     credentials: "include",
   });

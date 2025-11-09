@@ -1,3 +1,4 @@
+import { buildApiUrl } from "../config/api";
 import { APIError } from "../data/Auth";
 import { colorNameToHex, hexToColorName } from "../data/Utils/colors";
 import {
@@ -9,7 +10,7 @@ import {
 
 // Labels API functions
 export const getLabels = async (): Promise<LabelResponse> => {
-  const response = await fetch("http://localhost:8080/api/v1/labels", {
+  const response = await fetch(buildApiUrl("labels"), {
     method: "GET",
     credentials: "include",
   });
@@ -36,7 +37,7 @@ export const getLabel = async (labelId: string): Promise<LabelInterface | undefi
     throw new Error("Label ID is required");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/labels/${labelId}`, {
+  const response = await fetch(buildApiUrl(`labels/${labelId}`), {
     method: "GET",
     credentials: "include",
   });
@@ -62,7 +63,7 @@ export const addLabel = async (labelData: Partial<LabelInterface>): Promise<Part
     color: colorNameToHex(labelData.color),
   };
 
-  const response = await fetch("http://localhost:8080/api/v1/labels", {
+  const response = await fetch(buildApiUrl("labels"), {
     method: "POST",
     credentials: "include",
     headers: {
@@ -99,7 +100,7 @@ export const updateLabel = async (
     ...(labelData.color && { color: colorNameToHex(labelData.color) }),
   };
 
-  const response = await fetch(`http://localhost:8080/api/v1/labels/${labelId}`, {
+  const response = await fetch(buildApiUrl(`labels/${labelId}`), {
     method: "PUT",
     credentials: "include",
     headers: {
@@ -127,7 +128,7 @@ export const deleteLabel = async (labelId: string): Promise<void> => {
     throw new Error("Label ID is required for deletion");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/labels/${labelId}`, {
+  const response = await fetch(buildApiUrl(`labels/${labelId}`), {
     method: "DELETE",
     credentials: "include",
   });
@@ -140,14 +141,14 @@ export const deleteLabel = async (labelId: string): Promise<void> => {
 
 // Label Connections API functions
 export const getLabelConnections = async (objectId?: string, objectType?: string): Promise<LabelConnectionResponse> => {
-  let url = "http://localhost:8080/api/v1/label-connections";
+  let url = buildApiUrl("label-connections");
   const params = new URLSearchParams();
 
   if (objectId) params.append("objectId", objectId);
   if (objectType) params.append("objectType", objectType);
 
   if (params.toString()) {
-    url += `?${params.toString()}`;
+    url = `${url}?${params.toString()}`;
   }
 
   const response = await fetch(url, {
@@ -166,7 +167,7 @@ export const getLabelConnections = async (objectId?: string, objectType?: string
 export const addLabelConnection = async (
   connectionData: Pick<LabelConnection, "entity_id" | "entity_type" | "label_id">,
 ): Promise<Partial<LabelConnection>> => {
-  const response = await fetch("http://localhost:8080/api/v1/label-connections", {
+  const response = await fetch(buildApiUrl("label-connections"), {
     method: "POST",
     credentials: "include",
     headers: {
@@ -208,7 +209,7 @@ export const deleteLabelConnection = async (connectionId: string): Promise<void>
     throw new Error("Connection ID is required for deletion");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/label-connections/${connectionId}`, {
+  const response = await fetch(buildApiUrl(`label-connections/${connectionId}`), {
     method: "DELETE",
     credentials: "include",
   });

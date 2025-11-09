@@ -1,8 +1,9 @@
 import { APIError } from "@shared/data/Auth";
 import { TaskListsResponse, type TaskInterface, type TaskListInterface } from "@shared/data/Tasks/interfaces";
+import { buildApiUrl } from "../config/api";
 
 export const getTasks = async (task_list_id: string): Promise<TaskInterface[]> => {
-  const response = await fetch(`http://localhost:8080/api/v1/task-lists/${task_list_id}/tasks`, {
+  const response = await fetch(buildApiUrl(`task-lists/${task_list_id}/tasks`), {
     method: "GET",
     credentials: "include",
   });
@@ -29,7 +30,7 @@ export const getTasks = async (task_list_id: string): Promise<TaskInterface[]> =
 };
 
 export const addTask = async (taskData: Partial<TaskInterface>): Promise<Partial<TaskInterface>> => {
-  const response = await fetch("http://localhost:8080/api/v1/tasks", {
+  const response = await fetch(buildApiUrl("tasks"), {
     method: "POST",
     credentials: "include",
     headers: {
@@ -51,7 +52,7 @@ export const updateTask = async (taskId: string, taskData: Partial<TaskInterface
   if (!taskId) {
     throw new Error("Task ID is required for update");
   }
-  const response = await fetch(`http://localhost:8080/api/v1/tasks/${taskId}`, {
+  const response = await fetch(buildApiUrl(`tasks/${taskId}`), {
     method: "PATCH",
     credentials: "include",
     headers: {
@@ -72,7 +73,7 @@ export const deleteTask = async (taskId: string): Promise<void> => {
     throw new Error("Task ID is required for deletion");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/tasks/${taskId}`, {
+  const response = await fetch(buildApiUrl(`tasks/${taskId}`), {
     method: "DELETE",
     credentials: "include",
   });
@@ -84,7 +85,7 @@ export const deleteTask = async (taskId: string): Promise<void> => {
 };
 
 export const getTaskLists = async (): Promise<TaskListsResponse> => {
-  const response = await fetch("http://localhost:8080/api/v1/task-lists", {
+  const response = await fetch(buildApiUrl("task-lists"), {
     method: "GET",
     credentials: "include",
   });
@@ -101,7 +102,7 @@ export const getTaskList = async (listId: string): Promise<TaskListInterface | u
   if (!listId) {
     throw new Error("Task list ID is required");
   }
-  const response = await fetch(`http://localhost:8080/api/v1/task-lists/${listId}`, {
+  const response = await fetch(buildApiUrl(`task-lists/${listId}`), {
     method: "GET",
     credentials: "include",
   });
@@ -116,7 +117,7 @@ export const getTaskList = async (listId: string): Promise<TaskListInterface | u
 
 //TODO: listData just string name or extend it to Partial?
 export const addTaskList = async (listData: string): Promise<Partial<TaskListInterface>> => {
-  const response = await fetch("http://localhost:8080/api/v1/task-lists", {
+  const response = await fetch(buildApiUrl("task-lists"), {
     method: "POST",
     credentials: "include",
     headers: {
@@ -140,7 +141,7 @@ export const updateTaskList = async (
   if (!listId) {
     throw new Error("Task list ID is required for update");
   }
-  const response = await fetch(`http://localhost:8080/api/v1/task-lists/${listId}`, {
+  const response = await fetch(buildApiUrl(`task-lists/${listId}`), {
     method: "PUT",
     credentials: "include",
     headers: {
@@ -162,7 +163,7 @@ export const deleteTaskList = async (listId: string): Promise<void> => {
     throw new Error("Task list ID is required for deletion");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/task-lists/${listId}`, {
+  const response = await fetch(buildApiUrl(`task-lists/${listId}`), {
     method: "DELETE",
     credentials: "include",
   });

@@ -1,8 +1,9 @@
+import { buildApiUrl } from "@shared/config/api";
 import { APIError } from "@shared/data/Auth";
 import { type EventResponse, EventInterface } from "@shared/data/Calendar/events";
 
 export const getEvents = async (): Promise<EventResponse> => {
-  const response = await fetch("http://localhost:8080/api/v1/events", {
+  const response = await fetch(buildApiUrl("events"), {
     method: "GET",
     credentials: "include",
   });
@@ -16,7 +17,7 @@ export const getEvents = async (): Promise<EventResponse> => {
 };
 
 export const addEvent = async (eventData: Partial<EventInterface>): Promise<Partial<EventInterface>> => {
-  const response = await fetch("http://localhost:8080/api/v1/events", {
+  const response = await fetch(buildApiUrl("events"), {
     method: "POST",
     credentials: "include",
     headers: {
@@ -39,7 +40,7 @@ export const updateEvent = async (
   if (!eventId) {
     throw new Error("Event ID is required for update");
   }
-  const response = await fetch(`http://localhost:8080/api/v1/events/${eventId}`, {
+  const response = await fetch(buildApiUrl(`events/${eventId}`), {
     method: "PATCH",
     credentials: "include",
     headers: {
@@ -61,7 +62,7 @@ export const deleteEvent = async (eventId: string): Promise<void> => {
     throw new Error("Event ID is required for deletion");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/events/${eventId}`, {
+  const response = await fetch(buildApiUrl(`events/${eventId}`), {
     method: "DELETE",
     credentials: "include",
   });

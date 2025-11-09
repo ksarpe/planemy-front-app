@@ -1,10 +1,11 @@
+import { buildApiUrl } from "@shared/config/api";
 import { APIError } from "../data/Auth";
 import { type Permission, type ShareNotification } from "../data/Utils/interfaces";
 import { type SharePermission, type ShareableObjectType } from "../data/Utils/types";
 
 // Permissions API functions
 export const getPermissions = async (): Promise<Permission[]> => {
-  const response = await fetch("http://localhost:8080/api/v1/permissions", {
+  const response = await fetch(buildApiUrl("permissions"), {
     method: "GET",
     credentials: "include",
   });
@@ -22,7 +23,7 @@ export const getPermission = async (permissionId: string): Promise<Permission | 
     throw new Error("Permission ID is required");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/permissions/${permissionId}`, {
+  const response = await fetch(buildApiUrl(`permissions/${permissionId}`), {
     method: "GET",
     credentials: "include",
   });
@@ -43,7 +44,7 @@ export const getPermissionsForObject = async (
     throw new Error("Object ID and object type are required");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/permissions/object/${objectId}/${objectType}`, {
+  const response = await fetch(buildApiUrl(`permissions/object/${objectId}/${objectType}`), {
     method: "GET",
     credentials: "include",
   });
@@ -57,7 +58,7 @@ export const getPermissionsForObject = async (
 };
 
 export const addPermission = async (permissionData: Partial<Permission>): Promise<Partial<Permission>> => {
-  const response = await fetch("http://localhost:8080/api/v1/permissions", {
+  const response = await fetch(buildApiUrl("permissions"), {
     method: "POST",
     credentials: "include",
     headers: {
@@ -82,7 +83,7 @@ export const updatePermission = async (
     throw new Error("Permission ID is required for update");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/permissions/${permissionId}`, {
+  const response = await fetch(buildApiUrl(`permissions/${permissionId}`), {
     method: "PUT",
     credentials: "include",
     headers: {
@@ -104,7 +105,7 @@ export const deletePermission = async (permissionId: string): Promise<void> => {
     throw new Error("Permission ID is required for deletion");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/permissions/${permissionId}`, {
+  const response = await fetch(buildApiUrl(`permissions/${permissionId}`), {
     method: "DELETE",
     credentials: "include",
   });
@@ -117,7 +118,7 @@ export const deletePermission = async (permissionId: string): Promise<void> => {
 
 // Share Notifications API functions
 export const getShareNotifications = async (): Promise<ShareNotification[]> => {
-  const response = await fetch("http://localhost:8080/api/v1/share-notifications", {
+  const response = await fetch(buildApiUrl("share-notifications"), {
     method: "GET",
     credentials: "include",
   });
@@ -131,7 +132,7 @@ export const getShareNotifications = async (): Promise<ShareNotification[]> => {
 };
 
 export const getPendingShareNotifications = async (): Promise<ShareNotification[]> => {
-  const response = await fetch("http://localhost:8080/api/v1/share-notifications/pending", {
+  const response = await fetch(buildApiUrl("share-notifications/pending"), {
     method: "GET",
     credentials: "include",
   });
@@ -147,7 +148,7 @@ export const getPendingShareNotifications = async (): Promise<ShareNotification[
 export const addShareNotification = async (
   notificationData: Partial<ShareNotification>,
 ): Promise<Partial<ShareNotification>> => {
-  const response = await fetch("http://localhost:8080/api/v1/share-notifications", {
+  const response = await fetch(buildApiUrl("share-notifications"), {
     method: "POST",
     credentials: "include",
     headers: {
@@ -172,7 +173,7 @@ export const updateShareNotification = async (
     throw new Error("Notification ID is required for update");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/share-notifications/${notificationId}`, {
+  const response = await fetch(buildApiUrl(`share-notifications/${notificationId}`), {
     method: "PUT",
     credentials: "include",
     headers: {
@@ -194,7 +195,7 @@ export const deleteShareNotification = async (notificationId: string): Promise<v
     throw new Error("Notification ID is required for deletion");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/share-notifications/${notificationId}`, {
+  const response = await fetch(buildApiUrl(`share-notifications/${notificationId}`), {
     method: "DELETE",
     credentials: "include",
   });
@@ -212,7 +213,7 @@ export const shareObject = async (
   targetUserEmail: string,
   permission: SharePermission,
 ): Promise<Partial<ShareNotification>> => {
-  const response = await fetch("http://localhost:8080/api/v1/share-notifications/share", {
+  const response = await fetch(buildApiUrl("share-notifications/share"), {
     method: "POST",
     credentials: "include",
     headers: {
@@ -239,7 +240,7 @@ export const acceptShareInvitation = async (notificationId: string): Promise<voi
     throw new Error("Notification ID is required");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/share-notifications/${notificationId}/accept`, {
+  const response = await fetch(buildApiUrl(`share-notifications/${notificationId}/accept`), {
     method: "POST",
     credentials: "include",
   });
@@ -255,7 +256,7 @@ export const rejectShareInvitation = async (notificationId: string): Promise<voi
     throw new Error("Notification ID is required");
   }
 
-  const response = await fetch(`http://localhost:8080/api/v1/share-notifications/${notificationId}/reject`, {
+  const response = await fetch(buildApiUrl(`share-notifications/${notificationId}/reject`), {
     method: "POST",
     credentials: "include",
   });

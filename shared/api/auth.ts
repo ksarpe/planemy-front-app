@@ -1,10 +1,11 @@
 //types
+import { buildApiUrl } from "@shared/config/api";
 import type { AuthResponse, LoginRequest, RegisterRequest } from "@shared/data/Auth/interfaces";
 import { APIError } from "@shared/data/Auth/interfaces";
 import { User } from "@shared/data/User";
 
 export const loginUser = async (credentials: LoginRequest): Promise<AuthResponse> => {
-  const response = await fetch("http://localhost:8080/api/v1/auth/login", {
+  const response = await fetch(buildApiUrl("auth/login"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -23,7 +24,7 @@ export const loginUser = async (credentials: LoginRequest): Promise<AuthResponse
 };
 
 export const registerUser = async (credentials: RegisterRequest): Promise<AuthResponse> => {
-  const response = await fetch("http://localhost:8080/api/v1/auth/register", {
+  const response = await fetch(buildApiUrl("auth/register"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -42,7 +43,7 @@ export const registerUser = async (credentials: RegisterRequest): Promise<AuthRe
 };
 
 export const logoutUser = async (): Promise<void> => {
-  const response = await fetch("http://localhost:8080/api/v1/auth/logout", {
+  const response = await fetch(buildApiUrl("auth/logout"), {
     method: "POST",
     credentials: "include", // Include cookies for session management
   });
@@ -54,7 +55,7 @@ export const logoutUser = async (): Promise<void> => {
 };
 
 export const validateUser = async (): Promise<User> => {
-  const response = await fetch("http://localhost:8080/api/v1/auth/userinfo", {
+  const response = await fetch(buildApiUrl("auth/userinfo"), {
     method: "GET",
     credentials: "include",
   });
@@ -68,7 +69,7 @@ export const validateUser = async (): Promise<User> => {
 };
 
 export const refreshToken = async (): Promise<void> => {
-  const response = await fetch("http://localhost:8080/api/v1/auth/refresh", {
+  const response = await fetch(buildApiUrl("auth/refresh"), {
     method: "POST",
     credentials: "include", // Important: sends refresh token cookie
   });
@@ -81,7 +82,7 @@ export const refreshToken = async (): Promise<void> => {
 };
 
 export const changePassword = async (currentPassword: string, newPassword: string): Promise<void> => {
-  const response = await fetch("http://localhost:8080/api/v1/auth/change-password", {
+  const response = await fetch(buildApiUrl("auth/change-password"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
