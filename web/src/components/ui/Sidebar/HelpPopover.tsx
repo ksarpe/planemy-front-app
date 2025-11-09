@@ -19,7 +19,7 @@ export function HelpPopover({ collapsed }: HelpPopoverProps) {
           } cursor-pointer`}
           onClick={() => setIsOpen(true)}
           title="Help">
-          <FiHelpCircle size={20} />
+          <FiHelpCircle size={16} />
         </div>
       </PopoverTrigger>
       <PopoverContent

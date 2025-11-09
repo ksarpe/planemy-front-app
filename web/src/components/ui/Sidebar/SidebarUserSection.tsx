@@ -2,6 +2,7 @@ import { useLogout } from "@shared/hooks/auth/useAuth";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 import { useToast } from "@shared/hooks/toasts/useToast";
 import { FiLogOut, FiUser } from "react-icons/fi";
+import { Badge } from "../Common/Badge";
 
 export interface SidebarUserSectionProps {
   collapsed: boolean;
@@ -41,15 +42,15 @@ export function SidebarUserSection({ collapsed, onSettingsClick }: SidebarUserSe
               : "flex items-center gap-3 flex-1 min-w-0 overflow-hidden group cursor-pointer"
           }
           title={collapsed ? user?.username || user?.email || "Profil" : "Profil"}>
-          <div className="w-12 h-12 rounded-full border border-bg-muted-light hover:bg-bg-muted-light flex items-center justify-center font-bold text-black">
-            <FiUser size={24} className="text-text-muted" />
+          <div className="w-8 h-8 rounded-full border border-bg-muted-light hover:bg-bg-muted-light flex items-center justify-center font-bold text-black">
+            <FiUser size={18} className="text-text-muted" />
           </div>
           {!collapsed && (
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 flex flex-col">
               <p className="text-sm font-semibold text-text truncate">
                 {user!.username || user!.email || "Użytkownik"}
               </p>
-              <p className="text-xs text-text truncate">{"Free plan"}</p>
+              <Badge variant="violet" className="text-[10px]">{"Free plan"}</Badge>
             </div>
           )}
         </div>
