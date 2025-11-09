@@ -1,0 +1,37 @@
+# Ignoruj niepotrzebne pliki przy deploymencie na Railway
+
+# Mobile app (nie potrzebujemy jej na Railway)
+mobile/
+
+# Development files
+*.log
+.DS_Store
+.env.local
+.env.development
+
+# Node modules (będą zainstalowane podczas buildu)
+node_modules/
+
+# Build artifacts (będą zbudowane podczas buildu)
+web/dist/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Docs
+docs/
+
+# Scripts
+scripts/
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
