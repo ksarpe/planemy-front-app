@@ -41,13 +41,13 @@ export default function SidebarTools({
   };
 
   return (
-    <div className={`flex ${collapsed && "flex-col"} items-center`}>
+    <div className={`flex ${collapsed && "flex-col"} items-center justify-between`}>
       <NotificationPopup open={isNotificationOpen} onOpenChange={setIsNotificationOpen}>
         <div
           className="rounded-2xl p-4 flex active:scale-95 hover:bg-bg text-text cursor-pointer relative"
           onClick={() => setIsNotificationOpen(!isNotificationOpen)}
           title="Notifications">
-          <FiBell size={20} />
+          <FiBell size={16} />
           {unreadCount > 0 && (
             <Badge variant="primary" className="absolute top-1 right-1 w-4 h-4">
               {unreadCount > 99 ? "99+" : unreadCount}
@@ -56,10 +56,10 @@ export default function SidebarTools({
         </div>
       </NotificationPopup>
       <Button onClick={onSettingsClick} variant="ghost" title="Settings" className="p-4">
-        <FiSettings size={20} />
+        <FiSettings size={16} />
       </Button>
       <Button onClick={handleTutorialClick} variant="ghost" title="Start Tutorial" className="p-4">
-        <FiBook size={20} />
+        <FiBook size={16} />
       </Button>
       <HelpPopover collapsed={collapsed} />
     </div>

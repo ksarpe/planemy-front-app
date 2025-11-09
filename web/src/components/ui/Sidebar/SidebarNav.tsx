@@ -27,16 +27,18 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
 
   if (collapsed) {
     return (
-      <nav className="flex flex-col h-full">
+      <nav className="flex flex-col">
         <div className="flex flex-col items-center gap-1">
           {navigationItems.map(({ to, Icon, label }) => (
             <SidebarNavLink key={to} to={to} label={label} Icon={Icon} onClick={handleNavigate} collapsed={true} />
           ))}
+        </div>
+        <div className="flex flex-col items-center gap-1">
           {personalItems.map(({ to, Icon, label }) => (
             <SidebarNavLink key={to} to={to} label={label} Icon={Icon} onClick={handleNavigate} collapsed={true} />
           ))}
         </div>
-        <div className="mt-auto flex flex-col items-center">
+        <div className="flex flex-col items-center gap-1">
           {utilsItems.map(({ to, Icon, label }) => (
             <SidebarNavLink key={to} to={to} label={label} Icon={Icon} onClick={handleNavigate} collapsed={true} />
           ))}
@@ -46,21 +48,25 @@ export function SidebarNav({ handleNavigate, collapsed = false }: SidebarNavProp
   }
 
   return (
-    <nav className="flex flex-col h-full justify-between">
+    <nav className="flex flex-col gap-8">
       <div className="flex flex-col gap-1">
         <span className="text-xs font-bold text-text-muted">NAVIGATION</span>
 
         {navigationItems.map(({ to, Icon, label }) => (
           <SidebarNavLink key={to} to={to} label={label} Icon={Icon} onClick={handleNavigate} collapsed={false} />
         ))}
-        <span className="text-xs font-bold text-text-muted mt-8">PERSONAL</span>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <span className="text-xs font-bold text-text-muted">PERSONAL</span>
 
         {personalItems.map(({ to, Icon, label }) => (
           <SidebarNavLink key={to} to={to} label={label} Icon={Icon} onClick={handleNavigate} collapsed={false} />
         ))}
       </div>
-      <div className="flex flex-col">
-        <span className="text-xs font-bold text-text-muted mb-2">UTILS</span>
+
+      <div className="flex flex-col gap-1">
+        <span className="text-xs font-bold text-text-muted">UTILS</span>
 
         {utilsItems.map(({ to, Icon, label }) => (
           <SidebarNavLink key={to} to={to} label={label} Icon={Icon} onClick={handleNavigate} collapsed={false} />

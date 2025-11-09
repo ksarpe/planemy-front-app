@@ -37,16 +37,18 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
 
       {/* Sidebar - wyższy z-index niż overlay */}
       <aside
-        className={`p-4 fixed inset-y-0 left-0 z-50 ${widthClasses} h-full transform transition-all duration-300 bg-bg-alt md:static flex flex-col justify-between p-2 ${
+        className={`fixed inset-y-0 left-0 z-50 ${widthClasses} transform transition-all duration-300 bg-bg-alt md:static flex flex-col p-2 ${
           isOpen ? " translate-x-0" : " -translate-x-full md:translate-x-0"
         }`}>
-        {/* LOGO */}
-        <NavLink to="/">
-          <img src={collapsed ? `minilogo.png` : `logo.png`} alt="Logo" className={collapsed ? `h-12` : `h-16`} />
-        </NavLink>
+        {/* LOGO - Fixed at top */}
+        <div className="flex-shrink-0 p-2">
+          <NavLink to="/">
+            <img src={collapsed ? `minilogo.png` : `logo.png`} alt="Logo" className={collapsed ? `h-12` : `h-16`} />
+          </NavLink>
+        </div>
 
-        {/* NAVIGATION / PERSONAL / UTILS */}
-        <div className="flex flex-col flex-1 mt-4">
+        {/* SCROLLABLE NAVIGATION AREA */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 mt-4 pb-2 scrollable-sidebar">
           <SidebarNav
             handleNavigate={onClose || (() => {})}
             //totalNotifications={totalNotifications}
@@ -54,29 +56,35 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
             collapsed={collapsed}
           />
         </div>
-        <div className="w-full h-px bg-text-muted/20 my-1" />
 
-        {/* SETTINGS */}
-        <SidebarTools collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
-        <div className="w-full h-px bg-text-muted/20 my-1" />
-        {/* USER INFO */}
-        <SidebarUserSection collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
+        {/* FIXED BOTTOM SECTION */}
+        <div className="flex-shrink-0 flex flex-col">
+          <div className="w-full h-px bg-text-muted/20 my-1" />
 
-        <div className="w-full h-px bg-text-muted/20 mb-4 mt-1" />
-        {/* Collapse button + Dark Mode */}
-        <div
-          className={`hidden md:flex ${
-            collapsed ? "flex-col items-center gap-3" : "flex-row items-center justify-between"
-          }`}>
-          <DarkModeToggle />
-          <Button
-            aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
-            variant="ghost"
-            onClick={() => setCollapsed((c) => !c)}>
-            <span className="hover:bg-bg rounded-2xl px-1 transition-colors">
-              {collapsed ? <FiChevronsRight size={24} /> : <FiChevronsLeft size={24} />}
-            </span>
-          </Button>
+          {/* SETTINGS */}
+          <SidebarTools collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
+          <div className="w-full h-px bg-text-muted/20 my-1" />
+
+          {/* USER INFO */}
+          <SidebarUserSection collapsed={collapsed} onSettingsClick={() => setIsSettingsModalOpen(true)} />
+
+          <div className="w-full h-px bg-text-muted/20 mb-2 mt-1" />
+
+          {/* Collapse button + Dark Mode */}
+          <div
+            className={`hidden md:flex ${
+              collapsed ? "flex-col items-center gap-2" : "flex-row items-center justify-between"
+            }`}>
+            <DarkModeToggle />
+            <Button
+              aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
+              variant="ghost"
+              onClick={() => setCollapsed((c) => !c)}>
+              <span className="hover:bg-bg rounded-2xl px-1 transition-colors">
+                {collapsed ? <FiChevronsRight size={24} /> : <FiChevronsLeft size={24} />}
+              </span>
+            </Button>
+          </div>
         </div>
       </aside>
       <SettingsModal isOpen={isSettingsModalOpen} onClose={() => setIsSettingsModalOpen(false)} />
