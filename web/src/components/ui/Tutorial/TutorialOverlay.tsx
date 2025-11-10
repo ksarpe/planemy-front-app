@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/shadcn/button";
+import { Button } from "@/components/ui/Utils/button";
 import { useTutorial } from "@/context/TutorialContext";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -292,7 +292,7 @@ export function TutorialOverlay() {
       {/* Tooltip */}
       <div
         key={currentStep} // Force re-render on step change for animation
-        className={`fixed z-50 bg-bg-alt border border-border rounded-2xl shadow-2xl p-4 ${getAnimationClass()}`}
+        className={`fixed z-50 bg-bg-primary border border-border rounded-2xl shadow-2xl p-4 ${getAnimationClass()}`}
         style={{
           top: `${top}px`,
           left: `${left}px`,

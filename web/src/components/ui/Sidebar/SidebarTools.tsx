@@ -5,7 +5,7 @@ import { useTutorial } from "@/context/TutorialContext";
 import { useEffect, useState } from "react";
 import { FiBell, FiBook, FiSettings } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
-import { Button } from "../shadcn/button";
+import { Button } from "../Utils/button";
 import { HelpPopover } from "./HelpPopover";
 
 export default function SidebarTools({
@@ -44,7 +44,7 @@ export default function SidebarTools({
     <div className={`flex ${collapsed && "flex-col"} items-center justify-between`}>
       <NotificationPopup open={isNotificationOpen} onOpenChange={setIsNotificationOpen}>
         <div
-          className="rounded-2xl p-4 flex active:scale-95 hover:bg-bg text-text cursor-pointer relative"
+          className="rounded-2xl p-4 flex active:scale-95 hover:bg-bg-secondary text-text cursor-pointer relative"
           onClick={() => setIsNotificationOpen(!isNotificationOpen)}
           title="Notifications">
           <FiBell size={16} />

@@ -4,15 +4,6 @@ const sidebars: SidebarsConfig = {
   docs: [
     {
       type: 'category',
-      label: 'Getting Started',
-      collapsed: false,
-      items: [
-        'getting-started/project-structure',
-        'getting-started/first-changes',
-      ],
-    },
-    {
-      type: 'category',
       label: 'Architecture',
       collapsed: false,
       items: [

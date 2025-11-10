@@ -51,7 +51,7 @@ export default function BaseModal({
               damping: 20,
             }}
             onClick={(e) => e.stopPropagation()}
-            className={`bg-bg  text-text  p-6 rounded-xl w-1/5 max-h-[90vh] overflow-y-auto shadow-2xl cursor-default relative`}>
+            className={`bg-bg-secondary  text-text  p-6 rounded-xl w-1/5 max-h-[90vh] overflow-y-auto shadow-2xl cursor-default relative`}>
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold">{title}</h3>
@@ -60,7 +60,7 @@ export default function BaseModal({
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="text-text/60  hover:text-text  transition-colors p-1 rounded-2xl hover:bg-bg-alt ">
+                  className="text-text/60  hover:text-text  transition-colors p-1 rounded-2xl hover:bg-bg-primary ">
                   <X size={20} />
                 </motion.button>
               )}

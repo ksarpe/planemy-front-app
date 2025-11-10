@@ -79,7 +79,7 @@ export default function LabelsView() {
         {/* Quick Stats */}
         {labels.length > 0 && (
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-bg-alt rounded-2xl p-4 border border-bg-muted-light">
+            <div className="bg-bg-primary rounded-2xl p-4 border border-bg-muted-light">
               <div className="flex items-center gap-2 mb-1">
                 <Sparkles className="text-primary" size={16} />
                 <span className="text-xs text-text-muted">Total</span>
@@ -87,7 +87,7 @@ export default function LabelsView() {
               <p className="text-2xl font-bold text-text">{colorStats.total}</p>
             </div>
 
-            <div className="bg-bg-alt rounded-2xl p-4 border border-bg-muted-light">
+            <div className="bg-bg-primary rounded-2xl p-4 border border-bg-muted-light">
               <div className="flex items-center gap-2 mb-1">
                 <Palette className="text-purple-500" size={16} />
                 <span className="text-xs text-text-muted">Colors</span>
@@ -95,7 +95,7 @@ export default function LabelsView() {
               <p className="text-2xl font-bold text-text">{colorStats.uniqueColors}</p>
             </div>
 
-            <div className="bg-bg-alt rounded-2xl p-4 border border-bg-muted-light">
+            <div className="bg-bg-primary rounded-2xl p-4 border border-bg-muted-light">
               <div className="flex items-center gap-2 mb-1">
                 <Tag className="text-green-500" size={16} />
                 <span className="text-xs text-text-muted">Most Used</span>

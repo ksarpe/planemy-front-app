@@ -2,10 +2,10 @@ import type { TaskItemProps } from "@shared/data/Tasks/interfaces";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
 import { useUpdateTask } from "@shared/hooks/tasks/useTasks";
 import { AlertCircle, Calendar, CheckCircle2, Clock } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useT } from "@shared/hooks/utils/useT";
 
 export default function TaskItem({ task }: TaskItemProps) {
-  const { t } = useTranslation();
+  const { t } = useT();
   const { mutate: updateTask } = useUpdateTask();
   const { clickedTask, setClickedTask } = useTaskViewContext();
   //const { labels, createLabelConnection, removeLabelConnection } = useLabelContext();
@@ -69,7 +69,7 @@ export default function TaskItem({ task }: TaskItemProps) {
             {task.isCompleted ? (
               <CheckCircle2 size={20} className="text-primary" />
             ) : (
-              <div className="w-5 h-5 border-1 border-text-muted-more rounded-full hover:bg-primary hover:border-primary transition-colors" />
+              <div className="w-5 h-5 border-1 border-text-muted rounded-full hover:bg-primary hover:border-primary transition-colors" />
             )}
           </button>
 
@@ -85,7 +85,7 @@ export default function TaskItem({ task }: TaskItemProps) {
             {
               <p
                 className={`text-xs mt-1 transition-colors duration-200 ${
-                  task.isCompleted ? "line-through text-text-muted " : "text-text-muted-more "
+                  task.isCompleted ? "line-through text-text-muted " : "text-text-muted "
                 }`}>
                 {task.task_description ? task.task_description : "Brak opisu"}
               </p>

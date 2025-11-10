@@ -6,7 +6,7 @@ export type EventColor =
   | "negative" // e74c3c - czerwony błędu
   | "text" // 1e1e1e - ciemny tekst
   | "text-light" // 666666 - jasnoszary tekst
-  | "bg-hover" // e3cdbf - hover color
+  | "bg-secondary" // e3cdbf - hover color
   | "custom"; // pozwala na custom hex color
 
 export type EventCategory =

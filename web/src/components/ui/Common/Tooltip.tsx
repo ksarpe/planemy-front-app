@@ -17,12 +17,12 @@ export function Tooltip({ content, children, position = "top", className = "", d
   };
 
   const arrowClasses = {
-    top: "top-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-b-transparent border-t-bg-alt",
+    top: "top-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-b-transparent border-t-bg-primary",
     bottom:
-      "bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent border-b-bg-alt",
-    left: "left-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent border-l-bg-alt",
+      "bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent border-b-bg-primary",
+    left: "left-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent border-l-bg-primary",
     right:
-      "right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-bg-alt",
+      "right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-bg-primary",
   };
 
   return (
@@ -31,7 +31,7 @@ export function Tooltip({ content, children, position = "top", className = "", d
       <div
         className={`
           absolute z-50 ${positionClasses[position]}
-          px-2 py-1 text-xs rounded bg-bg-alt text-text
+          px-2 py-1 text-xs rounded bg-bg-primary text-text
           opacity-0 group-hover:opacity-100 
           transition-opacity ${delay > 0 ? `delay-${delay}` : ""}
           pointer-events-none whitespace-nowrap

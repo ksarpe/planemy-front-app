@@ -95,7 +95,7 @@ export default function DashboardView() {
 
   return (
     <div className="h-full overflow-auto scrollbar-hide">
-      <div className="p-6 space-y-6 bg-bg-alt min-h-full w-full">
+      <div className="p-6 space-y-6 bg-bg-primary min-h-full w-full">
         {/* Buddy Widget - Minimalist */}
         <BuddyWidget />
 

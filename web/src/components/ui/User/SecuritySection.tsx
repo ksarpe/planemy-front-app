@@ -4,7 +4,7 @@ import { useToast } from "@shared/hooks/toasts/useToast";
 import { useT } from "@shared/hooks/utils/useT";
 import { useState } from "react";
 import { InputModal } from "../Common";
-import { Button } from "../shadcn/button";
+import { Button } from "../Utils/button";
 
 export default function SecuritySection() {
   const { t } = useT();

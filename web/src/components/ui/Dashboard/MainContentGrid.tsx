@@ -26,7 +26,7 @@ export default function MainContentGrid({
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
       {/* Today's Events - Most Prominent */}
       <div className="xl:col-span-2">
-        <div className="p-6 rounded-xl bg-bg-alt border border-border shadow-md shadow-shadow space-y-6">
+        <div className="p-6 rounded-xl bg-bg-primary border border-border shadow-md shadow-shadow space-y-6">
           {/* Today's Events - Main Section */}
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -61,7 +61,7 @@ export default function MainContentGrid({
                   return (
                     <div
                       key={event.id}
-                      className="p-4 rounded-lg bg-bg-alt/80 backdrop-blur-sm border border-border hover:border-primary/30 transition-all cursor-pointer group">
+                      className="p-4 rounded-lg bg-bg-primary/80 backdrop-blur-sm border border-border hover:border-primary/30 transition-all cursor-pointer group">
                       <div className="flex items-center gap-3">
                         <div className="flex-shrink-0 flex items-center gap-2 text-center">
                           <Clock className="w-4 h-4 text-text-muted" />
@@ -139,7 +139,7 @@ export default function MainContentGrid({
       {/* Right Column - Next 7 Days - Match Left Panel Height */}
       <div>
         {/* Next 7 Days Events - Full Height */}
-        <div className="p-5 rounded-xl bg-bg-alt border shadow-shadow border-border shadow-md h-full flex flex-col">
+        <div className="p-5 rounded-xl bg-bg-primary border shadow-shadow border-border shadow-md h-full flex flex-col">
           <div className="mb-4">
             <div className="flex items-center gap-2 mb-1">
               <Calendar className="w-5 h-5 text-primary" />
@@ -161,7 +161,7 @@ export default function MainContentGrid({
                 return (
                   <div
                     key={event.id}
-                    className="p-3 rounded-lg bg-bg border border-border hover:border-primary/30 transition-colors cursor-pointer">
+                    className="p-3 rounded-lg bg-bg-secondary border border-border hover:border-primary/30 transition-colors cursor-pointer">
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium text-text-muted">{eventDate}</span>

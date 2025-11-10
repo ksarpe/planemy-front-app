@@ -57,7 +57,7 @@ export function PaymentListItem({ payment, onClick, isSelected = false }: Paymen
               {/* Paid date */}
               {isPaid && payment.paid_at && (
                 <>
-                  <span className="text-text-muted-more text-xs">•</span>
+                  <span className="text-text-muted text-xs">•</span>
                   <div className="flex items-center gap-1 text-xs text-success">
                     <CheckCircle2 size={12} />
                     <span>Paid {format(new Date(payment.paid_at), "MMM dd")}</span>

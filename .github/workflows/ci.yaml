@@ -1,0 +1,23 @@
+name: Build CI
+
+on:
+  push:
+    branches: [ "development" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Build app
+        run: npm run build

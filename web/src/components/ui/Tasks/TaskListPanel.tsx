@@ -3,20 +3,20 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/shadcn/dropdown-menu";
+} from "@/components/ui/Utils/dropdown-menu";
 import type { TaskListPanelProps } from "@shared/data/Tasks/Components/TaskComponentInterfaces";
 import type { TaskListInterface } from "@shared/data/Tasks/interfaces";
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
 import { useDeleteTaskList, useTasks, useUpdateTaskList } from "@shared/hooks/tasks/useTasks";
+import { useT } from "@shared/hooks/utils/useT";
 import { Edit2, MoreVertical, Plus, Share2, Trash2, Users } from "lucide-react";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { DeleteConfirmationModal } from "../Common";
-import { Button } from "../shadcn/button";
+import { Button } from "../Utils/button";
 import ManageTaskListSharingModal from "./Modals/ManageTaskListSharingModal";
 
 export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: TaskListPanelProps) {
-  const { t } = useTranslation();
+  const { t } = useT();
   const { defaultTaskListId } = usePreferencesContext();
   const deleteList = useDeleteTaskList();
   const updateList = useUpdateTaskList();
@@ -87,7 +87,7 @@ export function TaskListPanel({ lists, currentList, onSelectList, onAddList }: T
       <div
         key={list.id}
         className={`p-2 rounded-2xl border transition-all text-text ${
-          isSelected ? "border-text bg-bg-hover " : "hover:bg-bg-hover border-bg-muted-light "
+          isSelected ? "border-text bg-bg-secondary " : "hover:bg-bg-secondary border-bg-muted-light "
         }`}
         onClick={() => !isEditing && onSelectList(list)}>
         <div className="flex items-start justify-between">

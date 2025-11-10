@@ -1,4 +1,4 @@
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/shadcn/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/Utils/popover";
 import { Book, ExternalLink, Mail } from "lucide-react";
 import { useState } from "react";
 import { FiHelpCircle } from "react-icons/fi";
@@ -14,7 +14,7 @@ export function HelpPopover({ collapsed }: HelpPopoverProps) {
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <div
-          className={`p-4 text-text rounded-2xl active:scale-95 hover:bg-bg ${
+          className={`p-4 text-text rounded-2xl active:scale-95 hover:bg-bg-secondary ${
             collapsed ? "flex items-center justify-center" : ""
           } cursor-pointer`}
           onClick={() => setIsOpen(true)}
@@ -42,14 +42,14 @@ export function HelpPopover({ collapsed }: HelpPopoverProps) {
           <div className="space-y-2">
             <a
               href="/docs"
-              className="flex items-center gap-3 px-2 py-2 rounded-2xl hover:bg-bg-hover transition-colors group">
+              className="flex items-center gap-3 px-2 py-2 rounded-2xl hover:bg-bg-secondary transition-colors group">
               <Book size={16} className="text-text-muted group-hover:text-primary" />
               <span className="text-xs text-text-muted group-hover:text-text">Documentation</span>
               <ExternalLink size={12} className="ml-auto text-text-muted opacity-0 group-hover:opacity-100" />
             </a>
             <a
               href="mailto:support@planemy.com"
-              className="flex items-center gap-3 px-2 py-2 rounded-2xl hover:bg-bg-hover transition-colors group">
+              className="flex items-center gap-3 px-2 py-2 rounded-2xl hover:bg-bg-secondary transition-colors group">
               <Mail size={16} className="text-text-muted group-hover:text-primary" />
               <span className="text-xs text-text-muted group-hover:text-text">Contact Support</span>
             </a>

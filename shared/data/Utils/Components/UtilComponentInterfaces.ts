@@ -19,24 +19,6 @@ export interface ConfirmationModalProps {
   cancelLabel?: string;
 }
 
-export interface InlineAddInputProps {
-  onSubmit: (value: string) => void;
-  onCancel: () => void;
-  placeholder?: string;
-  classNames?: string;
-}
-
-export interface EditableTextProps {
-  value: string;
-  onSave: (newValue: string) => Promise<void>;
-  type?: "text" | "number" | "date";
-  suffix?: string;
-  className?: string;
-  placeholder?: string;
-  disabled?: boolean;
-  displayValue?: string; // Optional display value different from edit value
-}
-
 export interface DropdownMenuProps {
   isOpen: boolean;
   onClose: () => void;

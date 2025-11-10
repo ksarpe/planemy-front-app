@@ -1,5 +1,5 @@
 import type { PersonalInformationSectionProps } from "@shared/data/User";
-import { Input } from "../shadcn/input";
+import { Input } from "../Utils/input";
 
 export default function PersonalInformationSection({
   userInfo,

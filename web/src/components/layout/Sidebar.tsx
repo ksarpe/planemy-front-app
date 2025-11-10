@@ -7,7 +7,7 @@ import { DarkModeToggle } from "../ui/Sidebar/DarkModeToggle";
 import { SidebarNav } from "../ui/Sidebar/SidebarNav";
 import SidebarTools from "../ui/Sidebar/SidebarTools";
 import { SidebarUserSection } from "../ui/Sidebar/SidebarUserSection";
-import { Button } from "../ui/shadcn/button";
+import { Button } from "../ui/Utils/button";
 
 export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   //TODO: counts (lightweight; consider optimization later)
@@ -37,7 +37,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
 
       {/* Sidebar - wyższy z-index niż overlay */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 ${widthClasses} transform transition-all duration-300 bg-bg-alt md:static flex flex-col p-2 ${
+        className={`fixed inset-y-0 left-0 z-50 ${widthClasses} transform transition-all duration-300 bg-bg-primary md:static flex flex-col p-2 ${
           isOpen ? " translate-x-0" : " -translate-x-full md:translate-x-0"
         }`}>
         {/* LOGO - Fixed at top */}
@@ -80,7 +80,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
               aria-label={collapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}
               variant="ghost"
               onClick={() => setCollapsed((c) => !c)}>
-              <span className="hover:bg-bg rounded-2xl px-1 transition-colors">
+              <span className="hover:bg-bg-secondary rounded-2xl px-1 transition-colors">
                 {collapsed ? <FiChevronsRight size={24} /> : <FiChevronsLeft size={24} />}
               </span>
             </Button>

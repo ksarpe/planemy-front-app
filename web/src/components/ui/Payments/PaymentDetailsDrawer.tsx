@@ -1,6 +1,6 @@
 import { Drawer } from "@/components/ui/Common/Drawer";
-import { Button } from "@/components/ui/shadcn/button";
-import { Input } from "@/components/ui/shadcn/input";
+import { Button } from "@/components/ui/Utils/button";
+import { Input } from "@/components/ui/Utils/input";
 import type { PaymentInterface } from "@shared/data/Payments/interfaces";
 import { format } from "date-fns";
 import { Calendar, DollarSign, Trash2 } from "lucide-react";

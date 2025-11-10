@@ -1,7 +1,7 @@
 import { ChevronDownIcon, PlusIcon } from "lucide-react";
 import { useId, useState } from "react";
 
-import { Button } from "@/components/ui/shadcn/button";
+import { Button } from "@/components/ui/Utils/button";
 import {
   Command,
   CommandEmpty,
@@ -10,8 +10,8 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/components/ui/shadcn/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/shadcn/popover";
+} from "@/components/ui/Utils/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/Utils/popover";
 
 interface MultiselectProps {
   options: { label: string; value: string; color?: string }[];
@@ -41,7 +41,7 @@ export default function Multiselect({
             role="combobox"
             aria-expanded={open}
             className="w-full justify-between border-bg-muted-light px-3 font-medium hover:border-text">
-            <span className="truncate text-text-muted-more">{placeholder}</span>
+            <span className="truncate text-text-muted">{placeholder}</span>
             <ChevronDownIcon size={16} className="shrink-0 text-text-muted" aria-hidden="true" />
           </Button>
         </PopoverTrigger>

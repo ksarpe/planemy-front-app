@@ -1,14 +1,14 @@
 import { DeleteConfirmationModal } from "@/components/ui/Common";
 import { ColorPicker } from "@/components/ui/Common/ColorPicker";
 import { Drawer } from "@/components/ui/Common/Drawer";
-import { Button } from "@/components/ui/shadcn/button";
+import { Button } from "@/components/ui/Utils/button";
 import type { ColorName } from "@shared/data/Utils/colors";
 import type { LabelInterface } from "@shared/data/Utils/interfaces";
 import { useT } from "@shared/hooks/utils/useT";
 import { useEffect, useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Badge } from "../Common/Badge";
-import { Input } from "../shadcn/input";
+import { Input } from "../Utils/input";
 
 interface LabelPanelProps {
   isOpen: boolean;

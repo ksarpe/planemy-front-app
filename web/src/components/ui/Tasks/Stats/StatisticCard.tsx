@@ -12,12 +12,15 @@ export default function StatisticCard({
   return (
     <button
       onClick={onClick}
-      className={clsx("w-full text-center border border-bg-muted-light  shadow-md hover:scale-105 duration-200 sm:text-left px-2 rounded-2xl bg-bg-alt cursor-pointer  ", {
-        // Zaznaczony
-        " text-text border-primary": isSelected,
-        // Niezaznaczony
-        " text-text-muted-more   ": !isSelected,
-      })}>
+      className={clsx(
+        "w-full text-center border border-bg-muted-light  shadow-md hover:scale-105 duration-200 sm:text-left px-2 rounded-2xl bg-bg-primary cursor-pointer  ",
+        {
+          // Zaznaczony
+          " text-text border-primary": isSelected,
+          // Niezaznaczony
+          " text-text-muted   ": !isSelected,
+        },
+      )}>
       <div className="flex flex-col lg:flex-row xl:flex-col justify-center gap-2">
         {/* Górna część: Ikona i Tytuł */}
         <div className="flex items-center gap-2 text-center justify-center xl:justify-start">

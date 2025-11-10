@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "../shadcn/button";
+import { Button } from "../Utils/button";
 
 export default function BuddyWidget() {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ export default function BuddyWidget() {
   const progressPercentage = (buddyData.currentXP / buddyData.nextLevelXP) * 100;
 
   return (
-    <div className="p-4 rounded-xl bg-bg-alt border border-border shadow-md shadow-shadow">
+    <div className="p-4 rounded-xl bg-bg-primary border border-border shadow-md shadow-shadow">
       <div className="flex items-center gap-4">
         {/* Avatar - clickable */}
         <Button type="button" variant="ghost" onClick={() => navigate("/buddy")} aria-label="Buddy View">

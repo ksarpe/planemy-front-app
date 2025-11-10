@@ -63,15 +63,15 @@ export default function DevelopmentView() {
     <div className="w-full h-full overflow-y-auto scrollbar-hide">
       <div className="mx-auto p-6 space-y-6">
         {/* Header - Twój Rozwój */}
-        <div className="bg-bg-alt rounded-3xl p-8 border border-border shadow-md">
+        <div className="bg-bg-primary rounded-3xl p-8 border border-border shadow-md">
           <div className="flex items-start justify-between">
             <div className="space-y-2">
               <p className="text-text text-2xl">Śledź swoje postępy i osiągnięcia</p>
               <div className="flex items-center gap-4 mt-4">
-                <div className="bg-bg border border-border px-4 py-2 rounded-full">
+                <div className="bg-bg-secondary border border-border px-4 py-2 rounded-full">
                   <span className="text-sm font-semibold text-text">Poziom {stats.level}</span>
                 </div>
-                <div className="bg-bg border border-border px-4 py-2 rounded-full">
+                <div className="bg-bg-secondary border border-border px-4 py-2 rounded-full">
                   <span className="text-sm font-semibold text-text">🔥 {stats.streak} dni z rzędu</span>
                 </div>
               </div>
@@ -101,7 +101,7 @@ export default function DevelopmentView() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-bg-alt shadow-md shadow-shadow rounded-2xl p-6 border border-bg-muted-light">
+          <div className="bg-bg-primary shadow-md shadow-shadow rounded-2xl p-6 border border-bg-muted-light">
             <div className="flex  items-center justify-between">
               <div>
                 <p className="text-text-muted text-sm">Ukończone zadania</p>
@@ -111,7 +111,7 @@ export default function DevelopmentView() {
             </div>
           </div>
 
-          <div className="bg-bg-alt shadow-md shadow-shadow rounded-2xl p-6 border border-bg-muted-light">
+          <div className="bg-bg-primary shadow-md shadow-shadow rounded-2xl p-6 border border-bg-muted-light">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-text-muted text-sm">Wydarzenia</p>
@@ -121,7 +121,7 @@ export default function DevelopmentView() {
             </div>
           </div>
 
-          <div className="bg-bg-alt rounded-2xl p-6 border border-bg-muted-light shadow-md shadow-shadow">
+          <div className="bg-bg-primary rounded-2xl p-6 border border-bg-muted-light shadow-md shadow-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-text-muted text-sm">Seria dni</p>
@@ -134,7 +134,7 @@ export default function DevelopmentView() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Osiągnięcia */}
-          <div className="bg-bg-alt rounded-2xl p-6 border border-bg-muted-light shadow-md shadow-shadow">
+          <div className="bg-bg-primary rounded-2xl p-6 border border-bg-muted-light shadow-md shadow-shadow">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-text">Osiągnięcia</h2>
               <Trophy className="text-yellow-500" size={24} />
@@ -146,7 +146,9 @@ export default function DevelopmentView() {
                   <div
                     key={achievement.id}
                     className={`p-4 rounded-xl border transition-all ${
-                      achievement.unlocked ? "bg-bg-alt border-yellow-500/30" : "bg-bg border-bg-muted-light opacity-60"
+                      achievement.unlocked
+                        ? "bg-bg-primary border-yellow-500/30"
+                        : "bg-bg-secondary border-bg-muted-light opacity-60"
                     }`}>
                     <div className="flex items-start gap-3">
                       <div
@@ -189,7 +191,7 @@ export default function DevelopmentView() {
           </div>
 
           {/* Drzewko umiejętności */}
-          <div className="bg-bg-alt rounded-2xl p-6 border border-bg-muted-light shadow-md shadow-shadow">
+          <div className="bg-bg-primary rounded-2xl p-6 border border-bg-muted-light shadow-md shadow-shadow">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-text">Umiejętności</h2>
               <Brain className="text-purple-500" size={24} />
@@ -199,9 +201,9 @@ export default function DevelopmentView() {
                 const Icon = skill.icon;
                 const progress = (skill.level / skill.maxLevel) * 100;
                 return (
-                  <div key={skill.id} className="p-4 bg-bg rounded-xl border border-bg-muted-light">
+                  <div key={skill.id} className="p-4 bg-bg-secondary rounded-xl border border-bg-muted-light">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="p-2 bg-bg-alt rounded-lg">
+                      <div className="p-2 bg-bg-primary rounded-lg">
                         <Icon className={skill.color} size={20} />
                       </div>
                       <div className="flex-1">
@@ -223,7 +225,7 @@ export default function DevelopmentView() {
                 );
               })}
             </div>
-            <div className="mt-4 p-4 bg-bg-alt rounded-xl border border-border">
+            <div className="mt-4 p-4 bg-bg-primary rounded-xl border border-border">
               <p className="text-sm text-text-muted">
                 💡 <span className="font-semibold text-text">Wskazówka:</span> Rozwijaj umiejętności wykonując zadania,
                 uczestnicząc w wydarzeniach i osiągając cele!
@@ -235,7 +237,7 @@ export default function DevelopmentView() {
         {/* Ostatnia aktywność i wykresy placeholder */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Ostatnia aktywność */}
-          <div className="bg-bg-alt rounded-2xl p-6 border border-bg-muted-light shadow-md shadow-shadow">
+          <div className="bg-bg-primary rounded-2xl p-6 border border-bg-muted-light shadow-md shadow-shadow">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-text">Ostatnia aktywność</h2>
               <TrendingUp className="text-primary" size={24} />
@@ -244,7 +246,7 @@ export default function DevelopmentView() {
               {recentActivity.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex items-center gap-3 p-3 bg-bg rounded-xl border border-bg-muted-light">
+                  className="flex items-center gap-3 p-3 bg-bg-secondary rounded-xl border border-bg-muted-light">
                   <div className="w-2 h-2 bg-primary rounded-full" />
                   <div className="flex-1">
                     <p className="text-sm font-medium text-text">{activity.title}</p>
@@ -257,16 +259,16 @@ export default function DevelopmentView() {
           </div>
 
           {/* Wykresy - placeholder */}
-          <div className="bg-bg-alt rounded-2xl p-6 border border-bg-muted-light shadow-md shadow-shadow">
+          <div className="bg-bg-primary rounded-2xl p-6 border border-bg-muted-light shadow-md shadow-shadow">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-text">Statystyki</h2>
               <BarChart3 className="text-blue-500" size={24} />
             </div>
-            <div className="h-64 flex items-center justify-center bg-bg rounded-xl border border-bg-muted-light border-dashed">
+            <div className="h-64 flex items-center justify-center bg-bg-secondary rounded-xl border border-bg-muted-light border-dashed">
               <div className="text-center">
                 <BarChart3 className="text-text-muted mx-auto mb-2" size={48} />
                 <p className="text-text-muted">Wykresy postępów</p>
-                <p className="text-xs text-text-muted-more mt-1">Wkrótce dostępne</p>
+                <p className="text-xs text-text-muted mt-1">Wkrótce dostępne</p>
               </div>
             </div>
           </div>

@@ -3,11 +3,11 @@ import { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import "@shared/i18n";
+import "@shared/i18n"; //Check if needed
 
 // views
 import MainLayout from "@/components/layout/MainLayout"; //no lazy load coz it is used everywhere
-import Spinner from "./components/ui/Utils/Spinner";
+import Spinner from "./components/ui/Loaders/Spinner";
 
 const BuddyView = lazy(() => import("@/components/views/BuddyView"));
 const CalendarView = lazy(() => import("@/components/views/CalendarView"));
@@ -20,7 +20,7 @@ const DevelopmentView = lazy(() => import("@/components/views/DevelopmentView"))
 
 // providers/route // no lazy load as it is important to have fast
 import Providers from "@shared/context/AllProviders";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { ProtectedRoute } from "./components/ui/Signing/ProtectedRoute";
 import { TutorialOverlay } from "./components/ui/Tutorial/TutorialOverlay";
 import { TutorialProvider } from "./context/TutorialContext";
 import { WebToastProvider } from "./context/WebToastProvider";
@@ -48,10 +48,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <Suspense fallback={<Spinner />}>
+    {/* Top level suspense to handle all lazy loaded components */}
     <Providers>
       <WebToastProvider>
         <TutorialProvider>
-          {/* Top level suspense to handle all lazy loaded components */}
           <RouterProvider router={router} />
           <TutorialOverlay />
         </TutorialProvider>

@@ -1,11 +1,11 @@
 import { AddPaymentModal, PaymentDetailsDrawer, PaymentListItem, PaymentSection } from "@/components/ui/Payments";
-import { Tabs, TabsList, TabsTab } from "@/components/ui/shadcn/tabs";
+import { Tabs, TabsList, TabsTab } from "@/components/ui/Utils/tabs";
 import type { PaymentInterface } from "@shared/data/Payments/interfaces";
 import { useCreatePayment, useDeletePayment, usePayments, useUpdatePayment } from "@shared/hooks/payments";
 import { addDays, endOfToday, isAfter, isBefore, startOfToday } from "date-fns";
 import { AlertCircle, Calendar, CheckCircle2, Clock, DollarSign, Plus, TrendingUp, Wallet } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Button } from "../ui/shadcn/button";
+import { Button } from "../ui/Utils/button";
 
 export default function Payments() {
   const { data: paymentsResponse } = usePayments();
@@ -114,7 +114,7 @@ export default function Payments() {
         {/* Quick Stats */}
         {payments.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-bg-alt rounded-2xl p-4 border border-bg-muted-light shadow-md shadow-shadow">
+            <div className="bg-bg-primary rounded-2xl p-4 border border-bg-muted-light shadow-md shadow-shadow">
               <div className="flex items-center gap-2 mb-1">
                 <DollarSign className="text-primary" size={16} />
                 <span className="text-xs text-text-muted">Total Unpaid</span>
@@ -123,7 +123,7 @@ export default function Payments() {
               <p className="text-xs text-text-muted mt-1">{stats.unpaid} bills</p>
             </div>
 
-            <div className="bg-bg-alt rounded-2xl p-4 border border-bg-muted-light shadow-md shadow-shadow">
+            <div className="bg-bg-primary rounded-2xl p-4 border border-bg-muted-light shadow-md shadow-shadow">
               <div className="flex items-center gap-2 mb-1">
                 <CheckCircle2 className="text-success" size={16} />
                 <span className="text-xs text-text-muted">Paid</span>
@@ -132,7 +132,7 @@ export default function Payments() {
               <p className="text-xs text-text-muted mt-1">{stats.paid} bills</p>
             </div>
 
-            <div className="bg-bg-alt rounded-2xl p-4 border border-bg-muted-light shadow-md shadow-shadow">
+            <div className="bg-bg-primary rounded-2xl p-4 border border-bg-muted-light shadow-md shadow-shadow">
               <div className="flex items-center gap-2 mb-1">
                 <AlertCircle className="text-negative" size={16} />
                 <span className="text-xs text-text-muted">Overdue</span>
@@ -141,7 +141,7 @@ export default function Payments() {
               <p className="text-xs text-text-muted mt-1">{stats.overdue} bills</p>
             </div>
 
-            <div className="bg-bg-alt rounded-2xl p-4 border border-bg-muted-light shadow-md shadow-shadow">
+            <div className="bg-bg-primary rounded-2xl p-4 border border-bg-muted-light shadow-md shadow-shadow">
               <div className="flex items-center gap-2 mb-1">
                 <TrendingUp className="text-purple-500" size={16} />
                 <span className="text-xs text-text-muted">Next 7 Days</span>
@@ -177,8 +177,8 @@ export default function Payments() {
         {/* Empty State */}
         {payments.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-center py-12 bg-bg-alt rounded-2xl px-8">
-              <Wallet size={48} className="mx-auto text-text-muted-more mb-4" />
+            <div className="text-center py-12 bg-bg-primary rounded-2xl px-8">
+              <Wallet size={48} className="mx-auto text-text-muted mb-4" />
               <h3 className="text-lg font-medium text-text-muted mb-2">No payments yet</h3>
               <p className="text-text-muted mb-4">Add your first bill to start tracking your payments.</p>
               <Button onClick={handleOpenCreateModal} variant="primary" type="button">
@@ -188,7 +188,7 @@ export default function Payments() {
             </div>
           </div>
         ) : activeTab === "deadlines" ? (
-          <div className="bg-bg-alt rounded-2xl flex flex-col gap-4">
+          <div className="bg-bg-primary rounded-2xl flex flex-col gap-4">
             {/* Overdue Payments */}
             {stats.overduePayments.length > 0 && (
               <PaymentSection
@@ -258,7 +258,7 @@ export default function Payments() {
             )}
           </div>
         ) : (
-          <div className="bg-bg-alt rounded-2xl">
+          <div className="bg-bg-primary rounded-2xl">
             {/* All Payments List */}
             <ul className="flex flex-col gap-3">
               {payments.map((payment) => (

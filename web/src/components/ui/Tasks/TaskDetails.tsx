@@ -1,25 +1,25 @@
-import { Button } from "@/components/ui/shadcn/button";
-import { Calendar as CalendarRAC } from "@/components/ui/shadcn/calendar-rac";
-import { DateInput } from "@/components/ui/shadcn/datefield-rac";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/shadcn/select";
+import { Calendar as CalendarRAC } from "@/components/ui/Calendar/calendar-rac";
+import { Button } from "@/components/ui/Utils/button";
+import { DateInput } from "@/components/ui/Utils/datefield-rac";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Utils/select";
 import { parseDate } from "@internationalized/date";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
 import { useDeleteLabelConnection } from "@shared/hooks/labels/useLabels";
 import { useDeleteTask, useUpdateTask } from "@shared/hooks/tasks/useTasks";
 import { useToast } from "@shared/hooks/toasts/useToast";
+import { useT } from "@shared/hooks/utils/useT";
 import { format } from "date-fns";
 import { Calendar, CheckCircle2, Tag, Trash, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button as AriaButton, Popover as AriaPopover, DatePicker, Dialog, Group } from "react-aria-components";
-import { useTranslation } from "react-i18next";
 import { BasicDropdown, BasicDropdownItem, DeleteConfirmationModal } from "../Common";
 import { Drawer } from "../Common/Drawer";
-import { Input } from "../shadcn/input";
-import { Label } from "../shadcn/label";
-import { Textarea } from "../shadcn/textarea";
+import { Input } from "../Utils/input";
+import { Label } from "../Utils/label";
+import { Textarea } from "../Utils/textarea";
 
 export default function TaskDetails() {
-  const { t } = useTranslation();
+  const { t } = useT();
   const { clickedTask, setClickedTask, currentTaskListId } = useTaskViewContext();
   const { showSuccess } = useToast();
 
@@ -224,21 +224,19 @@ export default function TaskDetails() {
                     }
                   }}
                   className="group flex flex-col gap-1">
-                  <Group className="flex w-full items-center rounded-2xl border border-text-muted-more bg-bg-alt hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
+                  <Group className="flex w-full items-center rounded-2xl border border-text-muted bg-bg-primary hover:border-white px-3 py-2 text-xs transition-colors focus-within:border-ring">
                     <DateInput className="flex flex-1 text-text" unstyled />
                     <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
                       <Calendar size={16} />
                     </AriaButton>
                   </Group>
-                  <AriaPopover className="rounded-2xl border border-text-muted-more bg-bg-alt p-2 shadow-lg">
+                  <AriaPopover className="rounded-2xl border border-text-muted bg-bg-primary p-2 shadow-lg">
                     <Dialog className="outline-none">
                       <CalendarRAC />
                     </Dialog>
                   </AriaPopover>
                 </DatePicker>
-                {!dueDate && (
-                  <Label className="text-text-muted-more text-xs">Task doesn't have due date by default</Label>
-                )}
+                {!dueDate && <Label className="text-text-muted text-xs">Task doesn't have due date by default</Label>}
               </div>
 
               {/* Time Select */}

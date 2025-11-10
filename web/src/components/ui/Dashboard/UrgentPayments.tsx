@@ -9,7 +9,7 @@ export default function UrgentPayments({ upcomingPayments }: UrgentPaymentsProps
   if (upcomingPayments.length === 0) return null;
 
   return (
-    <div className="p-5 rounded-xl bg-bg-alt border border-border shadow-md shadow-shadow">
+    <div className="p-5 rounded-xl bg-bg-primary border border-border shadow-md shadow-shadow">
       <div className="flex items-center gap-2 mb-4">
         <AlertCircle className="w-5 h-5 text-negative" />
         <h3 className="font-semibold text-text">Urgent Payments</h3>
@@ -22,7 +22,7 @@ export default function UrgentPayments({ upcomingPayments }: UrgentPaymentsProps
             className={`p-3 rounded-lg border transition-colors cursor-pointer ${
               new Date(payment.due_date) < new Date()
                 ? "bg-negative/5 border-negative/20 hover:border-negative/40"
-                : "bg-bg border-border hover:border-warning/30"
+                : "bg-bg-secondary border-border hover:border-warning/30"
             }`}>
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">

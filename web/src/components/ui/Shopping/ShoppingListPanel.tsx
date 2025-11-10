@@ -94,7 +94,7 @@
 //               <div
 //                 key={list.id}
 //                 className={`p-3 rounded-2xl border transition-all cursor-pointer ${
-//                   isSelected ? "border-primary bg-bg-hover " : "border-primary hover:bg-bg-hover "
+//                   isSelected ? "border-primary bg-bg-secondary " : "border-primary hover:bg-bg-secondary "
 //                 }`}
 //                 onClick={() => !isEditing && onSelectList(list)}>
 //                 <div className="flex items-start justify-between">

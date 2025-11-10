@@ -1,8 +1,8 @@
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/shadcn/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/Utils/popover";
 import { formatDistanceToNow } from "date-fns";
 import { Calendar, CheckSquare, Share2, X } from "lucide-react";
 import { useState } from "react";
-import { Button } from "../shadcn/button";
+import { Button } from "../Utils/button";
 
 type NotificationType = "task" | "event" | "share";
 
@@ -127,7 +127,7 @@ export default function NotificationPopup({ children, open, onOpenChange }: Noti
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
-        className="w-80 p-0 bg-bg-alt shadow-xl border border-bg-muted-light shadow-shadow"
+        className="w-80 p-0 bg-bg-primary shadow-xl border border-bg-muted-light shadow-shadow"
         align="end"
         side="right"
         sideOffset={8}
@@ -158,7 +158,7 @@ export default function NotificationPopup({ children, open, onOpenChange }: Noti
             notifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`px-4 py-3 border-b border-border last:border-b-0 transition-colors hover:bg-bg-hover cursor-pointer ${
+                className={`px-4 py-3 border-b border-border last:border-b-0 transition-colors hover:bg-bg-secondary cursor-pointer ${
                   notification.unread ? "bg-primary/5" : ""
                 }`}
                 onClick={() => handleNotificationClick(notification.id)}>
@@ -183,7 +183,7 @@ export default function NotificationPopup({ children, open, onOpenChange }: Noti
 
         {/* Footer */}
         {/* {notifications.length > 0 && (
-          <div className="px-4 py-2 border-t border-border bg-bg-hover">
+          <div className="px-4 py-2 border-t border-border bg-bg-secondary">
             <button className="w-full text-xs font-medium text-primary hover:underline">View all notifications</button>
           </div>
         )} */}

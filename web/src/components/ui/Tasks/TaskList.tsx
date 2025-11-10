@@ -1,14 +1,14 @@
 import type { TaskListProps } from "@shared/data/Tasks/interfaces";
+import { useT } from "@shared/hooks/utils/useT";
 import { ListX, Plus } from "lucide-react";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Button } from "../shadcn/button";
-import Spinner from "../Utils/Spinner";
+import Spinner from "../Loaders/Spinner";
+import { Button } from "../Utils/button";
 import QuickAddTask from "./QuickAddTask";
 import TaskItem from "./TaskItem";
 
 export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
-  const { t } = useTranslation();
+  const { t } = useT();
   const [showQuickAdd, setShowQuickAdd] = useState(false);
 
   // Loading placeholder to prevent layout jump
@@ -96,7 +96,7 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
       </div>
 
       {/* Scrollable task list - background fills to bottom */}
-      <div className="flex-1 bg-bg-alt rounded-2xl">
+      <div className="flex-1 bg-bg-primary rounded-2xl">
         <ul className="space-y-4 p-0">
           {sortedTasks.map((task) => (
             <TaskItem key={task.id} task={task} />

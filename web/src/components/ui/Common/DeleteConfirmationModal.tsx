@@ -1,6 +1,6 @@
 import { DeleteConfirmationModalProps } from "@shared/data/Common/interfaces";
 import { AlertTriangle } from "lucide-react";
-import { Button } from "../shadcn/button";
+import { Button } from "../Utils/button";
 import BaseModal from "./BaseModal";
 
 export default function DeleteConfirmationModal({
@@ -31,7 +31,7 @@ export default function DeleteConfirmationModal({
       <div className="flex items-start gap-3">
         <AlertTriangle size={24} className="text-red-500 flex-shrink-0 mt-1" />
         <div>
-          <p className="text-text-muted-more mb-2">
+          <p className="text-text-muted mb-2">
             {message} <span className="font-semibold">"{itemName}"</span>?
           </p>
 

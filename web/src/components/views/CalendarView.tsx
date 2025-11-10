@@ -1,6 +1,6 @@
-import { EventCalendar } from "@/components/shadcn/Calendar/event-calendar";
-import type { CalendarEvent } from "@/components/shadcn/types";
-import Spinner from "@/components/ui/Utils/Spinner";
+import { EventCalendar } from "@/components/ui/Calendar/event-calendar";
+import type { CalendarEvent } from "@/components/ui/Calendar/types";
+import Spinner from "@/components/ui/Loaders/Spinner";
 import type { EventInterface } from "@shared/data/Calendar/events";
 import { useCreateEvent, useDeleteEvent, useEvents, useUpdateEvent } from "@shared/hooks/events";
 import { useMemo } from "react";

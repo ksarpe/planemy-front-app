@@ -1,42 +1,26 @@
 import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import HttpApi from "i18next-http-backend";
+import { initReactI18next } from "react-i18next";
 
-// Import translation files
-import enTranslations from "./locales/en.json";
-import plTranslations from "./locales/pl.json";
-import deTranslations from "./locales/de.json";
-
-// Translation resources
-const resources = {
-  en: {
-    translation: enTranslations,
-  },
-  pl: {
-    translation: plTranslations,
-  },
-  de: {
-    translation: deTranslations,
-  },
-};
-
-i18n
+export default i18n
+  .use(HttpApi)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    resources,
-    fallbackLng: "pl", // Default to Polish as it seems to be the primary language
-    debug: false,
-
+    backend: {
+      loadPath: "/locales/{{lng}}.json", // path to translation files
+    },
+    fallbackLng: "pl-PL", // default
+    debug: true,
     interpolation: {
       escapeValue: false, // React already escapes values
     },
+    supportedLngs: ["en-US", "pl-PL", "de-DE"],
 
     detection: {
-      // Don't use browser language detection, let the app control language
-      order: [],
-      caches: [], // Don't cache language detection
+      order: ["localStorage", "navigator", "htmlTag"],
+      caches: ["localStorage"],
+      lookupLocalStorage: "app_language",
     },
   });
-
-export default i18n;

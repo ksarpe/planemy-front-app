@@ -23,8 +23,8 @@ export default function LanguageRegionSection({
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300  rounded-2xl bg-white  text-gray-900  focus:ring-2 focus:ring-primary focus:border-primary">
-            <option value="pl">{t("languageAndRegion.polish")}</option>
-            <option value="en">{t("languageAndRegion.english")}</option>
+            <option value="pl-PL">{t("languageAndRegion.polish")}</option>
+            <option value="en-US">{t("languageAndRegion.english")}</option>
           </select>
         </div>
         <div>

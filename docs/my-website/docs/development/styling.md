@@ -21,7 +21,7 @@ Colors are defined in `colors.css`:
 ## Usage
 
 ```tsx
-<div className="bg-bg text-text">
+<div className="bg-bg-secondary text-text">
   <h1 className="text-primary">Title</h1>
 </div>
 ```
@@ -31,16 +31,14 @@ Colors are defined in `colors.css`:
 Automatically handled based on system preference:
 
 ```tsx
-<div className="bg-bg dark:bg-bg-dark">
-  Content
-</div>
+<div className="bg-bg-secondary dark:bg-bg-dark">Content</div>
 ```
 
 ## Common Patterns
 
 ```tsx
 // Card
-<div className="bg-bg rounded-lg border border-border p-4">
+<div className="bg-bg-secondary rounded-lg border border-border p-4">
 
 // Button
 <button className="bg-primary text-white px-4 py-2 rounded-lg">
@@ -54,9 +52,7 @@ Automatically handled based on system preference:
 Mobile-first approach:
 
 ```tsx
-<div className="w-full md:w-1/2 lg:w-1/3">
-  Responsive width
-</div>
+<div className="w-full md:w-1/2 lg:w-1/3">Responsive width</div>
 ```
 
 ## Utility Classes

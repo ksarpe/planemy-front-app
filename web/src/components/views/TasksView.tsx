@@ -14,8 +14,8 @@ import { usePreferencesContext } from "@shared/hooks/context/usePreferencesConte
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
 import { useEffect, useState } from "react";
 import { Drawer } from "../ui/Common/Drawer";
+import Spinner from "../ui/Loaders/Spinner";
 import { TaskListPanel } from "../ui/Tasks/TaskListPanel";
-import Spinner from "../ui/Utils/Spinner";
 
 function TasksViewContent() {
   const {
@@ -59,7 +59,7 @@ function TasksViewContent() {
   }
 
   return (
-    <div className="relative h-full flex flex-col bg-bg-alt">
+    <div className="relative h-full flex flex-col bg-bg-primary">
       {/* Task Lists Drawer */}
 
       <Drawer

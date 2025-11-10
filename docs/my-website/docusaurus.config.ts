@@ -14,7 +14,7 @@ const config: Config = {
   },
 
   url: "https://planemy.com",
-  baseUrl: "/docs/",
+  baseUrl: "/",
 
   organizationName: "ksarpe",
   projectName: "aiplanner-app",

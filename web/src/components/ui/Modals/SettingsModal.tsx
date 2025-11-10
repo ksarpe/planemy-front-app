@@ -1,5 +1,5 @@
 import { NotificationSettingsSection, PersonalInformationSection, SecuritySection } from "@/components/ui/User";
-import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/shadcn/tabs";
+import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/Utils/tabs";
 import type { NotificationSettings } from "@shared/data/User";
 import { useAuthContext } from "@shared/hooks/context/useAuthContext";
 import { usePreferencesContext } from "@shared/hooks/context/usePreferencesContext";
@@ -9,8 +9,8 @@ import { useEffect, useState } from "react";
 import { FiBell, FiGlobe, FiShield, FiUser } from "react-icons/fi";
 import LargeModal, { LargeModalContent, LargeModalFooter, LargeModalHeader } from "../Common/LargeModal";
 import Multiselect from "../Common/Multiselect";
-import { SkeletonText } from "../Utils";
-import { Button } from "../shadcn/button";
+import { SkeletonText } from "../Loaders";
+import { Button } from "../Utils/button";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -76,7 +76,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   };
 
   const handleLanguageChange = (lang: string) => {
-    setSelectedLanguage(lang as "en" | "pl" | "de");
+    setSelectedLanguage(lang as "en-US" | "pl-PL" | "de-DE");
     setIsDirty(true);
   };
 
@@ -147,7 +147,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         ) : (
           <Tabs defaultValue="profile" orientation="vertical" className="w-full h-full flex flex-row">
             {/* Sidebar with tabs */}
-            <div className="w-56 bg-bg border-bg-muted-light flex-shrink-0">
+            <div className="w-56 bg-bg-secondary border-bg-muted-light flex-shrink-0">
               <div className="p-4">
                 <h3 className="text-xs font-semibold text-text-muted uppercase mb-3 px-3">Account</h3>
                 <TabsList variant="underline" className="w-full flex-col items-stretch">
@@ -191,14 +191,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <label className="block text-sm font-medium text-text mb-3">Preferowany język</label>
                     <Multiselect
                       options={[
-                        { label: "Polski 🇵🇱", value: "pl" },
-                        { label: "English 🇬🇧", value: "en" },
-                        { label: "Deutsch 🇩🇪", value: "de" },
+                        { label: "Polski 🇵🇱", value: "pl-PL" },
+                        { label: "English 🇬🇧", value: "en-US" },
+                        { label: "Deutsch 🇩🇪", value: "de-DE" },
                       ]}
                       placeholder={
-                        selectedLanguage === "pl"
+                        selectedLanguage === "pl-PL"
                           ? "Polski 🇵🇱"
-                          : selectedLanguage === "en"
+                          : selectedLanguage === "en-US"
                           ? "English 🇬🇧"
                           : "Deutsch 🇩🇪"
                       }

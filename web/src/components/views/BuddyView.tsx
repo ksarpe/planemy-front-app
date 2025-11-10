@@ -72,7 +72,7 @@ export default function BuddyView() {
     <div className="w-full h-full overflow-y-auto scrollbar-hide">
       <div className="mx-auto p-6 space-y-6">
         {/* Buddy Character - Główna interakcja */}
-        <div className="bg-bg-alt rounded-3xl p-8 border border-border shadow-md shadow-shadow">
+        <div className="bg-bg-primary rounded-3xl p-8 border border-border shadow-md shadow-shadow">
           <div className="text-center">
             {/* Buddy Avatar - Duże emoji jako placeholder */}
             <div className="inline-block mb-6">
@@ -102,7 +102,7 @@ export default function BuddyView() {
             </div>
 
             {/* Buddy Message */}
-            <div className="bg-bg rounded-2xl p-6 mb-6 border border-border max-w-2xl mx-auto">
+            <div className="bg-bg-secondary rounded-2xl p-6 mb-6 border border-border max-w-2xl mx-auto">
               <p className="text-2xl font-semibold text-text mb-2">{currentMessage}</p>
               <p className="text-text-muted">
                 {buddyMood === "happy" && "Jak mogę Ci dziś pomóc?"}
@@ -118,7 +118,7 @@ export default function BuddyView() {
                 <button
                   key={interaction.id}
                   onClick={() => setBuddyMood(interaction.mood)}
-                  className="bg-bg hover:bg-bg-muted-light border border-border hover:border-primary rounded-xl px-4 py-3 transition-all group">
+                  className="bg-bg-secondary hover:bg-bg-muted-light border border-border hover:border-primary rounded-xl px-4 py-3 transition-all group">
                   <div className="text-3xl mb-1 group-hover:scale-110 transition-transform">{interaction.emoji}</div>
                   <div className="text-xs text-text-muted group-hover:text-text">{interaction.label}</div>
                 </button>
@@ -134,7 +134,7 @@ export default function BuddyView() {
             return (
               <div
                 key={fact.label}
-                className="bg-bg-alt shadow-md shadow-shadow rounded-2xl p-6 border border-bg-muted-light text-center">
+                className="bg-bg-primary shadow-md shadow-shadow rounded-2xl p-6 border border-bg-muted-light text-center">
                 <Icon className={`${fact.color} mx-auto mb-2`} size={32} />
                 <p className="text-2xl font-bold text-text">{fact.value}</p>
                 <p className="text-xs text-text-muted mt-1">{fact.label}</p>
@@ -144,7 +144,7 @@ export default function BuddyView() {
         </div>
 
         {/* Sugestie od Buddy */}
-        <div className="bg-bg-alt rounded-2xl p-6 border shadow-md shadow-shadow border-bg-muted-light">
+        <div className="bg-bg-primary rounded-2xl p-6 border shadow-md shadow-shadow border-bg-muted-light">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-text">Sugestie od Buddy</h2>
             <Sparkles className="text-purple-500" size={24} />
@@ -155,11 +155,11 @@ export default function BuddyView() {
               return (
                 <div
                   key={suggestion.id}
-                  className="p-4 bg-bg rounded-xl  border border-bg-muted-light hover:border-primary transition-all group">
+                  className="p-4 bg-bg-secondary rounded-xl  border border-bg-muted-light hover:border-primary transition-all group">
                   <Icon className={`${suggestion.color} mb-3`} size={28} />
                   <h3 className="font-semibold text-text mb-2">{suggestion.title}</h3>
                   <p className="text-sm text-text-muted mb-4">{suggestion.description}</p>
-                  <button className="w-full bg-bg-alt hover:bg-bg-muted-light border border-border rounded-lg py-2 text-xs font-medium text-text transition-all">
+                  <button className="w-full bg-bg-primary hover:bg-bg-muted-light border border-border rounded-lg py-2 text-xs font-medium text-text transition-all">
                     {suggestion.action}
                   </button>
                 </div>
@@ -169,7 +169,7 @@ export default function BuddyView() {
         </div>
 
         {/* Poziom przyjaźni z Buddy */}
-        <div className="bg-bg-alt rounded-2xl shadow-md shadow-shadow p-6 border border-bg-muted-light">
+        <div className="bg-bg-primary rounded-2xl shadow-md shadow-shadow p-6 border border-bg-muted-light">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-xl font-bold text-text">Poziom przyjaźni</h2>
@@ -190,15 +190,15 @@ export default function BuddyView() {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3">
-            <div className="bg-bg rounded-lg p-3 border border-border text-center">
+            <div className="bg-bg-secondary rounded-lg p-3 border border-border text-center">
               <p className="text-xl font-bold text-text">{buddyStats.level}</p>
               <p className="text-xs text-text-muted">Poziom Buddy</p>
             </div>
-            <div className="bg-bg rounded-lg p-3 border border-border text-center">
+            <div className="bg-bg-secondary rounded-lg p-3 border border-border text-center">
               <p className="text-xl font-bold text-text">{buddyStats.tasksHelped}</p>
               <p className="text-xs text-text-muted">Pomoc w zadaniach</p>
             </div>
-            <div className="bg-bg rounded-lg p-3 border border-border text-center">
+            <div className="bg-bg-secondary rounded-lg p-3 border border-border text-center">
               <p className="text-xl font-bold text-text">{buddyStats.daysWithYou}</p>
               <p className="text-xs text-text-muted">Dni razem</p>
             </div>
@@ -206,13 +206,13 @@ export default function BuddyView() {
         </div>
 
         {/* Fun Facts o Buddy */}
-        <div className="bg-bg-alt rounded-2xl shadow-md shadow-shadow p-6 border border-bg-muted-light">
+        <div className="bg-bg-primary rounded-2xl shadow-md shadow-shadow p-6 border border-bg-muted-light">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-text">Ciekawe fakty o Buddy 🎉</h2>
             <Sparkles className="text-purple-500" size={24} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-bg rounded-xl p-4 border border-bg-muted-light">
+            <div className="bg-bg-secondary rounded-xl p-4 border border-bg-muted-light">
               <div className="text-2xl mb-2">🎂</div>
               <h3 className="font-semibold text-text mb-1">Urodzony, aby pomagać</h3>
               <p className="text-sm text-text-muted">
@@ -220,7 +220,7 @@ export default function BuddyView() {
                 dzień był produktywny!
               </p>
             </div>
-            <div className="bg-bg rounded-xl p-4 border border-bg-muted-light">
+            <div className="bg-bg-secondary rounded-xl p-4 border border-bg-muted-light">
               <div className="text-2xl mb-2">☕</div>
               <h3 className="font-semibold text-text mb-1">Ulubiony napój</h3>
               <p className="text-sm text-text-muted">
@@ -228,7 +228,7 @@ export default function BuddyView() {
                 pomysłów.
               </p>
             </div>
-            <div className="bg-bg rounded-xl p-4 border border-bg-muted-light">
+            <div className="bg-bg-secondary rounded-xl p-4 border border-bg-muted-light">
               <div className="text-2xl mb-2">🎨</div>
               <h3 className="font-semibold text-text mb-1">Hobby</h3>
               <p className="text-sm text-text-muted">
@@ -236,7 +236,7 @@ export default function BuddyView() {
                 logiczne!
               </p>
             </div>
-            <div className="bg-bg rounded-xl p-4 border border-bg-muted-light">
+            <div className="bg-bg-secondary rounded-xl p-4 border border-bg-muted-light">
               <div className="text-2xl mb-2">🌟</div>
               <h3 className="font-semibold text-text mb-1">Supermoc</h3>
               <p className="text-sm text-text-muted">
@@ -244,12 +244,12 @@ export default function BuddyView() {
                 zadaniu!
               </p>
             </div>
-            <div className="bg-bg rounded-xl p-4 border border-bg-muted-light">
+            <div className="bg-bg-secondary rounded-xl p-4 border border-bg-muted-light">
               <div className="text-2xl mb-2">💬</div>
               <h3 className="font-semibold text-text mb-1">Ulubione powiedzenie</h3>
               <p className="text-sm text-text-muted">"Każdy dzień to nowa szansa na bycie lepszą wersją siebie!"</p>
             </div>
-            <div className="bg-bg rounded-xl p-4 border border-bg-muted-light">
+            <div className="bg-bg-secondary rounded-xl p-4 border border-bg-muted-light">
               <div className="text-2xl mb-2">🎯</div>
               <h3 className="font-semibold text-text mb-1">Największe osiągnięcie</h3>
               <p className="text-sm text-text-muted">

@@ -76,11 +76,11 @@
 //       <div
 //         role="dialog"
 //         aria-label="Panel list zakupów"
-//         className={`fixed top-0 right-0 h-full w-80 sm:w-100 max-w-full bg-bg-alt border-l border-bg-hover shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
+//         className={`fixed top-0 right-0 h-full w-80 sm:w-100 max-w-full bg-bg-primary border-l border-bg-secondary shadow-xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
 //           showListsPanel ? "translate-x-0" : "translate-x-full"
 //         }`}
 //         onClick={(e) => e.stopPropagation()}>
-//         <div className="p-4 border-b border-bg-hover flex items-center gap-2 bg-bg-alt sticky top-0 z-10">
+//         <div className="p-4 border-b border-bg-secondary flex items-center gap-2 bg-bg-primary sticky top-0 z-10">
 //           <div className="flex gap-2 flex-1">
 //             <button onClick={() => setActiveTab("shopping")} className={getTabButtonClass("shopping")}>
 //               <ShoppingCart size={16} className="inline mr-2" />

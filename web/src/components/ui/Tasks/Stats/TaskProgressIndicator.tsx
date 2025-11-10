@@ -10,7 +10,7 @@ export default function TaskProgressIndicator({
       : 0;
 
   return (
-    <div className="bg-bg-alt  text-text border border-bg-muted-light rounded-2xl p-4 shadow-md text-sm">
+    <div className="bg-bg-primary  text-text border border-bg-muted-light rounded-2xl p-4 shadow-md text-sm">
       <div className="flex justify-between items-center mb-2">
         <span>Progress</span>
         {completedTasksLength} of {completedTasksLength + pendingTasksLength}

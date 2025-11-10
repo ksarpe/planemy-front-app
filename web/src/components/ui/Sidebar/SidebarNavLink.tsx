@@ -18,7 +18,7 @@ export function SidebarNavLink({ to, label, Icon, onClick, collapsed = false }: 
         title={label}
         onClick={onClick}
         className={({ isActive }) =>
-          `w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-bg active:scale-95 ${
+          `w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-bg-secondary active:scale-95 ${
             isActive ? "bg-primary/10  text-primary" : "text-text-muted"
           }`
         }>
@@ -32,7 +32,7 @@ export function SidebarNavLink({ to, label, Icon, onClick, collapsed = false }: 
       to={to}
       onClick={onClick}
       className={({ isActive }) =>
-        `p-2 rounded-2xl flex hover:bg-bg items-center justify-center active:scale-95 overflow-hidden ${
+        `p-2 rounded-2xl flex hover:bg-bg-secondary items-center justify-center active:scale-95 overflow-hidden ${
           isActive ? "bg-primary/10 " : ""
         }`
       }>

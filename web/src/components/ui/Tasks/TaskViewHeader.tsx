@@ -1,11 +1,11 @@
 import type { TaskViewHeaderProps } from "@shared/data/Tasks/interfaces";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
+import { useT } from "@shared/hooks/utils/useT";
 import { ArrowBigRightDash, MoreVertical, Users } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { Button } from "../shadcn/button";
+import { Button } from "../Utils/button";
 
 export function TaskViewHeader({ onToggleLists, listsOpen }: TaskViewHeaderProps) {
-  const { t } = useTranslation();
+  const { t } = useT();
   const { currentTaskList } = useTaskViewContext();
 
   if (!currentTaskList) return null; //TODO: loading state or check chain logic to be sure if we even can get here without currentTaskList

@@ -73,7 +73,7 @@ export default function LargeModal({
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={handleOverlayClick}>
         <div
-          className={`bg-bg-alt rounded-2xl shadow-2xl w-full ${maxWidth} ${height} overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300`}
+          className={`bg-bg-primary rounded-2xl shadow-2xl w-full ${maxWidth} ${height} overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300`}
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true">
@@ -112,7 +112,7 @@ export function LargeModalFooter({ children, show = true }: { children: ReactNod
   if (!show) return null;
 
   return (
-    <div className="border-t border-bg-muted-light p-6 bg-bg flex items-center justify-between flex-shrink-0">
+    <div className="border-t border-bg-muted-light p-6 bg-bg-secondary flex items-center justify-between flex-shrink-0">
       {children}
     </div>
   );

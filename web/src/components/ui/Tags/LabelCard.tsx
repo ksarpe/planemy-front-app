@@ -8,7 +8,7 @@ export default function LabelCard({ label, onEdit }: LabelCardProps) {
 
   return (
     <div
-      className="group bg-bg-alt rounded-2xl p-5 border border-bg-muted-light shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer relative overflow-hidden"
+      className="group bg-bg-primary rounded-2xl p-5 border border-bg-muted-light shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer relative overflow-hidden"
       onClick={() => onEdit(label)}>
       {/* Color accent bar */}
       <div

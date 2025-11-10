@@ -1,16 +1,16 @@
 @theme {
   /* main colors */
   --color-primary: #00b3c7;
-  --color-primary-light: hsl(186, 95%, 34%);
+  --color-primary-light: hsl(186, 96%, 31%);
+  /* DEPRICATED COLOR-BG, change to BG-SECONDARY if you see */
   --color-bg: hsl(0, 0%, 96%);
-  --color-bg-alt: hsl(0, 0%, 100%);
+  --color-bg-secondary: hsl(0, 0%, 96%);
+  --color-bg-primary: hsl(0, 0%, 100%);
   --color-text: hsl(0, 0%, 0%);
-  --color-text-muted: hsl(0, 0%, 30%);
-  --color-text-muted-more: hsl(0, 0%, 50%);
+  --color-text-muted: hsl(0, 0%, 40%);
   --color-bg-muted-light: hsl(0, 0%, 90%);
 
   /* utils */
-  --color-bg-hover: hsl(0, 0%, 93%);
   --color-border: hsl(0, 0%, 85%);
   --color-success: hsl(145, 63%, 49%);
   --color-negative: hsl(0, 65%, 43%);
@@ -24,15 +24,15 @@
     /* main colors */
     --color-primary: #00818f;
     --color-primary-light: hsl(186, 98%, 19%);
+    /* DEPRICATED COLOR-BG, change to BG-SECONDARY if you see */
     --color-bg: hsl(0, 0%, 10%);
-    --color-bg-alt: hsl(0, 0%, 15%);
+    --color-bg-secondary: hsl(0, 0%, 10%);
+    --color-bg-primary: hsl(0, 0%, 15%);
     --color-text: hsl(0, 0%, 100%);
     --color-text-muted: hsl(0, 0%, 70%);
-    --color-text-muted-more: hsl(0, 0%, 50%);
     --color-bg-muted-light: hsl(0, 0%, 25%);
 
     /* utils */
-    --color-bg-hover: hsl(0, 0%, 15%);
     --color-border: hsl(0, 0%, 25%);
     --color-success: hsl(145, 63%, 40%);
     --color-negative: hsl(0, 87%, 36%);

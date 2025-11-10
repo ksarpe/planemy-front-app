@@ -1,7 +1,17 @@
-import { createContext, useState, ReactNode, useEffect } from "react";
-import type { PreferencesContextProps } from "@shared/data/User/preferencesContext";
 import { persistentStorage } from "@shared/lib/storage.web";
-import i18n from "@shared/i18n";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+export interface PreferencesContextProps {
+  defaultTaskListId: string | null;
+  setDefaultTaskListId: (listId: string | null) => void;
+  defaultShoppingListId: string | null;
+  setDefaultShoppingListId: (listId: string | null) => void;
+  isDark: boolean;
+  toggleDark: () => void;
+  setLanguage: (language: "en-US" | "pl-PL" | "de-DE") => void;
+  language: "en-US" | "pl-PL" | "de-DE";
+}
 
 const PreferencesContext = createContext<PreferencesContextProps | undefined>(undefined);
 export { PreferencesContext };
@@ -10,7 +20,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [defaultTaskListId, setDefaultTaskListId] = useState<string | null>(null);
   const [defaultShoppingListId, setDefaultShoppingListId] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(false);
-  const [language, setLanguageState] = useState<"en" | "pl" | "de">("pl");
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     const loadPreferences = async () => {
@@ -20,13 +30,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
       setIsDark(isDarkMode);
       updateHtmlClass(isDarkMode);
-
-      // Load language
-      const savedLanguage = await persistentStorage.getItem("app_language");
-      const currentLanguage =
-        savedLanguage === "en" || savedLanguage === "pl" || savedLanguage === "de" ? savedLanguage : "pl";
-      setLanguageState(currentLanguage);
-      i18n.changeLanguage(currentLanguage);
     };
     loadPreferences();
   }, []);
@@ -49,9 +52,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   };
 
   // Set language
-  const setLanguage = (newLanguage: "en" | "pl" | "de") => {
-    setLanguageState(newLanguage);
-    persistentStorage.setItem("app_language", newLanguage);
+  const setLanguage = (newLanguage: "en-US" | "pl-PL" | "de-DE") => {
     i18n.changeLanguage(newLanguage);
   };
 
@@ -64,8 +65,8 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         setDefaultShoppingListId,
         isDark,
         toggleDark,
-        language,
         setLanguage,
+        language: i18n.language as "en-US" | "pl-PL" | "de-DE",
       }}>
       {children}
     </PreferencesContext.Provider>

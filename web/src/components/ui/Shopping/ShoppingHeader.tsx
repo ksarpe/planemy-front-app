@@ -17,7 +17,7 @@ export function ShoppingHeader({ name, stats, onToggleLists, listsOpen }: Extend
           <button
             type="button"
             onClick={onToggleLists}
-            className="px-2 py-2 rounded-2xl bg-bg-hover border border-bg-hover hover:bg-primary transition-colors text-xs sm:text-sm cursor-pointer">
+            className="px-2 py-2 rounded-2xl bg-bg-secondary border border-bg-secondary hover:bg-primary transition-colors text-xs sm:text-sm cursor-pointer">
             <MoreVertical size={14} />
           </button>
         )}
