@@ -2,7 +2,7 @@ import type { TaskListProps } from "@shared/data/Tasks/interfaces";
 import { useT } from "@shared/hooks/utils/useT";
 import { ListX, Plus } from "lucide-react";
 import { useState } from "react";
-import Spinner from "../Loaders/Spinner";
+import { SkeletonList, SkeletonTaskCard } from "../Loaders/SkeletonPresets";
 import { Button } from "../Utils/button";
 import QuickAddTask from "./QuickAddTask";
 import TaskItem from "./TaskItem";
@@ -12,11 +12,15 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
   const [showQuickAdd, setShowQuickAdd] = useState(false);
 
   // Loading placeholder to prevent layout jump
+  // Loading placeholder to prevent layout jump
   if (isLoading) {
     return (
-      <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-8">
-        <Spinner />
-        <p className="mt-2 text-sm text-text-muted">{t("tasks.loading.tasks")}</p>
+      <div className="flex-1 min-h-0 flex flex-col">
+        <div className="flex-1 bg-bg-primary rounded-2xl overflow-y-auto p-1 scrollbar-hide">
+          <div className="space-y-4 p-0 pb-4">
+            <SkeletonList count={6} ItemComponent={SkeletonTaskCard} />
+          </div>
+        </div>
       </div>
     );
   }
@@ -96,8 +100,8 @@ export default function TaskList({ filter, tasks, isLoading }: TaskListProps) {
       </div>
 
       {/* Scrollable task list - background fills to bottom */}
-      <div className="flex-1 bg-bg-primary rounded-2xl">
-        <ul className="space-y-4 p-0">
+      <div className="flex-1 bg-bg-primary rounded-2xl overflow-y-auto p-1 scrollbar-hide">
+        <ul className="space-y-4 p-0 pb-4">
           {sortedTasks.map((task) => (
             <TaskItem key={task.id} task={task} />
           ))}

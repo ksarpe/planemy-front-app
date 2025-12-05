@@ -16,7 +16,7 @@ export const getPayments = async (): Promise<PaymentResponse> => {
   return data;
 };
 
-export const addPayment = async (paymentData: Partial<Payment>): Promise<Partial<Payment>> => {
+export const addPayment = async (paymentData: Omit<Payment, "id">): Promise<Partial<Payment>> => {
   const response = await fetch(buildApiUrl("bills"), {
     method: "POST",
     credentials: "include",

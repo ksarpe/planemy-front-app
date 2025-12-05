@@ -188,74 +188,122 @@ export default function Payments() {
             </div>
           </div>
         ) : activeTab === "deadlines" ? (
-          <div className="bg-bg-primary rounded-2xl flex flex-col gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Overdue Payments */}
-            {stats.overduePayments.length > 0 && (
-              <PaymentSection
-                title="Overdue"
-                icon={AlertCircle}
-                count={stats.overdue}
-                total={stats.totalOverdue}
-                payments={stats.overduePayments}
-                bgColor="bg-negative/10"
-                borderColor="border-negative/20"
-                textColor="text-negative"
-                onMarkPaid={handleMarkPaid}
-                onMarkUnpaid={handleMarkUnpaid}
-                onDelete={handleDeletePayment}
-              />
-            )}
+            <div>
+              {stats.overduePayments.length > 0 ? (
+                <PaymentSection
+                  title="Overdue"
+                  icon={AlertCircle}
+                  count={stats.overdue}
+                  total={stats.totalOverdue}
+                  payments={stats.overduePayments}
+                  textColor="text-negative"
+                  onMarkPaid={handleMarkPaid}
+                  onMarkUnpaid={handleMarkUnpaid}
+                  onDelete={handleDeletePayment}
+                />
+              ) : (
+                <div className="rounded-xl border border-bg-muted-light overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-3 bg-bg-muted/50">
+                    <div className="flex items-center gap-2.5">
+                      <AlertCircle className="text-negative" size={18} />
+                      <h3 className="text-base font-semibold text-negative">Overdue</h3>
+                    </div>
+                  </div>
+                  <div className="bg-bg-primary px-4 py-8 text-center">
+                    <p className="text-sm text-text-muted">No overdue payments</p>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Due Today */}
-            {stats.dueTodayPayments.length > 0 && (
-              <PaymentSection
-                title="Due Today"
-                icon={Clock}
-                count={stats.dueToday}
-                total={stats.totalDueToday}
-                payments={stats.dueTodayPayments}
-                bgColor="bg-warning/10"
-                borderColor="border-warning/20"
-                textColor="text-warning"
-                onMarkPaid={handleMarkPaid}
-                onMarkUnpaid={handleMarkUnpaid}
-                onDelete={handleDeletePayment}
-              />
-            )}
+            <div>
+              {stats.dueTodayPayments.length > 0 ? (
+                <PaymentSection
+                  title="Due Today"
+                  icon={Clock}
+                  count={stats.dueToday}
+                  total={stats.totalDueToday}
+                  payments={stats.dueTodayPayments}
+                  textColor="text-warning"
+                  onMarkPaid={handleMarkPaid}
+                  onMarkUnpaid={handleMarkUnpaid}
+                  onDelete={handleDeletePayment}
+                />
+              ) : (
+                <div className="rounded-xl border border-bg-muted-light overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-3 bg-bg-muted/50">
+                    <div className="flex items-center gap-2.5">
+                      <Clock className="text-warning" size={18} />
+                      <h3 className="text-base font-semibold text-warning">Due Today</h3>
+                    </div>
+                  </div>
+                  <div className="bg-bg-primary px-4 py-8 text-center">
+                    <p className="text-sm text-text-muted">Nothing due today</p>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Due Tomorrow */}
-            {stats.dueTomorrowPayments.length > 0 && (
-              <PaymentSection
-                title="Due Tomorrow"
-                icon={Calendar}
-                count={stats.dueTomorrow}
-                total={stats.totalDueTomorrow}
-                payments={stats.dueTomorrowPayments}
-                bgColor="bg-primary/10"
-                borderColor="border-primary/20"
-                textColor="text-primary"
-                onMarkPaid={handleMarkPaid}
-                onMarkUnpaid={handleMarkUnpaid}
-                onDelete={handleDeletePayment}
-              />
-            )}
+            <div>
+              {stats.dueTomorrowPayments.length > 0 ? (
+                <PaymentSection
+                  title="Due Tomorrow"
+                  icon={Calendar}
+                  count={stats.dueTomorrow}
+                  total={stats.totalDueTomorrow}
+                  payments={stats.dueTomorrowPayments}
+                  textColor="text-primary"
+                  onMarkPaid={handleMarkPaid}
+                  onMarkUnpaid={handleMarkUnpaid}
+                  onDelete={handleDeletePayment}
+                />
+              ) : (
+                <div className="rounded-xl border border-bg-muted-light overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-3 bg-bg-muted/50">
+                    <div className="flex items-center gap-2.5">
+                      <Calendar className="text-primary" size={18} />
+                      <h3 className="text-base font-semibold text-primary">Due Tomorrow</h3>
+                    </div>
+                  </div>
+                  <div className="bg-bg-primary px-4 py-8 text-center">
+                    <p className="text-sm text-text-muted">Nothing due tomorrow</p>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Next 7 Days */}
-            {stats.dueNext7DaysPayments.length > 0 && (
-              <PaymentSection
-                title="Next 7 Days"
-                icon={TrendingUp}
-                count={stats.dueNext7Days}
-                total={stats.totalDueNext7Days}
-                payments={stats.dueNext7DaysPayments}
-                bgColor="bg-purple-500/10"
-                borderColor="border-purple-500/20"
-                textColor="text-purple-500"
-                onMarkPaid={handleMarkPaid}
-                onMarkUnpaid={handleMarkUnpaid}
-                onDelete={handleDeletePayment}
-              />
-            )}
+            <div>
+              {stats.dueNext7DaysPayments.length > 0 ? (
+                <PaymentSection
+                  title="Next 7 Days"
+                  icon={TrendingUp}
+                  count={stats.dueNext7Days}
+                  total={stats.totalDueNext7Days}
+                  payments={stats.dueNext7DaysPayments}
+                  textColor="text-text-muted"
+                  onMarkPaid={handleMarkPaid}
+                  onMarkUnpaid={handleMarkUnpaid}
+                  onDelete={handleDeletePayment}
+                />
+              ) : (
+                <div className="rounded-xl border border-bg-muted-light overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-3 bg-bg-muted/50">
+                    <div className="flex items-center gap-2.5">
+                      <TrendingUp className="text-text-muted" size={18} />
+                      <h3 className="text-base font-semibold text-text-muted">Next 7 Days</h3>
+                    </div>
+                  </div>
+                  <div className="bg-bg-primary px-4 py-8 text-center">
+                    <p className="text-sm text-text-muted">Nothing due in the next 7 days</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="bg-bg-primary rounded-2xl">

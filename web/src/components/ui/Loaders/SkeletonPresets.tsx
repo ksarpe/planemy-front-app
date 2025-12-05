@@ -34,6 +34,24 @@ export function SkeletonTaskItem() {
   );
 }
 
+// Task Card Skeleton (matches TaskItem style)
+export function SkeletonTaskCard() {
+  return (
+    <div className="rounded-2xl px-4 py-3 shadow-md border border-bg-muted-light bg-bg-primary flex items-center justify-between">
+      <div className="flex items-center gap-3 flex-1">
+        <Skeleton variant="circular" width={20} height={20} />
+        <div className="flex-1 space-y-2">
+          <Skeleton variant="text" className="w-1/2 h-4" />
+          <Skeleton variant="text" className="w-1/3 h-3" />
+        </div>
+      </div>
+      <div className="flex flex-col items-end gap-2">
+        <Skeleton variant="text" className="w-16 h-3" />
+      </div>
+    </div>
+  );
+}
+
 // Label Card Skeleton
 export function SkeletonLabelCard() {
   return (

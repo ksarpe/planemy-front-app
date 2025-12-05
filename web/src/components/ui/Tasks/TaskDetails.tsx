@@ -28,10 +28,14 @@ export default function TaskDetails() {
   const { mutate: removeLabelConnection } = useDeleteLabelConnection();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [displayTask, setDisplayTask] = useState(clickedTask);
 
   // Sync drawer open state with clickedTask
   useEffect(() => {
     setIsDrawerOpen(!!clickedTask);
+    if (clickedTask) {
+      setDisplayTask(clickedTask);
+    }
   }, [clickedTask]);
 
   // Form state
@@ -49,13 +53,14 @@ export default function TaskDetails() {
   });
 
   // Sync form state when clickedTask changes (when user clicks on a different task)
+  // Sync form state when displayTask changes
   useEffect(() => {
-    if (clickedTask) {
-      setTitle(clickedTask.title || "");
-      setDescription(clickedTask.task_description || "");
+    if (displayTask) {
+      setTitle(displayTask.title || "");
+      setDescription(displayTask.task_description || "");
 
-      if (clickedTask.dueDate && clickedTask.dueDate !== "") {
-        const date = new Date(clickedTask.dueDate);
+      if (displayTask.dueDate && displayTask.dueDate !== "") {
+        const date = new Date(displayTask.dueDate);
         setDueDate(date);
         setDueTime(`${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`);
       } else {
@@ -63,7 +68,7 @@ export default function TaskDetails() {
         setDueTime("12:00");
       }
     }
-  }, [clickedTask]); // Only re-run when the task ID changes (different task clicked)
+  }, [displayTask]);
 
   // Generate time options (same as event-panel)
   const timeOptions = [];
@@ -80,15 +85,15 @@ export default function TaskDetails() {
   }
 
   const handleSave = () => {
-    if (!clickedTask || !currentTaskListId) return;
+    if (!displayTask || !currentTaskListId) return;
 
     const updates: Partial<{ title: string; task_description: string; dueDate: string }> = {};
 
-    if (title.trim() !== clickedTask.title) {
+    if (title.trim() !== displayTask.title) {
       updates.title = title.trim();
     }
 
-    if (task_description !== (clickedTask.task_description || "")) {
+    if (task_description !== (displayTask.task_description || "")) {
       updates.task_description = task_description;
     }
 
@@ -97,12 +102,12 @@ export default function TaskDetails() {
       const combinedDate = new Date(dueDate);
       combinedDate.setHours(hours, minutes, 0, 0);
       updates.dueDate = combinedDate.toISOString();
-    } else if (clickedTask.dueDate) {
+    } else if (displayTask.dueDate) {
       updates.dueDate = "";
     }
 
     if (Object.keys(updates).length > 0) {
-      updateTask({ id: clickedTask.id, data: updates, listId: currentTaskListId });
+      updateTask({ id: displayTask.id, data: updates, listId: currentTaskListId });
       showSuccess("Task updated successfully");
     }
 
@@ -110,24 +115,21 @@ export default function TaskDetails() {
   };
 
   const handleToggleComplete = () => {
-    if (!clickedTask || !currentTaskListId) return;
-    updateTask({ id: clickedTask.id, data: { isCompleted: !clickedTask.isCompleted }, listId: currentTaskListId });
+    if (!displayTask || !currentTaskListId) return;
+    updateTask({ id: displayTask.id, data: { isCompleted: !displayTask.isCompleted }, listId: currentTaskListId });
     setClickedTask(null);
   };
 
   const handleDelete = () => {
-    if (!clickedTask) return;
+    if (!displayTask) return;
     setShowDeleteConfirm(false);
     setClickedTask(null);
-    removeTask(clickedTask.id);
+    removeTask(displayTask.id);
+    showSuccess("Task deleted successfully");
   };
 
   const handleClose = () => {
-    setIsDrawerOpen(false);
-    // Wait for animation to finish before clearing clickedTask
-    setTimeout(() => {
-      setClickedTask(null);
-    }, 300); // Match animation duration
+    setClickedTask(null);
   };
 
   return (
@@ -139,7 +141,7 @@ export default function TaskDetails() {
         position="right"
         title="Task Details"
         header={
-          clickedTask && (
+          displayTask && (
             <Button
               onClick={() => setShowDeleteConfirm(true)}
               variant="delete"
@@ -151,14 +153,14 @@ export default function TaskDetails() {
           )
         }
         footer={
-          clickedTask && (
+          displayTask && (
             <div className="flex items-center justify-end gap-2">
               <Button
                 onClick={handleToggleComplete}
-                variant={clickedTask.isCompleted ? "default" : "success"}
+                variant={displayTask.isCompleted ? "default" : "success"}
                 className="flex items-center justify-center gap-2">
                 <CheckCircle2 size={18} />
-                {clickedTask.isCompleted ? t("tasks.details.actions.markIncomplete") : "Complete"}
+                {displayTask.isCompleted ? t("tasks.details.actions.markIncomplete") : "Complete"}
               </Button>
               <Button onClick={handleSave} variant="primary">
                 {t("tasks.details.actions.save")}
@@ -166,12 +168,12 @@ export default function TaskDetails() {
             </div>
           )
         }>
-        {clickedTask && currentTaskListId && (
+        {displayTask && currentTaskListId && (
           <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-2">
             {/* Labels */}
-            {clickedTask.labels && clickedTask.labels.length > 0 && (
+            {displayTask.labels && displayTask.labels.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {clickedTask.labels.map((label) => (
+                {displayTask.labels.map((label) => (
                   <div onClick={(e) => e.stopPropagation()} key={label.id}>
                     <BasicDropdown
                       trigger={
@@ -186,7 +188,7 @@ export default function TaskDetails() {
                       <BasicDropdownItem
                         icon={Trash}
                         variant="red"
-                        onClick={() => removeLabelConnection(clickedTask.id)}>
+                        onClick={() => removeLabelConnection(displayTask.id)}>
                         {t("tasks.item.labels.remove")}
                       </BasicDropdownItem>
                     </BasicDropdown>
@@ -269,14 +271,14 @@ export default function TaskDetails() {
       </Drawer>
 
       {/* Delete Confirmation Modal */}
-      {clickedTask && (
+      {displayTask && (
         <DeleteConfirmationModal
           isOpen={showDeleteConfirm}
           onClose={() => setShowDeleteConfirm(false)}
           onConfirm={handleDelete}
           title={t("tasks.details.deleteConfirmation.title")}
           message={t("tasks.details.deleteConfirmation.message")}
-          itemName={clickedTask.title}
+          itemName={displayTask.title}
           confirmButtonText={t("tasks.details.deleteConfirmation.confirmButton")}
         />
       )}

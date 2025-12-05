@@ -1,8 +1,8 @@
 import type { TaskItemProps } from "@shared/data/Tasks/interfaces";
 import { useTaskViewContext } from "@shared/hooks/context/useTaskViewContext";
 import { useUpdateTask } from "@shared/hooks/tasks/useTasks";
-import { AlertCircle, Calendar, CheckCircle2, Clock } from "lucide-react";
 import { useT } from "@shared/hooks/utils/useT";
+import { AlertCircle, Calendar, CheckCircle2, Clock } from "lucide-react";
 
 export default function TaskItem({ task }: TaskItemProps) {
   const { t } = useT();
@@ -48,8 +48,8 @@ export default function TaskItem({ task }: TaskItemProps) {
 
   return (
     <li
-      className={`rounded-2xl px-4 py-2 text-text cursor-pointer shadow-md border border-bg-muted-light hover:scale-101 duration-200
-      ${clickedTask?.id === task.id && "border-primary"}`}
+      className={`rounded-2xl px-4 py-2 text-text cursor-pointer shadow-md border border-bg-muted-light hover:scale-99 duration-200
+      ${clickedTask?.id === task.id ? "border-primary" : ""}`}
       onClick={() => {
         // Toggle functionality - if already selected, deselect it
         if (clickedTask?.id === task.id) {

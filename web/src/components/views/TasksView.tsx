@@ -26,7 +26,6 @@ function TasksViewContent() {
     isLoadingLists,
     isLoadingTasks,
     allTaskLists,
-    clickedTask,
   } = useTaskViewContext();
   const { defaultTaskListId } = usePreferencesContext();
 
@@ -77,7 +76,9 @@ function TasksViewContent() {
       </Drawer>
 
       {/* Task Details Drawer */}
-      <div>{clickedTask && <TaskDetails />}</div>
+      <div>
+        <TaskDetails />
+      </div>
 
       {/* Main content */}
       <div className="flex flex-col px-4 py-2 md:px-4 md:py-4 h-full overflow-hidden">

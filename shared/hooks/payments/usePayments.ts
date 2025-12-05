@@ -15,7 +15,7 @@ export function usePayments() {
 
 export function useCreatePayment() {
   return useMutation({
-    mutationFn: (payment: Partial<Payment>) => addPayment(payment),
+    mutationFn: (payment: Omit<Payment, "id">) => addPayment(payment),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
     },

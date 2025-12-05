@@ -86,3 +86,13 @@ export interface InputModalProps {
   isLoading?: boolean;
   maxWidth?: string;
 }
+
+export interface RecurrenceRule {
+  frequency: "daily" | "weekly" | "monthly" | "yearly";
+  interval?: number;
+  bymonthday?: number;
+  byweekday?: number[];
+  count?: number;
+  until?: string;
+  weekStart?: number;
+}

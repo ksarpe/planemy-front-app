@@ -1,3 +1,6 @@
+import { RecurrenceRule } from "@shared/data/Common/interfaces";
+import { getDate, getDay } from "date-fns";
+
 export const getDateKey = (date: Date) => {
   const y = date.getFullYear();
   const m = `${date.getMonth() + 1}`.padStart(2, "0");
@@ -47,3 +50,66 @@ export const calculateNextPaymentDate = (
 
   return nextDate.toISOString().split("T")[0];
 };
+
+export function parseRecurrenceOption(optionValue: string, referenceDate: Date): RecurrenceRule | null {
+  switch (optionValue) {
+    case "none":
+      // Brak powtarzania - nie zwracaj RecurrenceRule
+      return null;
+
+    case "daily":
+      // Co dzień
+      return {
+        frequency: "daily",
+        interval: 1,
+      };
+
+    case "weekday":
+      // Dni robocze (poniedziałek-piątek)
+      return {
+        frequency: "weekly",
+        interval: 1,
+        byweekday: [1, 2, 3, 4, 5], // Mon-Fri
+      };
+
+    case "weekly":
+      // Co tydzień w ten sam dzień tygodnia
+      return {
+        frequency: "weekly",
+        interval: 1,
+        byweekday: [getDay(referenceDate)], // Dzień z reference date
+      };
+
+    case "monthly":
+      // Co miesiąc tego samego dnia (np. 5. dnia miesiąca)
+      return {
+        frequency: "monthly",
+        interval: 1,
+        bymonthday: getDate(referenceDate), // Dzień miesiąca z reference date
+      };
+
+    case "monthly-day":
+      // Co miesiąc w ten sam dzień tygodnia i tydzień miesiąca
+      // (np. każdy 2. wtorek miesiąca)
+      // UWAGA: Backend obecnie nie wspiera byweekday dla monthly!
+      // Ta opcja wymaga rozszerzenia API lub alternatywnego rozwiązania
+      console.warn("monthly-day nie jest jeszcze w pełni wspierana przez backend");
+      return {
+        frequency: "monthly",
+        interval: 1,
+        bymonthday: getDate(referenceDate), // Fallback do dnia miesiąca
+      };
+
+    case "yearly":
+      // Co rok w tę samą datę
+      return {
+        frequency: "yearly",
+        interval: 1,
+        // Backend automatycznie użyje daty z due_date/starts_at
+      };
+
+    default:
+      console.error(`Unknown recurrence option: ${optionValue}`);
+      return null;
+  }
+}

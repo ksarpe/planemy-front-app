@@ -1,90 +1,113 @@
 import type { PaymentInterface } from "@shared/data/Payments/interfaces";
-import { format } from "date-fns";
-import { motion } from "framer-motion";
+import { useToast } from "@shared/hooks/toasts/useToast";
+import { differenceInDays, format, isBefore, startOfToday } from "date-fns";
+import { CheckCircle2, DollarSign } from "lucide-react";
 import { useState } from "react";
+import BaseModal from "../Common/BaseModal";
+import { Button } from "../Utils/button";
 
 interface PaymentRowProps {
   payment: PaymentInterface;
   onMarkPaid: (payment: PaymentInterface) => void;
-  onMarkUnpaid: (payment: PaymentInterface) => void;
 }
 
-export function PaymentRow({ payment, onMarkPaid, onMarkUnpaid }: PaymentRowProps) {
+export function PaymentRow({ payment, onMarkPaid }: PaymentRowProps) {
   const dueDate = new Date(payment.due_date);
   const isPaid = !!payment.paid_at;
-  const [isHovered, setIsHovered] = useState(false);
+  const isOverdue = !isPaid && isBefore(dueDate, startOfToday());
+  const daysOverdue = isOverdue ? differenceInDays(startOfToday(), dueDate) : 0;
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const { showSuccess } = useToast();
 
-  const handleTogglePaid = () => {
-    if (isPaid) {
-      onMarkUnpaid(payment);
-    } else {
-      onMarkPaid(payment);
+  const handleRowClick = () => {
+    if (!isPaid) {
+      setShowConfirmModal(true);
     }
   };
 
-  return (
-    <div
-      className="group flex items-center justify-between py-2 hover:bg-bg-muted/5 transition-colors"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}>
-      {/* Left: Title and Date */}
-      <div className="flex items-center gap-4 flex-1">
-        <div className="flex items-center gap-3 flex-1">
-          {/* Interactive Checkbox Circle - slides in on hover */}
-          <motion.button
-            onClick={handleTogglePaid}
-            className="flex cursor-pointer items-center justify-center rounded-2xl font-medium p-1 text-white text-xs flex-shrink-0"
-            style={{
-              borderColor: isPaid ? "var(--color-success)" : "var(--color-text-muted)",
-              backgroundColor: isPaid ? "var(--color-success)" : "var(--color-success)",
-            }}
-            initial={{ opacity: 0, marginRight: 0, x: -8 }}
-            animate={{
-              opacity: isHovered ? 1 : 0,
-              marginRight: isHovered ? 36 : 0,
-              x: isHovered ? 12 : -8,
-            }}
-            whileHover={{ scale: 1.1 }}
-            transition={{
-              duration: 0.3,
-              ease: [0.4, 0, 0.2, 1],
-            }}
-            aria-label={isPaid ? "Mark as unpaid" : "Mark as paid"}>
-            PAID
-            {isPaid && (
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="text-white">
-                <path
-                  d="M2 6L5 9L10 3"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            )}
-          </motion.button>
+  const handleConfirmPayment = () => {
+    showSuccess("Payment marked as paid!");
+    onMarkPaid(payment);
+    setShowConfirmModal(false);
+  };
 
-          <div className="flex -ml-8 items-center gap-2 text-xl text-text-muted whitespace-nowrap transition-all duration-300">
-            <span>{format(dueDate, "MMM dd")}</span>
-            {isPaid && payment.paid_at && (
-              <span className="text-xs text-success ml-2">• Paid {format(new Date(payment.paid_at), "MMM dd")}</span>
+  return (
+    <>
+      <div
+        className={`group relative flex items-center justify-between py-2 px-4 transition-colors cursor-pointer border-b border-bg-muted-light last:border-b-0 ${
+          !isPaid ? "hover:bg-success/10 active:bg-success/20" : "hover:bg-bg-muted/20"
+        }`}
+        onClick={handleRowClick}>
+        {/* Left: Date, Price, Title - All in one row */}
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          {/* Date */}
+          <span className={`text-xs font-medium min-w-[50px] ${isOverdue ? "text-negative" : "text-text-muted"}`}>
+            {format(dueDate, "MMM dd")}
+            {isOverdue && daysOverdue > 0 && (
+              <span className="block text-[10px] text-negative leading-tight">+{daysOverdue}d</span>
             )}
-          </div>
-          <h4 className="font-medium text-text truncate transition-all duration-300">{payment.title}</h4>
-          <div className="text-xl font-bold text-primary whitespace-nowrap transition-all duration-300">
+          </span>
+
+          {/* Price */}
+          <span className={`text-sm font-bold min-w-[70px] ${isPaid ? "text-success" : "text-text"}`}>
             ${payment.amount.toFixed(2)}
-          </div>
+          </span>
+
+          {/* Title */}
+          <h4
+            className={`text-sm font-medium transition-colors flex-1 min-w-0 truncate ${
+              isPaid ? "line-through text-text-muted" : "text-text"
+            }`}>
+            {payment.title}
+          </h4>
         </div>
+
+        {/* Right: Status Icon or Pay Button */}
+        {isPaid ? (
+          <div className="text-success flex-shrink-0">
+            <CheckCircle2 size={18} />
+          </div>
+        ) : (
+          <div className="hidden sm:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="text-xs text-success font-medium">Click to pay</span>
+            <DollarSign size={16} className="text-success" />
+          </div>
+        )}
       </div>
 
-      {/* Right: Actions */}
-      <div className="flex items-center gap-2"></div>
-    </div>
+      {/* Confirmation Modal */}
+      <BaseModal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        title="Mark Payment as Paid"
+        showCloseButton={false}
+        actions={
+          <>
+            <Button onClick={() => setShowConfirmModal(false)} variant="default">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmPayment} variant="primary">
+              <CheckCircle2 size={16} />
+              Mark as Paid
+            </Button>
+          </>
+        }>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between p-3 bg-bg-muted/30 rounded-lg">
+            <span className="text-sm text-text-muted">Payment:</span>
+            <span className="font-medium text-text">{payment.title}</span>
+          </div>
+          <div className="flex items-center justify-between p-3 bg-bg-muted/30 rounded-lg">
+            <span className="text-sm text-text-muted">Amount:</span>
+            <span className="text-lg font-bold text-success">${payment.amount.toFixed(2)}</span>
+          </div>
+          <div className="flex items-center justify-between p-3 bg-bg-muted/30 rounded-lg">
+            <span className="text-sm text-text-muted">Due Date:</span>
+            <span className="font-medium text-text">{format(dueDate, "MMM dd, yyyy")}</span>
+          </div>
+          <p className="text-sm text-text-muted mt-4">Are you sure you want to mark this payment as paid?</p>
+        </div>
+      </BaseModal>
+    </>
   );
 }

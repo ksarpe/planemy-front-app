@@ -1,11 +1,14 @@
 // Payment related domain models - matches backend database structure
 
+import { RecurrenceRule } from "../Common/interfaces";
+
 export interface PaymentInterface {
   id: string;
   title: string;
   amount: number;
   due_date: string; // ISO 8601 format
   paid_at: string | null; // ISO 8601 format or null if unpaid
+  recurrence_rule: RecurrenceRule | null;
   // Future fields (commented out until backend supports them):
   // currency?: string;
   // cycle?: "weekly" | "monthly" | "quarterly" | "yearly";

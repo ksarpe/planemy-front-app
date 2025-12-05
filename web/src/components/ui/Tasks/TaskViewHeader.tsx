@@ -13,7 +13,7 @@ export function TaskViewHeader({ onToggleLists, listsOpen }: TaskViewHeaderProps
   return (
     <>
       {/* List name and three dots button */}
-      <div className="flex items-start gap-8 justify-between">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex gap-2">
           <div className="flex items-center">
             <h1 className="text-2xl font-semibold text-text">{currentTaskList.name}</h1>
