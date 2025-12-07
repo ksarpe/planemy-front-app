@@ -19,6 +19,7 @@ interface MultiselectProps {
   openedPlaceholder: string;
   addButtonText: string;
   onSelect: (value: string) => void;
+  onAddButtonClick?: () => void;
 }
 
 export default function Multiselect({
@@ -27,9 +28,17 @@ export default function Multiselect({
   openedPlaceholder,
   addButtonText,
   onSelect,
+  onAddButtonClick,
 }: MultiselectProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
+
+  const handleAddButtonClick = () => {
+    setOpen(false);
+    if (onAddButtonClick) {
+      onAddButtonClick();
+    }
+  };
 
   return (
     <div className="*:not-first:mt-2">
@@ -37,15 +46,17 @@ export default function Multiselect({
         <PopoverTrigger asChild>
           <Button
             id={id}
-            variant="default"
+            variant="link"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between border-bg-muted-light px-3 font-medium hover:border-text">
+            className="w-full justify-between bg-white border border-bg-muted-light px-3 font-medium hover:border-text">
             <span className="truncate text-text-muted">{placeholder}</span>
             <ChevronDownIcon size={16} className="shrink-0 text-text-muted" aria-hidden="true" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full min-w-[var(--radix-popper-anchor-width)] p-0" align="start">
+        <PopoverContent
+          className="w-full min-w-[var(--radix-popper-anchor-width)] p-0 bg-white border border-bg-muted-light"
+          align="start">
           <Command>
             <CommandInput placeholder={openedPlaceholder} />
             <CommandList>
@@ -67,7 +78,11 @@ export default function Multiselect({
               </CommandGroup>
               <CommandSeparator />
               <CommandGroup>
-                <Button variant="ghost" className="w-full justify-start font-normal">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start font-normal"
+                  onClick={handleAddButtonClick}
+                  type="button">
                   <PlusIcon size={16} className="-ms-2 opacity-60" aria-hidden="true" />
                   {addButtonText}
                 </Button>

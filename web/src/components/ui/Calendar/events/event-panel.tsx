@@ -1,12 +1,14 @@
 import { parseDate } from "@internationalized/date";
 import { RiArrowRightLine, RiDeleteBinLine } from "@remixicon/react";
 import { format, isBefore } from "date-fns";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button as AriaButton, Popover as AriaPopover, DatePicker, Dialog, Group } from "react-aria-components";
+import { useNavigate } from "react-router-dom";
 
 import { Calendar as CalendarRAC } from "@/components/ui/Calendar/calendar-rac";
 import { DefaultEndHour, DefaultStartHour, EndHour, StartHour } from "@/components/ui/Calendar/constants";
 import type { CalendarEvent, EventColor } from "@/components/ui/Calendar/types";
+import { DeleteConfirmationModal } from "@/components/ui/Common";
 import { Badge } from "@/components/ui/Common/Badge";
 import { Drawer } from "@/components/ui/Common/Drawer";
 import Multiselect from "@/components/ui/Common/Multiselect";
@@ -31,6 +33,8 @@ interface EventPanelProps {
 }
 
 export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPanelProps) {
+  const navigate = useNavigate();
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState<Date>(new Date());
@@ -40,8 +44,15 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
   const [allDay, setAllDay] = useState(false);
   const [location, setLocation] = useState("");
   const [color, setColor] = useState<EventColor>("cyan");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
   const { labels, getLabelForObject } = useLabelContext();
   const { mutate: setLabelConnection } = useSetLabelConnection();
+
+  const handleNavigateToLabels = () => {
+    onClose(); // Zamknij drawer
+    navigate("/labels"); // Przejdź do zakładki labels
+  };
 
   // Helper function to format time for input
   const formatTimeForInput = (date: Date) => {
@@ -77,6 +88,7 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
     setAllDay(false);
     setLocation("");
     setColor("cyan");
+    setSelectedLabelIds([]);
   }, []);
 
   useEffect(() => {
@@ -94,10 +106,25 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
       setAllDay(event.allDay || false);
       setLocation(event.location || "");
       setColor((event.color as EventColor) || "sky");
+
+      // Załaduj istniejące labele
+      const existingLabel = getLabelForObject("event", event.id);
+      setSelectedLabelIds(existingLabel ? [existingLabel.id] : []);
     } else {
       resetForm();
     }
-  }, [event, resetForm]);
+  }, [event, resetForm, getLabelForObject]);
+
+  // Auto-focus title input when drawer opens
+  useEffect(() => {
+    if (isOpen && titleInputRef.current) {
+      // Delay to let Drawer animation complete
+      const timeoutId = setTimeout(() => {
+        titleInputRef.current?.focus();
+      }, 150);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isOpen]);
 
   // Handler for start time change - automatically updates end time
   const handleStartTimeChange = (newStartTime: string) => {
@@ -155,26 +182,40 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
     };
 
     onSave(updatedEvent);
+
+    // Zapisz labele dopiero po zapisaniu eventu
+    if (event?.id && selectedLabelIds.length > 0) {
+      selectedLabelIds.forEach((labelId) => {
+        setLabelConnection({ entity_id: event.id, entity_type: "event", label_id: labelId });
+      });
+    }
+
     onClose();
   };
 
   const handleDelete = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
     if (event?.id) {
       onDelete(event.id);
+      setShowDeleteModal(false);
       onClose();
     }
   };
 
-  const newLabelAddAction = async (labelId: string) => {
-    if (!event?.id) {
-      toast.error("Save the event before adding labels.", { position: "bottom-center" });
-      return;
+  const newLabelAddAction = (labelId: string) => {
+    // Dodaj do lokalnego state, zapisz dopiero przy Save
+    if (!selectedLabelIds.includes(labelId)) {
+      setSelectedLabelIds([labelId]);
     }
-    setLabelConnection({ entity_id: event.id, entity_type: "event", label_id: labelId });
   };
 
-  const labelsToSelect = labels.map((label) => ({ label: label.label_name, value: label.id, color: label.color }));
-  const eventLabel = getLabelForObject("event", event?.id || "");
+  // Filtruj labele - nie pokazuj już wybranych
+  const labelsToSelect = labels
+    .filter((label) => !selectedLabelIds.includes(label.id))
+    .map((label) => ({ label: label.label_name, value: label.id, color: label.color }));
 
   return (
     <Drawer
@@ -208,8 +249,13 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
       <div className="flex-1 overflow-y-auto p-6">
         <div className="space-y-6">
           {/* Title */}
-          <Input id="title" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
-
+          <Input
+            ref={titleInputRef}
+            id="title"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />{" "}
           {/* Description */}
           <Textarea
             id="description"
@@ -218,7 +264,6 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
           />
-
           {/* Date & Time Section */}
           <div className="space-y-3">
             {/* Dates Row */}
@@ -327,30 +372,43 @@ export function EventPanel({ event, isOpen, onClose, onSave, onDelete }: EventPa
               </div>
             }
           </div>
-
           {/* All Day Switch */}
           <div className="flex items-center gap-2">
             <Switch id="all-day" checked={allDay} onCheckedChange={(checked) => setAllDay(checked === true)} />
             <Label className={`${allDay ? "text-text font-bold" : "text-text-muted"} `}>All day</Label>
           </div>
           {/* CURRENT LABELS BADGES */}
-          {event?.id && eventLabel && (
-            <Badge size="lg" variant={eventLabel.color || "blue"}>
-              {eventLabel?.label_name}
-            </Badge>
-          )}
+          {selectedLabelIds.map((labelId) => {
+            const label = labels.find((l) => l.id === labelId);
+            if (!label) return null;
+            return (
+              <Badge key={labelId} size="lg" variant={label.color || "blue"}>
+                {label.label_name}
+              </Badge>
+            );
+          })}
           {/* LABEL SELECT */}
-          {event?.id && (
-            <Multiselect
-              options={labelsToSelect}
-              placeholder="Select label"
-              openedPlaceholder="Search labels"
-              addButtonText="Create label"
-              onSelect={newLabelAddAction}
-            />
-          )}
+          <Multiselect
+            options={labelsToSelect}
+            placeholder="Select label"
+            openedPlaceholder="Search labels"
+            addButtonText="Create label"
+            onSelect={newLabelAddAction}
+            onAddButtonClick={handleNavigateToLabels}
+          />
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Event"
+        message="Are you sure you want to delete"
+        itemName={event?.title || "this event"}
+        additionalInfo="This action cannot be undone."
+      />
     </Drawer>
   );
 }
