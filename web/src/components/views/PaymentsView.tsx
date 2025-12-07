@@ -2,6 +2,7 @@ import { AddPaymentModal, PaymentDetailsDrawer, PaymentListItem, PaymentSection 
 import { Tabs, TabsList, TabsTab } from "@/components/ui/Utils/tabs";
 import type { PaymentInterface } from "@shared/data/Payments/interfaces";
 import { useCreatePayment, useDeletePayment, usePayments, useUpdatePayment } from "@shared/hooks/payments";
+import { calculateNextDueDateFromRule } from "@shared/utils/helpers";
 import { addDays, endOfToday, isAfter, isBefore, startOfToday } from "date-fns";
 import { AlertCircle, Calendar, CheckCircle2, Clock, DollarSign, Plus, TrendingUp, Wallet } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -18,7 +19,40 @@ export default function Payments() {
 
   const payments = useMemo(() => paymentsResponse?.items || [], [paymentsResponse?.items]);
 
-  // Calculate stats
+  // Generate virtual instances of recurring payments for the next 7 days
+  const expandedPayments = useMemo(() => {
+    const today = startOfToday();
+    const next7DaysEnd = addDays(today, 7);
+    const result: PaymentInterface[] = [];
+
+    payments.forEach((payment) => {
+      // Dodaj oryginalny payment
+      result.push(payment);
+
+      // Jeśli ma recurrence_rule i nie jest paid, generuj wirtualne instancje
+      if (payment.recurrence_rule && !payment.paid_at) {
+        let currentDate = payment.due_date;
+        let nextDate = calculateNextDueDateFromRule(currentDate, payment.recurrence_rule);
+
+        // Generuj kolejne instancje dopóki mieszczą się w next 7 days
+        while (new Date(nextDate) <= next7DaysEnd) {
+          // Stwórz wirtualną instancję z unikalnym ID
+          result.push({
+            ...payment,
+            id: `${payment.id}-virtual-${nextDate}`,
+            due_date: nextDate,
+          });
+
+          currentDate = nextDate;
+          nextDate = calculateNextDueDateFromRule(currentDate, payment.recurrence_rule);
+        }
+      }
+    });
+
+    return result;
+  }, [payments]);
+
+  // Calculate stats based on expanded payments (including virtual instances)
   const stats = useMemo(() => {
     const today = startOfToday();
     const todayEnd = endOfToday();
@@ -26,8 +60,19 @@ export default function Payments() {
     const tomorrowEnd = addDays(todayEnd, 1);
     const next7DaysEnd = addDays(today, 7);
 
-    const unpaidPayments = payments.filter((p) => !p.paid_at);
-    const paidPayments = payments.filter((p) => p.paid_at);
+    // Dla recurring payments: pokazuj je jeśli due_date jest w przyszłości (ignoruj paid_at)
+    // Dla non-recurring: pokazuj tylko jeśli !paid_at
+    const unpaidPayments = expandedPayments.filter((p) => {
+      if (p.recurrence_rule) {
+        // Recurring - zawsze pokazuj (paid_at to tylko historia ostatniej płatności)
+        return true;
+      } else {
+        // Non-recurring - pokazuj tylko jeśli niepaid
+        return !p.paid_at;
+      }
+    });
+
+    const paidPayments = payments.filter((p) => p.paid_at && !p.recurrence_rule); // Only one-time paid payments
 
     const overdue = unpaidPayments.filter((p) => isBefore(new Date(p.due_date), today));
 
@@ -43,19 +88,25 @@ export default function Payments() {
       (p) => isAfter(new Date(p.due_date), tomorrowEnd) && !isAfter(new Date(p.due_date), next7DaysEnd),
     );
 
-    const totalUnpaid = unpaidPayments.reduce((sum, p) => sum + p.amount, 0);
+    const totalUnpaid = unpaidPayments
+      .filter((p) => !p.id.includes("-virtual-")) // Count only real payments for totals
+      .reduce((sum, p) => sum + p.amount, 0);
     const totalPaid = paidPayments.reduce((sum, p) => sum + p.amount, 0);
-    const totalOverdue = overdue.reduce((sum, p) => sum + p.amount, 0);
-    const totalDueToday = dueToday.reduce((sum, p) => sum + p.amount, 0);
-    const totalDueTomorrow = dueTomorrow.reduce((sum, p) => sum + p.amount, 0);
-    const totalDueNext7Days = dueNext7Days.reduce((sum, p) => sum + p.amount, 0);
+    const totalOverdue = overdue.filter((p) => !p.id.includes("-virtual-")).reduce((sum, p) => sum + p.amount, 0);
+    const totalDueToday = dueToday.filter((p) => !p.id.includes("-virtual-")).reduce((sum, p) => sum + p.amount, 0);
+    const totalDueTomorrow = dueTomorrow
+      .filter((p) => !p.id.includes("-virtual-"))
+      .reduce((sum, p) => sum + p.amount, 0);
+    const totalDueNext7Days = dueNext7Days
+      .filter((p) => !p.id.includes("-virtual-"))
+      .reduce((sum, p) => sum + p.amount, 0);
 
     return {
-      total: payments.length,
-      unpaid: unpaidPayments.length,
+      total: payments.length, // Only real payments
+      unpaid: payments.filter((p) => p.recurrence_rule || !p.paid_at).length, // Recurring always count as unpaid
       paid: paidPayments.length,
-      overdue: overdue.length,
-      dueToday: dueToday.length,
+      overdue: overdue.filter((p) => !p.id.includes("-virtual-")).length,
+      dueToday: dueToday.length, // Show all instances including virtual
       dueTomorrow: dueTomorrow.length,
       dueNext7Days: dueNext7Days.length,
       totalUnpaid,
@@ -70,7 +121,7 @@ export default function Payments() {
       dueNext7DaysPayments: dueNext7Days,
       paidPayments,
     };
-  }, [payments]);
+  }, [expandedPayments, payments]);
 
   const handleAddPayment = async (paymentData: Omit<PaymentInterface, "id">) => {
     await createPaymentMutation.mutateAsync(paymentData);
@@ -78,19 +129,41 @@ export default function Payments() {
   };
 
   const handleMarkPaid = async (payment: PaymentInterface) => {
-    await updatePaymentMutation.mutateAsync({
-      id: payment.id,
-      data: { paid_at: new Date().toISOString() },
-    });
-  };
+    // Jeśli to wirtualna instancja, znajdź oryginalny payment
+    const isVirtual = payment.id.includes("-virtual-");
+    const realPaymentId = isVirtual ? payment.id.split("-virtual-")[0] : payment.id;
 
-  const handleMarkUnpaid = async (payment: PaymentInterface) => {
-    await updatePaymentMutation.mutateAsync({
-      id: payment.id,
-      data: { paid_at: null },
-    });
-  };
+    // Jeśli płatność ma recurrence_rule, oblicz następny due_date
+    if (payment.recurrence_rule) {
+      const nextDueDate = calculateNextDueDateFromRule(payment.due_date, payment.recurrence_rule);
+      const now = new Date().toISOString();
+      // Backend wymaga pełnych danych - wysyłamy wszystko
+      const updateData = {
+        title: payment.title,
+        amount: payment.amount,
+        due_date: nextDueDate, // Przesuń due_date na następny okres
+        paid_at: now, // Zapisz kiedy ostatnio zapłacono
+        recurrence_rule: payment.recurrence_rule,
+      };
 
+      await updatePaymentMutation.mutateAsync({
+        id: realPaymentId,
+        data: updateData,
+      });
+    } else {
+      // Backend wymaga pełnych danych
+      await updatePaymentMutation.mutateAsync({
+        id: realPaymentId,
+        data: {
+          title: payment.title,
+          amount: payment.amount,
+          due_date: payment.due_date,
+          paid_at: new Date().toISOString(),
+          recurrence_rule: payment.recurrence_rule,
+        },
+      });
+    }
+  };
   const handleDeletePayment = async (paymentId: string) => {
     if (window.confirm("Are you sure you want to delete this payment?")) {
       await deletePaymentMutation.mutateAsync(paymentId);
@@ -188,121 +261,65 @@ export default function Payments() {
             </div>
           </div>
         ) : activeTab === "deadlines" ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
             {/* Overdue Payments */}
-            <div>
-              {stats.overduePayments.length > 0 ? (
-                <PaymentSection
-                  title="Overdue"
-                  icon={AlertCircle}
-                  count={stats.overdue}
-                  total={stats.totalOverdue}
-                  payments={stats.overduePayments}
-                  textColor="text-negative"
-                  onMarkPaid={handleMarkPaid}
-                  onMarkUnpaid={handleMarkUnpaid}
-                  onDelete={handleDeletePayment}
-                />
-              ) : (
-                <div className="rounded-xl border border-bg-muted-light overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-3 bg-bg-muted/50">
-                    <div className="flex items-center gap-2.5">
-                      <AlertCircle className="text-negative" size={18} />
-                      <h3 className="text-base font-semibold text-negative">Overdue</h3>
-                    </div>
-                  </div>
-                  <div className="bg-bg-primary px-4 py-8 text-center">
-                    <p className="text-sm text-text-muted">No overdue payments</p>
-                  </div>
-                </div>
-              )}
+            <div className="h-full">
+              <PaymentSection
+                title="Overdue"
+                icon={AlertCircle}
+                count={stats.overdue}
+                total={stats.totalOverdue}
+                payments={stats.overduePayments}
+                textColor="text-negative"
+                emptyMessage="No overdue payments"
+                onMarkPaid={handleMarkPaid}
+                onDelete={handleDeletePayment}
+              />
             </div>
 
             {/* Due Today */}
-            <div>
-              {stats.dueTodayPayments.length > 0 ? (
-                <PaymentSection
-                  title="Due Today"
-                  icon={Clock}
-                  count={stats.dueToday}
-                  total={stats.totalDueToday}
-                  payments={stats.dueTodayPayments}
-                  textColor="text-warning"
-                  onMarkPaid={handleMarkPaid}
-                  onMarkUnpaid={handleMarkUnpaid}
-                  onDelete={handleDeletePayment}
-                />
-              ) : (
-                <div className="rounded-xl border border-bg-muted-light overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-3 bg-bg-muted/50">
-                    <div className="flex items-center gap-2.5">
-                      <Clock className="text-warning" size={18} />
-                      <h3 className="text-base font-semibold text-warning">Due Today</h3>
-                    </div>
-                  </div>
-                  <div className="bg-bg-primary px-4 py-8 text-center">
-                    <p className="text-sm text-text-muted">Nothing due today</p>
-                  </div>
-                </div>
-              )}
+            <div className="h-full">
+              <PaymentSection
+                title="Due Today"
+                icon={Clock}
+                count={stats.dueToday}
+                total={stats.totalDueToday}
+                payments={stats.dueTodayPayments}
+                textColor="text-warning"
+                emptyMessage="Nothing due today"
+                onMarkPaid={handleMarkPaid}
+                onDelete={handleDeletePayment}
+              />
             </div>
 
             {/* Due Tomorrow */}
-            <div>
-              {stats.dueTomorrowPayments.length > 0 ? (
-                <PaymentSection
-                  title="Due Tomorrow"
-                  icon={Calendar}
-                  count={stats.dueTomorrow}
-                  total={stats.totalDueTomorrow}
-                  payments={stats.dueTomorrowPayments}
-                  textColor="text-primary"
-                  onMarkPaid={handleMarkPaid}
-                  onMarkUnpaid={handleMarkUnpaid}
-                  onDelete={handleDeletePayment}
-                />
-              ) : (
-                <div className="rounded-xl border border-bg-muted-light overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-3 bg-bg-muted/50">
-                    <div className="flex items-center gap-2.5">
-                      <Calendar className="text-primary" size={18} />
-                      <h3 className="text-base font-semibold text-primary">Due Tomorrow</h3>
-                    </div>
-                  </div>
-                  <div className="bg-bg-primary px-4 py-8 text-center">
-                    <p className="text-sm text-text-muted">Nothing due tomorrow</p>
-                  </div>
-                </div>
-              )}
+            <div className="h-full">
+              <PaymentSection
+                title="Due Tomorrow"
+                icon={Calendar}
+                count={stats.dueTomorrow}
+                total={stats.totalDueTomorrow}
+                payments={stats.dueTomorrowPayments}
+                textColor="text-primary"
+                emptyMessage="Nothing due tomorrow"
+                onMarkPaid={handleMarkPaid}
+                onDelete={handleDeletePayment}
+              />
             </div>
 
             {/* Next 7 Days */}
-            <div>
-              {stats.dueNext7DaysPayments.length > 0 ? (
-                <PaymentSection
-                  title="Next 7 Days"
-                  icon={TrendingUp}
-                  count={stats.dueNext7Days}
-                  total={stats.totalDueNext7Days}
-                  payments={stats.dueNext7DaysPayments}
-                  textColor="text-text-muted"
-                  onMarkPaid={handleMarkPaid}
-                  onMarkUnpaid={handleMarkUnpaid}
-                  onDelete={handleDeletePayment}
-                />
-              ) : (
-                <div className="rounded-xl border border-bg-muted-light overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-3 bg-bg-muted/50">
-                    <div className="flex items-center gap-2.5">
-                      <TrendingUp className="text-text-muted" size={18} />
-                      <h3 className="text-base font-semibold text-text-muted">Next 7 Days</h3>
-                    </div>
-                  </div>
-                  <div className="bg-bg-primary px-4 py-8 text-center">
-                    <p className="text-sm text-text-muted">Nothing due in the next 7 days</p>
-                  </div>
-                </div>
-              )}
+            <div className="h-full">
+              <PaymentSection
+                title="Next 7 Days"
+                icon={TrendingUp}
+                count={stats.dueNext7Days}
+                total={stats.totalDueNext7Days}
+                payments={stats.dueNext7DaysPayments}
+                textColor="text-text-muted"
+                emptyMessage="Nothing due in the next 7 days"
+                onMarkPaid={handleMarkPaid}
+                onDelete={handleDeletePayment}
+              />
             </div>
           </div>
         ) : (

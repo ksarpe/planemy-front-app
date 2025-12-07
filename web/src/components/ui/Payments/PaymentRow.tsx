@@ -1,7 +1,8 @@
 import type { PaymentInterface } from "@shared/data/Payments/interfaces";
 import { useToast } from "@shared/hooks/toasts/useToast";
+import { getRecurrenceDescription } from "@shared/utils/helpers";
 import { differenceInDays, format, isBefore, startOfToday } from "date-fns";
-import { CheckCircle2, DollarSign } from "lucide-react";
+import { CheckCircle2, DollarSign, Repeat } from "lucide-react";
 import { useState } from "react";
 import BaseModal from "../Common/BaseModal";
 import { Button } from "../Utils/button";
@@ -18,6 +19,7 @@ export function PaymentRow({ payment, onMarkPaid }: PaymentRowProps) {
   const daysOverdue = isOverdue ? differenceInDays(startOfToday(), dueDate) : 0;
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { showSuccess } = useToast();
+  const recurrenceDesc = getRecurrenceDescription(payment.recurrence_rule);
 
   const handleRowClick = () => {
     if (!isPaid) {
@@ -42,7 +44,7 @@ export function PaymentRow({ payment, onMarkPaid }: PaymentRowProps) {
         <div className="flex items-center gap-3 flex-1 min-w-0">
           {/* Date */}
           <span className={`text-xs font-medium min-w-[50px] ${isOverdue ? "text-negative" : "text-text-muted"}`}>
-            {format(dueDate, "MMM dd")}
+            {format(dueDate, "MMM dd")} ({format(dueDate, "EEE")})
             {isOverdue && daysOverdue > 0 && (
               <span className="block text-[10px] text-negative leading-tight">+{daysOverdue}d</span>
             )}
@@ -105,7 +107,23 @@ export function PaymentRow({ payment, onMarkPaid }: PaymentRowProps) {
             <span className="text-sm text-text-muted">Due Date:</span>
             <span className="font-medium text-text">{format(dueDate, "MMM dd, yyyy")}</span>
           </div>
-          <p className="text-sm text-text-muted mt-4">Are you sure you want to mark this payment as paid?</p>
+          {recurrenceDesc && (
+            <div className="flex items-center justify-between p-3 bg-primary/10 border border-primary/20 rounded-lg">
+              <div className="flex items-center gap-2">
+                <Repeat size={16} className="text-primary" />
+                <span className="text-sm text-text-muted">Recurrence:</span>
+              </div>
+              <span className="font-medium text-primary">{recurrenceDesc}</span>
+            </div>
+          )}
+          <p className="text-sm text-text-muted mt-4">
+            Are you sure you want to mark this payment as paid?
+            {recurrenceDesc && (
+              <span className="block mt-2 text-xs text-primary">
+                💡 A new payment will be automatically created for the next period.
+              </span>
+            )}
+          </p>
         </div>
       </BaseModal>
     </>

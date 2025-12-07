@@ -113,3 +113,80 @@ export function parseRecurrenceOption(optionValue: string, referenceDate: Date):
       return null;
   }
 }
+
+/**
+ * Oblicza następną datę płatności na podstawie RecurrenceRule
+ * @param currentDueDate - obecna data płatności (string ISO)
+ * @param recurrenceRule - reguła powtarzania
+ * @returns następna data w formacie YYYY-MM-DD
+ */
+export function calculateNextDueDateFromRule(currentDueDate: string, recurrenceRule: RecurrenceRule): string {
+  const current = new Date(currentDueDate);
+  const next = new Date(current);
+  const interval = recurrenceRule.interval || 1;
+
+  switch (recurrenceRule.frequency) {
+    case "daily":
+      next.setDate(next.getDate() + interval);
+      break;
+
+    case "weekly":
+      next.setDate(next.getDate() + 7 * interval);
+      break;
+
+    case "monthly":
+      next.setMonth(next.getMonth() + interval);
+      // Jeśli bymonthday jest określony, ustaw konkretny dzień miesiąca
+      if (recurrenceRule.bymonthday) {
+        next.setDate(recurrenceRule.bymonthday);
+      }
+      break;
+
+    case "yearly":
+      next.setFullYear(next.getFullYear() + interval);
+      break;
+  }
+
+  // Zwróć w formacie YYYY-MM-DD
+  return next.toISOString().split("T")[0];
+}
+
+/**
+ * Zwraca czytelny opis recurrence rule
+ * @param recurrenceRule - reguła powtarzania
+ * @returns opis po polsku
+ */
+export function getRecurrenceDescription(recurrenceRule: RecurrenceRule | null): string | null {
+  if (!recurrenceRule) return null;
+
+  const interval = recurrenceRule.interval || 1;
+  const prefix = interval > 1 ? `Co ${interval} ` : "";
+
+  switch (recurrenceRule.frequency) {
+    case "daily":
+      return interval === 1 ? "Codziennie" : `${prefix}dni`;
+
+    case "weekly":
+      if (
+        recurrenceRule.byweekday?.length === 5 &&
+        JSON.stringify(recurrenceRule.byweekday.sort()) === JSON.stringify([1, 2, 3, 4, 5])
+      ) {
+        return "Dni robocze";
+      }
+      return interval === 1 ? "Co tydzień" : `${prefix}tygodnie`;
+
+    case "monthly":
+      if (recurrenceRule.bymonthday) {
+        return interval === 1
+          ? `Co miesiąc (${recurrenceRule.bymonthday}.)`
+          : `${prefix}miesiące (${recurrenceRule.bymonthday}.)`;
+      }
+      return interval === 1 ? "Co miesiąc" : `${prefix}miesiące`;
+
+    case "yearly":
+      return interval === 1 ? "Co rok" : `${prefix}lata`;
+
+    default:
+      return "Powtarza się";
+  }
+}

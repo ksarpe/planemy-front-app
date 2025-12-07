@@ -38,6 +38,12 @@ export const updatePayment = async (paymentId: string, paymentData: Partial<Paym
   if (!paymentId) {
     throw new Error("Payment ID is required for update");
   }
+
+  console.log("📤 API: updatePayment called");
+  console.log("  - paymentId:", paymentId);
+  console.log("  - paymentData:", paymentData);
+  console.log("  - URL:", buildApiUrl(`bills/${paymentId}`));
+
   const response = await fetch(buildApiUrl(`bills/${paymentId}`), {
     method: "PUT",
     credentials: "include",
@@ -47,11 +53,15 @@ export const updatePayment = async (paymentId: string, paymentData: Partial<Paym
     body: JSON.stringify(paymentData),
   });
 
+  console.log("📥 API: Response status:", response.status);
+
   if (!response.ok) {
     const errorBody = await response.json();
+    console.error("❌ API: Update failed:", errorBody);
     throw new APIError(`Updating payment failed`, response.status, errorBody);
   }
   const data = await response.json();
+  console.log("✅ API: Update successful:", data);
   return data;
 };
 
@@ -72,4 +82,10 @@ export const deletePayment = async (paymentId: string): Promise<void> => {
 };
 
 // Re-export helper functions from utils (for backward compatibility with existing components)
-export { calculateNextPaymentDate, getDaysUntilPayment, isPaymentPaidForCurrentPeriod } from "@shared/utils/helpers";
+export {
+  calculateNextDueDateFromRule,
+  calculateNextPaymentDate,
+  getDaysUntilPayment,
+  getRecurrenceDescription,
+  isPaymentPaidForCurrentPeriod,
+} from "@shared/utils/helpers";

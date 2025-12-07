@@ -1,6 +1,7 @@
 import type { PaymentInterface } from "@shared/data/Payments/interfaces";
+import { getRecurrenceDescription } from "@shared/utils/helpers";
 import { format, isBefore, startOfToday } from "date-fns";
-import { AlertCircle, Calendar, CheckCircle2 } from "lucide-react";
+import { AlertCircle, Calendar, CheckCircle2, Repeat } from "lucide-react";
 
 interface PaymentListItemProps {
   payment: PaymentInterface;
@@ -12,10 +13,11 @@ export function PaymentListItem({ payment, onClick, isSelected = false }: Paymen
   const isPaid = !!payment.paid_at;
   const isOverdue = !isPaid && isBefore(new Date(payment.due_date), startOfToday());
   const dueDate = new Date(payment.due_date);
+  const recurrenceDesc = getRecurrenceDescription(payment.recurrence_rule);
 
   return (
     <li
-      className={`rounded-2xl px-4 py-2 text-text cursor-pointer shadow-md border border-bg-muted-light hover:scale-101 duration-200
+      className={`rounded-2xl px-4 py-2 text-text cursor-pointer shadow-md border border-bg-muted-light hover:scale-99 duration-200
       ${isSelected && "border-primary"}`}
       onClick={() => onClick(payment)}>
       <div className="flex items-center justify-between">
@@ -61,6 +63,17 @@ export function PaymentListItem({ payment, onClick, isSelected = false }: Paymen
                   <div className="flex items-center gap-1 text-xs text-success">
                     <CheckCircle2 size={12} />
                     <span>Paid {format(new Date(payment.paid_at), "MMM dd")}</span>
+                  </div>
+                </>
+              )}
+
+              {/* Recurrence indicator */}
+              {recurrenceDesc && (
+                <>
+                  <span className="text-text-muted text-xs">•</span>
+                  <div className="flex items-center gap-1 text-xs text-primary">
+                    <Repeat size={12} />
+                    <span>{recurrenceDesc}</span>
                   </div>
                 </>
               )}
