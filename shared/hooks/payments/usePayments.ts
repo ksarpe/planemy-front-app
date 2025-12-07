@@ -1,4 +1,4 @@
-import { addPayment, deletePayment, getPayments, updatePayment } from "@shared/api/payments";
+import { addPayment, deletePayment, getPayments, patchPaymentStatus, updatePayment } from "@shared/api/payments";
 import { queryClient } from "@shared/lib/queryClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -25,6 +25,18 @@ export function useCreatePayment() {
 export function useUpdatePayment() {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Payment> }) => updatePayment(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["payments"] });
+    },
+    onError: (error: unknown) => {
+      return error;
+    },
+  });
+}
+
+export function usePatchPaymentStatus() {
+  return useMutation({
+    mutationFn: ({ id, paidAt }: { id: string; paidAt: string | null }) => patchPaymentStatus(id, paidAt),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
     },

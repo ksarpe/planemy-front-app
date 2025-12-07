@@ -1,14 +1,18 @@
+import { Calendar as CalendarRAC } from "@/components/ui/Calendar/calendar-rac";
+import { DateInput } from "@/components/ui/Utils/datefield-rac";
+import { parseDate } from "@internationalized/date";
 import type { AddPaymentModalProps } from "@shared/data/Payments/Components/PaymentComponentInterfaces";
 import type { PaymentInterface } from "@shared/data/Payments/interfaces";
+import { parseRecurrenceOption } from "@shared/utils/helpers";
 import { format, getDate, getDay } from "date-fns";
-import { Check, ChevronDown, Repeat } from "lucide-react";
+import { Calendar, Check, ChevronDown, Repeat } from "lucide-react";
 import { useMemo, useState } from "react";
+import { Button as AriaButton, Popover as AriaPopover, DatePicker, Dialog, Group } from "react-aria-components";
 import BaseModal from "../Common/BaseModal";
 import { Button } from "../Utils/button";
 import { Command, CommandGroup, CommandItem, CommandList } from "../Utils/command";
 import { Input } from "../Utils/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../Utils/popover";
-import { parseRecurrenceOption } from "@shared/utils/helpers"
 
 type RecurrenceOption = {
   value: string;
@@ -63,7 +67,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
-  const [dueDate, setDueDate] = useState(new Date().toISOString().split("T")[0]);
+  const [dueDate, setDueDate] = useState<Date>(new Date());
   const [recurrence, setRecurrence] = useState("none");
   const [recurrenceOpen, setRecurrenceOpen] = useState(false);
 
@@ -74,16 +78,16 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
       const paymentData: Omit<PaymentInterface, "id"> = {
         title,
         amount: parseFloat(amount),
-        due_date: new Date(dueDate).toISOString(),
+        due_date: dueDate.toISOString(),
         paid_at: null,
-        recurrence_rule: parseRecurrenceOption(recurrence, new Date(dueDate)),
+        recurrence_rule: parseRecurrenceOption(recurrence, dueDate),
       };
 
       await onSubmit(paymentData);
       // Reset form
       setTitle("");
       setAmount("");
-      setDueDate(new Date().toISOString().split("T")[0]);
+      setDueDate(new Date());
       setRecurrence("none");
       onClose();
     } catch (error) {
@@ -99,10 +103,9 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
 
   // Generate dynamic descriptions based on selected due date
   const dynamicRecurrenceOptions = useMemo(() => {
-    const selectedDate = new Date(dueDate);
     return recurrenceOptions.map((option) => ({
       ...option,
-      description: option.getDescription ? option.getDescription(selectedDate) : undefined,
+      description: option.getDescription ? option.getDescription(dueDate) : undefined,
     }));
   }, [dueDate]);
 
@@ -153,7 +156,28 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
           {/* Due Date */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-text">Due Date</label>
-            <Input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} placeholder="" required />
+            <DatePicker
+              aria-label="Payment Due Date Picker"
+              value={dueDate ? parseDate(format(dueDate, "yyyy-MM-dd")) : null}
+              onChange={(date) => {
+                if (date) {
+                  const jsDate = new Date(date.year, date.month - 1, date.day);
+                  setDueDate(jsDate);
+                }
+              }}
+              className="group flex flex-col gap-1">
+              <Group className="flex w-full items-center rounded-2xl border border-bg-muted-light hover:border-text-muted focus-within:border-primary bg-bg-primary px-3 py-2 text-xs transition-colors">
+                <DateInput aria-label="Due Date Input" className="flex flex-1 text-text" unstyled />
+                <AriaButton className="ml-2 outline-none text-text-muted hover:text-white cursor-pointer">
+                  <Calendar size={16} />
+                </AriaButton>
+              </Group>
+              <AriaPopover className="rounded-2xl border border-bg-muted-light bg-bg-primary p-2 shadow-lg">
+                <Dialog className="outline-none">
+                  <CalendarRAC />
+                </Dialog>
+              </AriaPopover>
+            </DatePicker>
           </div>
 
           {/* Recurrence Selector */}
@@ -163,10 +187,10 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
               <PopoverTrigger asChild>
                 <Button
                   type="button"
-                  variant="default"
+                  variant="link"
                   role="combobox"
                   aria-expanded={recurrenceOpen}
-                  className="w-full justify-between border-bg-muted-light px-3 font-medium hover:border-primary/40">
+                  className="w-full justify-between border border-bg-muted-light px-2">
                   <div className="flex items-center gap-2">
                     <Repeat size={16} className="text-text-muted" />
                     <span className="text-sm text-text">{selectedRecurrenceLabel}</span>
@@ -174,7 +198,9 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
                   <ChevronDown size={16} className="text-text-muted" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-full min-w-[var(--radix-popper-anchor-width)] p-0" align="start">
+              <PopoverContent
+                className="w-full min-w-[var(--radix-popper-anchor-width)] p-0 bg-bg-primary border-bg-muted-light"
+                align="start">
                 <Command>
                   <CommandList>
                     <CommandGroup>
@@ -186,7 +212,7 @@ export const AddPaymentModal = ({ isOpen, onClose, onSubmit }: AddPaymentModalPr
                             setRecurrence(value);
                             setRecurrenceOpen(false);
                           }}
-                          className="flex items-center justify-between py-2.5 cursor-pointer">
+                          className="flex items-center justify-between py-2.5 cursor-pointer hover:bg-bg-secondary rounded-lg">
                           <div className="flex-1">
                             <div className="text-sm font-medium">{option.label}</div>
                             {option.description && (

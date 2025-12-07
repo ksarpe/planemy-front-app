@@ -151,7 +151,7 @@ export default function MainContentGrid({
             </p>
           </div>
 
-          <div className="space-y-2 flex-1 items-center flex justify-center overflow-y-auto scrollbar-hide">
+          <div className="space-y-2 flex-1 flex flex-col overflow-y-auto scrollbar-hide">
             {next7DaysEvents.length > 0 ? (
               next7DaysEvents.map((event) => {
                 const eventLabel = getLabelForObject("event", event.id);
@@ -161,7 +161,7 @@ export default function MainContentGrid({
                 return (
                   <div
                     key={event.id}
-                    className="p-3 rounded-lg bg-bg-secondary border border-border hover:border-primary/30 transition-colors cursor-pointer">
+                    className="p-3 rounded-lg bg-bg-primary border border-bg-muted-light transition-colors cursor-pointer">
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium text-text-muted">{eventDate}</span>
@@ -180,7 +180,9 @@ export default function MainContentGrid({
                 );
               })
             ) : (
-              <p className="text-sm text-text-muted text-center py-4">Brak wydarzeń</p>
+              <div className="flex-1 flex items-center justify-center">
+                <p className="text-sm text-text-muted text-center py-4">Brak wydarzeń</p>
+              </div>
             )}
           </div>
         </div>

@@ -10,7 +10,8 @@ interface PaymentListItemProps {
 }
 
 export function PaymentListItem({ payment, onClick, isSelected = false }: PaymentListItemProps) {
-  const isPaid = !!payment.paid_at;
+  // Dla recurring: paid_at to historia, nie status - więc nie traktuj jako "paid"
+  const isPaid = !!payment.paid_at && !payment.recurrence_rule;
   const isOverdue = !isPaid && isBefore(new Date(payment.due_date), startOfToday());
   const dueDate = new Date(payment.due_date);
   const recurrenceDesc = getRecurrenceDescription(payment.recurrence_rule);
@@ -56,13 +57,17 @@ export function PaymentListItem({ payment, onClick, isSelected = false }: Paymen
                 {isOverdue && <AlertCircle size={12} className="text-negative" />}
               </div>
 
-              {/* Paid date */}
-              {isPaid && payment.paid_at && (
+              {/* Paid date - show for paid items OR recurring items with payment history */}
+              {payment.paid_at && payment.paid_at !== null && payment.paid_at !== "" && (
                 <>
                   <span className="text-text-muted text-xs">•</span>
-                  <div className="flex items-center gap-1 text-xs text-success">
+                  <div className={`flex items-center gap-1 text-xs ${isPaid ? "text-success" : "text-text-muted"}`}>
                     <CheckCircle2 size={12} />
-                    <span>Paid {format(new Date(payment.paid_at), "MMM dd")}</span>
+                    <span>
+                      {payment.recurrence_rule && !isPaid
+                        ? `Last paid ${format(new Date(payment.paid_at), "MMM dd, yyyy")}`
+                        : `Paid ${format(new Date(payment.paid_at), "MMM dd, yyyy")}`}
+                    </span>
                   </div>
                 </>
               )}

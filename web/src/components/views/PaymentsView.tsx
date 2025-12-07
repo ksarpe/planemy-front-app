@@ -1,7 +1,13 @@
 import { AddPaymentModal, PaymentDetailsDrawer, PaymentListItem, PaymentSection } from "@/components/ui/Payments";
 import { Tabs, TabsList, TabsTab } from "@/components/ui/Utils/tabs";
 import type { PaymentInterface } from "@shared/data/Payments/interfaces";
-import { useCreatePayment, useDeletePayment, usePayments, useUpdatePayment } from "@shared/hooks/payments";
+import {
+  useCreatePayment,
+  useDeletePayment,
+  usePatchPaymentStatus,
+  usePayments,
+  useUpdatePayment,
+} from "@shared/hooks/payments";
 import { calculateNextDueDateFromRule } from "@shared/utils/helpers";
 import { addDays, endOfToday, isAfter, isBefore, startOfToday } from "date-fns";
 import { AlertCircle, Calendar, CheckCircle2, Clock, DollarSign, Plus, TrendingUp, Wallet } from "lucide-react";
@@ -12,6 +18,7 @@ export default function Payments() {
   const { data: paymentsResponse } = usePayments();
   const createPaymentMutation = useCreatePayment();
   const updatePaymentMutation = useUpdatePayment();
+  const patchPaymentStatusMutation = usePatchPaymentStatus();
   const deletePaymentMutation = useDeletePayment();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<PaymentInterface | null>(null);
@@ -29,8 +36,9 @@ export default function Payments() {
       // Dodaj oryginalny payment
       result.push(payment);
 
-      // Jeśli ma recurrence_rule i nie jest paid, generuj wirtualne instancje
-      if (payment.recurrence_rule && !payment.paid_at) {
+      // Jeśli ma recurrence_rule, generuj wirtualne instancje (niezależnie od paid_at)
+      // paid_at w recurring payment to historia ostatniej płatności, nie status!
+      if (payment.recurrence_rule) {
         let currentDate = payment.due_date;
         let nextDate = calculateNextDueDateFromRule(currentDate, payment.recurrence_rule);
 
@@ -132,35 +140,34 @@ export default function Payments() {
     // Jeśli to wirtualna instancja, znajdź oryginalny payment
     const isVirtual = payment.id.includes("-virtual-");
     const realPaymentId = isVirtual ? payment.id.split("-virtual-")[0] : payment.id;
+    const now = new Date().toISOString();
 
-    // Jeśli płatność ma recurrence_rule, oblicz następny due_date
+    // Jeśli płatność ma recurrence_rule, przesuń due_date i zapisz paid_at
     if (payment.recurrence_rule) {
       const nextDueDate = calculateNextDueDateFromRule(payment.due_date, payment.recurrence_rule);
-      const now = new Date().toISOString();
-      // Backend wymaga pełnych danych - wysyłamy wszystko
-      const updateData = {
-        title: payment.title,
-        amount: payment.amount,
-        due_date: nextDueDate, // Przesuń due_date na następny okres
-        paid_at: now, // Zapisz kiedy ostatnio zapłacono
-        recurrence_rule: payment.recurrence_rule,
-      };
 
-      await updatePaymentMutation.mutateAsync({
-        id: realPaymentId,
-        data: updateData,
-      });
-    } else {
-      // Backend wymaga pełnych danych
+      // WAŻNE: Kolejność ma znaczenie!
+      // 1. PUT - najpierw przesuń due_date na następny okres (bez invalidacji cache)
       await updatePaymentMutation.mutateAsync({
         id: realPaymentId,
         data: {
           title: payment.title,
           amount: payment.amount,
-          due_date: payment.due_date,
-          paid_at: new Date().toISOString(),
+          due_date: nextDueDate,
           recurrence_rule: payment.recurrence_rule,
         },
+      });
+
+      // 2. PATCH - potem zapisz paid_at (cache się odświeży z nową due_date)
+      await patchPaymentStatusMutation.mutateAsync({
+        id: realPaymentId,
+        paidAt: now,
+      });
+    } else {
+      // Dla płatności jednorazowych tylko PATCH paid_at
+      await patchPaymentStatusMutation.mutateAsync({
+        id: realPaymentId,
+        paidAt: now,
       });
     }
   };

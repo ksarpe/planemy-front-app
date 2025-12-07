@@ -14,7 +14,13 @@ interface PaymentRowProps {
 
 export function PaymentRow({ payment, onMarkPaid }: PaymentRowProps) {
   const dueDate = new Date(payment.due_date);
-  const isPaid = !!payment.paid_at;
+  
+  // Płatność jest "paid" tylko jeśli paid_at istnieje I jest >= due_date
+  // To zapewnia że wirtualne instancje przyszłych dat nie są oznaczane jako paid
+  const isPaid = payment.paid_at 
+    ? new Date(payment.paid_at) >= dueDate 
+    : false;
+  
   const isOverdue = !isPaid && isBefore(dueDate, startOfToday());
   const daysOverdue = isOverdue ? differenceInDays(startOfToday(), dueDate) : 0;
   const [showConfirmModal, setShowConfirmModal] = useState(false);

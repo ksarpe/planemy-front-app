@@ -51,7 +51,7 @@ export default function BaseModal({
               damping: 20,
             }}
             onClick={(e) => e.stopPropagation()}
-            className={`bg-bg-secondary  text-text  p-6 rounded-xl w-3/5 xl:w-2/5 max-h-[90vh] overflow-y-auto shadow-2xl cursor-default relative`}>
+            className={`bg-bg-primary  text-text  p-6 rounded-xl w-3/5 xl:w-2/5 max-h-[90vh] overflow-y-auto shadow-2xl cursor-default relative`}>
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold">{title}</h3>

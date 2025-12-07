@@ -1,1 +1,7 @@
-export { useCreatePayment, useDeletePayment, usePayments, useUpdatePayment } from "./usePayments";
+export {
+  useCreatePayment,
+  useDeletePayment,
+  usePatchPaymentStatus,
+  usePayments,
+  useUpdatePayment,
+} from "./usePayments";
